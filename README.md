@@ -59,7 +59,7 @@ workflow/the-drill-and-memory.md.`
 
 ## The private GitHub repo
 
-This folder is becoming a **private** GitHub repo for backup and one-command migration.
+This folder IS a **private** GitHub repo (github.com/chanrylejay/Claude-Core, created Jul 24 2026) for backup and one-command migration.
 `archives/` is excluded via `.gitignore` — the frozen originals hold client names and terms, so
 they stay local-only (plus offline backup). Never commit client data or credentials, and keep
 the archives exclusion forever. Never connect this repo to Vercel, Netlify, Bolt, or any
