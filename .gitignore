@@ -1,0 +1,11 @@
+# Frozen archives hold client names, terms, and compensation details.
+# They stay LOCAL-ONLY (plus offline backup) — never committed, even to a private repo.
+# Chan's ruling, Jul 24 2026. Keep this exclusion forever.
+archives/
+LOCAL-ONLY-*
+memory/LOCAL-ONLY-*
+.env*
+*.pem
+*.key
+*credential*
+*.zip
