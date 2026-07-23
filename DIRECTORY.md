@@ -38,6 +38,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 ## projects/ — per-project canons (read only when working that project)
 
 - `devoted-care/design-lessons.md` — the Devoted Care design canon (client-era laws, type scale, patterns). Project-specific, NOT Chan's personal defaults.
+- `ano-ulam/project-canon.md` — Chan's own product (he continues it post-Devoted): full architecture, recipe-engine laws, closed decisions, bug list. Read before ANY ano-ulam work.
 
 ## templates/ — reusable infrastructure
 

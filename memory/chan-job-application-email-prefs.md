@@ -19,3 +19,10 @@ metadata:
 **How to apply:** every draft leads with or clearly includes the AI-assisted angle and the flexible-hours interest, on top of matching the specific posting's keywords. Positioning canon: [[chan-career-portfolio-state]].
 
 **Contact info for signatures:** phone 09157096854, email chanrylecagara@gmail.com.
+
+**Cover-letter standing rules (absorbed Jul 24 2026 from job-hunting-supplementary.txt):**
+- ALL FOUR links in every cover letter: chanryle-cagara.vercel.app · linkedin.com/in/chanrylejay · github.com/chanrylejay · chanrylecagara@gmail.com.
+- Full legal name in ALL formal documents: **CHANRYLE JAY CAGARA** (never "Chan Ryle Cagara", never "Chanryle Cagara").
+- Honest fit assessment BEFORE composing; if there is a gap, name it transparently.
+- Volume strategy: write the letter for whatever role Chan brings; no ranking or filtering unless he asks.
+- Lead project per role: the mapping lives in [[chan-career-playbook]]. Sales-side rules (Upwork, rates, negotiation): [[chan-freelance-sales-playbook]].

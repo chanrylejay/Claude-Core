@@ -19,5 +19,7 @@ Read top-down; the first three files are the cold-start trio.
 - [Pre-Devoted assets (Apr-Jun 2026)](chan-pre-devoted-assets.md) — live apps, portfolio numbers, the private prompt vault (DO NOT TOUCH), security rulings SETTLED, do not re-raise.
 - [⭐ Skills ledger + origin story](chan-skills-ledger.md) — THE canonical source for anything career-facing: skills, tools, metrics, the origin arc.
 - [⭐ Career Resilience Playbook](chan-career-playbook.md) — standing posture, day-1-if-engagement-ends checklist, side-project flywheel. ACTIVE NOW: closure was Jul 24 2026, run it with workflow/devoted-closure-checklist.md.
+- [⭐ Freelance sales playbook](chan-freelance-sales-playbook.md) — Upwork laws, Zero-Call strategy, rate tiers ($35/hr display, flat T1-T4), no-benefits +₱3-5K rule, interview frames, employment history.
+- [Job leads snapshot Jun 2026](chan-job-leads-snapshot-jun2026.md) — STALE-RISK: 4 applications + the Fresh Start Cleaners pro bono lead; verify every status with Chan before acting.
 - [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md) — the six settled rulings with site names and paths; gitignored, THIS MACHINE ONLY (a fresh clone will not have it). Do not re-raise the rulings.
 - [AI cost context](chan-ai-cost-context.md) — engagement ENDED Jul 24 2026, Claude access revoked ~Jul 25; Chan runs on his own DeepSeek key now (switch runbook in workflow/). Keep the kit lean and mechanical for weaker models.
