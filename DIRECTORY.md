@@ -51,6 +51,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 ## archives/ — frozen originals (verbatim, never edit, never commit; stale-lock warnings inside)
 
 - `document-a-operating-briefing-v10.md` + `document-b-lessons-registry-v9.md` + `document-c-deep-archive-v9.md` — the three source docs Claude-Core descends from (operating briefing, lessons registry, deep archive).
+- `job-hunting-supplementary.txt` + `ANO_ULAM_CLAUDE_BOSS_CONTEXT.txt` — frozen originals of the Jul 24 2026 absorption (distilled into the sales playbook, leads snapshot, and the ano-ulam canon); moved here from Downloads/Projects.
 
 ## portfolio/ — career material
 

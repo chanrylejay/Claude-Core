@@ -30,6 +30,10 @@ metadata:
 - Never let a side project touch client infrastructure, accounts, or data.
 
 ## Job application mechanics (standing rules, from the June era, still true)
+
+- Browser extensions: VET before installing any (users over 1K · age over 6 months · permissions scope · developer identity). HIHIRED = BANNED (unencrypted HTTP backend, 1 user, all-urls permission). Simplify Copilot was dropped for PH fit (details: archive Doc C).
+- Personas: Sentinel for serious decisions only (financial, career, burnout); GRT for company research with verified citations when applying.
+- Launching publicly: update home base FIRST (portfolio, GitHub, Upwork) before sharing any link. Proven channels: n8n Discord, Dev.to, X, LinkedIn (profile + group, never group-spam), n8n Forum, FB groups (pattern-interrupt opener), Upwork portfolio, GitHub README, portfolio site. Reddit: no emojis, link in comments, space posts 2-3 days (account was blocked May 2026).
 - Cover letters always carry all four links: portfolio, LinkedIn, GitHub, email. Honest fit assessment BEFORE composing; name gaps plainly.
 - Lead project per role: web/full-stack roles lead with the Devoted platform · AI/LLM roles lead with the AI pipelines and prompt systems · automation roles lead with the SMS/cron work and Shiny Gmail.
 - Full legal name on formal documents: CHANRYLE JAY CAGARA.
