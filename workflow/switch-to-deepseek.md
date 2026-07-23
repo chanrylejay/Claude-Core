@@ -4,6 +4,12 @@ Verified from DeepSeek's official docs Jul 24 2026 (their Anthropic-compatible e
 their own Claude Code guide). Do NOT run this while Claude access still works: the switch
 takes effect on the next VS Code start.
 
+## The switch — EASIEST PATH (staged Jul 24 2026, ready to fire)
+
+Double-click C:/Users/Chanryle/.claude/SWITCH-TO-DEEPSEEK.cmd, paste the API key when it asks,
+then fully restart VS Code. That is the whole switch: the VS Code checkbox
+(claudeCode.disableLoginPrompt) was already set on Jul 24. The manual path below does the same.
+
 ## The switch (one command + one checkbox)
 
 1. Get the API key from platform.deepseek.com/api_keys (Chan already has a working account).
