@@ -37,3 +37,11 @@ When one person relays between the client and the AI *and* reviews everything, t
   whether direction-giving stays respectful under stress; that, not skill, is what ended this one.
 - Leave clean: proper handoff, recovered data, documented systems. The exit is part of the
   portfolio too.
+
+## Compliance posture (HIPAA-class data; from archive Doc A v10, banked Jul 24 2026)
+
+Compliance is NOT self-decidable: it attaches by operation of law, and the determination
+belongs to the client + their counsel, never to the builder or an AI session. The practical
+unblock: Safe-Harbor de-identification done LOCALLY before any vendor sees the data. A vendor
+BAA alone is not compliance. BAA vendor reality (as of mid-2026): Supabase needs Team plan +
+add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.

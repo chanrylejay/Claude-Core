@@ -31,3 +31,4 @@ Proven in production on the Ask-Devoted agent (a scheduler-facing assistant over
 - AI-draft, human-approve, for anything outward-facing. Always label AI content as AI.
 - Sequence everything toward the real user running their real work in the tool; the handoff is the point.
 - "Find X for Y" and "show me raw availability" are DIFFERENT needs; do not merge them into one surface.
+- Real-time AI calls per user page-visit are BANNED: generate on a schedule into a DB cache and serve every visit from the cache. Cost + latency law, production-proven; doubly true now that the API key is Chan's own money.

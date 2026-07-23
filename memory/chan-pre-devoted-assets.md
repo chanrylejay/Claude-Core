@@ -29,4 +29,8 @@ metadata:
 
 **Housekeeping verdicts:** Claude-Core-OLD-moved-2026-07-23 = DELETED Jul 23 2026 after a re-verified diff (only unique content was an old backup subset). Do NOT purge the Devoted archive; it holds the only originals of the distilled rules.
 
+**Deferred triggers (Doc A v10 §5, banked Jul 24 2026):** Hermes agent on Hetzner CX33 when funded · Cursor Pro when budget allows · n8n Template Gallery submissions (Shiny Gmail + Supervisor) · Moltgate.com storefront evaluation · Odysseus = SKIP (needs local GPU) · Sonnetto = superseded by Hermes · ano-ulam follow-ups now live in ../projects/ano-ulam/project-canon.md.
+
+**Closed-decision registers (never re-raise):** Supervisor V1 Lean has an 11-item never-suggest list (no Redis/queue mode, no Prometheus, no PgBouncer, localhost IS production, ...) and Ano Ulam's permanent decisions are in the project canon; both verbatim in archive Doc B §7.
+
 Related: [[chan-career-portfolio-state]] · [[chan-hard-rules]]

@@ -35,3 +35,12 @@ Started non-technical: BS IT but no coding career; customer support, then admin,
 From that point, evenings and weekends alongside a full-time job (while a 6-month Top Performer at Accenture), by June 2026: 7 production prompt systems · 2 deployed n8n automation systems · 2 deployed web apps · 1 viral product (Ano Ulam, 1K+ likes, 300+ shares, users' comments became the roadmap) · 60+ stress tests, 22+ audit rounds, 40+ bugs fixed · portfolio across 10 platforms.
 Then June-July 2026: first paid client, and the entire Devoted Care platform shipped solo (see [[chan-career-portfolio-state]] and `../portfolio/devoted-project-summary.md`).
 The arc IS the pitch: proof of learning velocity, discipline, and shipping.
+
+## Employment history and education (canonical; from archive Doc A v10 §3, banked Jul 24 2026)
+
+- Accenture — Content Operations Specialist, May 2025 - Jun 2026 (Top Performer 6 consecutive months).
+- Teletech — customer support, Aug 2023 - Sep 2024 (95%+ CSAT).
+- Alorica — customer support / CRM, 2022-2023.
+- Accenture — Admin & Recruitment coordination, 2021.
+- Education: BS Information Technology, QC University, June 2020. Based in Quezon City, PH.
+- Then: personal automation era Apr-Jun 2026 → the paid Devoted engagement Jun-Jul 2026 (solo developer, ended cleanly Jul 24 2026).

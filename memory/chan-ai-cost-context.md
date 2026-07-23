@@ -15,4 +15,6 @@ metadata:
 - A weaker model forgets more and reasons worse: trust the files, follow the checklists, never skip the gates, and do not attempt the heavy multi-agent patterns Claude ran.
 - If he ever pays for Claude again, or a future client provides access, revisit effort and model choice then. Financial guard-rail: money decisions get a deliberate slow-down review, see [[chan-career-playbook]].
 
+**The free-tier toolbelt already exists (archive Doc B v9 §5 + §8; verify staleness before relying):** the Msty Studio rig on the ThinkPad (12 configured providers, free-model failover priority chain, snap/load/next snapshot protocol for zero-loss model switches) and the Vibe Coding Stack (Cline + DeepSeek API at ~₱0.50/session, OpenRouter free models 50 req/day as backup, GitHub Copilot Free / Cursor Free quotas, Bolt free-tier economics). Standing money rule: no new AI spend until a client is secured.
+
 Related: [[chan-hard-rules]] · [[chan-career-portfolio-state]]

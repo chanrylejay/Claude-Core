@@ -41,3 +41,9 @@ This file is the ONE home for operational tool lessons; TOOLS.md is the historic
 ## Databases
 The standing laws live in Chan's hard rules, rule 10: never write a third-party's prod DB, review-first destructive SQL, archive-before-drop (`../memory/chan-hard-rules.md`).
 Migration mechanics: `../lessons/engineering-lessons.md`.
+
+## Auditing a new API (the P-API workflow, from archive Doc B, banked Jul 24 2026)
+
+Official spec → distilled catalogued reference doc (a send-on-demand txt, never the raw spec
+in context) → live validation via USER-RUN read-only Bruno calls with sanitized paste-back →
+bank corrections into the reference (r1.0 → r1.1). Raw specs and dumps stay out of context.

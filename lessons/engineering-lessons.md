@@ -45,3 +45,8 @@
 - **Archive, never delete** (pattern 35) — files, columns, features. Everything reversible until proven safe.
 - Timezone canon: pick the business's timezone once, apply it in every date computation.
   Server-local dates cause off-by-one bugs that look like logic errors.
+
+## Data archaeology (from archive Doc B, banked Jul 24 2026)
+
+- Empty tables are findings, not dead ends: schema-without-data means scaffolded-but-never-wired; investigate the wiring, not the data.
+- AI-built micro-app sprawl mirrors its source boards 1:1 across platforms (Supabase/Netlify/Monday); map the WHOLE sprawl before consolidating anything.

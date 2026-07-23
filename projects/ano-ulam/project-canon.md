@@ -18,8 +18,8 @@ pdf-parse v2, Vercel Analytics. Cost ~$0/month.
 1-hour window fired them out of order, Jun 4 2026; never split them again).
 - INGEST: scrape da.gov.ph/price-monitoring for the Daily Price Index PDF link (URLs change
   daily, never hardcode; pick Daily Price Index ~380KB, NOT Daily Retail Price Range ~1.5MB)
-  → pdf-parse → first 16,000 chars to DeepSeek → CSV out (JSON banned: ~27K output cap
-  truncates 100+ items) → JS Map dedup → batch upsert via ($1::jsonb) jsonb_array_elements
+  → pdf-parse → first 16,000 chars to DeepSeek → CSV out (JSON banned: ~27K cap; default CSV at
+  50+ items, 100+ WILL truncate) → JS Map dedup → batch upsert via ($1::jsonb) jsonb_array_elements
   (2 queries total, never 100+ round trips) → already-ingested check (DA re-publishing
   yesterday's PDF is EXPECTED, not a bug).
 - SUGGEST: today's prices → PriceMap → yesterday's prices for trends → yesterday's meal IDs
@@ -49,13 +49,16 @@ cost math; the hardcoded engine is 10/10). DeepSeek's ONLY roles: PDF-to-CSV ext
 
 ## Display rules (lib/commodity-names.ts, 3 layers + naming convention, permanent)
 
-Layer 1 hide brands (Magnolia, Bounty Fresh, ...) · Layer 2 auto-strip " Imported"/" Local"
+Layer 1 hide brands (Magnolia, Bounty Fresh, Unbranded Fresh, Fully Dressed) · Layer 2 auto-strip " Imported"/" Local"
 (Chan never wants those words visible) · Layer 3 explicit map for special cases.
 Naming: meat cuts English (Chicken Breast) · vegetables/spices Filipino (Kamatis, Bawang) ·
 fish Filipino (Bangus, Galunggong) · traditional dishes Filipino (Adobo, Sinigang) · simple
 preps English (Fried Chicken). ₱0 optionals are HIDDEN (₱0 reads as "free" = misleading).
 /prices is a receipt-style list, never a card grid (pattern 19; green ≤₱100, amber ≤₱250,
-red >₱250). Nutrition (V2.2): lib/nutrition.ts USDA per-100g table, name-first lookup
+red >₱250). DA Bantay Presyo attribution is a STANDING requirement (homepage + Footer).
+Price trend indicators use native emoji dots 🟢🔴, never colored CSS arrows (invisible on the
+orange/red frosted homepage). DA holds 98+ items; the 3 layers filter to ~55-60 shown.
+Nutrition (V2.2): lib/nutrition.ts USDA per-100g table, name-first lookup
 (pattern 23), all 5 macros per serving (total ÷ 2), served client-side from RECIPES
 (pattern 22, zero backend changes). MealCard V2.2: 3 accordions (Buong Sangkap / Paano
 Magluto? / Nutrition Facts), all closed by default; filter tabs Lahat/Isda/Manok/Baboy/Beef/
@@ -86,7 +89,7 @@ by design (DA posts late; the 10AM run usually ingests yesterday's edition).
 The txt's "deepseek-chat, migrate before Jul 24 2026" is DONE: ano-ulam migrated to
 deepseek-v4-flash Jul 23 2026 and the 10AM cron ran clean on it. The txt's "v4-flash breaks
 tool calling" note is stale (predates the V4 retirement; ano-ulam uses no tool calling).
-DeepSeek account: Maya Visa top-up, $2 minimum, PH email-only registration.
+DeepSeek account: Maya Visa top-up, $2 minimum, PH email-only registration, NO free credits.
 
 ## Closed decisions (final; never revisit)
 

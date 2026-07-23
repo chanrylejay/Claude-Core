@@ -1,8 +1,9 @@
 # Memory Index — Chan (portable)
 
-- Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
+- Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com, Quezon City PH. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
 - NOW (Jul 24 2026): Devoted engagement ENDED today (last day worked, handoff complete, fully hands-off) · job hunt ACTIVE, now the only track · portfolio demo v2 live. Update this block when the mode changes.
 - Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
+- MODES (read the matching set BEFORE working): JOB HUNT → chan-career-portfolio-state + chan-career-playbook + chan-skills-ledger + chan-job-application-email-prefs + chan-freelance-sales-playbook + chan-job-leads-snapshot-jun2026, plus ../workflow/devoted-closure-checklist.md while its boxes stay open. ANO ULAM → ../projects/ano-ulam/project-canon.md + ../lessons/platform-gotchas.md. CLIENT BUILD → ../workflow/new-project-checklist.md + the QA gauntlet.
 
 Read top-down; the first three files are the cold-start trio.
 

@@ -35,7 +35,7 @@ ARCHITECT PLAYBOOK v2 (txt in Downloads/Projects; private methodology, pointer o
 
 ## Rates and negotiation
 
-Upwork display rate $35/hr; actual quotes always flat: T1 $15-20 (first clients, simple
+Upwork profile: upwork.com/freelancers/~01c62edc2e375ef8ce. Display rate $35/hr; actual quotes always flat: T1 $15-20 (first clients, simple
 fixes) · T2 $50 (standard debug/recovery) · T3 $100-250 (architecture, complex builds) ·
 T4 $50-150 per add-on upsell. Consultant roles with NO PH-mandated benefits (SSS,
 PhilHealth, PAG-IBIG, 13th month, leave): add ₱3,000-5,000 above target. Benchmark: Farben
@@ -52,10 +52,9 @@ strengths: Accenture Top Performer 6 consecutive months · production systems sh
 tutorials · live sites with real traffic · $0/month automation stack · the Devoted platform
 story ([[chan-career-playbook]] owns the interview narrative).
 
-## Employment history (for resumes; verify current status before using)
+## Employment history
 
-Accenture: Content Operations Specialist (full-time day job as of Jun 6 2026 — VERIFY
-whether still current) + recruitment coordination (2021) + content moderation, 6-month Top
-Performer. Earlier: customer support / CRM / tickets at Teletech and Alorica. Automation
-and systems work: personal projects (Apr-Jun 2026 era) then the paid Devoted engagement
-(Jun-Jul 2026). Related: [[chan-job-application-email-prefs]] · [[chan-career-playbook]]
+Canonical dates and education: [[chan-skills-ledger]] (employment + education block). Short
+arc: call-center support (Teletech, Alorica) → Accenture content ops (Top Performer ×6, ended
+Jun 2026) → personal automation era (Apr-Jun 2026) → paid Devoted engagement (Jun-Jul 2026,
+ended cleanly). Related: [[chan-job-application-email-prefs]] · [[chan-career-playbook]]

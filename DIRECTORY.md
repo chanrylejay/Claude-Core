@@ -28,7 +28,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 
 ## lessons/ — universal lessons (project-agnostic)
 
-- `universal-patterns.md` — the 41 numbered patterns + AI stress-testing + multi-worker governance + the L24 doc diff-audit rule. Reference patterns by number.
+- `universal-patterns.md` — the 42 numbered patterns + AI stress-testing + multi-worker governance + the L24 doc diff-audit rule. Reference patterns by number.
 - `engineering-lessons.md` — migration-cutover trap, regression nets, push=deploy discipline, ranking systems, display≠data.
 - `client-collaboration-lessons.md` — show-first→approve→deploy, verbatim ask capture, the review bottleneck, leaving clean.
 - `platform-gotchas.md` — per-platform behaviors (Vercel, Neon, Supabase, Netlify, Next/npm, DeepSeek, Bolt, n8n, scraping); read before building on any of them.

@@ -5,7 +5,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 
 ## Vercel
 - Cron sends GET, not POST: export both, GET delegates to POST. Auth is `Authorization: Bearer CRON_SECRET`; support the `x-cron-secret` header too for manual tests.
-- **Hobby cron has a 1-hour flexible window. NEVER two dependent crons: the window can fire B before A (proven live).** Combine into one sequential endpoint; keep the individual routes for manual tests.
+- **Hobby cron has a 1-hour flexible window. NEVER two dependent crons: the window can fire B before A (proven live).** Combine into one sequential endpoint; keep the individual routes for manual tests. The dashboard Cron tab shows invocation history (2XX blue, 4XX yellow) for debugging.
 - Edge cache serves stale responses even with `dynamic = "force-dynamic"`. Add `Cache-Control: no-store` plus the CDN and Vercel-CDN variants on dynamic API routes.
 - Serverless timeout 60s on free tier; set `maxDuration` on heavy routes; batch DB round-trips (100+ trips US-to-Singapore fails).
 - `new Date().toISOString()` is UTC; Manila is UTC+8; prefer latest-date-from-DB over a computed "today".
@@ -39,7 +39,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - Write architecture: see universal-patterns pattern 41 (the write-function spine).
 
 ## DeepSeek API
-- **JSON output hard-caps near 27K characters: use CSV for 100+ item extractions (3-5x more compact).** Remove response_format json_object when requesting CSV.
+- **JSON output hard-caps near 27K characters: default to CSV at 50+ items — 100+ WILL truncate as JSON (CSV is 3-5x more compact).** Remove response_format json_object when requesting CSV.
 - Responses may arrive wrapped in markdown code fences regardless of settings: always strip before parsing.
 - Model names: deepseek-chat RETIRED Jul 24 2026; deepseek-v4-flash is the current correct model (the old "v4-flash banned for n8n tool calling" lock predates the retirement; retest tool-calling if n8n agents are revived).
 - AI generation of structured local-domain data (Filipino recipes) rated 6-7/10: wrong ingredients, bad cost math. Deterministic engine plus LLM explanation is the pattern.
@@ -57,6 +57,11 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - Error Trigger fires only on PRODUCTION executions and deregisters after any Code-node edit (toggle the workflow off-on). staticData saves on workflow success only. Re-import resets all credentials. Exports strip credentials (safe for GitHub).
 - SplitInBatches: never loop a Wait node back upstream; done branch never connects to Wait.
 - Windows self-host: crypto and env access need NODE_FUNCTION_ALLOW_BUILTIN and N8N_BLOCK_ENV_ACCESS_IN_NODE; Gmail OAuth can fail via ngrok (reconnect via localhost).
+- Circuit-breaker recipe (proven, supervisor repo + archive Doc B §2): breaker state in an atomic SQL CTE (FOR UPDATE + INSERT ON CONFLICT); 5 errors → OPEN, OPEN → HALF_OPEN after 5min, HALF_OPEN → CLOSED after 10min; every transition logged.
+
+## Google / Gemini
+
+- **NEVER link billing to Google AI Studio: it kills the free tier PERMANENTLY.** Chan's prompt systems run on the Gemini free tier; this is irreversible. (Standing lock since the pre-Devoted era.)
 
 ## Data sources and scraping
 - Government/institutional PDFs (DA Bantay Presyo pattern): publication times are unreliable, URLs are unpredictable (scrape the listing page for the current link), multiple daily editions exist (pick one and lock it), and re-ingesting yesterday's edition when today's is late is expected behavior guarded by an already-ingested check.

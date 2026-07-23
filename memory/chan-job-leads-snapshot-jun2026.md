@@ -23,7 +23,8 @@ metadata:
 Texas cleaning business on BookingKoala; dropped Zapier + GoHighLevel over cost. Chan's
 pitch: n8n + Twilio SMS notifications at ~$16-20/month vs $65-110 for Zapier equivalents =
 $1,000+/year savings. Architecture confirmed (n8n + Twilio + BookingKoala API). Meeting was
-missed Jun 3 (client busy); awaiting reschedule at snapshot time. Pitch rules: lead with the
+missed Jun 3 (client busy); at snapshot time BOTH were pending: the reschedule AND the
+client-data confirmation (the meeting script's what-we-need checklist was still blank). Pitch rules: lead with the
 savings; discovery covers booking volume, SMS needs, staff count, workflow pains. Full
 meeting script: C:/Users/Chanryle/Downloads/Projects/fresh-start-cleaners-meeting-script.txt
 (pointer only; revive on Chan's word during the post-Devoted job hunt).

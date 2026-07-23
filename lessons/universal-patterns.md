@@ -1,4 +1,4 @@
-# Universal Patterns — the 41 patterns + how Chan tests AI systems
+# Universal Patterns — the 42 patterns + how Chan tests AI systems
 
 Distilled Jul 23 2026 from Document B v9 (verbatim original: `../archives/document-b-lessons-registry-v9.md`).
 These are project-agnostic engineering and AI-collaboration patterns proven across 7 prompt systems, 2 n8n platforms, 4 web apps, and the Devoted Care production era. Reference by number.
@@ -33,7 +33,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 24. **Multi-session build management:** number the micro-sessions, one deliverable each, end each with a handoff paragraph, never load files the session will not touch.
 25. **Trimmed context documents per sub-project:** instructions = lean behavior layer; context doc = deep knowledge layer; never duplicate between the two; never hand a sub-instance the raw full archive.
 
-## CLI-era patterns (26-41)
+## CLI-era patterns (26-42)
 
 26. **Silent fallbacks poison production:** any helper that quietly degrades to mock data WILL feed a real surface. Fallbacks are for layout, never for facts; gate real-record consumers on an explicit live flag.
 27. **Racing builds corrupt artifacts:** two builds (or build plus dev server) over one artifact dir corrupt it confusingly. Kill all, wipe, rebuild once. Never use grep-filtered build output as a success signal.
@@ -51,6 +51,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 39. **Split credentials by direction; production sources are SELECT-only forever.** Writes, if ever sanctioned, ride a separate write-scoped token behind a fail-closed kill switch, dummy-proven first, audited always.
 40. **Brief the client's AI:** clients feed deliverables to their own AI. Embed an honest briefing in the deliverable (what it is, what changed, what is intentionally absent, how to verify). Context-not-persuasion survives adversarial review.
 41. **The write-function spine:** routes never touch the DB directly; every write goes through named write functions in one shared lib, and audit logging (before/after plus a frozen actor) is a Definition-of-Done line on every write. (Moved from platform-gotchas Jul 24 2026: architecture, not a platform behavior.)
+42. **Never hand an AI code agent a broad redesign prompt:** it produces oscillating, unpredictable changes. Scope exact changes; the agent executes and makes zero design decisions. (Proven in the Ano Ulam era; still true with stronger agents on personal-taste surfaces.)
 
 ## How Chan stress-tests AI systems (the methodology)
 
