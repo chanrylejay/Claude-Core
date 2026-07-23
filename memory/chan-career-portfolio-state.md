@@ -7,7 +7,7 @@ metadata:
 
 # Career and portfolio state (current as of Jul 24 2026)
 
-**Status:** job hunt ACTIVE; the Devoted engagement is winding down. Career work is a standing track Claude proactively supports.
+**Status:** job hunt ACTIVE and now the ONLY track; the Devoted engagement ENDED Jul 24 2026 (last day worked, handoff complete). Career work is a standing track Claude proactively supports.
 
 **Positioning (canon):** role title "Systems Developer" (his chosen title, used on portfolio and resume). Line: "AI-native systems builder, ships production platforms solo." Skills, tools, metrics, and the origin story: [[chan-skills-ledger]]. Standing posture, day-1 checklist, side-project flywheel: [[chan-career-playbook]].
 

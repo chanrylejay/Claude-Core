@@ -23,6 +23,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `tool-playbook.md` — operational lessons: visual verification, diagnose-before-crusading, EOL-aware editing, DB discipline.
 - `new-project-checklist.md` — the starting ritual for any real build: docs skeleton, live-data verification, write-safety day one, ship cadence.
 - `new-computer-migration.md` — moving Claude's brain to a new PC: what to copy, what to reinstall, the absolute-path gotcha.
+- `devoted-closure-checklist.md` — the closure-day runbook (closure was Jul 24 2026): status flips done, LinkedIn/resume sweeps, tooling-cost revisit, week-1 momentum kit.
 
 ## lessons/ — universal lessons (project-agnostic)
 

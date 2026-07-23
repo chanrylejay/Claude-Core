@@ -3,7 +3,8 @@
 The client-specific canon (exact hexes, locked components) stays with that project.
 These were the working rules of the Devoted Care build (largely the client's taste). Reuse in a
 new project ONLY what that project explicitly adopts. Chan ruled Jul 23 2026: no standing
-personal design canon; every project defines its own.
+personal design canon; every project defines its own. Engagement ENDED Jul 24 2026: this
+canon is reference and portfolio material now.
 
 ## The laws (violate = failed review)
 - **Zero guide text.** No helper sentences, no placeholder instructions, no "click here to…".

@@ -1,17 +1,18 @@
 ---
 name: chan-resigned-devoted-jul15
-description: The Devoted Care arc — Chan resigned Jul 15 2026, work RESUMED Jul 16-22, and as of Jul 23 2026 the engagement is WINDING DOWN (Chan confirmed). Live-system actions stay gated on his explicit per-action GO.
+description: The Devoted Care arc — resigned Jul 15 2026, resumed Jul 16-22, wound down Jul 23, ENDED Jul 24 2026 (last day worked, handoff complete). Fully hands-off; no client-system actions ever again.
 metadata:
   type: project
 ---
 
-# STATUS UPDATE — Jul 23 2026 (Chan confirmed): WINDING DOWN
+# STATUS — ENDED Jul 24 2026: last day worked, handoff COMPLETE (previous: winding down Jul 23)
 
 The Jul 15 resignation did not end the work: the build resumed Jul 16 and ran through Jul 22
 (see the Devoted archive index: the Jul 16-18 ship notes and the Jul 22 caregiver-profile flood).
 As of Jul 23 2026 the engagement is WINDING DOWN: occasional work may still land, every
 live-system action stays gated on Chan's explicit per-action GO, and the archive remains the
-record. The history below is kept as originally written except person names, redacted Jul 24 2026 for the private repo (verbatim original in the local Devoted archive); read it as the Jul 15 snapshot, not
+record. FINAL (Jul 24 2026): Chan worked his last day and completed the handoff; the
+engagement is over and fully HANDS-OFF from here. The history below is kept as originally written except person names, redacted Jul 24 2026 for the private repo (verbatim original in the local Devoted archive); read it as the Jul 15 snapshot, not
 the current state.
 
 ---

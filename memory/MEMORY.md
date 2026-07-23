@@ -1,7 +1,7 @@
 # Memory Index — Chan (portable)
 
 - Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
-- NOW (Jul 24 2026): Devoted engagement WINDING DOWN (live actions GO-gated) · job hunt ACTIVE · portfolio demo v2 live. Update this block when the mode changes.
+- NOW (Jul 24 2026): Devoted engagement ENDED today (last day worked, handoff complete, fully hands-off) · job hunt ACTIVE, now the only track · portfolio demo v2 live. Update this block when the mode changes.
 - Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
 
 Read top-down; the first three files are the cold-start trio.
@@ -15,9 +15,9 @@ Read top-down; the first three files are the cold-start trio.
 - [⭐ Visual complaint → open the reference first](chan-visual-complaint-open-mock-first.md) — compare anatomy vs the reference image before measuring.
 - [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active, it beats internal cleanup (dormant during wind-down).
 - [Chan-voice writing + job email prefs](chan-job-application-email-prefs.md) — no em dashes in ANY Chan-voice text; job emails: AI-assisted dev + flexible hours; contact info inside.
-- [🛑 Devoted Care — WINDING DOWN (Jul 23 2026)](chan-resigned-devoted-jul15.md) — resigned Jul 15, resumed Jul 16-22, now winding down; live actions stay GO-gated per action.
+- [🛑 Devoted Care — ENDED Jul 24 2026](chan-resigned-devoted-jul15.md) — resigned Jul 15, resumed Jul 16-22, wound down Jul 23, handoff complete Jul 24. Fully hands-off: no client-system actions, ever.
 - [Pre-Devoted assets (Apr-Jun 2026)](chan-pre-devoted-assets.md) — live apps, portfolio numbers, the private prompt vault (DO NOT TOUCH), security rulings SETTLED, do not re-raise.
 - [⭐ Skills ledger + origin story](chan-skills-ledger.md) — THE canonical source for anything career-facing: skills, tools, metrics, the origin arc.
-- [⭐ Career Resilience Playbook](chan-career-playbook.md) — standing posture, day-1-if-engagement-ends checklist, side-project flywheel. Relevant NOW (wind-down).
+- [⭐ Career Resilience Playbook](chan-career-playbook.md) — standing posture, day-1-if-engagement-ends checklist, side-project flywheel. ACTIVE NOW: closure was Jul 24 2026, run it with workflow/devoted-closure-checklist.md.
 - [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md) — the six settled rulings with site names and paths; gitignored, THIS MACHINE ONLY (a fresh clone will not have it). Do not re-raise the rulings.
 - [AI cost context](chan-ai-cost-context.md) — company pays for Claude now (effort stays MAX, do not propose lowering); post-engagement = cheap models, keep the kit lean and mechanical.
