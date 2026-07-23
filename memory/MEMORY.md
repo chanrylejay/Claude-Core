@@ -13,11 +13,11 @@ Read top-down; the first three files are the cold-start trio.
 - [⭐⭐ Directives are NOT absolute](chan-critique-directives.md) — critique every directive (client's OR Chan's) + propose better; the owner decides.
 - [⭐⭐ The review-bottleneck lesson](chan-review-bottleneck.md) — Chan is often the single reviewer: plain language, screenshots, small slices.
 - [⭐ Visual complaint → open the reference first](chan-visual-complaint-open-mock-first.md) — compare anatomy vs the reference image before measuring.
-- [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active, it beats internal cleanup (dormant during wind-down).
+- [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active, it beats internal cleanup (dormant: no active client engagement since Jul 24 2026).
 - [Chan-voice writing + job email prefs](chan-job-application-email-prefs.md) — no em dashes in ANY Chan-voice text; job emails: AI-assisted dev + flexible hours; contact info inside.
 - [🛑 Devoted Care — ENDED Jul 24 2026](chan-resigned-devoted-jul15.md) — resigned Jul 15, resumed Jul 16-22, wound down Jul 23, handoff complete Jul 24. Fully hands-off: no client-system actions, ever.
 - [Pre-Devoted assets (Apr-Jun 2026)](chan-pre-devoted-assets.md) — live apps, portfolio numbers, the private prompt vault (DO NOT TOUCH), security rulings SETTLED, do not re-raise.
 - [⭐ Skills ledger + origin story](chan-skills-ledger.md) — THE canonical source for anything career-facing: skills, tools, metrics, the origin arc.
 - [⭐ Career Resilience Playbook](chan-career-playbook.md) — standing posture, day-1-if-engagement-ends checklist, side-project flywheel. ACTIVE NOW: closure was Jul 24 2026, run it with workflow/devoted-closure-checklist.md.
 - [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md) — the six settled rulings with site names and paths; gitignored, THIS MACHINE ONLY (a fresh clone will not have it). Do not re-raise the rulings.
-- [AI cost context](chan-ai-cost-context.md) — company pays for Claude now (effort stays MAX, do not propose lowering); post-engagement = cheap models, keep the kit lean and mechanical.
+- [AI cost context](chan-ai-cost-context.md) — engagement ENDED Jul 24 2026, Claude access revoked ~Jul 25; Chan runs on his own DeepSeek key now (switch runbook in workflow/). Keep the kit lean and mechanical for weaker models.

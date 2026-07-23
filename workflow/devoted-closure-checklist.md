@@ -12,6 +12,9 @@ off with dates as they happen.
 - chan-career-portfolio-state.md: job hunt is now the only track.
 - portfolio/devoted-project-summary.md: closing line reflects the completed clean handoff.
 - projects/devoted-care/design-lessons.md: marked reference-only.
+- chan-career-playbook.md: frontmatter flipped to ACTIVE NOW (day-1 checklist live).
+- chan-ai-cost-context.md: rewritten to the post-engagement posture (DeepSeek ruling).
+- DIRECTORY.md: this runbook indexed with closure-day status; no stale engagement lines remain.
 
 ## 2. Hands-off law (permanent from Jul 24 2026)
 
@@ -21,9 +24,9 @@ no "quick favors" without a brand-new signed engagement. The sealed memory bank
 
 ## 3. LinkedIn session (Chan's hands, Claude drafts; do in ONE sitting)
 
-- [ ] Availability post: short, plain, confident. Angle: shipped a full production platform
-  solo (AI-assisted), engagement completed cleanly, open for the next build. Claude drafts,
-  Chan approves and posts.
+- [ ] Availability post (playbook day-1 item 4 owns the move; the Devoted-specific angle lives
+  here): shipped a full production platform solo (AI-assisted), engagement completed cleanly,
+  open for the next build. Drafted by the AI, approved and posted by Chan.
 - [ ] Fix the company-name mismatch between the Skills tags and the Experience entry (both
   spellings visible on LinkedIn itself).
 - [ ] Devoted experience entry: set the end date (Jun 2026 - Jul 2026) and flip wording to past
@@ -38,13 +41,14 @@ no "quick favors" without a brand-new signed engagement. The sealed memory bank
 
 ## 5. Money and tooling revisit (the chan-ai-cost-context trigger)
 
-- [ ] FIRST QUESTION: does Claude access end with the engagement? (Sessions ran on the client
-  account.) Decide: own subscription, cheaper model, or pause. The kit is downgrade-ready by
-  design: hooks enforce the laws, files are short and mechanical.
+- [x] ANSWERED Jul 24 2026: yes, Claude access is expected to be revoked ~Jul 25. Chan's
+  ruling: run Claude Code against his own DeepSeek API key (see the switch runbook in this
+  folder). The kit is downgrade-ready by design: hooks enforce the laws, files stay short.
 - [ ] When the account situation changes, update the hub section 1 line about the signed-in
   account showing the old client address.
-- [ ] Effort setting: MAX was tied to the company paying; re-decide deliberately (money
-  decisions get the slow-down review, per the career playbook guard-rail).
+- [ ] Effort setting under DeepSeek: re-decide deliberately once real usage is visible (money
+  decisions get the slow-down review, per the career playbook guard-rail). After any future
+  ruling, update memory/chan-ai-cost-context.md in the same edit.
 
 ## 6. Space and cleanup (each on Chan's word, never automatic)
 

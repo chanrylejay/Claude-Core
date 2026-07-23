@@ -1,18 +1,18 @@
 ---
 name: chan-ai-cost-context
-description: Why effort stays MAX for now, and why the kit must stay lean anyway. The company pays for Claude during the engagement; after it ends Chan expects to run on cheap or low-end AI models. Design every workflow file to still work with a weaker model.
+description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. His Claude access is expected to be revoked around Jul 25 2026; he switches to cheap models (his own DeepSeek API key). Keep the kit lean and mechanical so weaker models can run it.
 metadata:
   type: user
 ---
 
-# AI cost context (Chan, Jul 24 2026)
+# AI cost context (updated Jul 24 2026, closure day)
 
-**His words (paraphrased):** while at this company he keeps the max effort setting because he does not pay for the Claude subscription. When the engagement is gone, he will probably run on low-end AI models.
+**The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access is expected to be revoked around Jul 25 2026, so that premise is gone.
 
-**What this means for every future decision:**
-- Effort/model settings stay at MAX while the engagement runs. Do not propose lowering them to save tokens; the tokens are not his cost right now.
-- The 10/10 workflow goal is a system that SURVIVES the downgrade: when a weaker model runs this kit someday, it will forget more and reason worse. So determinism beats memory: hooks over prose rules, short high-signal files over long clever ones, checklists over judgment calls, one home per fact.
-- Token diet work still matters, not for today's bill but because low-end models have small contexts. Every always-loaded line must earn its place.
-- When the engagement ends: revisit the effort setting, the model choice, and the subscription in the same session as the closure checklist. See [[chan-career-playbook]] (financial guard-rail: money decisions get a deliberate slow-down review).
+**Current posture (Chan's ruling, Jul 24 2026):**
+- He runs Claude Code against his own DeepSeek API key from now on. Switch instructions: ../workflow/devoted-closure-checklist.md item 5 plus the switch runbook in workflow/ (added the same day).
+- The 10/10 workflow goal was always a system that SURVIVES this downgrade: hooks over prose rules, short high-signal files, checklists over judgment calls, one home per fact. That design is now live reality, not insurance.
+- A weaker model forgets more and reasons worse: trust the files, follow the checklists, never skip the gates, and do not attempt the heavy multi-agent patterns Claude ran.
+- If he ever pays for Claude again, or a future client provides access, revisit effort and model choice then. Financial guard-rail: money decisions get a deliberate slow-down review, see [[chan-career-playbook]].
 
 Related: [[chan-hard-rules]] · [[chan-career-portfolio-state]]

@@ -1,6 +1,6 @@
 ---
 name: chan-career-playbook
-description: Chan's Career Resilience Playbook, moved into Claude-Core Jul 23 2026 from Document A v10 section 4. The standing career posture, the day-1 checklist if an engagement ends, and the side-project flywheel. HIGHLY RELEVANT during the Devoted wind-down. Claude proactively helps with all of it.
+description: Chan's Career Resilience Playbook, moved into Claude-Core Jul 23 2026 from Document A v10 section 4. The standing career posture, the day-1 checklist if an engagement ends, and the side-project flywheel. ACTIVE NOW: the Devoted engagement ended Jul 24 2026 — run the day-1 checklist together with workflow/devoted-closure-checklist.md. Claude proactively helps with all of it.
 metadata:
   type: user
 ---
