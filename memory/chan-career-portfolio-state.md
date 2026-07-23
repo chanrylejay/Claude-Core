@@ -11,9 +11,11 @@ metadata:
 
 **Positioning (canon):** role title "Systems Developer" (his chosen title, used on portfolio and resume). Line: "AI-native systems builder, ships production platforms solo." Skills, tools, metrics, and the origin story: [[chan-skills-ledger]]. Standing posture, day-1 checklist, side-project flywheel: [[chan-career-playbook]].
 
-**Portfolio site:** chanryle-cagara.vercel.app (repo my-portfolio-v1, plain HTML, Vercel auto-deploys from main, so push needs GO). Devoted Care is the first Experience tab and the first featured project. Resume regeneration mechanics live in the portfolio project's own MEMORY.md (project-only fact).
+**Portfolio site:** chanryle-cagara.vercel.app (repo C:/Users/Chanryle/Downloads/Projects/Github/my-portfolio-v1; the resume source is resume-v4.html, and resume.pdf is generated FROM it: open, Ctrl+P, save over — never edit the PDF; plain HTML, Vercel auto-deploys from main, so push needs GO). Devoted Care is the first Experience tab and the first featured project. Resume regeneration mechanics live in the portfolio project's own MEMORY.md (project-only fact).
 
 **The living demo:** chanryle-cagara.vercel.app/devoted-shift-demo/ shipped Jul 23 2026: 12 sanitized interactive pages, an exact replica of the live system UI with fully fictional data. Standing task: extend it alongside real milestones. The sanitizer script with the real-to-fictional name map stays in the client Docs folder and NEVER goes public.
+
+**Other public profiles:** facebook.com/chanrylejay (reads professional in PH context), instagram.com/chanrylejay, codepen.io/chanrylejay.
 
 **LinkedIn:** linkedin.com/in/chanrylejay, overhauled Jul 7 2026 (headline, About, Devoted Care entry as Freelance Jun 2026-Present, dates aligned to the resume as source of truth, skills added). Target 1-2 posts per week; Claude drafts, Chan approves and posts. Open item he still owes: the company-name mismatch between his LinkedIn Skills tags and his Experience entry (two spellings of the client entity; both visible on LinkedIn itself, fix it there).
 

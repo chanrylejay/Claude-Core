@@ -1,9 +1,11 @@
 # Ano Ulam? — project canon (Chan's own product; he plans to continue it)
 
-Absorbed Jul 24 2026 from ANO_ULAM_CLAUDE_BOSS_CONTEXT.txt v2.1 (Jun 6 2026, kept at
-C:/Users/Chanryle/Downloads/Projects/). That txt stays the frozen original; THIS file is the
+Absorbed Jul 24 2026 from ANO_ULAM_CLAUDE_BOSS_CONTEXT.txt v2.1 (Jun 6 2026, frozen verbatim
+in ../../archives/). That txt stays the frozen original; THIS file is the
 living canon. Read this before ANY ano-ulam bug fix, feature, or design decision.
 Live: ma-anoulam.vercel.app · Repo: github.com/chanrylejay/ano-ulam (PUBLIC) · V2.2, 9.5/10.
+Local working copy: C:/Users/Chanryle/Downloads/Projects/Github/ano-ulam (holds the synced
+.env — never re-clone over it). Push = LIVE deploy (Vercel auto-deploys main): GO required.
 
 ## What it is
 
@@ -79,7 +81,9 @@ Every cron route: export GET delegating to POST (Vercel Cron sends GET) + dual a
 (x-cron-secret header OR Authorization Bearer) + all three no-store headers
 (Cache-Control, CDN-Cache-Control, Vercel-CDN-Cache-Control; edge cache ignores
 force-dynamic without them). maxDuration 60 on heavy routes. CRON_SECRET lives in Vercel
-env vars (Production AND Preview); the value is NOT written in this kit. Manual test:
+env vars (Production AND Preview); the value is NOT written in the committed kit (it does sit
+inside the frozen archives txt, which is gitignored, and rotation was DECLINED Jul 23 2026 —
+settled, do not re-raise). Manual test:
 curl.exe -X POST the /api/cron/daily URL with the x-cron-secret header. A 504 at exactly
 02:00-02:01 UTC = collision with the scheduled run, not a failure. Site prices lag one day
 by design (DA posts late; the 10AM run usually ingests yesterday's edition).
@@ -115,6 +119,11 @@ only Chan's real test outputs are valid data; ask instead of fabricating history
 
 ## Status snapshot (Jun 6 2026 — VERIFY before acting; the project resumes post-Devoted)
 
-Possibly-still-open from the txt: Reddit post (account was blocked), README update for the
-V2.1 rotation feature. This project is side-project lane (a) in
+Possibly-still-open from the txt + Doc A: Reddit post (account was blocked), README update to
+V2.2, and the dev-project-instructions V2.1→V2.2 fix (superseded for AI sessions by THIS canon;
+still open for the repo's own docs). This project is side-project lane (a) in
 ../../workflow/devoted-closure-checklist.md's week-1 momentum kit.
+
+Related reading before a work session: ../../memory/chan-ai-cost-context.md (the model/tool
+reality after Jul 25 2026) and LOCAL-ONLY-security-rulings items 3 and 5 (env + migration
+facts, machine-only file).

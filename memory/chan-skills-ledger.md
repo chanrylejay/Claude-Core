@@ -41,6 +41,6 @@ The arc IS the pitch: proof of learning velocity, discipline, and shipping.
 - Accenture — Content Operations Specialist, May 2025 - Jun 2026 (Top Performer 6 consecutive months).
 - Teletech — customer support, Aug 2023 - Sep 2024 (95%+ CSAT).
 - Alorica — customer support / CRM, 2022-2023.
-- Accenture — Admin & Recruitment coordination, 2021.
+- Accenture — Admin & Recruitment coordination, 2021 (handled 200+ candidates).
 - Education: BS Information Technology, QC University, June 2020. Based in Quezon City, PH.
 - Then: personal automation era Apr-Jun 2026 → the paid Devoted engagement Jun-Jul 2026 (solo developer, ended cleanly Jul 24 2026).

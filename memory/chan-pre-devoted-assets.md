@@ -12,7 +12,7 @@ metadata:
 **Live/public today:**
 - ano-ulam: ma-anoulam.vercel.app, Filipino meal app, DA price-PDF scraper + 47-recipe cost engine. Strongest showable project of the era.
 - n8n-project-calculator: n8n-project-calculator.vercel.app. Exposes old budget pricing (T1 $15-20), consider reframing now.
-- github.com/chanrylejay: shiny-gmail-automation (60 nodes, V4.0) + supervisor repo (48 nodes, zero-AI). Repo name typo "erorr" worth renaming.
+- github.com/chanrylejay: shiny-gmail-automation (60 nodes, V4.0) + supervisor repo (48 nodes, zero-AI); their Neon databases are deliberately ISOLATED from each other. Repo name typo "erorr" worth renaming.
 - Profile README frozen Jun 4 2026, pre-Devoted. Needs the Devoted role added.
 
 **Portfolio stories with verified numbers:**
@@ -21,7 +21,7 @@ metadata:
 - Original n8n platform bug discoveries (import corruption of IF/Switch, queryReplacement comma-split, canvas-Y execution order): blog/LinkedIn material.
 - The sanitized full-system demo: live and extending; canonical status lives in [[chan-career-portfolio-state]].
 
-**Private methodology vault (NEVER publish, per his own May 27 open-source policy):** Prompt Engineering/ (82 files, 7 personas: Nautica/PED, Ninja, Sentinel, GRT/Ulrich, MIRA, HAWK, Main AI governance docs). PED v6.3 and Ninja v3.1 are still usable tools. HAWK v2.0 + the n8n ARCHITECT PLAYBOOK = ready-to-run Upwork sales system if freelancing resumes. **Chan ruled Jul 23 2026: DO NOT TOUCH or reorganize this folder, ever. Do not re-suggest archiving.** Also DEFERRED by Chan: LinkedIn/blog posts from the Supervisor rebuild story and n8n bug discoveries (re-offer only if he brings up content).
+**Private methodology vault (NEVER publish, per his own May 27 open-source policy):** Prompt Engineering/ (82 files, 7 personas: Nautica/PED, Ninja, Sentinel, GRT/Ulrich, MIRA, HAWK, Main AI governance docs). PED v6.3 and Ninja v3.1 are still usable tools. HAWK v2.0 + the n8n ARCHITECT PLAYBOOK = ready-to-run Upwork sales system if freelancing resumes. **Chan ruled Jul 23 2026: DO NOT TOUCH or reorganize this folder, ever. Do not re-suggest archiving.** Vault ops facts (recovered Jul 24): the Gemini-hosted personas run Activity ON, Personalization OFF, Instructions OFF, Connected Apps OFF, one dedicated chat per system (all other Gemini accounts: Activity OFF); DeepSeek R1 Expert hosts PED/PMD/Ninja/HAWK. Prompt-systems-in-n8n = NO (API means Deep Think OFF, degrades 10/10 systems; re-open only if that changes). GRT's two designed-but-unbuilt upgrade paths if revived: v7.0 on a Thinking-class model, or a pre-validation wrapper once an application layer exists. Also DEFERRED by Chan: LinkedIn/blog posts from the Supervisor rebuild story and n8n bug discoveries (re-offer only if he brings up content).
 
 **Housekeeping completed Jul 23 2026:** misfiled Shiny Gmail V4.0 rescued to "N8N Workflows/Shiny Gmail v4.0 Lean/"; ano-ulam cleaned (node_modules/.next deleted, .sql.sql renamed, CLAUDE.md + seed tracked, local env synced to prod) committed 0ba2a43; calculator @supabase/supabase-js removed, build green, committed 9168548; both n8n repo READMEs fixed and pushed (shiny 6779dad, supervisor e207fc9).
 
@@ -29,8 +29,8 @@ metadata:
 
 **Housekeeping verdicts:** Claude-Core-OLD-moved-2026-07-23 = DELETED Jul 23 2026 after a re-verified diff (only unique content was an old backup subset). Do NOT purge the Devoted archive; it holds the only originals of the distilled rules.
 
-**Deferred triggers (Doc A v10 §5, banked Jul 24 2026):** Hermes agent on Hetzner CX33 when funded · Cursor Pro when budget allows · n8n Template Gallery submissions (Shiny Gmail + Supervisor) · Moltgate.com storefront evaluation · Odysseus = SKIP (needs local GPU) · Sonnetto = superseded by Hermes · ano-ulam follow-ups now live in ../projects/ano-ulam/project-canon.md.
+**Deferred triggers (Doc A v10 §5, banked Jul 24 2026):** Hermes agent on Hetzner CX33 when funded · Cursor Pro when budget allows · n8n Template Gallery submissions (Shiny Gmail + Supervisor) · Moltgate.com storefront evaluation · Odysseus = SKIP (needs local GPU) · Sonnetto = superseded by Hermes · Hetzner CX33 fits the whole plan (Hermes ~2GB + permanent n8n ~2GB + OS ~1GB of 8GB; Hermes is MIT-licensed) · ano-ulam follow-ups now live in ../projects/ano-ulam/project-canon.md.
 
-**Closed-decision registers (never re-raise):** Supervisor V1 Lean has an 11-item never-suggest list (no Redis/queue mode, no Prometheus, no PgBouncer, localhost IS production, ...) and Ano Ulam's permanent decisions are in the project canon; both verbatim in archive Doc B §7.
+**Closed-decision registers (never re-raise):** Supervisor V1 Lean has a 12-item never-suggest list (no Redis/queue mode, no Prometheus, no PgBouncer, localhost IS production, no table-partitioning/enterprise-scale, ...) and Ano Ulam's permanent decisions are in the project canon; both verbatim in archive Doc B §7.
 
 Related: [[chan-career-portfolio-state]] · [[chan-hard-rules]]

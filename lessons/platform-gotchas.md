@@ -50,17 +50,20 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 
 ## n8n (platform behaviors that survive versions)
 - **"Execute Once": chained nodes run once PER INPUT ITEM; a 22-item output upstream multiplies everything downstream (22 x 18 = 396 runs, discovered in a 2-hour production debug).** Enable Execute Once on DB queries, fetches, API calls that must run once.
-- JSON import corrupts IF/Switch/SplitInBatches internal mappings: delete and recreate those nodes after import, then test each branch.
+- JSON import corrupts IF/Switch/SplitInBatches internal mappings: delete and recreate those nodes after import, then test each branch. Import method: Ctrl+V pastes workflow JSON straight onto the canvas. UI label notes for client guides: the Set node displays as "Edit Fields (Set)".
+- Form Trigger serializes submissions: a second simultaneous submit stalls at the button but creates NO duplicate row; the risk is user confusion, not data.
 - queryReplacement comma-split bug: single-JSON-parameter inserts, ($1::jsonb)->>'field', are the only safe pattern. Postgres errors can route to the SUCCESS output: handle both paths; enable Always Output Data.
 - Postgres node output replaces upstream data in multi-branch flows: add a Set node after conditional gates to carry fields forward.
 - toolWorkflow wraps agent arguments in one query property as a JSON string: JSON.parse in every tool input Code node. Agent tool output property must be named "output", not "response".
-- Error Trigger fires only on PRODUCTION executions and deregisters after any Code-node edit (toggle the workflow off-on). staticData saves on workflow success only. Re-import resets all credentials. Exports strip credentials (safe for GitHub).
+- Error Trigger fires only on PRODUCTION executions and deregisters after any Code-node edit (toggle the workflow off-on). staticData saves on workflow success only, and is PER-WORKFLOW scoped: cross-workflow cache sharing is impossible without a DB. Re-import resets all credentials. Exports strip credentials (safe for GitHub).
 - SplitInBatches: never loop a Wait node back upstream; done branch never connects to Wait.
+- Healthchecks.io dead-man-switch on a sleeping-laptop host needs a grace period longer than the sleep cycles (30 min proved right; 5-min ping cadence).
 - Windows self-host: crypto and env access need NODE_FUNCTION_ALLOW_BUILTIN and N8N_BLOCK_ENV_ACCESS_IN_NODE; Gmail OAuth can fail via ngrok (reconnect via localhost).
 - Circuit-breaker recipe (proven, supervisor repo + archive Doc B §2): breaker state in an atomic SQL CTE (FOR UPDATE + INSERT ON CONFLICT); 5 errors → OPEN, OPEN → HALF_OPEN after 5min, HALF_OPEN → CLOSED after 10min; every transition logged.
 
 ## Google / Gemini
 
+- **Deleting Gemini activity data wipes ALL chat instances on the account — and the deployed personas (Sentinel, GRT, PED) LIVE in those chats.** Learned the hard way. Back up every system prompt before ANY Gemini platform or settings change.
 - **NEVER link billing to Google AI Studio: it kills the free tier PERMANENTLY.** Chan's prompt systems run on the Gemini free tier; this is irreversible. (Standing lock since the pre-Devoted era.)
 
 ## Data sources and scraping

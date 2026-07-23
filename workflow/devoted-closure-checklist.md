@@ -58,8 +58,9 @@ no "quick favors" without a brand-new signed engagement. The sealed memory bank
 
 ## 7. Week-1 momentum kit (start within days, not weeks)
 
-- [ ] Applications tracker: one simple file (company, role, date, status, next action), kept in
-  the job-hunt project memory. Claude maintains it.
+- [ ] Applications tracker: one simple file (company, role, date, status, next action) at
+  ~/.claude/projects/c--Users-Chanryle-Downloads-Projects-Github-my-portfolio-v1/memory/job-applications-tracker.md
+  (the portfolio workspace is the job-hunt home base). The AI maintains it; create on first application.
 - [ ] Pick ONE side-project lane to stay sharp while applying, from: (a) ano-ulam upgrade
   (strongest public demo), (b) calculator reframe (pricing story is stale), (c) the Upwork
   sales system revival (HAWK + architect playbook, if freelancing appeals). Ship small, weekly.

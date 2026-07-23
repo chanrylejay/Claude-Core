@@ -70,6 +70,8 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 - Give workers the WHY, not just the WHAT, so they can catch the architect's wrong assumptions against the real code.
 - Review-first on surgery over audited code; execute-direct on greenfield with an open flag-if-it-does-not-fit channel.
 - Two independent confirmations for high-stakes changes, never one.
+- Reviewers scope-creep into designing fixes/test suites; give every reviewer explicit scope language ("Score and flag only; no test design unless asked"). Proven twice on the same reviewer.
+- Consultation exception: a single targeted patch backed by CONFIRMED real failure data may skip the full review round; major upgrades and new capabilities never skip it.
 
 ## Maintaining documents (applies to Claude-Core itself)
 

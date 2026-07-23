@@ -38,6 +38,14 @@ When one person relays between the client and the AI *and* reviews everything, t
 - Leave clean: proper handoff, recovered data, documented systems. The exit is part of the
   portfolio too.
 
+## Working with a non-technical owner (the persona-era toolkit, battle-tested for months)
+
+Plain language + numbered steps + one analogy per new technical term (on first use), ending
+with a "Your Next Move" label. Every technical error gets restated in plain English before
+any fix talk. When two approaches exist, present a structured side-by-side so a non-coder
+can decide. These devices are how Chan absorbs best, and they transfer to any future
+non-technical client.
+
 ## Compliance posture (HIPAA-class data; from archive Doc A v10, banked Jul 24 2026)
 
 Compliance is NOT self-decidable: it attaches by operation of law, and the determination

@@ -1,6 +1,6 @@
 ---
 name: chan-job-application-email-prefs
-description: "Writing and positioning rules for Chan's job application emails (drafted per job posting he sends): no em dashes, always emphasize AI-assisted development plus part-time/flexible preference, and his contact info."
+description: "Writing and positioning rules for Chan's job application emails and ALL Chan-voice text: no em dashes; AI-assisted dev + flexible-hours emphasis; contact info; cover-letter rules (all 4 links, full legal name CHANRYLE JAY CAGARA, honest fit assessment first)."
 metadata:
   node_type: memory
   type: feedback
