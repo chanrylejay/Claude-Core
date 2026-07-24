@@ -26,6 +26,7 @@
 // The wall blocks unless a token exists. CLAUDE creates the token ONLY after actually running the agent:
 //   .claude/GATE_OK  ← net-runner ran (type-check + lint + the regression nets for this change) → GREEN
 //   .claude/UX_OK    ← client-ux reviewed the UI change (it runs the impeccable detector itself)
+//   .claude/UX_SHOT  no-vision runtime ONLY: the UI screenshot was SAVED to a file for Chan; clears the UX wall WITHOUT claiming a visual pass (the verdict stays owed to Chan's eyes)
 //   .claude/QA_OK    ← client-qa acceptance-reviewed the flood-module change
 // Tokens are consumed when the turn ends cleanly. The friction lands on CLAUDE, never on Chan.
 // No-vision DeepSeek runtime: run the gauntlet CHECKS inline (do NOT spawn the agent fleet) and
@@ -54,6 +55,7 @@ const P = (name) => join(CLAUDE_DIR, name);
 const OFF = P("GAUNTLET_OFF");
 const GATE_OK = P("GATE_OK");
 const UX_OK = P("UX_OK");
+const UX_SHOT = P("UX_SHOT");
 const QA_OK = P("QA_OK");
 const CODE_TOUCHED = P("CODE_TOUCHED");
 const UI_TOUCHED = P("UI_TOUCHED");
@@ -89,7 +91,7 @@ function consume(f) {
   if (existsSync(f)) unlinkSync(f);
 }
 function clearTurnState() {
-  [CODE_TOUCHED, UI_TOUCHED, RISK_TOUCHED, GATE_OK, UX_OK, QA_OK, NAG].forEach(consume);
+  [CODE_TOUCHED, UI_TOUCHED, RISK_TOUCHED, GATE_OK, UX_OK, UX_SHOT, QA_OK, NAG].forEach(consume);
 }
 function emitContext(hookEventName, text) {
   process.stdout.write(
@@ -160,7 +162,7 @@ function doneWall() {
   const risk = readLines(RISK_TOUCHED);
 
   const needGate = code.length > 0 && !existsSync(GATE_OK);
-  const needUX = ui.length > 0 && !existsSync(UX_OK);
+  const needUX = ui.length > 0 && !existsSync(UX_OK) && !existsSync(UX_SHOT);
   const needQA = risk.length > 0 && !existsSync(QA_OK);
 
   if (!needGate && !needUX && !needQA) {
@@ -210,6 +212,7 @@ function doneWall() {
   const todo = [];
   if (needGate) todo.push(`  • net-runner  — type-check + lint + the nets for: ${code.join(", ")}\n      → then create \`.claude/GATE_OK\``);
   if (needUX) todo.push(`  • client-ux    — design/UX + impeccable detector on: ${ui.join(", ")}\n      → then create \`.claude/UX_OK\``);
+  if (needUX) todo.push("      (no-vision runtime: SAVE the screenshot to a FILE, then create .claude/UX_SHOT to clear this wall; the CLEAN / POLISH / VIOLATIONS verdict stays owed to Chan, never faked)");
   if (needQA) todo.push(`  • client-qa    — acceptance + regression on: ${risk.join(", ")}\n      → then create \`.claude/QA_OK\``);
 
   console.error(

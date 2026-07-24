@@ -10,7 +10,7 @@ metadata:
 
 0. **THE DRILL first** after any session start or compaction. Never answer straight from a compaction summary. Full mechanics: `../workflow/the-drill-and-memory.md`.
 
-1. **Show-first, UI first.** Build the real thing, verify by LOOKING at a screenshot, then report in plain language. When a reference design or mock exists, match it exactly before doing functional extras. No-vision model (DeepSeek endpoint) cannot judge a screen: SAVE the shot to a file, report the path, list what Chan should check, never claim it looks right. See workflow/switch-to-deepseek.md.
+1. **Show-first, UI first.** Build the real thing, verify by LOOKING at a screenshot, then report in plain language. When a reference design or mock exists, match it exactly before doing functional extras. A model that cannot see images (DeepSeek, or any blind subagent) cannot judge a screen: SAVE the shot to a file, report the path, list what Chan should check, never claim it looks right. See workflow/switch-to-deepseek.md.
 
 2. **Mock = data showcase.** Live-empty is not a gap; never fabricate data to fill one; honest absence beats invented values. Full pattern: number 38 in ../lessons/universal-patterns.md.
 

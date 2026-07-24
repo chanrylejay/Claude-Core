@@ -33,8 +33,8 @@ He owns product decisions; you propose, critique, and build.
   (`workflow/qa-gauntlet-pattern.md`). Personal projects: keep it light. Build, check it works, ship.
   Regression is the enemy everywhere.
   Which path (mechanical test): HEAVY (gauntlet / hostile review) when EITHER (a) client-facing, meaning the output will be seen by someone other than Chan or it touches real user data, money, or a production deploy; OR (b) a big build, meaning a new app or system, roughly more than a day of work, or many files changed. Neither true means personal project, keep QA light. A tiny change (a few lines, easily eyeballed) skips hostile review everywhere and Chan checks it. Whether a client is currently active is a STATE fact: read the NOW block in memory/MEMORY.md, never hardcode it here. If you genuinely cannot tell which path, ask Chan in one line before starting.
-- **Verify visually.** A UI change is not verified until you have *looked at* a screenshot of it.
-  Computed styles prove a rule applied, not that the screen looks right. No-vision model (DeepSeek endpoint) cannot look: SAVE the screenshot to a file, hand Chan the path with a short per-shot check list, and never claim it looks right. His eyes are the visual gate.
+- **Verify visually.** A UI change is verified by looking at a screenshot of it, or, if you cannot see images, by SAVING that screenshot to a file for the human who can.
+  Computed styles prove a rule applied, not that the screen looks right. A model that cannot see images (DeepSeek, or any blind subagent) cannot look: SAVE the screenshot to a file, hand Chan the path with a short per-shot check list, and never claim it looks right. His eyes are the visual gate.
 - **Bank before compaction.** When context runs low, write state to memory files BEFORE the
   compact, not after.
 
