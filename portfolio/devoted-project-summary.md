@@ -1,16 +1,18 @@
-# Devoted Care — project summary (portfolio-safe)
+# Devoted Care: project summary (portfolio-safe)
 
-**Role:** Solo architect/developer (AI-assisted), Jun–Jul 2026, for a US home-care agency.
+**Voice:** source copy for Chan-voice output; when adapting to resume or interview text, use plain punctuation only, no em or en dashes.
+
+**Role:** Solo architect/developer (AI-assisted), Jun-Jul 2026, for a US home-care agency.
 Built and operated the agency's internal operations dashboard end-to-end: product decisions
 relayed from the operations manager, implementation, QA, deploys, and incident response.
 No credentials, client data, or internal identifiers appear in this file.
 
 ## What was built
 
-**Caregiver–client matching engine.** Scoring system that ranks an entire caregiver roster for
+**Caregiver-client matching engine.** Scoring system that ranks an entire caregiver roster for
 any client shift: availability grading (12+ states from clean-fit to vacation), client history
 (continuity), distance, skill/experience fit, and soft risk penalties (gender preference,
-clinical credential gaps, driver requirement, prior declines) — designed to *bury, never hide*
+clinical credential gaps, driver requirement, prior declines), designed to *bury, never hide*
 weak options, with hard exclusions relaxing automatically rather than ever returning an empty
 list. Included a plain-language "why is this person ranked here" explainer in the UI, and a
 deliberate decoupling of resume/marketing tags from matching decisions (only verified
@@ -22,7 +24,7 @@ profiles with per-field edit history and append-only audit trail, availability c
 one-page caregiver resume generator with a 6-category skills taxonomy.
 
 **AI features.** LLM-powered care-note scanning (auto-scan cron), scheduler shift summaries,
-and communication-log summarization — with a review-queue rule so AI output is always
+and communication-log summarization, with a review-queue rule so AI output is always
 human-approved before it reaches a family.
 
 **Integrations.** Read-only sync from the agency's scheduling system (AxisCare), monday.com
@@ -51,7 +53,7 @@ production batches · same-day incident-to-recovery on the migration data loss.
 
 ## The story to tell in interviews
 Solo-built a production ops platform for a real business at high velocity **with AI as the
-build partner and a human-designed QA system keeping it honest** — the interesting part isn't
+build partner and a human-designed QA system keeping it honest**. The interesting part isn't
 that AI wrote code, it's the *harness*: verbatim spec capture, adversarial review, regression
-nets, deploy guards, and show-first client approval. Resigned Jul 15 2026 and continued
-delivering through a professional, fully documented wind-down, completed with a clean handoff on Jul 24 2026.
+nets, deploy guards, and show-first client approval. Delivered the full Jun-Jul 2026 freelance engagement end to end and closed it out with a
+professional, fully documented wind-down and a clean handoff.

@@ -1,0 +1,50 @@
+{
+  "_README": "SKELETON of ~/.claude/settings.json for dead-disk recovery from THIS repo. The GitHub repo backs up Claude-Core only, NOT ~/.claude, so rebuild settings.json from this at recovery time. lean-ctx re-adds its own observe/rewrite/redirect hooks and the Read/Grep/Glob deny on install, so those self-heal and are omitted here. The DeepSeek env block is NOT here: run templates/apply-deepseek-switch.mjs to add it (it holds the real key, which NEVER goes in the repo). Adjust absolute paths to the recovery machine.",
+  "model": "<your model, e.g. opus[1m]; on DeepSeek the ANTHROPIC_* env from apply-deepseek-switch.mjs drives the model instead>",
+  "theme": "dark",
+  "effortLevel": "xhigh",
+  "alwaysThinkingEnabled": true,
+  "env": {
+    "LEAN_CTX_REPLACE_MODE": "0"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__lean-ctx__ctx_read",
+      "mcp__lean-ctx__ctx_search",
+      "mcp__lean-ctx__ctx_tree",
+      "mcp__lean-ctx__ctx_session",
+      "mcp__lean-ctx__ctx_glob",
+      "mcp__lean-ctx__ctx_shell",
+      "mcp__lean-ctx__ctx_patch",
+      "mcp__lean-ctx__ctx_compose",
+      "mcp__lean-ctx__ctx_callgraph",
+      "mcp__lean-ctx__ctx_expand",
+      "mcp__lean-ctx__ctx_call",
+      "mcp__lean-ctx__shell"
+    ],
+    "deny": [
+      "Read",
+      "Grep",
+      "Glob"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "ccusage statusline",
+    "padding": 0
+  },
+  "hooks": {
+    "_comment": "lean-ctx adds its own observe (PostToolUse/PreCompact/SessionEnd/SessionStart/Stop/UserPromptSubmit) + rewrite/redirect (PreToolUse) hooks on install; only the CUSTOM session-ritual wiring is preserved here. Re-point the absolute path to the recovery machine's home.",
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.claude/hooks/session-ritual.mjs\" start"
+          }
+        ]
+      }
+    ]
+  }
+}

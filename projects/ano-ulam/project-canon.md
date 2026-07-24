@@ -68,6 +68,8 @@ Itlog/Gulay; pantry items labeled "hindi kasama sa DA price monitoring".
 
 ## Database rules (Neon "anoulam")
 
+(These are ano-ulam's PROJECT-APPLIED instances with the real column names. The universal form of each rule, e.g. Neon NUMERIC-returns-STRINGS, ON CONFLICT DO NOTHING, ORDER BY DESC NULLS LAST, is single-homed in ../../lessons/platform-gotchas.md.)
+
 - prices.price_prevailing NUMERIC returns STRINGS: parseFloat in the API route, always.
 - daily_suggestions.meals is TEXT not JSONB: (meals::jsonb)->0->>'name', never uncast.
 - Multiple rows per date exist: ORDER BY generated_at DESC NULLS LAST, id DESC LIMIT 1,
@@ -76,6 +78,8 @@ Itlog/Gulay; pantry items labeled "hindi kasama sa DA price monitoring".
 - Sequence names survive table renames (daily_prices_id_seq is historical, expected).
 
 ## Cron route law
+
+(The universal Vercel-cron rule, GET-delegates-POST + dual-auth + no-store headers, is single-homed in ../../lessons/platform-gotchas.md; below is ano-ulam's application plus its project-only facts.)
 
 Every cron route: export GET delegating to POST (Vercel Cron sends GET) + dual auth
 (x-cron-secret header OR Authorization Bearer) + all three no-store headers

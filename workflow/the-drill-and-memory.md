@@ -13,7 +13,7 @@ disk/repo verification still applies to every start):
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
    Chan's verbatim correction: *"the drill should be dont trust the summary, and read the last
    transcript line by line if necessary."*
-2. **Re-read the READ-FIRST memory files** (the ⭐/🛑/🔴-marked index lines in MEMORY.md).
+2. **Re-read the READ-FIRST memory files** (the ⭐/🛑/🔴-marked index lines, split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md).
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.
 4. Only then reply.
@@ -23,7 +23,7 @@ disk/repo verification still applies to every start):
 **Mechanics:**
 - One durable fact per `.md` file, with frontmatter (`name`, `description`, `type:
   user | feedback | project | reference`).
-- Every file gets a one-line pointer in `MEMORY.md` — that index is what loads each session,
+- Every file gets a one-line pointer in the Core memory index (`Claude-Core/memory/MEMORY.md`), which is read on demand during the ritual; the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) is what auto-loads each session,
   so the line must carry the hook (what it is + when to read it).
 - Update existing files rather than duplicating; delete what turns out to be wrong.
 - Link related memories with `[[name]]`.

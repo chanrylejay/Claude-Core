@@ -1,7 +1,7 @@
 # The QA Gauntlet — agent team pattern
 
 Scope (Chan, Jul 23 2026): built for CLIENT work. Use on client projects and big builds only;
-personal projects keep QA light (self-review + a working check).
+personal projects keep QA light (self-review + a working check). Exact heavy-vs-light test: the contract, Claude-Core/CLAUDE.md.
 
 Built on Devoted Care when the client (PO) went on vacation and Claude had to own the QA gate.
 It killed the "regression = the enemy" problem: nothing gets called done on the builder's
@@ -47,6 +47,7 @@ cited conclusions instead of file dumps. Use before building, any time.
   the same module stops breaking twice.
 - **Agents are the owner's review proxy.** Surface their verdicts to the human in plain
   language; that's what shrinks the review bottleneck.
+- **No-vision model (DeepSeek endpoint).** The UX/visual pass cannot self-verify: capture the screenshots to FILES and hand them to Chan; his eyes give the CLEAN / POLISH / VIOLATIONS verdict. Never self-pass UX_OK blind. See workflow/switch-to-deepseek.md.
 
 ## The guard hooks (`../templates/hooks/`)
 

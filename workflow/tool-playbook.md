@@ -7,8 +7,8 @@ This file is the ONE home for operational tool lessons; TOOLS.md is the historic
 
 ## Seeing is verifying
 - **A UI change is verified by LOOKING at it** — take a screenshot and actually view the image.
-  Playwright: omit the `filename` param and the screenshot returns inline (viewable);
-  with `filename` you get a link and you're blind.
+  Vision model (Claude): omit the `filename` param and the shot returns inline, viewable.
+  No-vision model (DeepSeek rejects images): PASS a `filename` so the shot SAVES to a file, then hand Chan the path; his eyes do the looking.
 - Computed-style probing (`browser_evaluate`) proves a CSS rule *applied* — it does NOT prove
   the screen *looks right*. Spacing, crowding, and alignment are invisible to it. Never call a
   UI change verified on inference alone.

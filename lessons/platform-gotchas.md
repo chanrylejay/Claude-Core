@@ -41,7 +41,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 ## DeepSeek API
 - **JSON output hard-caps near 27K characters: default to CSV at 50+ items — 100+ WILL truncate as JSON (CSV is 3-5x more compact).** Remove response_format json_object when requesting CSV.
 - Responses may arrive wrapped in markdown code fences regardless of settings: always strip before parsing.
-- Model names: deepseek-chat RETIRED Jul 24 2026; deepseek-v4-flash is the current correct model (the old "v4-flash banned for n8n tool calling" lock predates the retirement; retest tool-calling if n8n agents are revived).
+- Model names (product/API builds): deepseek-chat AND deepseek-reasoner both RETIRED Jul 24 2026, never use those names. deepseek-v4-flash is the current name for product AI features (cheapest tier); deepseek-v4-pro for higher-quality work. This bullet is the PRODUCT-API layer only; configuring the Claude Code harness is separate (there pro is the main model, flash is subagents/background): see ../workflow/switch-to-deepseek.md. (The old v4-flash-banned-for-n8n lock predates the retirement; retest tool-calling if n8n agents are revived.)
 - AI generation of structured local-domain data (Filipino recipes) rated 6-7/10: wrong ingredients, bad cost math. Deterministic engine plus LLM explanation is the pattern.
 
 ## Bolt.new

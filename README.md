@@ -16,7 +16,7 @@ Built Jul 15 2026, during the Devoted Care wind-down.
 | `lessons/` | **What experience taught us** — engineering, platform, AI-agent, and client-collaboration lessons, distilled and de-clientized. |
 | `projects/` | **Per-project canons** — one folder per project (Devoted Care's design canon lives here); read only when working that project. |
 | `archives/` | **Frozen originals** — Documents A, B, C verbatim with stale-lock warnings; never edited, never committed (see below). |
-| `templates/` | **Reusable infrastructure** — the four gauntlet agents (spec-reader, reviewer, net-runner, recon) and the guard hooks (push-guard, gauntlet-guard). The two client-persona roles (QA/UX) are written fresh per project. |
+| `templates/` | **Reusable infrastructure** — the five gauntlet agents (spec-reader, reviewer, net-runner, recon, challenger) and the guard hooks (push-guard, gauntlet-guard). The two client-persona roles (QA/UX) are written fresh per project. |
 | `portfolio/` | A confidentiality-safe summary of what you built at Devoted, ready for resume/interview use. |
 | `TOOLS.md` | Historical catalog of every tool used on the Devoted project; operational rules live in `workflow/tool-playbook.md`. |
 | `DIRECTORY.md` | One-line index of every file in this kit. New file → new line there, always. |

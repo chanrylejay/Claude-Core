@@ -11,5 +11,4 @@ metadata:
   His own machine is the ThinkPad X270 (primary, Windows, 20GB RAM per the Clone-16-era
   record; a later record said X270-only, so treat the MSI as occasional-access, not his).
 - He has a cat named Khaku (the name surfaced during a GRT live-search session).
-- Based in Quezon City, PH (also in the index header). Full legal name for formal documents:
-  CHANRYLE JAY CAGARA (rule lives in [[chan-job-application-email-prefs]]).
+- Based in Quezon City, PH (also in the index header). Full legal name and its formal-document rule live in [[chan-job-application-email-prefs]].

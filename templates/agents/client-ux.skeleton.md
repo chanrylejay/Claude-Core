@@ -18,7 +18,7 @@ tools: 🔧 REPLACE with this environment's real browser/screenshot + file-read 
 
 ## The pass
 
-1. Open the changed screens READ-ONLY. Screenshot every listed width and LOOK at the images.
+1. Open the changed screens READ-ONLY. Screenshot every listed width and LOOK at the images (no-vision model: SAVE them to files and hand Chan the paths, his eyes give the verdict).
    Computed styles are not visual proof.
 2. Judge against the canon and the reference artifacts. Personal taste is not a violation; the
    OWNER'S PET PEEVES list is not personal taste — it counts, see step 4.

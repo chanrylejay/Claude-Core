@@ -1,13 +1,12 @@
 ---
 name: challenger
 description: Adversarial filter that runs AFTER the review agents and BEFORE the owner reads anything. Re-tests every finding, kills false alarms, merges duplicates; the owner reads only survivors. Optional on small changes; run whenever review output exceeds a screen.
-tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Read, Grep, Glob, Bash
+tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Bash
 ---
 
-> ⚙ **TOOLING — ADAPT PER ENVIRONMENT.** Fix the frontmatter tools list to the project's real
-> environment first: a subagent with tools it can't use fails silently. Read-only set only —
+> ⚙ **TOOLING — SHIPS MACHINE-CORRECT.** The tools list already ships machine-correct for Chan's machine (ctx_* + Bash), so it is NOT a fill-in; a subagent with tools it can't use fails silently. Read-only set only —
 > this agent never needs write tools. On Chan's machine: native Read/Grep/Glob are DENIED — use
-> the lean-ctx `ctx_*` tools with ABSOLUTE paths; native Bash works and is the escape hatch.
+> the lean-ctx `ctx_*` tools with ABSOLUTE paths; native Bash works and is the escape hatch. Only a future environment that actually allows native Read/Grep/Glob should add them back.
 
 > 🔧 **ADAPT PER PROJECT (fill in, then delete this block):**
 > - REVIEWERS FEEDING THIS AGENT: `<reviewer, net-runner, client-ux, client-qa — adjust to the project's roster>`

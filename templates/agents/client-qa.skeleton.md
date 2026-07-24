@@ -18,7 +18,7 @@ tools: 🔧 REPLACE with this environment's real read-only tools (browser/screen
 1. Read what was ASKED (the spec-reader output or the owner's verbatim words). Acceptance means
    "does it do what was asked", never "is it impressive".
 2. Open the live feature READ-ONLY on real data. Walk it exactly as the owner would, on their
-   real task, not a happy-path demo. Screenshot what you judge and LOOK at the images: a
+   real task, not a happy-path demo. Screenshot what you judge and LOOK at the images (no-vision model: SAVE them to files and hand Chan the paths): a
    walk-through you have not seen is not an acceptance pass.
 3. Data honesty: is anything shown invented, stale, or silently defaulted? Display is not data.
 4. Regression sweep of the TOP CARES list, one by one. If the change touched a HIGH-RISK

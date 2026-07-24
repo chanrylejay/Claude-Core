@@ -15,7 +15,7 @@
 // Wired in the project's .claude/settings.local.json (PreToolUse). The matcher MUST cover every
 // shell path: "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell" on lean-ctx machines,
 // or a push through lean-ctx walks straight past the guard. Exit codes: 0 = allow,
-// 2 = block (stderr is shown to Claude). Test: scripts/_pushguard_test.mjs (lives in the origin project, not in this kit).
+// 2 = block (stderr is shown to Claude). Test (MANDATORY after any edit): _pushguard_test.mjs in this folder, run: node _pushguard_test.mjs
 
 import { existsSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -43,6 +43,9 @@ function isGitPush(command) {
   });
 }
 
+export { isGitPush };
+
+if (process.argv[1] && process.argv[1].endsWith("push-guard.mjs")) {
 let raw = "";
 try {
   for await (const chunk of process.stdin) raw += chunk;
@@ -64,4 +67,5 @@ try {
 } catch (err) {
   console.error(`[push-guard] hook error (${err?.message ?? err}) — failing CLOSED, push blocked.`);
   process.exit(2);
+}
 }

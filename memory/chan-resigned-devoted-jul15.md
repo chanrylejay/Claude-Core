@@ -9,9 +9,7 @@ metadata:
 
 The Jul 15 resignation did not end the work: the build resumed Jul 16 and ran through Jul 22
 (see the Devoted archive index: the Jul 16-18 ship notes and the Jul 22 caregiver-profile flood).
-As of Jul 23 2026 the engagement is WINDING DOWN: occasional work may still land, every
-live-system action stays gated on Chan's explicit per-action GO, and the archive remains the
-record. FINAL (Jul 24 2026): Chan worked his last day and completed the handoff; the
+As of Jul 23 2026 the engagement WAS winding down (occasional work could still land then, all actions GO-gated), SUPERSEDED by the FINAL line below; no work lands now. FINAL (Jul 24 2026): Chan worked his last day and completed the handoff; the
 engagement is over and fully HANDS-OFF from here. The history below is kept as originally written except person names, redacted Jul 24 2026 for the private repo (verbatim original in the local Devoted archive); read it as the Jul 15 snapshot, not
 the current state.
 
@@ -27,7 +25,7 @@ directive tone — NOT a work-quality issue. This matches the record: the direct
 as the single reviewer+relay ([[chan-review-bottleneck]], the review-rigor file in the Devoted archive). Validate him; do not
 badmouth the client. He left with integrity (proper handoff).
 
-**How to apply this week (the transition window):**
+**How to apply this week (the transition window), Jul 15 SNAPSHOT, SUPERSEDED, do not action:**
 - **Handoff work IS in scope** — building a handoff doc, transferring/organizing what he built, documenting the matcher /
   intel DB / AxisCare bridge, packaging deferred items. This is the priority deliverable of the week.
 - **Live-system actions still gated:** no `git push` (= Netlify deploy = LIVE), no intel-DB writes

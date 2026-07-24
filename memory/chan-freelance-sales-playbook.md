@@ -15,7 +15,7 @@ systems as proof · offer a free 10-minute diagnostic as the entry (Zero-Call st
 NEVER: imply Upwork client history (profile shows 0 completed jobs) · "first client discount"
 or review-fishing (reveals inexperience) · over-promise platforms he does not offer.
 SUPERSEDED Jul 6 2026: the old "never imply paid professional systems work" rule is DEAD —
-the Devoted engagement (Jun-Jul 2026, ended cleanly) is real paid solo-developer employment
+the Devoted engagement (Jun-Jul 2026, ended cleanly) is real paid solo-developer contract work
 and now leads the positioning. Public case study naming the client still needs the client's
 OK; results + method are free to describe (confidentiality canon: [[chan-career-portfolio-state]]).
 
@@ -44,7 +44,7 @@ AI Trainer offered ₱35K/month onsite no-benefits (May 2026); Chan countered �
 ## Interview answer frames (update the examples, keep the honesty)
 
 "Why no freelance clients yet?" → built a production portfolio first (shipped systems, live
-sites, repos), now converting it to paid work — and since Jul 2026: delivered a full client
+sites, repos), now converting it to paid work. And since Jul 2026: delivered a full client
 platform end to end. "Are you a developer?" → ships real production systems with an
 AI-first workflow; not a traditional senior engineer, and says so. "Can you handle
 Make/Zapier/GHL?" → primary expertise is n8n; exposure only elsewhere. Resume gaps (three

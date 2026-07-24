@@ -14,6 +14,8 @@ Moving = copy two folders + one file, reinstall a few tools, fix paths if the us
 Best practice: keep Claude-Core in a **private GitHub repo** — then "copying" is just `git clone`,
 and it's backed up forever.
 
+**But the repo backs up Claude-Core ONLY, not ~/.claude.** A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
+
 ## What to reinstall (the tools — these do NOT copy)
 
 1. VS Code + the Claude Code extension (sign into the Claude account — any account works;

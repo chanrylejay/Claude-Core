@@ -28,6 +28,9 @@
 //   .claude/UX_OK    ← client-ux reviewed the UI change (it runs the impeccable detector itself)
 //   .claude/QA_OK    ← client-qa acceptance-reviewed the flood-module change
 // Tokens are consumed when the turn ends cleanly. The friction lands on CLAUDE, never on Chan.
+// No-vision DeepSeek runtime: run the gauntlet CHECKS inline (do NOT spawn the agent fleet) and
+// create a token only after actually running that check; UX_OK stays owed to Chan's eyes.
+// See Claude-Core/workflow/switch-to-deepseek.md.
 //
 // ── WHY THIS CAN'T LOCK CHAN OUT (the safety property) ──
 // Hooks only intercept CLAUDE's tool calls. Chan commits/pushes from his OWN terminal, which no hook
@@ -39,7 +42,7 @@
 // NOTE (verified against code.claude.com/docs/en/hooks.md, Jul-13): there is NO `stop_hook_active`
 // flag — Stop-loop protection MUST be self-tracked, which is what .gauntlet_nag does. Also: on
 // UserPromptSubmit an exit 2 REJECTS AND ERASES the user's message, so spec-nudge never exits 2.
-// Test: scripts/_gauntlet_test.mjs (lives in the origin project, not in this kit)
+// Test (MANDATORY after any edit): _gauntlet_test.mjs in this folder, run: node _gauntlet_test.mjs
 
 import { existsSync, unlinkSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { dirname, join } from "node:path";

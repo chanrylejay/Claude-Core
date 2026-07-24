@@ -8,7 +8,7 @@ metadata:
 
 # THE DRILL (rule 0. Full drill after ANY compaction; fresh starts run the hub ritual; disk verification applies to EVERY start)
 
-Never answer straight from a compaction summary; files and disk win over it. The 4 steps: (1) don't trust the summary; (2) re-read the READ-FIRST memory files; (3) verify actual disk/repo state, disk wins; (4) only then reply. Full mechanics and the memory system: `../workflow/the-drill-and-memory.md`.
+Never answer straight from a compaction summary; files and disk win over it. The 4 steps: (1) don't trust the summary; (2) re-read the READ-FIRST memory files; (3) verify actual disk/repo state, disk wins; (4) only then reply. The drill itself is the four steps above; deeper memory-system mechanics: `../workflow/the-drill-and-memory.md`.
 
 Skipping the drill is the failure mode Chan flagged. Do it every time, even when the summary looks complete.
 

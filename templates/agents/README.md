@@ -22,8 +22,7 @@ screenshots at multiple widths, ACCEPT/SEND-BACK verdicts) carries over even tho
 doesn't.
 
 ## Adaptation checklist per project
-1. **Fix the tools list in each agent's frontmatter** — these carry `mcp__lean-ctx__ctx_*` +
-   native entries from the origin environment. Match the new environment's actual tools:
+1. **Tools list: already machine-correct** — they carry the lean-ctx `ctx_*` set + Bash and native Read/Grep/Glob are permanently denied here (NOT listed). Only touch them if a DIFFERENT environment's real tools differ:
    **a subagent with tools it can't use fails silently** (learned the hard way — agents ran
    toolless for a day).
 2. **Fill every 🔧 ADAPT block** (repo path, client feedback style, locked-canon files,
@@ -32,8 +31,7 @@ doesn't.
 4. **Hooks (`../hooks/`):** in `gauntlet-guard.mjs`, rewrite `RISK_PATH` to the new repo's
    high-risk modules, adjust the spec-nudge relay regex to the new client's relay phrases, and
    rename the `client-qa`/`client-ux` role names if the project uses different agent names.
-   The referenced test nets (`scripts/_pushguard_test.mjs`, `scripts/_gauntlet_test.mjs`) live
-   in the origin project, not in this kit — port them if you want the hooks pinned by tests.
+   The regression test nets now SHIP IN THIS KIT at `../hooks/_pushguard_test.mjs` and `../hooks/_gauntlet_test.mjs` (plain `node`, no framework). Re-running them after ANY edit to push-guard.mjs or gauntlet-guard.mjs is MANDATORY; they pin the documented false-positive fixes and the classifiers.
 5. Strip any residual origin-project references from prompt bodies before first use.
 
 ## Hooks (`../hooks/`) — wiring only
@@ -44,7 +42,7 @@ The concept, the rules, and the never-fake-a-gate law live in ONE home:
   `done-wall` (Stop), `spec-nudge` (UserPromptSubmit).
 
 COPY both hooks into the project's `.claude/hooks/` first — never run them from Claude-Core
-(their paths resolve relative to the file). Copy-paste `.claude/settings.local.json` wiring
+(full rationale + the lean-ctx matcher rule + day-one order live in the qa-gauntlet home). Copy-paste `.claude/settings.local.json` wiring
 (JSON-validate after editing — a corrupt settings file silently disables everything in it):
 
 ```json

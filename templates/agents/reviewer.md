@@ -1,13 +1,12 @@
 ---
 name: reviewer
 description: Hostile code reviewer. Use to adversarially review a diff/change before it ships — for correctness bugs AND adherence to the project's write/discipline rules. Returns a verdict + must-fix list, not a rewrite.
-tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Read, Grep, Glob, Bash
+tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Bash
 ---
 
-> ⚙ **TOOLING — ADAPT PER ENVIRONMENT.** Fix the frontmatter tools list to the project's real
-> environment first: a subagent with tools it can't use fails silently. On Chan's machine
+> ⚙ **TOOLING — SHIPS MACHINE-CORRECT.** The tools list already ships machine-correct for Chan's machine (ctx_* + Bash), so it is NOT a fill-in; a subagent with tools it can't use fails silently. On Chan's machine
 > (verified Jul 23 2026): native Read/Grep/Glob are DENIED — use the lean-ctx `ctx_*` tools with
-> ABSOLUTE paths; native Bash WORKS and is the escape hatch when ctx_* can't reach a path.
+> ABSOLUTE paths; native Bash WORKS and is the escape hatch when ctx_* can't reach a path. Only a future environment that actually allows native Read/Grep/Glob should add them back to the tools list.
 
 > 🔧 **ADAPT PER PROJECT (fill in, then delete this block):**
 > - REPO: `<absolute path>` · BUILD/LINT: `<the exact commands>`

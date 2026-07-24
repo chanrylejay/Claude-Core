@@ -45,8 +45,16 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `leanctx-seed.js` — copy into any workspace root; gives the lean-ctx graph indexer one parse target so it never freezes (keep + commit it).
 - `project-claude-md.md` — starter CLAUDE.md for any new repo: what it is, the stack, the run command.
 - `apply-deepseek-switch.mjs` — the one-shot switch script (backs up settings, merges the env block, validates; --dry-run to rehearse). Never holds the key.
-- `agents/` — the gauntlet team: README (adaptation checklist) + spec-reader, reviewer, net-runner, recon, challenger, plus client-qa/client-ux SKELETONS (persona agents are written fresh per project, starting from them).
-- `hooks/` — push-guard.mjs (PreToolUse: `git push` blocked unless a one-shot GO file exists) + gauntlet-guard.mjs (Stop: a build turn can't claim "done" without gauntlet tokens).
+- `agents/` — the QA gauntlet team (5 shipped project-agnostic agents + 2 client-persona skeletons; the review chain is 6 roles):
+  - `agents/README.md` — the adaptation checklist and settings.local.json wiring.
+  - `agents/spec-reader.md` — ASK-DON'T-ASSUME requirements clarifier.
+  - `agents/reviewer.md` — hostile code reviewer.
+  - `agents/net-runner.md` — regression-net / anti-churn gate.
+  - `agents/recon.md` — read-only codebase/data-flow tracer.
+  - `agents/challenger.md` — adversarial filter on the other reviewers' findings.
+  - `agents/client-qa.skeleton.md` + `agents/client-ux.skeleton.md` — the 2 client-persona SKELETONS, written fresh per project.
+- `hooks/` — push-guard.mjs (PreToolUse: `git push` blocked unless a one-shot GO file exists) + gauntlet-guard.mjs (Stop: a build turn can't claim "done" without gauntlet tokens) + `_pushguard_test.mjs` / `_gauntlet_test.mjs` (in-kit regression nets, plain node, MANDATORY re-run after any hook edit).
+- `global/` — dead-disk recovery copies of the machine-global automation (NOT auto-loaded): `session-ritual.mjs` (the seed-planting + drill-injection SessionStart hook) and `settings.global.skeleton.json` (placeholders only; rebuild ~/.claude/settings.json from it). See `workflow/new-computer-migration.md`.
 
 ## archives/ — frozen originals (verbatim, never edit, never commit; stale-lock warnings inside)
 
