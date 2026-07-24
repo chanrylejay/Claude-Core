@@ -19,11 +19,26 @@ const S = (process.env.USERPROFILE || "C:/Users/Chanryle") + "/.claude/settings.
 const ENV = {
   ANTHROPIC_BASE_URL: "https://api.deepseek.com/anthropic",
   ANTHROPIC_AUTH_TOKEN: key,
-  ANTHROPIC_MODEL: "deepseek-v4-pro",
-  ANTHROPIC_DEFAULT_OPUS_MODEL: "deepseek-v4-pro",
-  ANTHROPIC_DEFAULT_SONNET_MODEL: "deepseek-v4-pro",
+  // Main model: Chan chose flash (Jul 24 2026) for cost/speed. For the smarter (pricier) tier,
+  // set these three back to "deepseek-v4-pro".
+  ANTHROPIC_MODEL: "deepseek-v4-flash",
+  ANTHROPIC_DEFAULT_OPUS_MODEL: "deepseek-v4-flash",
+  ANTHROPIC_DEFAULT_SONNET_MODEL: "deepseek-v4-flash",
   ANTHROPIC_DEFAULT_HAIKU_MODEL: "deepseek-v4-flash",
   CLAUDE_CODE_SUBAGENT_MODEL: "deepseek-v4-flash",
+  // Safety: Claude Code sends a "thinking" field with the effort setting; DeepSeek may reject it with a hard 400.
+  // Disabling adaptive thinking up front prevents that (DeepSeek reasons on its own regardless).
+  CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1",
+  // Show BOTH flash and pro in the /model picker so Chan can switch per session with a click
+  // (flash stays the default). Claude Code queries DeepSeek /v1/models at startup; if DeepSeek does
+  // not serve it, the picker just has no DeepSeek entries and the one-line model flip above is the fallback.
+  CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY: "1",
+  // RELIABLE way to put pro in the /model picker without depending on DeepSeek serving a model list:
+  // a LOCAL custom picker entry. Flash stays the default (ANTHROPIC_MODEL above); this just adds pro as
+  // a one-click option. Selecting it sends model=deepseek-v4-pro, which DeepSeek accepts.
+  ANTHROPIC_CUSTOM_MODEL_OPTION: "deepseek-v4-pro",
+  ANTHROPIC_CUSTOM_MODEL_OPTION_NAME: "DeepSeek V4 Pro",
+  ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION: "Smarter, ~3x pricier; pick for hard tasks",
 };
 
 const target = dry ? S + ".dryrun" : S;

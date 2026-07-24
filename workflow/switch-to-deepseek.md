@@ -33,9 +33,10 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 ## What it configures (from DeepSeek's official guide)
 
 - Endpoint: https://api.deepseek.com/anthropic (the plain api.deepseek.com does NOT work here).
-- Main model: `deepseek-v4-pro` (their recommended Claude Code main; Opus/Sonnet names route to
+- Main model: `deepseek-v4-flash` (Chan chose flash Jul 24 2026 for cost/speed; flip ANTHROPIC_MODEL + DEFAULT_OPUS/SONNET to `deepseek-v4-pro` for the smarter, pricier tier). Opus/Sonnet names route to
   it). Subagents/background: `deepseek-v4-flash`.
 - `deepseek-chat` and `deepseek-reasoner` RETIRED Jul 24 2026. Never use those names.
+- You will SEE `deepseek-v4-flash` in the VS Code status bar (that is the confirmation the switch worked). Flash is the default. Pro is added to the /model picker as a LOCAL custom entry (ANTHROPIC_CUSTOM_MODEL_OPTION), which does NOT depend on DeepSeek serving a model list, so it is the dependable way to click-switch to pro (gateway discovery is also on as a bonus but can fail silently). IMPORTANT: none of the picker behavior can be tested until actually on DeepSeek; docs-confirmed, not live-tested. Guaranteed fallback if pro does not appear: flip ANTHROPIC_MODEL + DEFAULT_OPUS/SONNET to deepseek-v4-pro and restart.
 - Pricing per 1M tokens: flash $0.14 in / $0.28 out; pro $0.435 in / $0.87 out (cache hits are
   near-free). Real spend lives on platform.deepseek.com usage; ccusage's dollar numbers will be
   WRONG for DeepSeek models (it prices Claude).
@@ -50,7 +51,7 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 - Weaker model discipline: no heavy multi-agent fleets; small steps; trust the files over
   memory; the checklists ARE the intelligence now.
 - The QA gauntlet on DeepSeek: the CHECKS are mandatory, the subagent FLEET is a strong-Claude optimization. Do NOT spawn the agents; run each check yourself inline and in order (spec-read the ask, hostile self-review of the diff, type/lint + regression, then the UI step), and create a gauntlet token ONLY after you actually ran that step. Token split by what a blind model can honestly self-certify: GATE_OK and the non-visual parts of QA_OK you self-certify after running; UX_OK involves LOOKING, so never self-pass it blind. Capture the Playwright shot to a FILE and create .claude/UX_SHOT; the done-wall UX branch clears on that marker (not on faking UX_OK), and the visual verdict stays owed to Chan (his eyes give CLEAN / POLISH / VIOLATIONS).
-- Thinking works (budget knob ignored); tool cache directives ignored (caching is automatic).
+- Thinking / effort: Claude Code sends a "thinking" field with the effort setting and DeepSeek can hard-400 on it, so the switch sets CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1. The effort slider does nothing on DeepSeek; it reasons on its own. Tool cache directives ignored (caching is automatic).
 
 ## When DeepSeek is down, out of credits, or a model name 404s
 
