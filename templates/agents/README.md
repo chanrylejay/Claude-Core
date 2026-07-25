@@ -43,7 +43,7 @@ doesn't.
 The concept, the rules, and the never-fake-a-gate law live in ONE home:
 `../../workflow/qa-gauntlet-pattern.md`.
 - **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and gauntlet-guard `done-wall` (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits 1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice. The non-blocking modes (`ui-track`, `spec-nudge`) do not need it. If you rewrite a hook command for a new repo, the suffix goes back on.
-- `push-guard.mjs` — PreToolUse on the shell tools; update the GO-file path and matcher per repo.
+- `push-guard.mjs` — PreToolUse on the shell tools. The matcher above already includes `mcp__lean-ctx__ctx_call`: lean-ctx's `ctx_execute` runs shell and is reachable only THROUGH `ctx_call`, so dropping that entry is not a weaker guard, it is no guard at all on that path. Update the GO-file path per repo, and before anything else diff this matcher against every shell-capable tool THIS environment exposes — the shipped list is correct for lean-ctx machines only.
 - `gauntlet-guard.mjs` — three modes by argv: `ui-track` (PostToolUse on edit tools),
   `done-wall` (Stop), `spec-nudge` (UserPromptSubmit).
 
@@ -54,7 +54,7 @@ COPY both hooks into the project's `.claude/hooks/` first — never run them fro
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell", "hooks": [{ "type": "command", "command": "node .claude/hooks/push-guard.mjs || exit 2" }] }],
+    "PreToolUse": [{ "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell|mcp__lean-ctx__ctx_call", "hooks": [{ "type": "command", "command": "node .claude/hooks/push-guard.mjs || exit 2" }] }],
     "PostToolUse": [{ "matcher": "Edit|Write|mcp__lean-ctx__ctx_patch", "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs ui-track" }] }],
     "Stop": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs done-wall || exit 2" }] }],
     "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs spec-nudge" }] }]

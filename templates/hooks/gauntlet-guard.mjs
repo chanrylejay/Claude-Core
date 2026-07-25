@@ -45,12 +45,12 @@
 // Exit codes: 0 = allow (stdout JSON may inject context), 2 = block (stderr is shown to Claude). ⚠ On exit 0 the DOCUMENTED channel is stdout JSON via
 // emitContext(); stderr may or may not reach the model. The two exit-0 disclosures below (the
 // fail-open notice and the BATCH warning) are written to stderr, so they are best-effort. What
-// makes the FAIL-OPEN one reliable is that it does not clear the touched ledger, so the wall
-// fires again next turn and re-states it on the exit-2 path, which IS documented.
-// That compensation does NOT hold for the BATCH branch: it sits above the nag counter and exits
-// 0 on every turn, so exit 2 is unreachable for the entire life of the batch (audit Jul 25 2026 —
-// I wrote the compensation claim an hour before it was caught, and it covered a path it does not
-// reach). The BATCH branch therefore emits on BOTH channels, stdout JSON included.
+// EVERY exit-0 disclosure here emits on BOTH channels: the BATCH warning, the UX-deferral
+// notice, the fail-open notice, and the catch-block error. The earlier design leaned on "the wall
+// fires again next turn and re-states it on the exit-2 path", which does not hold for any branch
+// entered on EVERY turn — BATCH and uxDeferred both make exit 2 unreachable for as long as their
+// marker exists (audit Jul 25 2026: the compensation was written, then applied to only one of the
+// two branches it covers). Do not add a fifth exit-0 disclosure on stderr alone.
 // NOTE (verified against code.claude.com/docs/en/hooks.md, Jul-13): there is NO `stop_hook_active`
 // flag — Stop-loop protection MUST be self-tracked, which is what .gauntlet_nag does. Also: on
 // UserPromptSubmit an exit 2 REJECTS AND ERASES the user's message, so spec-nudge never exits 2.
@@ -75,6 +75,10 @@ const RISK_TOUCHED = P("RISK_TOUCHED");
 const NAG = P(".gauntlet_nag");
 // Quick-fix streak: turns end freely and the ledger accumulates; the review fires ONCE when it closes.
 const BATCH = P("BATCH");
+// The commit the turn started at, recorded on UserPromptSubmit. gitChanged() reads the working
+// tree, and commits here are free and automatic by design, so a shell edit that gets committed
+// leaves a CLEAN tree and the backstop saw nothing (audit Jul 25 2026).
+const TURN_BASE = P("TURN_BASE");
 
 const MAX_NAG = 3; // after this many Stop blocks, FAIL OPEN — never trap the agent
 
@@ -100,14 +104,15 @@ function readLines(f) {
   return readFileSync(f, "utf8").split("\n").map((s) => s.trim()).filter(Boolean);
 }
 function addLine(f, line) {
-  if (readLines(f).includes(line)) return; // dedup
+  if (readLines(f).includes(line)) return false; // dedup
   appendFileSync(f, line + "\n");
+  return true; // NEW to the ledger — the caller uses this to decide token invalidation
 }
 function consume(f) {
   if (existsSync(f)) unlinkSync(f);
 }
 function clearTurnState() {
-  [CODE_TOUCHED, UI_TOUCHED, RISK_TOUCHED, GATE_OK, UX_OK, UX_SHOT, QA_OK, NAG].forEach(consume);
+  [CODE_TOUCHED, UI_TOUCHED, RISK_TOUCHED, GATE_OK, UX_OK, UX_SHOT, QA_OK, NAG, TURN_BASE].forEach(consume);
 }
 function emitContext(hookEventName, text) {
   process.stdout.write(
@@ -184,18 +189,49 @@ function uiTrack(payload) {
 let _gitOk = true;
 function gitAvailable() { return _gitOk; }
 
-function gitChanged() {
+function git(args) {
   try {
-    const out = execSync("git status --porcelain --untracked-files=all", {
-      cwd: join(CLAUDE_DIR, ".."), encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 4000,
+    return execSync(args, {
+      cwd: REPO_ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 4000,
     });
-    return out.split("\n").map((l) => l.slice(3).trim()).filter(Boolean)
-      .map((p) => join(join(CLAUDE_DIR, ".."), p.replace(/^"|"$/g, "")))
-      .filter((p) => !outOfScope(p));
   } catch {
     _gitOk = false;
-    return [];
+    return null;
   }
+}
+
+// Recorded once per turn, on UserPromptSubmit. A blocked turn keeps its ORIGINAL base, so the
+// debt reaches back to where the unreviewed work actually started rather than to the retry.
+function markTurnBase() {
+  if (existsSync(TURN_BASE)) return;
+  const head = git("git rev-parse HEAD");
+  if (head) writeFileSync(TURN_BASE, head.trim());
+}
+
+// Working tree AND anything committed since the turn started. Still best-effort by design: no
+// repo, no git, a rebased-away base, or any failure just leaves the ledger as it was, because
+// this hook must never wedge a turn.
+function gitChanged() {
+  const files = new Set();
+
+  const status = git("git status --porcelain --untracked-files=all");
+  if (status) for (const l of status.split("\n")) {
+    const p = l.slice(3).trim();
+    if (p) files.add(p);
+  }
+
+  const base = existsSync(TURN_BASE) ? readLines(TURN_BASE)[0] : null;
+  if (base && /^[0-9a-f]{7,40}$/i.test(base)) { // we wrote it, but never interpolate unvalidated
+    const committed = git("git diff --name-only " + base + "..HEAD");
+    if (committed) for (const l of committed.split("\n")) {
+      const p = l.trim();
+      if (p) files.add(p);
+    }
+  }
+
+  return [...files]
+    .map((p) => join(REPO_ROOT, p.replace(/^"|"$/g, "")))
+    .filter((p) => !outOfScope(p));
 }
 
 function doneWall() {
@@ -210,9 +246,13 @@ function doneWall() {
     );
   }
   for (const fp of shellChanged) {
-    if (CODE_EXT.test(fp)) addLine(CODE_TOUCHED, fp);
-    if (UI_EXT.test(fp)) addLine(UI_TOUCHED, fp);
-    if (RISK_PATH.test(fp)) addLine(RISK_TOUCHED, fp);
+    // Same invalidation uiTrack applies, for the same reason: a token attests to the state the
+    // agent SAW. A file discovered here was never seen by it. Only a file NEW to the ledger
+    // invalidates — a re-listed file the agent already cleared must not nuke its own token every
+    // turn, which would be the perpetual-nag mode.
+    if (CODE_EXT.test(fp) && addLine(CODE_TOUCHED, fp)) consume(GATE_OK);
+    if (UI_EXT.test(fp) && addLine(UI_TOUCHED, fp)) { consume(UX_OK); consume(UX_SHOT); }
+    if (RISK_PATH.test(fp) && addLine(RISK_TOUCHED, fp)) consume(QA_OK);
   }
   const code = readLines(CODE_TOUCHED);
   const ui = readLines(UI_TOUCHED);
@@ -230,12 +270,16 @@ function doneWall() {
   if (!needGate && !needUX && !needQA) {
     if (uxDeferred) {
       consume(NAG);
-      console.error(
+      // This branch is entered BECAUSE UX_SHOT exists, so exit 2 is unreachable for the whole
+      // life of the token and stderr has no backstop — the same argument that dual-channelled
+      // BATCH, applied to the branch it also covers (audit Jul 25 2026).
+      const msg =
         "[gauntlet] UX verdict still OWED on: " + ui.join(", ") + "\n" +
-          "  The screenshot was saved and handed to Chan; he has not given CLEAN / POLISH / VIOLATIONS yet.\n" +
-          "  Do NOT call this verified or done. The ledger is kept and this fires again next turn.\n" +
-          "  It clears only when Chan answers and you create .claude/UX_OK.",
-      );
+        "  The screenshot was saved and handed to Chan; he has not given CLEAN / POLISH / VIOLATIONS yet.\n" +
+        "  Do NOT call this verified or done. The ledger is kept and this fires again next turn.\n" +
+        "  It clears only when Chan answers and you create .claude/UX_OK.";
+      emitContext("Stop", msg);
+      console.error(msg);
       process.exit(0);
     }
     clearTurnState(); // genuinely clean turn — reset so nothing leaks into the next one
@@ -288,12 +332,13 @@ function doneWall() {
     // it never cancels it. clearTurnState() here used to erase the debt, so a skipped pass could
     // never fire again in any later turn (audit Jul 25 2026).
     consume(NAG);
-    console.error(
+    const openMsg =
       `[gauntlet] ⚠️ FAILING OPEN after ${MAX_NAG} blocks — allowing the stop so you are not trapped.\n` +
-        `  ${skipped} did NOT run on: ${[...new Set([...code, ...ui, ...risk])].join(", ")}\n` +
-        `  TELL CHAN PLAINLY, in your reply, that this work shipped WITHOUT its review pass.\n` +
-        `  The pass is STILL OWED: the ledger is kept and this wall fires again next turn.`,
-    );
+      `  ${skipped} did NOT run on: ${[...new Set([...code, ...ui, ...risk])].join(", ")}\n` +
+      `  TELL CHAN PLAINLY, in your reply, that this work shipped WITHOUT its review pass.\n` +
+      `  The pass is STILL OWED: the ledger is kept and this wall fires again next turn.`;
+    emitContext("Stop", openMsg);
+    console.error(openMsg);
     process.exit(0);
   }
   writeFileSync(NAG, String(n));
@@ -316,6 +361,7 @@ function doneWall() {
 }
 
 function specNudge(payload) {
+  markTurnBase(); // must run before any early return below, or the base is never recorded
   // NEVER exit 2 here — on UserPromptSubmit that REJECTS AND ERASES Chan's message. Always exit 0.
   const prompt = payload?.prompt ?? "";
 
@@ -343,6 +389,7 @@ function specNudge(payload) {
 
 // ── entry ────────────────────────────────────────────────────────────────
 const MODE = process.argv[2];
+const EVENT = { "ui-track": "PostToolUse", "done-wall": "Stop", "spec-nudge": "UserPromptSubmit" };
 
 export { CODE_EXT, UI_EXT, RISK_PATH, MAX_NAG }; // for the test net
 
@@ -364,7 +411,9 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
   } catch (err) {
     // NOTHING here fails closed. This hook never gates a commit or a push, so a bug in it must never
     // wedge the agent mid-turn or eat Chan's prompt. The only hard gate in the repo is push-guard.
-    console.error(`[gauntlet] hook error (${err?.message ?? err}) — failing OPEN (${MODE}).`);
+    const errMsg = `[gauntlet] hook error (${err?.message ?? err}) — failing OPEN (${MODE}).`;
+    if (EVENT[MODE]) emitContext(EVENT[MODE], errMsg);
+    console.error(errMsg);
     process.exit(0);
   }
 }

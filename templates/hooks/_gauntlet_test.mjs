@@ -167,11 +167,34 @@ if (gitRepo()) {
   gitRepo();
   writeFileSync(join(SB, "src", "sneaky.ts"), "export const x = 1;\n");
   writeFileSync(tok("GATE_OK"), "net-runner ran");
-  check("git-seen change clears once the agent has run", run("done-wall", {}).status === 0);
+  // A file discovered through git was never seen by the agent, so a token created BEFORE it is
+  // stale and must be invalidated — the same invariant uiTrack already enforces. The old
+  // expectation here pinned the opposite (token survives a file the agent never saw), which is
+  // exactly the defect T2-F3 reported. The net had been certifying the bug.
+  check("a git-discovered file invalidates a pre-existing token", run("done-wall", {}).status === 2);
+  check("and that token is actually gone", !existsSync(tok("GATE_OK")));
+  // Next turn: the file is already ledgered, so re-running the agent clears it for good and it
+  // does NOT re-invalidate every turn — that would be the perpetual-nag mode.
+  writeFileSync(tok("GATE_OK"), "net-runner re-ran, now seeing the file");
+  check("re-running the agent clears it on the next turn", run("done-wall", {}).status === 0);
 
   gitRepo();
   writeFileSync(join(SB, "notes.md"), "# hello\n");
   check("a markdown change does not trip the code gate", run("done-wall", {}).status === 0);
+
+  // THE COMMITTED CASE (T2-F2). Commits are free and automatic by design here, so a shell edit
+  // that gets committed leaves a CLEAN working tree and git status reported nothing — the turn
+  // ended over unreviewed work, which is the exact outcome the backstop was added to stop.
+  // Verified Jul 25 2026: exit 0 before the turn-base diff, exit 2 after.
+  gitRepo();
+  run("spec-nudge", {}); // records the turn base
+  writeFileSync(join(SB, "src", "committed.ts"), "export const y = 2;\n");
+  try {
+    execSync("git add -A && git -c user.email=t@t -c user.name=t commit -q -m shelledit", { cwd: SB, stdio: "ignore" });
+    check("a shell edit that was COMMITTED is still caught", run("done-wall", {}).status === 2);
+  } catch {
+    console.log("  --  commit failed in the sandbox, skipped the committed-case check");
+  }
 } else {
   console.log("  --  git not available, skipped the git-backed ledger checks");
 }
