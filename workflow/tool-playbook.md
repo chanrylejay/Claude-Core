@@ -26,7 +26,12 @@ This file is the ONE home for operational tool lessons; TOOLS.md is the historic
 - **EOL-aware editing:** detect `\r\n` vs `\n` before string-matching; normalize for the match,
   write back in the original EOL. CRLF mismatches are the #1 cause of "anchor not found."
 - When native file tools are gated/denied, a **node script run through the shell**
-  (`writeFileSync`) edits anything. NEVER ask the user to hand-paste an edit — that's a failure.
+  (`writeFileSync`) edits anything — but ONLY when the block is MECHANICAL: a rewrite hook, CRLF
+  or anchor trouble, a path outside the project root, a tool that is simply absent. A PERMISSION
+  DENY or a guard hook firing is a DECISION, not friction: it is someone saying no. Never route
+  around one. Stop, say which gate fired and on what, and ask Chan. Writing past a denial through
+  the shell is the single place this kit could talk itself around a closed gate, so it is named
+  here and banned here. NEVER ask the user to hand-paste an edit — that's a failure.
 - Ask the environment before prescribing fixes: Chan is on the **VS Code extension**, not a
   terminal — keystroke/settings advice differs.
 
