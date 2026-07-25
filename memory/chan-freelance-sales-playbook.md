@@ -19,7 +19,11 @@ or review-fishing (reveals inexperience) · over-promise platforms he does not o
 SUPERSEDED Jul 6 2026: the old "never imply paid professional systems work" rule is DEAD —
 the Devoted engagement (Jun-Jul 2026, ended cleanly) is real paid solo-developer contract work
 and now leads the positioning. Public case study naming the client still needs the client's
-OK; results + method are free to describe (confidentiality canon: [[chan-career-portfolio-state]]).
+OK. "Results + method are free to describe" applies ONLY when the client is not named and the
+entry is not one [[chan-skills-ledger]] lists as consent-gated (Devoted, AxisCare, the agency's
+production writes). Those three need the written OK on file whether or not the client is named,
+because they identify the client on their own. Everything else: anonymize to "a US home-care
+agency" and describe freely (confidentiality canon: [[chan-career-portfolio-state]]).
 
 ## Platforms honesty
 
@@ -49,8 +53,11 @@ AI Trainer offered ₱35K/month onsite no-benefits (May 2026); Chan countered �
 sites, repos), now converting it to paid work. And since Jul 2026: delivered a full client
 platform end to end. "Are you a developer?" → ships real production systems with an
 AI-first workflow; not a traditional senior engineer, and says so. "Can you handle
-Make/Zapier/GHL?" → primary expertise is n8n; exposure only elsewhere. Resume gaps (three
-visible) → "periods of personal development and self-directed learning", said plainly. Always-mention
+Make/Zapier/GHL?" → primary expertise is n8n; exposure only elsewhere. Resume gaps → "periods of personal
+development and self-directed learning", said plainly — but ONLY for a gap whose dates are
+already recorded in [[chan-skills-ledger]]. Any gap the ledger marks unrecorded (the Sep 2024 to
+May 2025 one, today) is asked about, never filled with this phrase or any other. The ledger is
+the ceiling on employment facts and it wins here. Always-mention
 strengths: Accenture Top Performer 6 consecutive months · production systems shipped, not
 tutorials · live sites with real traffic · $0/month automation stack · the Devoted platform
 story ([[chan-career-playbook]] owns the interview narrative).

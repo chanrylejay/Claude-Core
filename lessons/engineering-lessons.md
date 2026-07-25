@@ -10,7 +10,9 @@
 - **Recovery SQL is guarded SQL:** fill only where blank, never overwrite, idempotent, archived
   to a dated file with root cause in the header comment.
 - **"Data gone" is usually a display/read-path gap, not data loss.** Diagnose the read path
-  before panicking — and before telling the user their data is gone.
+  before panicking — and before telling the user their data is gone. The guard runs BOTH ways:
+  never report the data as fine either until you have queried the rows and seen the values. A
+  read-path diagnosis explains the symptom; it is not evidence the stored data survived.
 - **Write-here/read-there bugs:** any field written by surface A and read by surface B is a
   standing hazard. Audit those pairs explicitly when refactoring.
 - **Audit logs are append-only.** Ruled, never revisited.
@@ -28,9 +30,16 @@
   production screens after pushing.
 
 ## Ranking / matching systems (if you build one again)
-- **Soft penalties > hard filters:** bury weak candidates, never hide them — except for a few
-  true hard rules. And when a hard rule would return an EMPTY list, relax it and show options
-  anyway ("never strand the user").
+- **Soft penalties > hard filters:** bury weak candidates, never hide them. The ONLY rules that
+  may hide a record outright are ELIGIBILITY rules — the ones that make a match illegal, unsafe,
+  or a lie: a missing verified credential, an Inactive or terminated status, a hard availability
+  or compliance block. Write that list down per project; anything not on it is a penalty, not a
+  filter, and the owner approves additions to it.
+  When an eligibility rule would return an EMPTY list, return the empty list and say WHY it is
+  empty and which rule emptied it. Never relax an eligibility rule to avoid an empty screen: this
+  same file calls "someone marked Inactive who still gets recommended" a trust gap, and relaxing
+  is how you produce one. Preference and ranking rules relax freely — that is what
+  "never strand the user" means.
 - **Trust signals decay.** A "preferred" flag from a stale external system was mostly dead
   records; verify a signal is alive before weighting it.
 - **Decouple presentation data from decision data.** Resume/marketing tags describing a person

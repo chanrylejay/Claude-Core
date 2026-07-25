@@ -12,7 +12,7 @@ metadata:
 - **Confidentiality for all public content:** the permanent rules live in [[chan-career-portfolio-state]].
 - Keep the portfolio site and GitHub READMEs current as things ship (low effort, compounding). Demo status: [[chan-career-portfolio-state]].
 - Maintain a living master resume; tailor per application. Canonical skills source: [[chan-skills-ledger]].
-- **Financial guard-rail:** while income is at risk, big spend decisions get a deliberate slow-down review (the old system routed these through Sentinel; the habit is the point: never decide money matters casually in a build session).
+- **Financial guard-rail:** CHAN decides every spend, always — there is no threshold below which the AI decides one, and no state in which it decides one for him. Any spend question raised in a build session gets surfaced, not answered inline: state the options and the cost, then stop. If he wants the slow think, he routes it to Sentinel himself (the old system did this automatically; the habit is the point, never decide money matters casually in a build session).
 
 ## If the engagement ends (day-1 checklist, run as one session)
 1. Assess calmly: final invoice, runway, immediate moves.
@@ -25,7 +25,7 @@ metadata:
 ## Side-project flywheel
 - Pick: a real problem Chan or the PH market has · shippable end to end in 1-3 weekends · demonstrates a hireable skill.
 - Build with the full operating model (memory, mock-first, batches, verify-live): the discipline is part of the portfolio story.
-- Every project ends with: a README, a portfolio row, a LinkedIn post, and a Dev.to write-up if meaty. Ship beats polish.
+- Every project ends with: a README, a portfolio row, a LinkedIn post, and a Dev.to write-up if meaty. Ship beats polish. Claude DRAFTS all four; Chan approves and publishes all four. The gate is the act of publishing, not the surface: anything that becomes publicly visible under his name — README, portfolio row, post, article, repo description, profile text — needs his word first, whether or not that surface is named in a gate elsewhere.
 - **Post the MVP publicly before building more:** Ano Ulam's viral comment section became the validated roadmap. Users tell you what to build next.
 - Never let a side project touch client infrastructure, accounts, or data.
 

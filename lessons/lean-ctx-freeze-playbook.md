@@ -11,7 +11,10 @@ repeats it. Applies to lean-ctx ≤ 3.9.12 on Windows.
   bootstrap with a 0-byte transcript** (their session hooks block on the same shared state).
 - No crash is logged, the server process sits at ~0 CPU (deadlock, not a spin), and MCP calls have
   no client-side timeout — so it looks exactly like "reading the file hangs." The file is never the problem.
-- Established workspaces (Devoted-Care) are immune, which makes it look haunted. It isn't.
+- Workspaces with real indexed code files do not freeze, which makes it look haunted. It isn't:
+  the variable is files_indexed, NOT the age of the repo. An old HTML-only repo froze for exactly
+  this reason on Jul 23 2026 because the rule then said "new or near-empty". Run the seed check in
+  EVERY workspace before the first ctx_* call, established or not.
 
 ## The root cause (proven, not guessed)
 
@@ -51,7 +54,12 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
   params are enforced by the wedged server itself and never fire.
 - **Bounded CLI repro** (safe, definitive): pipe JSON-RPC into the binary under `timeout`:
   `( printf '%s\n' "$INIT"; sleep 1; printf '%s\n' "$INITIALIZED"; sleep 1; printf '%s\n' "$TOOLS_CALL"; sleep 5 ) | timeout 30 lean-ctx.exe`
+  ⚠ INLINE the JSON-RPC payloads as literals. Do NOT put them in shell variables: the Bash-tool
+  rewrite hook strips leading VAR= assignments, so the variables arrive empty, empty lines pipe
+  into the binary, and it exits 0 — see Known Bugs. That is a broken test, not a clean result.
   — rc 124 = froze; check whether a `.graph-idx-*.lock` appears (build fired) and clears (build completed).
+  — exited 0 with NO lock and NO build = the command never ran properly. Conclude NOTHING and
+    re-run with the payloads inlined. This state is not "not reproducible".
 - **Monitor tool = shell escape hatch** in Claude Code when natives are denied and ctx_* are dead —
   it executes bash and is not on the deny list. (Since Jul 23 2026 native Bash itself works; Monitor is the backup.)
 - **Canary pattern** for live verification: background Agent → TaskOutput with a hard timeout →

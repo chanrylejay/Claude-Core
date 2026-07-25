@@ -10,7 +10,7 @@ metadata:
 Chan evaluates screens against the reference design in his head (the mock, the live site, the screenshot he sent). Browser measurements can prove two wrong things equal; "aligned" to him means it matches the reference's anatomy, not that my own elements agree with each other.
 
 **How to apply:**
-- On ANY visual complaint: open the current reference image FIRST, find that exact region, name the anatomical difference, THEN patch once.
+- On ANY visual complaint: open the current reference image FIRST, find that exact region, name the anatomical difference, THEN patch once. Then hand the screen back to Chan's eyes to confirm, on EVERY model, sighted or not. Never claim "aligned" or "looks right" on your own look: this whole file exists because four fixes measured pixel-perfect and were still wrong to him.
 - If a complaint repeats after a "verified" fix, the frame is wrong. Stop measuring, re-read the reference, or ask him to circle the spot. His red-box annotated screenshots are gold and end alignment sagas fast.
 
 **If you cannot see images (no-vision model, e.g. the DeepSeek endpoint):**

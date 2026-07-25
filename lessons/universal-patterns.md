@@ -37,7 +37,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 26. **Silent fallbacks poison production:** any helper that quietly degrades to mock data WILL feed a real surface. Fallbacks are for layout, never for facts; gate real-record consumers on an explicit live flag.
 27. **Racing builds corrupt artifacts:** two builds (or build plus dev server) over one artifact dir corrupt it confusingly. Kill all, wipe, rebuild once. Never use grep-filtered build output as a success signal.
-28. **Middleware eats machine traffic:** auth gates built for humans silently 307 scheduled functions and webhooks to login. Exempt platform paths; diagnose with the platform TRAFFIC log.
+28. **Middleware eats machine traffic:** auth gates built for humans silently 307 scheduled functions and webhooks to login. Exempt the EXACT paths that are failing, one literal route at a time (`/api/cron/daily`, not `/api/*`) — a prefix exemption opens every human-facing endpoint under it with no authentication at all. Each exemption is a hole in an auth gate: name it in the PR, and any exemption broader than a single literal route needs Chan's explicit OK. Diagnose with the platform TRAFFIC log.
 29. **A plausible theory is not a root cause.** The same bug survived two wrong-but-plausible theories. No state-changing fix until a log line or probe proves the mechanism.
 30. **Caches lie during verification:** bust caches before debugging code; verify the deployed thing, not the local one.
 31. **Show-first beats ship-first:** approval-then-deploy creates closure; never argue "it already works", show it. Mock scope (reconciled Jul 24 2026): a clickable preview mock BEFORE building is the gold standard for client approval; a mock INSTEAD of the real build to demo "finished" work is banned — show-first means the real thing plus screenshots.
@@ -114,5 +114,5 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 ## Maintaining documents (applies to Claude-Core itself)
 
-- **L24, the diff-audit rule:** any rewrite or compression that shrinks a permanent doc by more than 25% must pass a fact-token diff audit (extract numbers, codes, CamelCase, URLs from the old version, grep the new set, triage every miss as relocated, superseded, or LOST). A 45% compression once silently dropped 24 real facts including deploy-critical env vars.
+- **L24, the diff-audit rule:** any rewrite or compression that shrinks a permanent doc by more than 25% must pass a fact-token diff audit (extract numbers, codes, CamelCase, URLs from the old version, grep the new set, triage every miss as relocated, superseded, or LOST). A LOST item FAILS the audit: restore it to the new version, or get Chan's explicit OK to drop that specific fact, before the rewrite ships. Triage alone is not a pass — labelling all 24 facts LOST and shipping satisfies every other word of this rule, which is precisely what happened: a 45% compression once silently dropped 24 real facts including deploy-critical env vars.
 - Sub-documents get trimmed context, never raw archives (pattern 25).
