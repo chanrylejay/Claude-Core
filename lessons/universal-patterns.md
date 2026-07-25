@@ -77,6 +77,16 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   that had not existed that morning. Patch, then audit the patch, every time.
 - **Patch both copies in the same edit.** A rule bounded in one file and left unbounded in its twin
   ships as a defect. It happened here twice in one day (a supersede clause, a delete gate).
+- **Never put framing inside an audit input.** An audit input is the document and nothing else.
+  Notes explaining what the file is, why it matters, or what to watch for are PRIMING, and the
+  auditor spends effort resisting them instead of reading. Measured here Jul 25 2026: a note saying
+  "four fixes were made and each historically introduced a problem" was caught by the auditor as a
+  quota prior it had to defend against, and a second note was quoted back as if it were evidence.
+  Instructions for the human go in a separate file the human never pastes. This is the same defect
+  as leaking seed text into a test prompt, which also happened here the same day: TWO STRIKES, so
+  it is a standing rule now. Verify it mechanically: grep the paste file for your own header words
+  before sending, and make the check match your header format exactly so document prose does not
+  trip it.
 - **Plant a quota prior to test an auditor.** Telling it "four things were changed and each usually
   breaks something" and seeing whether it returns exactly four is a cheap calibration check.
 - **Verify a mechanical claim mechanically.** Five push-guard bypasses were argued in prose and all
