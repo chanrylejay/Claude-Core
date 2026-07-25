@@ -121,6 +121,13 @@ only Chan's real test outputs are valid data; ask instead of fabricating history
 "Bakit?" reasoning only, never data. Open-source policy: the repo is public BY STRATEGY
 (infrastructure transparency); the DeepSeek prompt text, methodology, keys stay private.
 
+## v3 kickoff — STEP 0 (added Jul 25 2026)
+
+Before new AI-feature work in v3: run the PDF-to-CSV extractor prompt AND the "Bakit" explainer
+prompt through PED (validated auditor, see ../../memory/ped-prompt-auditor.md; use the stress-test
+invocation). Any AI-feature prompt that ships gets a PED pass first, then log it in
+../../memory/ped-log.md. Prompts stay private (open-source policy above); PED audits them locally.
+
 ## Status snapshot (Jun 6 2026 — VERIFY before acting; the project resumes post-Devoted)
 
 Possibly-still-open from the txt + Doc A: Reddit post (account was blocked), README update to

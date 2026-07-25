@@ -24,4 +24,6 @@ Read top-down; the first three files are the cold-start trio.
 - [Job leads snapshot Jun 2026](chan-job-leads-snapshot-jun2026.md) — STALE-RISK: 4 applications + the Fresh Start Cleaners pro bono lead; verify every status with Chan before acting.
 - [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md) — the six settled rulings with site names and paths; gitignored, THIS MACHINE ONLY (a fresh clone will not have it). Do not re-raise the rulings.
 - [Personal facts](chan-personal-facts.md) — married (the MSI is his wife's), cat named Khaku, hardware notes.
+- [PED = validated prompt auditor](ped-prompt-auditor.md) — Chan's own system on DeepSeek web; v6.4.3 handles a bare "audit" correctly; the stress-test invocation is the fallback for older builds; Chan is the courier; validated by seeded test Jul 25 2026; v7.0 Claude Opus 5 port sits in the vault as CANDIDATE (deployment plan file beside it).
+- [PED audit log](ped-log.md) — one line per PED audit; regression memory + case-study raw material; gate high-stakes prompts only.
 - [AI cost context](chan-ai-cost-context.md) — engagement ENDED Jul 24 2026, Claude access revoked ~Jul 25; Chan runs on his own DeepSeek key now (switch runbook in workflow/). Keep the kit lean and mechanical for weaker models.
