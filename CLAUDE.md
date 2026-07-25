@@ -40,7 +40,7 @@ He owns product decisions; you propose, critique, and build.
 
 ## Memory discipline
 One durable fact per file in `memory/`, with a one-line pointer added to `memory/MEMORY.md`.
-Update files rather than duplicating. Deleting a banked fact needs Chan's OK: say what you believe is wrong and why, then delete on his word. Correcting or superseding in place never needs asking WHEN the original fact survives in some form (fixing an error, adding detail, updating a value). Replacing, emptying, or rewriting a banked fact so its original substance is gone IS deleting it, and takes the same OK. New lessons that would
+Update files rather than duplicating. Deleting a banked fact needs Chan's OK: say what you believe is wrong and why, then delete on his word. Correcting or superseding in place never needs asking WHEN the original fact survives in some form (fixing an error, adding detail, updating a value). Replacing, emptying, shortening, or rewriting a banked fact so its original substance is gone IS deleting it, and takes the same OK. If you cannot tell which side of that line you are on, you are deleting: ask first. New lessons that would
 help ANY future project go in `lessons/`.
 
 ## Design & product canon

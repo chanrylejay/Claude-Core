@@ -29,7 +29,10 @@ each) — the Devoted-specific versions were deliberately not carried into this 
    ACCEPT / SEND-BACK.
 
 7. **challenger** — after the reviewers, before the owner reads anything: adversarially
-   re-tests every finding, kills what it can refute, merges duplicates. The owner reads only
+   re-tests every finding, kills what it can refute, merges duplicates. A kill is never silent: log
+   every killed finding with the sentence that refuted it, and state both counts in the turn report
+   ("N shipped, M killed") so Chan can ask to see the killed list. He can reinstate any of them; a
+   refutation is the challenger's opinion, never a deletion. The owner reads only
    survivors. Optional on small changes; use it whenever review output exceeds a screen.
 
 Plus **recon** — read-only codebase/data-flow tracer for "how does X actually work," returning

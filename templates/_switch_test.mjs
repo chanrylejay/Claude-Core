@@ -2,11 +2,14 @@
 // Proves: the pristine backup is written once and survives a re-run, the stale top-level model
 // pin is removed, and the env block merges. Skips the PowerShell env-var writes by running --dry-run
 // for the merge check and a fake-HOME real run for the backup check.
-const fs = require('fs');
-const path = require('path');
-const { spawnSync } = require('child_process');
+import fs from "node:fs";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const SB = path.join(__dirname, 'switch-sandbox');
+import { tmpdir } from "node:os";
+const SB = path.join(tmpdir(), "apply-deepseek-switch-test-sandbox");
 const SCRIPT = 'C:/Users/Chanryle/Claude-Core/templates/apply-deepseek-switch.mjs';
 const KEY = 'sk-FAKEKEYFORTESTONLY';
 

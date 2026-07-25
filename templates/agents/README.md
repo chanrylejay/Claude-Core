@@ -31,7 +31,7 @@ doesn't.
 4. **Hooks (`../hooks/`):** in `gauntlet-guard.mjs`, rewrite `RISK_PATH` to the new repo's
    high-risk modules, adjust the spec-nudge relay regex to the new client's relay phrases, and
    rename the `client-qa`/`client-ux` role names if the project uses different agent names.
-   The regression test nets now SHIP IN THIS KIT at `../hooks/_pushguard_test.mjs` and `../hooks/_gauntlet_test.mjs` (plain `node`, no framework). Re-running them after ANY edit to push-guard.mjs or gauntlet-guard.mjs is MANDATORY; they pin the documented false-positive fixes and the classifiers.
+   The regression test nets now SHIP IN THIS KIT at `../hooks/_pushguard_test.mjs` and `../hooks/_gauntlet_test.mjs` (plain `node`, no framework). The switch script has its own at `../_switch_test.mjs`. Re-running the matching net after ANY edit to push-guard.mjs, gauntlet-guard.mjs, or apply-deepseek-switch.mjs is MANDATORY; they pin the documented false-positive fixes, the classifiers, five verified push bypasses, the done-wall behaviours, and the switch script's backup rules.
 5. Strip any residual origin-project references from prompt bodies before first use.
 
 ## Hooks (`../hooks/`) — wiring only

@@ -15,7 +15,7 @@ substantive reply):
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
    Chan's verbatim correction: *"the drill should be dont trust the summary, and read the last
    transcript line by line if necessary."*
-2. **Re-read the READ-FIRST memory files** (the ⭐/🛑/🔴-marked index lines, split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md).
+2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md).
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.
 4. Only then reply.
@@ -25,9 +25,9 @@ substantive reply):
 **Mechanics:**
 - One durable fact per `.md` file, with frontmatter (`name`, `description`, `type:
   user | feedback | project | reference`).
-- Every file gets a one-line pointer in the Core memory index (`Claude-Core/memory/MEMORY.md`), which is read on demand during the ritual; the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) is what auto-loads each session,
+- Every file gets a one-line pointer in the Core memory index (`Claude-Core/memory/MEMORY.md`), which is read on demand during the ritual. A project-scoped fact ALSO gets its own pointer line in the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) — that write is mandatory, not optional, because that index is what auto-loads each session and is the only place a 🔴 READ-FIRST marker can live. A fact with no line there is a fact the next session does not know exists.
   so the line must carry the hook (what it is + when to read it).
-- Update existing files rather than duplicating. Correcting or superseding a fact in place never needs asking WHEN the original fact survives in some form; rewriting it so its substance is gone IS deleting it. DELETING a banked fact needs Chan's explicit OK: say what you believe is wrong and why, then delete only on his word.
+- Update existing files rather than duplicating. Correcting or superseding a fact in place never needs asking WHEN the change is one of these three and nothing more: fixing an error, adding detail, updating a value. Replacing, emptying, shortening, or rewriting a banked fact so its original substance is gone IS deleting it. If you cannot tell which side of that line you are on, you are deleting: ask first. DELETING a banked fact needs Chan's explicit OK: say what you believe is wrong and why, then delete only on his word.
 - Link related memories with `[[name]]`.
 
 **Discipline that makes it work:**
