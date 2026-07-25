@@ -1,6 +1,6 @@
 ---
 name: ped-prompt-auditor
-description: "PED (Nautica) is Chan's validated external prompt auditor on DeepSeek web. THE ASK PICKS THE DEPTH: 'audit' gets a shallow compliance skim, 'stress test + hunt contradictions/loopholes' gets the real adversarial pass. Chan is the courier. Validated by a seeded-defect test Jul 25 2026."
+description: "PED (Nautica) is Chan's validated external prompt auditor. TWO BUILDS: v7.0.2 on Claude Opus 5 (validated 10/10 Jul 25 2026, strongest) and v6.4.3 on DeepSeek R1 (free daily driver). Chan is the courier between Claude Code and PED. Bare audit works on both; the stress-test invocation is the fallback for v6.3 and earlier."
 metadata:
   type: reference
 ---
@@ -56,20 +56,29 @@ rule, and a detector only catches it if its trigger words literally cover the de
 words, not the hope. Audit sentence by sentence; a safe overall theme never clears an individual
 sentence.
 
-**v7.0 CLAUDE PORT (Jul 25 2026, CANDIDATE):** the day Opus 5 launched, Fable 5 ported the
-v6.4.3 content engine to Claude Opus 5 (claude.ai): "Nautica PED v7.0 CANDIDATE, CLAUDE OPUS 5.txt"
-in the vault, beside the older builds. Content rules verbatim; platform layer rebuilt (SCOPE HOLD,
-ANTI-SOFTENING, ARTIFACT LOCK; anti-rumination re-aimed at hedge-stacking). Pre-ship QA: a 33-agent
-adversarial panel (4 lenses + per-finding refuters) confirmed 13 defects in the first draft, all
-fixed; 16 other findings were refuted. Design law learned there: the prompt body carries NO
-self-status and no test plan (it primed itself for its own probes); status lives in the filename
-and in "PED v7.0 DEPLOYMENT + VALIDATION PLAN (...).txt" beside it, which holds the claude.ai
-deployment steps (Project, memory OFF, effort xhigh/High) and the full validation round. v7.0
-stays CANDIDATE and v6.4.3 on R1 stays production until Chan couriers a fresh-seed round on
-claude.ai. Open items: the v6.4.3 vault file header still says CANDIDATE (stale, Chan flips it),
-and the SHADOW TEAM visibility note's missing ENGINE carve-out is a latent defect in v6.4.3 too
-(possible v6.4.4 backport). Cost gate: running v7.0 needs Chan's own Claude access; the
-no-new-AI-spend-until-a-client rule applies.
+**v7.0.2 CLAUDE OPUS 5 — VALIDATED 10/10 (Jul 25 2026).** Ported from the v6.4.3 content
+engine the day Opus 5 launched, then put through a 5-round program with sealed keys written
+before every run. Results: recall 3/3 seeds; attacks 5/5 (injection inside the audited doc,
+praise-framed softening, inverse creation trap, QUICK+ambiguous, LEARN-poisoning); routing
+10/10 including the debt carried since v6.3. It FAILED precision at v7.0.1 (three findings on
+a verified-clean control, all rejected 9-0 by adversarial refuters), which produced v7.0.2:
+the UNSCOPED PROHIBITION RULE (a general ban cures a defect even when a neighbouring narrower
+clause does not reach the case), the SELF-REFUTATION TEST (if your own example is forbidden by
+a sentence you quoted, the finding refutes itself), and the REACHABILITY TEST (an action the
+document never enables is a stall, not a breach). Round 5 confirmed both halves: seeds caught
+clean AND a zero-finding sweep on the control, with all three earlier false findings correctly
+cleared. These checks constrain SHIPPING, never SCANNING, which is why recall survived intact.
+
+WHICH BUILD TO USE: v7.0.2 on claude.ai when Chan has Claude access (strongest auditor by a
+wide margin: 13 real findings to v6.4.3's 3 in the blind championship). v6.4.3 on DeepSeek R1
+is the free daily driver and stays production there. Every build kept in the vault, never
+overwritten. Cost gate: v7.0.2 needs Claude access; the no-new-AI-spend-until-a-client rule
+still governs whether that access gets paid for.
+
+THE TESTING LAW THIS PROGRAM PROVED: test the test first. The clean control used to measure
+precision had to be rewritten three times because Claude kept writing real defects into a
+document meant to have none; five auditors and nine refuters were needed before it was safe to
+judge with. An unverified test rig fails the thing it is measuring, not the other way round.
 
 Related: [[chan-pre-devoted-assets]] (the vault, DO NOT TOUCH rules) · [[chan-skills-ledger]]
 (prompt systems as career assets)
