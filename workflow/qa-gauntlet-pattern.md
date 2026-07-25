@@ -19,8 +19,7 @@ each) — the Devoted-specific versions were deliberately not carried into this 
 2. *(build happens)*
 3. **reviewer** — hostile code review of the diff. Correctness bugs + project-discipline
    violations. Returns verdict + must-fix list, not a rewrite.
-4. **net-runner** — the anti-churn gate. Runs type/lint + EVERY regression net in the suite. Skipping any net requires naming it and the reason in the verdict, so a skip is something Chan can audit rather than a judgement made silently inside the word "relevant". Runs the nets relevant to the
-   change, audits whether the change *carries a net* that pins its own fix, raises a CHURN ALERT
+4. **net-runner** — the anti-churn gate. Runs type/lint + EVERY regression net in the suite. Skipping any net requires naming it and the reason in the verdict, so a skip is something Chan can audit rather than a judgement made silently inside the word "relevant". Match touched files against net headers to ORDER the run, never to decide what to skip. Also audits whether the change *carries a net* that pins its own fix, raises a CHURN ALERT
    when a repeatedly-fixed module is touched again without one. Green/red verdict.
 5. **client-ux** — design-law enforcer. Opens the live screen (read-only), screenshots desktop +
    narrow widths, judges against the project's design canon. CLEAN / POLISH / VIOLATIONS.
@@ -39,6 +38,11 @@ Plus **recon** — read-only codebase/data-flow tracer for "how does X actually 
 cited conclusions instead of file dumps. Use before building, any time.
 
 ## Rules that make it real
+
+- **Agents deploy alone.** A subagent loads its own file and nothing else. Any law it must obey at
+  runtime has to be written IN that file. This document is a map for Chan, never a runtime
+  dependency for an agent: when a rule here constrains an agent's behaviour, it is not enforced
+  until the same sentence also appears in that agent's own prompt.
 
 - **Never fake a gate.** Passing tokens (GATE_OK / UX_OK / QA_OK) exist only if the agent
   actually ran. Enforce with a Stop-hook if the temptation exists (`../templates/hooks/gauntlet-guard.mjs`).

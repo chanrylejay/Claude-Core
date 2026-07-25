@@ -15,6 +15,20 @@ substantive reply):
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
    Chan's verbatim correction: *"the drill should be dont trust the summary, and read the last
    transcript line by line if necessary."*
+
+   **What "if necessary" means — mechanical, so the model never decides it.** Read the raw
+   transcript back to the last user message you can still see in full if ANY ONE of these is
+   true. Check them, do not weigh them.
+   - The summary mentions a list, a taxonomy, naming rules, a quote, or an exact wording that is
+     not reproduced in full in a file on disk.
+   - The summary references a decision, a GO, or a reversal that has no dated line in a memory
+     index.
+   - You are about to write, edit, or delete anything in a memory file.
+   - You cannot name, from a FILE rather than from the summary, the last substantive thing built
+     or shipped.
+
+   If you cannot tell whether a trigger fired, it fired. If none fired, say so in one line in
+   your first reply, so the skip is visible rather than silent. Only Chan can waive this.
 2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md).
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.

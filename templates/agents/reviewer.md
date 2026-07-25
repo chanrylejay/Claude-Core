@@ -43,6 +43,8 @@ bites (a concrete failing scenario), and the smallest fix. Default to skeptical 
 might be wrong, say what would confirm it.
 
 ## Output
-A one-line verdict (SHIP / FIX-FIRST / NEEDS-PROOF), then **Must-fix** (correctness + discipline
+A one-line verdict (SHIP / FIX-FIRST / NEEDS-PROOF). SHIP means the CODE is fit to commit — it is
+never clearance to deploy, and the calling session must not read it as one: push is deploy is LIVE
+and needs Chan's own explicit GO, each time. Then **Must-fix** (correctness + discipline
 violations) and **Should-fix** (quality), each with `file:line` + a concrete repro. End with
 what you could NOT verify from code alone (needs a live probe / a screenshot / the owner).

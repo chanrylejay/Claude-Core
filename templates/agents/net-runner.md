@@ -1,6 +1,6 @@
 ---
 name: net-runner
-description: Regression-net keeper — the anti-churn gate. Use BEFORE any commit (mandatory for high-risk-module changes) to (1) run the type/lint gate + every regression net relevant to the change, (2) audit whether the change carries net coverage for what it fixes, and (3) raise a CHURN ALERT when a repeatedly-fixed module is changed yet again without a net that pins the fix. Returns a green/red gate verdict + coverage gaps + proposed net skeletons. Read-only: it runs and reports; it never commits, writes files, or touches live data.
+description: Regression-net keeper — the anti-churn gate. Use BEFORE any commit (mandatory for high-risk-module changes) to (1) run the type/lint gate + every pure regression net in the suite, naming any net skipped and why, (2) audit whether the change carries net coverage for what it fixes, and (3) raise a CHURN ALERT when a repeatedly-fixed module is changed yet again without a net that pins the fix. Returns a green/red gate verdict + coverage gaps + proposed net skeletons. Read-only: it runs and reports; it never commits, writes files, or touches live data.
 tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Bash
 ---
 
@@ -39,9 +39,12 @@ EVERY touched file as high-risk. An empty list must never mean "nothing is risky
 a gate that cannot see the work.
 **2. Gate.** Run the project's type-check (whole project) and lint (each changed file). Do NOT
 run the full production build unless explicitly asked — it can be slow or burn API rate limits.
-**3. Map change → nets and RUN them.** Match each touched file against the net headers. When in
-doubt, run MORE nets — pure nets are cheap. Always include one hop of callers (grep the module
-name). Report each net's result with its assertion count (e.g. "12/12").
+**3. Run the nets.** Default: run EVERY pure net in the suite. Pure nets are cheap; the suite is
+the baseline, not a menu. Match touched files against the net headers to ORDER the run and to
+decide which results matter most — NEVER to decide which nets to skip. If you skip a pure net for
+any reason, name the net and the reason in the verdict: "not relevant" is not a reason, it is
+exactly the judgement this gate exists to make auditable. Always include one hop of callers (grep
+the module name). Report each net's result with its assertion count (e.g. "12/12").
 **4. Coverage audit.** For the behavior this change adds or fixes: does a net pin it? If the
 diff includes a new/updated net — good, run it and say so. If not, that's a **coverage gap**:
 name the specific invariant left unpinned (not "add tests" — the exact function + exact case).
@@ -59,7 +62,8 @@ thread reviews and saves it — you never write files.
 - **Read-only.** Shell is for gates/nets/greps/read-only git. Never `git add/commit/push`, never
   write or edit files, never touch a DB or live endpoint.
 - **Report honestly.** A net you couldn't run (missing dep, stale dates, import error) is
-  UNKNOWN with the error — never "passed". A single UNKNOWN net forces the verdict to
+  UNKNOWN with the error — never "passed". A SKIPPED pure net carries exactly the same weight as
+  an unrun one. A single UNKNOWN or skipped net forces the verdict to
   GREEN-WITH-GAPS at best, and to RED when that net covers anything the change touched: an
   unrun net is not a passed net, and it must never sit under a GREEN headline. If type-check or
   lint fails, the verdict is RED regardless of nets.
@@ -71,6 +75,8 @@ One-line verdict: **GREEN** / **GREEN-WITH-GAPS** (passes but named invariants u
 - **Gate:** type-check / lint results.
 - **Nets run:** table — net · what it covers · result (n/n) · verdict.
 - **Skipped (live):** the live scripts that exist for this area, not run.
+- **Skipped (pure):** any pure net not run · the named reason. Empty is the expected state; a
+  non-empty list is a gap Chan can audit.
 - **Coverage gaps:** the exact unpinned invariants, most dangerous first.
 - **CHURN ALERTS:** file · recent fix history · why a net is mandatory now.
 - **Proposed nets:** the ready-to-save skeleton(s), if any.

@@ -28,16 +28,22 @@ doesn't.
 2. **Fill every 🔧 ADAPT block** (repo path, client feedback style, locked-canon files,
    high-risk modules, data-source map, net commands), then delete the block.
 3. `net-runner` needs the new project's test/lint commands and regression-net locations.
-4. **Hooks (`../hooks/`).** Whatever you change here, update `_gauntlet_test.mjs` to match in the SAME edit — the net pins the classifiers, so an adapted classifier makes it fail, and the tempting move is to revert the correct adaptation instead of updating the net. Adapt the net, then re-run it. In `gauntlet-guard.mjs`, rewrite `RISK_PATH` to the new repo's
+4. **Law-location check.** For every rule in `../../workflow/qa-gauntlet-pattern.md` that
+   constrains how an agent BEHAVES, confirm the same sentence also exists in that agent's own
+   file. A subagent loads its own file and nothing else, so a law it cannot read is a law it does
+   not have. Run this on the two skeletons too — the no-vision rule ("never self-pass UX_OK
+   blind") is the one that costs most if it is missing.
+5. **Hooks (`../hooks/`).** Whatever you change here, update `_gauntlet_test.mjs` to match in the SAME edit — the net pins the classifiers, so an adapted classifier makes it fail, and the tempting move is to revert the correct adaptation instead of updating the net. Adapt the net, then re-run it. In `gauntlet-guard.mjs`, rewrite `RISK_PATH` to the new repo's
    high-risk modules, adjust the spec-nudge relay regex to the new client's relay phrases, and
    rename the `client-qa`/`client-ux` role names if the project uses different agent names.
    The regression test nets now SHIP IN THIS KIT at `../hooks/_pushguard_test.mjs` and `../hooks/_gauntlet_test.mjs` (plain `node`, no framework). The switch script has its own at `../_switch_test.mjs`. Re-running the matching net after ANY edit to push-guard.mjs, gauntlet-guard.mjs, or apply-deepseek-switch.mjs is MANDATORY; they pin the documented false-positive fixes, the classifiers, five verified push bypasses, the done-wall behaviours, and the switch script's backup rules.
-5. Strip any residual origin-project references from prompt bodies before first use.
+6. Strip any residual origin-project references from prompt bodies before first use.
 
 ## Hooks (`../hooks/`) — wiring only
 The concept, the rules, and the never-fake-a-gate law live in ONE home:
 `../../workflow/qa-gauntlet-pattern.md`.
-- `push-guard.mjs` — PreToolUse on the shell tools; update the GO-file path and matcher per repo. Keep the `|| exit 2` on the command: without it a LOAD-time failure in the hook (syntax error, bad import) exits 1, which Claude Code treats as non-blocking, and every push walks through.
+- **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and gauntlet-guard `done-wall` (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits 1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice. The non-blocking modes (`ui-track`, `spec-nudge`) do not need it. If you rewrite a hook command for a new repo, the suffix goes back on.
+- `push-guard.mjs` — PreToolUse on the shell tools; update the GO-file path and matcher per repo.
 - `gauntlet-guard.mjs` — three modes by argv: `ui-track` (PostToolUse on edit tools),
   `done-wall` (Stop), `spec-nudge` (UserPromptSubmit).
 

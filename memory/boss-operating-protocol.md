@@ -8,7 +8,9 @@ metadata:
 
 # THE DRILL (rule 0. Full drill after ANY compaction; fresh starts run the hub ritual; disk verification applies to EVERY start)
 
-Never answer straight from a compaction summary; files and disk win over it. The 4 steps: (1) don't trust the summary; (2) re-read the READ-FIRST memory files, which means: the marked lines in the Core memory index (Claude-Core/memory/MEMORY.md) AND the 🔴 lines in this project's own MEMORY.md, plus [[chan-hard-rules]] always; (3) verify actual disk/repo state, disk wins; (4) only then reply. The drill itself is the four steps above; deeper memory-system mechanics: `../workflow/the-drill-and-memory.md`.
+Never answer straight from a compaction summary; files and disk win over it. The 4 steps: (1) don't trust the summary; (2) OPEN and read the READ-FIRST memory FILES — not their index lines, because a one-line pointer is a summary and step 1 says you do not trust summaries. The markers only name WHICH files to open, and they live in two indexes: the ⭐/🛑 lines in the Core memory index (Claude-Core/memory/MEMORY.md) AND the 🔴 lines in this project's own MEMORY.md, plus [[chan-hard-rules]] always. Reading a marker line and moving on does not satisfy this step; (3) verify actual disk/repo state, disk wins; (4) only then reply.
+
+These four steps are a COPY. The authoritative text of THE DRILL, and the memory mechanics, live in `../workflow/the-drill-and-memory.md`. If this copy and that file ever disagree, THAT FILE WINS, and you fix the disagreement here in the same session before replying.
 
 Skipping the drill is the failure mode Chan flagged. Do it every time, even when the summary looks complete.
 
