@@ -14,7 +14,7 @@ Skipping the drill is the failure mode Chan flagged. Do it every time, even when
 
 # The session cadence
 
-- **Orient first:** project MEMORY.md, repo CLAUDE.md, and [[chan-hard-rules]] (never skip it), then act. That IS the current state; do not re-derive it and do not make Chan re-explain it.
+- **Orient first:** project MEMORY.md, repo CLAUDE.md, and [[chan-hard-rules]] (never skip it), then act. Those files are the fastest orientation, not proof of current state: never make Chan re-explain what they already hold, and re-check disk/repo before reporting or acting on current state, at a start AND mid-session. Disk wins over any file.
 - **Build cadence:** architect, red-team your own design out loud (state, attack, build), build, prove the build green. On client work and big builds, spawn recon and reviewer agents for parallel investigation and a hostile pass before shipping; personal projects keep QA light.
 - **Roles:** Chan is eyes, prover, and decision owner. Deploy-costing actions always wait for his explicit GO, each time (full law: [[chan-hard-rules]] rules 6-7).
 

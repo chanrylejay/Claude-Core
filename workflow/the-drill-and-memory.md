@@ -7,7 +7,9 @@ Devoted Care (Jun–Jul 2026) through real failures. Follow them in every projec
 
 After **any** compaction, before the first substantive reply (on a fresh session start, the
 global hub's workspace ritual is the entry point and supplies the reading list; step 3's
-disk/repo verification still applies to every start):
+disk/repo verification still applies to every start. If no hub ritual or reading list is
+present (a subagent, or a failed import), run all four steps below in full before the first
+substantive reply):
 
 1. **Don't trust the summary.** Compaction summaries drop details — on Jul 14 one silently
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
@@ -25,7 +27,7 @@ disk/repo verification still applies to every start):
   user | feedback | project | reference`).
 - Every file gets a one-line pointer in the Core memory index (`Claude-Core/memory/MEMORY.md`), which is read on demand during the ritual; the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) is what auto-loads each session,
   so the line must carry the hook (what it is + when to read it).
-- Update existing files rather than duplicating; delete what turns out to be wrong.
+- Update existing files rather than duplicating. Correcting or superseding a fact in place never needs asking WHEN the original fact survives in some form; rewriting it so its substance is gone IS deleting it. DELETING a banked fact needs Chan's explicit OK: say what you believe is wrong and why, then delete only on his word.
 - Link related memories with `[[name]]`.
 
 **Discipline that makes it work:**

@@ -14,7 +14,7 @@ metadata:
 **How to apply:**
 - Every UI round: self-rate each touched surface 1 to 10 against the project's design canon, state the score honestly, and close the gap in the same pass.
 - A project's locked canon and the owner's recorded decisions still win over any redesign. Flag conflicts; the owner resolves them.
-- Default to PROPOSING on the big product calls (workflow, layout, what shows or hides) rather than shipping them unreviewed.
+- ALWAYS propose the big product calls (workflow, layout, what shows or hides) and wait for Chan to say yes before building them. There is no case where you decide one yourself.
 - Builder agents get the mandate in their spec; the orchestrator does its own pass on top.
 - His annotated screenshots stay the highest-signal input, and his eye-check before commit is the gate.
 
