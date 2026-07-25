@@ -37,7 +37,7 @@ doesn't.
 ## Hooks (`../hooks/`) — wiring only
 The concept, the rules, and the never-fake-a-gate law live in ONE home:
 `../../workflow/qa-gauntlet-pattern.md`.
-- `push-guard.mjs` — PreToolUse on the shell tools; update the GO-file path and matcher per repo.
+- `push-guard.mjs` — PreToolUse on the shell tools; update the GO-file path and matcher per repo. Keep the `|| exit 2` on the command: without it a LOAD-time failure in the hook (syntax error, bad import) exits 1, which Claude Code treats as non-blocking, and every push walks through.
 - `gauntlet-guard.mjs` — three modes by argv: `ui-track` (PostToolUse on edit tools),
   `done-wall` (Stop), `spec-nudge` (UserPromptSubmit).
 
@@ -48,7 +48,7 @@ COPY both hooks into the project's `.claude/hooks/` first — never run them fro
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell", "hooks": [{ "type": "command", "command": "node .claude/hooks/push-guard.mjs" }] }],
+    "PreToolUse": [{ "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell", "hooks": [{ "type": "command", "command": "node .claude/hooks/push-guard.mjs || exit 2" }] }],
     "PostToolUse": [{ "matcher": "Edit|Write|mcp__lean-ctx__ctx_patch", "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs ui-track" }] }],
     "Stop": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs done-wall" }] }],
     "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs spec-nudge" }] }]

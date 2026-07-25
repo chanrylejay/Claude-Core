@@ -18,7 +18,7 @@
 // So quality is enforced at the moment work is DECLARED DONE, not at the moment it is saved.
 //
 // ── THE THREE MODES (one script, dispatched by argv[2]; wired in .claude/settings.local.json) ──
-//   ui-track    PostToolUse  Edit|Write|mcp__lean-ctx__ctx_patch  → ledgers every code / UI / risk-module file Claude edits (never blocks)
+//   ui-track    PostToolUse  Edit|Write|mcp__lean-ctx__ctx_patch  → ledgers every file matching CODE_EXT / UI_EXT / RISK_PATH (see the classifiers below; adapt them per project or the wall is blind here) (never blocks)
 //   done-wall   Stop                     → BLOCKS the turn from ending until the right agents have run
 //   spec-nudge  UserPromptSubmit         → nudges spec-reader on a raw requirements dump (never blocks)
 //
@@ -36,6 +36,9 @@
 // ── WHY THIS CAN'T LOCK CHAN OUT (the safety property) ──
 // Hooks only intercept CLAUDE's tool calls. Chan commits/pushes from his OWN terminal, which no hook
 // touches. Worst case a bug here blocks Claude, and Chan says "fix it". He is never locked out.
+// GAUNTLET_OFF is CHAN'S FILE. Claude NEVER creates or restores it — if genuinely stuck, say so in
+// one line and ask him for it by name. Same rule as the push token. If it already exists, say so in
+// the turn report before claiming anything is done.
 // Belt AND braces: `.claude/GAUNTLET_OFF` (any content) disables every mode instantly, and done-wall
 // FAILS OPEN after MAX_NAG blocks, so the agent can never be trapped in a Stop loop.
 //
@@ -46,7 +49,7 @@
 // Test (MANDATORY after any edit): _gauntlet_test.mjs in this folder, run: node _gauntlet_test.mjs
 
 import { existsSync, unlinkSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const CLAUDE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -68,6 +71,10 @@ const MAX_NAG = 3; // after this many Stop blocks, FAIL OPEN — never trap the 
 
 // ── file classifiers ─────────────────────────────────────────────────────
 // Anything the type-checker/linter covers → net-runner must have run green before "done".
+// ⚠ ADAPT PER PROJECT: ships JS/TS-only. In a Python, Go, Ruby, Java, PHP, SQL or shell repo this
+// matches NOTHING, the ledger stays empty, and the done-wall reports clean while never having seen
+// a single edit. Add this repo's languages (.py .go .rb .java .php .sql .sh .html) before relying
+// on the wall — a gate that cannot see the work is the silent theatre this file warns about.
 const CODE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|css|scss|sass|less)$/i;
 // Anything with pixels → client-ux (which runs the impeccable detector itself).
 const UI_EXT = /\.(tsx|jsx|css|scss|sass|less|vue|svelte|html)$/i;
@@ -137,9 +144,13 @@ function uiTrack(payload) {
   const isRisk = RISK_PATH.test(fp);
   if (!isCode && !isUI && !isRisk) process.exit(0);
 
-  if (isCode) addLine(CODE_TOUCHED, fp);
-  if (isUI) addLine(UI_TOUCHED, fp);
-  if (isRisk) addLine(RISK_TOUCHED, fp);
+  // New work INVALIDATES the token for its own track. Without this, a token created earlier in
+  // the turn covered every file edited after it (audit Jul 25 2026): run the agent, create the
+  // token, then edit three more files, and the wall let the turn end with those three unchecked.
+  // A token attests to the state the agent actually saw, never to a later one.
+  if (isCode) { addLine(CODE_TOUCHED, fp); consume(GATE_OK); }
+  if (isUI) { addLine(UI_TOUCHED, fp); consume(UX_OK); consume(UX_SHOT); }
+  if (isRisk) { addLine(RISK_TOUCHED, fp); consume(QA_OK); }
 
   const need = [];
   if (isCode) need.push("net-runner (type-check + lint + regression nets)");
@@ -175,12 +186,17 @@ function doneWall() {
   //  these agents every quick fix?" No. Chan works one screenshot per message, so a per-TURN wall
   //  would run a browser agent to verify a one-word deletion. Disproportionate.
   //
+  // `.claude/BATCH` is opened by CHAN ONLY (he says "batch of quick fixes"). Claude never creates it,
+  // and closes it the moment he says the batch is done. A batch covers same-session fixes of a few
+  // lines each; anything larger, or a new file, closes it immediately.
   // With `.claude/BATCH` open, turns end freely and the ledger ACCUMULATES instead of clearing. When
   // the batch closes, ONE gauntlet pass reviews the FINAL state of everything touched — which is
   // strictly BETTER review than N passes over N intermediate states (it sees the screen the client sees).
   //
-  // The safety property is unchanged: nothing can reach the client unreviewed, because PUSH is still
-  // gated and Claude must not call a batch push-ready while files are pending.
+  // What BATCH actually costs: committed work sits unreviewed. Push is gated ONLY if push-guard.mjs
+  // is really wired in THIS project (verify it exists; this template cannot check for you), and Chan
+  // pushes from his own terminal, which no hook touches. So name the open batch and its pending files
+  // in every reply while it is open, and never call any of it done or push-ready.
   if (existsSync(BATCH)) {
     consume(NAG); // a batch is not a nag loop
     const pending = [...new Set([...code, ...ui, ...risk])];
@@ -199,11 +215,15 @@ function doneWall() {
     const skipped = [needGate ? "net-runner" : null, needUX ? "client-ux" : null, needQA ? "client-qa" : null]
       .filter(Boolean)
       .join(" + ");
-    clearTurnState();
+    // Consume the NAG counter ONLY. The touched ledger SURVIVES: failing open defers the review,
+    // it never cancels it. clearTurnState() here used to erase the debt, so a skipped pass could
+    // never fire again in any later turn (audit Jul 25 2026).
+    consume(NAG);
     console.error(
       `[gauntlet] ⚠️ FAILING OPEN after ${MAX_NAG} blocks — allowing the stop so you are not trapped.\n` +
         `  ${skipped} did NOT run on: ${[...new Set([...code, ...ui, ...risk])].join(", ")}\n` +
-        `  TELL CHAN PLAINLY, in your reply, that this work shipped WITHOUT its review pass.`,
+        `  TELL CHAN PLAINLY, in your reply, that this work shipped WITHOUT its review pass.\n` +
+        `  The pass is STILL OWED: the ledger is kept and this wall fires again next turn.`,
     );
     process.exit(0);
   }
@@ -221,7 +241,7 @@ function doneWall() {
       `\n\n  Your COMMITS were never blocked; this is only the "done" gate. The QA law: understand → build →\n` +
       `  self-review → test → regression-check → ONLY THEN mark complete. Run the agent(s), create the\n` +
       `  token(s), then finish. Never create a token without actually running the agent — that is the\n` +
-      `  entire point of it. (Escape hatch, only if genuinely stuck: .claude/GAUNTLET_OFF)`,
+      `  entire point of it. (Escape hatch: ask CHAN for it by name. Claude NEVER creates .claude/GAUNTLET_OFF.)`,
   );
   process.exit(2);
 }
@@ -257,7 +277,9 @@ const MODE = process.argv[2];
 
 export { CODE_EXT, UI_EXT, RISK_PATH, MAX_NAG }; // for the test net
 
-if (process.argv[1] && process.argv[1].endsWith("gauntlet-guard.mjs")) {
+// Resolved-path compare, not a filename match: a copy saved under any other name used to run
+// no mode at all and silently disable the whole gauntlet (audit Jul 25 2026).
+if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
   let raw = "";
   try {
     for await (const chunk of process.stdin) raw += chunk;
