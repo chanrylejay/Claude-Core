@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 // apply-deepseek-switch.mjs — one-shot: point Claude Code (CLI + VS Code extension) at DeepSeek.
 // Run the DAY Claude access dies, not before: the switch takes effect on the next VS Code start.
-// Usage: node apply-deepseek-switch.mjs sk-YOURDEEPSEEKKEY [--dry-run]
+// Usage: node apply-deepseek-switch.mjs sk-YOURDEEPSEEKKEY [--dry-run] [--no-env]
+// --no-env writes settings.json only and skips the Windows user env vars. Those env vars are
+// MACHINE-WIDE: they ignore any USERPROFILE override, so a test that points USERPROFILE at a
+// sandbox and then takes the real path still reconfigures the whole machine (that happened,
+// Jul 25 2026). Any test of this script must pass --no-env.
 // The key is NEVER stored in this repo: it goes only into ~/.claude/settings.json (local) and
 // user-level env vars. Playbook: ../workflow/switch-to-deepseek.md
-import { readFileSync, writeFileSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, copyFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 
 const key = process.argv[2];
 const dry = process.argv.includes("--dry-run");
+const noEnv = dry || process.argv.includes("--no-env");
 if (!key || !key.startsWith("sk-")) {
   console.error("Usage: node apply-deepseek-switch.mjs sk-YOURDEEPSEEKKEY [--dry-run]");
   process.exit(1);
@@ -42,18 +47,42 @@ const ENV = {
 };
 
 const target = dry ? S + ".dryrun" : S;
-copyFileSync(S, dry ? target : S + ".bak-before-deepseek");
+// Back up ONCE. This used to be unconditional, so a second run copied the already-DeepSeek
+// settings over the only pristine-Claude backup and the documented rollback restored DeepSeek
+// (audit Jul 25 2026). The first backup is the one worth keeping, so never overwrite it.
+if (dry) {
+  copyFileSync(S, target);
+} else {
+  const BAK = S + ".bak-before-deepseek";
+  const ORIG = S + ".bak-CLAUDE-ORIGINAL";
+  if (!existsSync(ORIG)) copyFileSync(existsSync(BAK) ? BAK : S, ORIG);
+  if (!existsSync(BAK)) copyFileSync(S, BAK);
+}
 const settings = JSON.parse(readFileSync(target, "utf8"));
 settings.env = { ...(settings.env || {}), ...ENV };
+// The /model picker writes a top-level "model" pin (e.g. "opus[1m]"), a Claude-only id that this
+// script used to leave in place. If that pin wins over ANTHROPIC_MODEL, every request asks DeepSeek
+// for a Claude model and 404s, and nothing in the runbook would surface it (audit Jul 25 2026).
+if (settings.model) {
+  console.log("  removed stale top-level model pin: " + JSON.stringify(settings.model));
+  delete settings.model;
+}
 writeFileSync(target, JSON.stringify(settings, null, 2) + "\n", "utf8");
 JSON.parse(readFileSync(target, "utf8")); // validate or throw
 console.log(
   (dry ? "[dry-run] " : "") +
     "settings env merged + JSON validated " +
-    (dry ? "(wrote " + target + ", real file untouched)" : "(backup: settings.json.bak-before-deepseek)"),
+    (dry
+      ? "(wrote " + target + ", real file untouched)"
+      : "(pristine backup: settings.json.bak-CLAUDE-ORIGINAL, written once and never overwritten)"),
 );
+if (dry) {
+  console.log(
+    "  ⚠ " + target + " contains your API key in PLAINTEXT. Delete it as soon as you have read it.",
+  );
+}
 
-if (!dry) {
+if (!noEnv) {
   for (const [k, v] of Object.entries(ENV)) {
     execSync(
       'powershell -NoProfile -Command "[Environment]::SetEnvironmentVariable(\'' +
@@ -68,7 +97,10 @@ NEXT STEPS:
 1. VS Code: Ctrl+, -> search claudeCode.disableLoginPrompt -> TICK it.
 2. Fully close and reopen VS Code (not just reload).
 3. Smoke test a new chat: "what is rule zero and who am I working with".
-4. Rollback: restore settings.json from the .bak-before-deepseek copy, delete the 7 user env vars.
+4. Rollback: restore settings.json from settings.json.bak-CLAUDE-ORIGINAL (the pristine pre-DeepSeek
+   copy, written once and never overwritten), then delete every ANTHROPIC_* and CLAUDE_CODE_* user
+   env var this script set, and UNTICK claudeCode.disableLoginPrompt in VS Code or the Anthropic
+   sign-in screen never appears and you cannot log back in.
 NOTE: ccusage dollar figures are wrong for DeepSeek; real spend: platform.deepseek.com usage page.
 NOTE: NO VISION on this endpoint — Chan's eyes verify all screenshots from now on.
 `);
