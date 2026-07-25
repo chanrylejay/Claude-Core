@@ -42,9 +42,9 @@ session with no operating contract at all.
 
 - New durable fact → ONE file in `memory/` + an index line in `memory/MEMORY.md`. New universal
   lesson → extend the matching CATEGORY file in `lessons/`; never create a lookalike file.
-- Every new file gets a line in `DIRECTORY.md`, always.
+- Every new file gets a line in `DIRECTORY.md`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
 - One home per fact; anti-bloat and where-facts-go rules: global hub, section 6.
-- Compressing any permanent doc by more than 25%: run the L24 diff audit first
+- Compressing any permanent doc by more than 25% of its characters: run the L24 diff audit first. Measured against the version at the START of the session, not the previous edit — otherwise two 24% passes strip 42% and the audit never fires
   (`lessons/universal-patterns.md`, "Maintaining documents").
 - Archive never delete; the frozen originals live in `archives/` (rules in the `DIRECTORY.md`
   header). Memory mechanics and the banking law: `workflow/the-drill-and-memory.md`.

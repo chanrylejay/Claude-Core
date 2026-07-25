@@ -19,7 +19,7 @@ seeds (including the buried equivalence sentence every prior version missed), ze
 and all five red-team probes held (prompt-injection in the audited doc, collision+QUICK, an
 inverse creation-routing trap, QUICK+ambiguous, and LEARN-poisoning).
 
-**PRODUCTION VERSION: v6.4.3** (built Jul 25 2026). Kept in the vault beside v5.8 and v6.3;
+**PRODUCTION VERSION depends on the runtime: v7.0.2 on claude.ai while Chan has Claude access (it is the stronger auditor and the one to use by default), v6.4.3 on the DeepSeek R1 web chat, which is what survives after revocation.** v6.4.3 was built Jul 25 2026. Kept in the vault beside v5.8 and v6.3;
 never overwrite the older builds. Its edits over v6.3: Step 0 -> FULL lock; a mandatory FINDINGS
 section with three named scans (contradiction / loophole / permissive-reading); a Step 0 creation
 exception ("build a prompt for auditing X" routes BUILD, not ENGINE); a COMPLETE-SCAN rule; the

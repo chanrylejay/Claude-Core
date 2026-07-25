@@ -11,4 +11,4 @@ Chan redirected a mid-sprint KB-debloat proposal back to finishing the caregiver
 
 **Why:** P1 is the client-facing deliverable. The KB docs are the build's own resume-truth, and the live tier churns every session during an active sprint — so refactoring the docs mid-build means redoing the work. Doing hygiene *after* a sprint also lets the just-finished work archive in a single clean pass instead of two.
 
-**How to apply:** When an internal-hygiene or refactor idea comes up during an active client sprint, capture it into the Backlog as a placed item and execute it AFTER the sprint closes. Don't interrupt a client-facing P1 (e.g. a pilot/handoff) to reorganize tooling or docs.
+**How to apply:** When an internal-hygiene or refactor idea comes up during an active client sprint, capture it into the Backlog as a placed item. CHAN declares a sprint closed, and CHAN says when a backlog item starts: when the sprint ends, surface the list for him to prioritise rather than beginning any of it. Don't interrupt a client-facing P1 (e.g. a pilot/handoff) to reorganize tooling or docs.

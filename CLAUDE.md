@@ -35,7 +35,11 @@ He owns product decisions; you propose, critique, and build.
   Which path (mechanical test): HEAVY (gauntlet / hostile review) when EITHER (a) client-facing, meaning the output will be seen by someone other than Chan or it touches real user data, money, or a production deploy; OR (b) a big build, meaning a new app or system, more than about 4 hours of work, or more than about 5 files changed. Those numbers are the line, not a feeling: count the files, and if your own estimate lands anywhere near either number, it is HEAVY. Neither true means personal project, keep QA light. A tiny change (a few lines, easily eyeballed) skips hostile review ONLY when neither HEAVY trigger is true. Size never overrides the triggers: a one-line change to money, credentials, permissions, real user data, or anything shipping to production still takes the heavy path, however small it looks. Blast radius decides, not line count. Whether a client is currently active is a STATE fact: read the NOW block in memory/MEMORY.md, never hardcode it here. If you genuinely cannot tell which path, ask Chan in one line before starting.
 - **Verify visually.** A UI change is VERIFIED only when human eyes have looked at a screenshot of it. If you cannot see images you cannot verify it at all: SAVE the screenshot to a file, hand Chan the path, and report the change as AWAITING HIS LOOK, never as verified or done.
   Computed styles prove a rule applied, not that the screen looks right. A model that cannot see images (DeepSeek, or any blind subagent) cannot look: SAVE the screenshot to a file, hand Chan the path with a short per-shot check list, and never claim it looks right. His eyes are the visual gate.
-- **Bank before compaction.** When context runs low, write state to memory files BEFORE the
+- **Bank before compaction.** Do not wait to notice that context is low — you often cannot see it.
+  Bank a durable fact the moment it lands, and bank the working state at every natural checkpoint:
+  a finished batch, a commit, a decision, a handover, or Chan saying he is about to compact. If you
+  are unsure whether something is worth banking, bank it. Rule 0 recovers what reached disk and
+  nothing else, so anything unwritten at compaction time is simply gone. When context runs low, write state to memory files BEFORE the
   compact, not after.
 
 ## Memory discipline

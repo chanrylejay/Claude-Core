@@ -42,7 +42,11 @@
 // Belt AND braces: `.claude/GAUNTLET_OFF` (any content) disables every mode instantly, and done-wall
 // FAILS OPEN after MAX_NAG blocks, so the agent can never be trapped in a Stop loop.
 //
-// Exit codes: 0 = allow (stdout JSON may inject context), 2 = block (stderr is shown to Claude).
+// Exit codes: 0 = allow (stdout JSON may inject context), 2 = block (stderr is shown to Claude). ⚠ On exit 0 the DOCUMENTED channel is stdout JSON via
+// emitContext(); stderr may or may not reach the model. The two exit-0 disclosures below (the
+// fail-open notice and the BATCH warning) are written to stderr, so they are best-effort. What
+// makes them reliable is that neither path clears the touched ledger any more, so the wall fires
+// again next turn and re-states them on the exit-2 path, which IS documented (audit Jul 25 2026).
 // NOTE (verified against code.claude.com/docs/en/hooks.md, Jul-13): there is NO `stop_hook_active`
 // flag — Stop-loop protection MUST be self-tracked, which is what .gauntlet_nag does. Also: on
 // UserPromptSubmit an exit 2 REJECTS AND ERASES the user's message, so spec-nudge never exits 2.

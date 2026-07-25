@@ -19,7 +19,7 @@ each) — the Devoted-specific versions were deliberately not carried into this 
 2. *(build happens)*
 3. **reviewer** — hostile code review of the diff. Correctness bugs + project-discipline
    violations. Returns verdict + must-fix list, not a rewrite.
-4. **net-runner** — the anti-churn gate. Runs type/lint + every regression net relevant to the
+4. **net-runner** — the anti-churn gate. Runs type/lint + EVERY regression net in the suite. Skipping any net requires naming it and the reason in the verdict, so a skip is something Chan can audit rather than a judgement made silently inside the word "relevant". Runs the nets relevant to the
    change, audits whether the change *carries a net* that pins its own fix, raises a CHURN ALERT
    when a repeatedly-fixed module is touched again without one. Green/red verdict.
 5. **client-ux** — design-law enforcer. Opens the live screen (read-only), screenshots desktop +

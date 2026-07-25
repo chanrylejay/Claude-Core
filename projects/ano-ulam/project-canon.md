@@ -127,7 +127,7 @@ round-trip timeout. (Mechanisms above; generic platform versions live in
 The txt's chat-era rules (full file replacements, no patches) are OBSOLETE under Claude
 Code. Still alive: explain root cause in plain language (an analogy helps) BEFORE the fix;
 only Chan's real test outputs are valid data; ask instead of fabricating history; AI is for
-"Bakit?" reasoning only, never data. Open-source policy: the repo is public BY STRATEGY
+"Bakit?" reasoning only, never data INVENTION — extraction of real numbers out of the DA PDF is the one data-touching role and it is sanctioned (see DeepSeek's ONLY roles above). AI never makes a price up, adjusts one, or fills a gap. Open-source policy: the repo is public BY STRATEGY
 (infrastructure transparency); the DeepSeek prompt text, methodology, keys stay private.
 
 ## v3 kickoff — STEP 0 (added Jul 25 2026)

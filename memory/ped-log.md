@@ -7,7 +7,7 @@ metadata:
 
 # PED audit log
 
-One line per audit, newest first. Columns: DATE | TARGET | ASK | VERDICT | FIX / OUTCOME.
+One line per audit, newest first — and when several land on one date, that order is the ONLY sequencing signal, so keep it exact and never append to the bottom. Columns: DATE | TARGET | ASK | VERDICT | FIX / OUTCOME.
 The whole point: a prompt bug PED caught once must never ship twice, and every entry is a
 sentence of the eventual case study. Full context on PED itself: [[ped-prompt-auditor]].
 
@@ -18,7 +18,7 @@ sentence of the eventual case study. Full context on PED itself: [[ped-prompt-au
 - 2026-07-25 | PED v7.0.2 (Opus 5) | round 5 both halves: fresh seeds + the proven-clean control | PASS BOTH. Recall: both required seeds caught, quotes verbatim, zero fabrications. Precision: CLEAN SWEEP, zero findings, and all three previously-inflated findings correctly moved to NOTED AND CLEARED | v7.0.2 = 10/10, promoted.
 - 2026-07-25 | PED v6.3 self-audit (seeded-defect + red-team program) | audit + 5 red-team probes, A/B vs candidates | v6.3 1/3 on buried seeds, LIGHT-protocol inconsistency exposed | drove the v6.4.x patch arc.
 - 2026-07-25 | CHAMPIONSHIP: v6.4.3 (R1) vs v7.0 (Opus 5), both auditing 4 Claude-Core files, blind-judged | bare audit x4 each | v7.0 WON: 13 real findings vs 3, ZERO fabrications from either | 8 real kit defects fixed and pushed (commit bb6ee06); 4 of them were in text Claude wrote the same day.
-- 2026-07-25 | Claude-Core hub/contract/index/protocol (the 4 load-bearing files) | external audit + 8-agent adversarial verification | 8 confirmed real, 46 claims rejected as stretches | fixed: self-satisfying presence check, verified-by-SAVING, tiny-change carve-out, deploy-gate parenthetical, undefined READ-FIRST, ungated delete, stale PED note.
+- 2026-07-25 | Claude-Core hub/contract/index/protocol (the 4 load-bearing files) | external audit + 8-agent adversarial verification | 8 confirmed real, 46 claims rejected as stretches | fixed: self-satisfying presence check, verified-by-SAVING, tiny-change carve-out, deploy-gate parenthetical, undefined READ-FIRST, ungated delete, stale PED note, and the files-are-current-state line in the boss protocol (the eighth; the original entry listed only seven and the count went unrecoverable until PED caught it Jul 25 2026 — every entry now lists as many fixes as it claims).
 - 2026-07-25 | v7.0 5-round validation program AUTHORED (not yet run) | n/a | materials pre-verified; the clean control was rejected twice for containing real defects Claude wrote by accident (v2.0 four, v2.1 three) before clearing five auditors at v2.3 | ready in session scratchpad/v7-rounds/, gated on Chan having Claude access.
 - 2026-07-25 | PED v6.4.3 (challenger) | 3 fresh seeds + 5 red-team probes, sealed keys | CLEAN: 3/3 seeds, 0 fabrications, all probes held | v6.4.3 = production; the buried-equivalence defect finally caught.
 
