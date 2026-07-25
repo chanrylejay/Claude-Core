@@ -50,19 +50,27 @@ try {
     const norm = resolve(cwd).replace(/[\\/]+$/, "").toLowerCase();
     const home = resolve(process.env.USERPROFILE || "C:/Users/Chanryle").toLowerCase();
     const plantHere = norm !== home && !/^[a-z]:$/.test(norm);
+    // The seed write gets its OWN try. It used to share the outer one and run BEFORE emit(), so a
+    // throw here (read-only cwd, permissions) exited 0 having emitted nothing — and after a
+    // compaction that means no DRILL, which is the exact failure this hook exists to prevent
+    // (audit Jul 25 2026). The message must survive a failed write.
     if (plantHere) {
-      const seedPath = join(cwd, "leanctx-seed.js");
-      if (existsSync(seedPath)) {
-        seedNote = "leanctx-seed.js present. ";
-      } else {
-        writeFileSync(seedPath, SEED);
-        seedNote = "leanctx-seed.js was MISSING and has been auto-created (freeze prevention; keep it forever). ";
+      try {
+        const seedPath = join(cwd, "leanctx-seed.js");
+        if (existsSync(seedPath)) {
+          seedNote = "leanctx-seed.js present. ";
+        } else {
+          writeFileSync(seedPath, SEED);
+          seedNote = "leanctx-seed.js was MISSING and has been auto-created (freeze prevention; keep it forever). ";
+        }
+      } catch (e) {
+        seedNote = "⚠ leanctx-seed.js could NOT be written here (" + (e?.message ?? e) + ") — the first ctx_* call may freeze this session; plant it by hand or use Bash. ";
       }
     }
     if (source === "compact") {
       emit(
         "SessionStart",
-        "[ritual hook] Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; re-read the READ-FIRST files in this project's MEMORY.md plus Claude-Core/DIRECTORY.md; verify git and disk state; disk wins over the summary. " +
+        "[ritual hook] Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md plus Claude-Core/DIRECTORY.md (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
           seedNote,
       );
     } else {

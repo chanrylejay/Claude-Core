@@ -32,8 +32,11 @@ setup (the lean-ctx seed file, orientation reads, and a 5-line repo CLAUDE.md fr
 **New machine:** follow `workflow/new-computer-migration.md`.
 
 **Fallback (a machine without the hub):** copy this folder anywhere and add one line to the
-project's CLAUDE.md: `At session start, read <path>/Claude-Core/memory/MEMORY.md and follow
-workflow/the-drill-and-memory.md.`
+project's CLAUDE.md: `At session start, read <path>/Claude-Core/CLAUDE.md (the operating
+contract, mandatory) and <path>/Claude-Core/memory/MEMORY.md, then follow
+workflow/the-drill-and-memory.md.` The contract must be named explicitly here: without the hub
+there is no @import, so a fallback line that loads only the index and the drill runs a full
+session with no operating contract at all.
 
 ## Keep it alive (the upkeep map — pointers, not copies)
 
