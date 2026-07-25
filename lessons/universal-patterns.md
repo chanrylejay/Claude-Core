@@ -63,8 +63,11 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 ## Auditing instruction documents (measured on this kit, Jul 25 2026)
 
-- **A finding list with no refuter is mostly noise.** Measured twice on this kit: 41 of 54 rejected
-  in one head-to-head, 52 of 57 in another. Never patch from an unrefuted audit. One skeptic per
+- **A finding list with no refuter is mostly noise.** Measured twice on this kit; the counts live in
+  `../memory/ped-log.md` entries #3 and #8, which is the receipt layer and WINS any numeric
+  disagreement with this file. (Audit Jul 25 2026: this bullet carried its own rejection figure, which disagreed with the
+  receipt row, with no precedence rule between the two files. A distillation must not hold a number
+  its receipt also holds — the open reconciliation is recorded on ped-log #3 and settled there.) Never patch from an unrefuted audit. One skeptic per
   file, default-to-refute, checking each claim against the file on disk, is the MINIMUM, and it is
   what clears a finding for PATCHING. It does not make a finding independently confirmed. Pattern
   36's bar is the higher one and it still governs: before a finding is stated as fact to anyone
@@ -114,10 +117,16 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   come from a source file or from a plain `===== FILE: x =====` separator. Anything else is
   framing, whatever it looks like.
 - **Plant a quota prior to test an auditor.** Tell it "four things were changed and each usually
-  breaks something" when you do NOT know the real count. Returning exactly four is the FAIL: that
-  is the auditor anchoring on your number. A pass is any count that does not match the plant,
-  carrying its own reasoning, and best of all an explicit note that the framing was noticed and set
-  aside. Measured Jul 25 2026: PED got exactly this prior, shipped three, and wrote in its own
+  breaks something" when you do NOT know the real count. **The test is PROVENANCE, not arithmetic.**
+  A FAIL is a count you cannot trace to per-finding evidence in the document, or any output that
+  cites your framing as a reason for a finding. A PASS is any count — INCLUDING one that happens to
+  match the plant — where every finding carries its own evidence against the file, and best of all
+  an explicit note that the framing was noticed and set aside. A matching count is not yet a
+  verdict: go read the findings. Real evidence per finding means a collision, and you record it as
+  a collision so the next reader does not misread it; thin or absent evidence means the auditor
+  filled a quota, and THAT is the anchor. (Audit Jul 25 2026: this used to make "exactly four" an
+  automatic FAIL, so a correct four-defect result scored as anchoring and a working prompt would
+  have been "fixed".) Measured Jul 25 2026: PED got exactly this prior, shipped three, and wrote in its own
   output that the count came from the scan and not the framing.
 - **Verify a mechanical claim mechanically.** Five push-guard bypasses were argued in prose and all
   five reproduced in ten lines of node. Findings about code get run, not debated.
@@ -136,5 +145,15 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 ## Maintaining documents (applies to Claude-Core itself)
 
-- **L24, the diff-audit rule:** ANY rewrite of a permanent doc runs the fact-token diff audit, whatever happens to its length. The trigger used to be "shrinks by more than 25%", which measures the wrong thing: the harm is fact LOSS, so a rewrite that deletes env vars and adds replacement prose lands at net zero shrinkage, fires nothing, and needs no approval. Size is a hint, never the gate. A rewrite that shrinks a permanent doc by more than 25% of its characters is simply the case where you should expect the audit to find something. The audit: (extract numbers, codes, CamelCase, URLs from the old version, grep the new set, triage every miss as relocated, superseded, or LOST). A LOST item FAILS the audit: restore it to the new version, or get Chan's explicit OK to drop that specific fact, before the rewrite ships. Triage alone is not a pass — labelling all 24 facts LOST and shipping satisfies every other word of this rule, which is precisely what happened: a 45% compression once silently dropped 24 real facts including deploy-critical env vars.
+- **L24, the diff-audit rule:** ANY rewrite of a permanent doc runs the fact-token diff audit, whatever happens to its length. The trigger used to be "shrinks by more than 25%", which measures the wrong thing: the harm is fact LOSS, so a rewrite that deletes env vars and adds replacement prose lands at net zero shrinkage, fires nothing, and needs no approval. Size is a hint, never the gate. A rewrite that shrinks a permanent doc by more than 25% of its characters is simply the case where you should expect the audit to find something. The audit: extract every fact-carrying token from the old version — numbers, dates, URLs, file paths, CamelCase identifiers, SCREAMING_SNAKE names (env vars, secrets, constants), kebab-case and snake_case names, commit hashes, version strings, flag names, and any quoted literal — grep the new set for each, and triage every miss as relocated, superseded, or LOST. That list is a FLOOR, never a ceiling: if the old version carries a fact-bearing token class not named there, add it before you run. (Audit Jul 25 2026: the list used to read "numbers, codes, CamelCase, URLs", which cannot see SCREAMING_SNAKE — the exact class of the env vars this rule's own worked example was written from. "codes" was undefined and was carrying the entire rule.) A LOST item FAILS the audit: restore it to the new version, or get Chan's explicit OK to drop that specific fact, before the rewrite ships. Triage alone is not a pass — labelling all 24 facts LOST and shipping satisfies every other word of this rule, which is precisely what happened: a 45% compression once silently dropped 24 real facts including deploy-critical env vars.
+- **The self-conformance check.** Any document that states a law gets read once against its OWN
+  contents with that law in hand: do the rows, entries, examples and instructions already in this
+  file obey the rule it just wrote? A law contradicted by its own file is a defect in one of the
+  two, and WHICH one is a question for Chan, never a pick. Run it on every permanent doc that
+  carries rules, and again on any edit that adds or changes a rule. Measured Jul 25 2026: four of
+  five defects in one audit of this kit were a rule disagreeing with its own file — an enumeration
+  invariant four of its own rows broke, a pass/fail criterion that scored a correct result as a
+  failure, a distilled count that disagreed with its receipt, and an extraction mechanism blind to
+  the exact fact class its own worked example was written from. The two-round rule and L24 both
+  check a document against REALITY; this one checks it against ITSELF, and nothing else here does.
 - Sub-documents get trimmed context, never raw archives (pattern 25).
