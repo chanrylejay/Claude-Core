@@ -73,6 +73,12 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 
 ## Rollback
 
+Restore from `settings.json.bak-CLAUDE-ORIGINAL`, never from `.bak-before-deepseek`. The
+pristine copy is written once and never overwritten; the other one was overwritten on every
+run by older versions of the script, so it can hold an already-DeepSeek config. If
+`.bak-CLAUDE-ORIGINAL` is missing, the machine ran an old script version: strip the `env`
+block and the API key out of settings.json by hand instead of restoring anything.
+
 Restore ~/.claude/settings.json from the `.bak-before-deepseek` backup the script made, delete
 the seven ANTHROPIC_*/CLAUDE_CODE_* user env vars, restart VS Code. Claude returns whenever
 there is an account to return to.

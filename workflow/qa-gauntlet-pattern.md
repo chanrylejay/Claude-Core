@@ -56,7 +56,7 @@ cited conclusions instead of file dumps. Use before building, any time.
   owner's explicit GO each time."
 - **gauntlet-guard.mjs** — Stop hook that blocks calling a build turn "done" until the gauntlet
   tokens exist. Commit itself is never blocked; only the *claim of done*. Escape hatch:
-  `.claude/GAUNTLET_OFF`.
+  `.claude/GAUNTLET_OFF` — CHAN'S FILE ONLY. Claude never creates or restores it: if genuinely stuck, say so in one line and ask him for it by name. Unlike PUSH_GO it is persistent, not one-shot, so once it exists every mode stays off for all later turns and sessions with nothing to notice. If it already exists, say so in the turn report before calling anything done.
 
 COPY both hooks into the project's `.claude/hooks/` first — run from Claude-Core they silently
 guard the wrong folder (their paths resolve relative to the file). Wire them in the project's

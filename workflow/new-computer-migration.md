@@ -14,7 +14,13 @@ Moving = copy two folders + one file, reinstall a few tools, fix paths if the us
 Best practice: keep Claude-Core in a **private GitHub repo** — then "copying" is just `git clone`,
 and it's backed up forever.
 
-**But the repo backs up Claude-Core ONLY, not ~/.claude.** A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
+A repo backs up only what was PUSHED, and only what is TRACKED. Before the old machine is
+retired, in Claude-Core and in every project repo, run `git status --short` and
+`git log origin/main..HEAD` and confirm both come back empty. A clone is not a backup until
+that check is clean. Then run `git status --ignored --short`: everything it lists is excluded
+by .gitignore, exists in no repo anywhere, and must be hand-copied to an offline drive.
+
+**But the repo backs up only the TRACKED, PUSHED part of Claude-Core, and nothing of ~/.claude.** Everything .gitignore excludes lives in no repo at all. Read the LIVE Claude-Core/.gitignore rather than trusting any list written here, because a list drifts and the file does not (as of Jul 25 2026 it excludes archives/, LOCAL-ONLY-*, memory/LOCAL-ONLY-*, .env*, *.pem, *.key, *credential*, *.zip). `git status --ignored --short` prints exactly what must be hand-copied to an offline drive; archives/ and memory/LOCAL-ONLY-security-rulings.md are both in there today, and a tracked file points at that security file as the sole home of six settled rulings. A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
 
 ## What to reinstall (the tools — these do NOT copy)
 
