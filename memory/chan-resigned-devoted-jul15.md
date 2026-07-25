@@ -37,6 +37,11 @@ badmouth the client. He left with integrity (proper handoff).
   still applies to how it's presented.
 - Don't delete the Devoted memory bank — it's Chan's record of what he built. Await his direction on archiving/reuse.
 
-CLOSED Jul 24 2026: the three transition open items are moot or done. RULED Jul 24 2026: the Devoted memory bank is SEALED in place (tombstone note added in the bank itself); revisit at full closure via the career-playbook day-1 checklist. The last-day question died with the
+CLOSED Jul 24 2026: the three transition open items are moot or done. RULED Jul 24 2026: the Devoted memory bank is SEALED in place (tombstone note added in the bank itself); the seal lifts only when Chan says so, in words, per item; the career-playbook day-1 checklist may prompt him but never authorizes a change. The last-day question died with the
 Jul 16-22 resume and the wind-down; the handoff-doc window passed; the portfolio framing shipped
 (../portfolio/devoted-project-summary.md plus the live demo).
+
+STILL IN FORCE, never part of any snapshot and never superseded: the confidentiality canon
+governs every portfolio entry, demo, resume line, proposal, and public mention of this work.
+No client name, no person names, no client data beyond the redacted form kept here, unless
+the client's written OK is on file and Chan says GO.

@@ -22,7 +22,7 @@ metadata:
 
 **Cover-letter standing rules (absorbed Jul 24 2026 from job-hunting-supplementary.txt):**
 - ALL FOUR links in every cover letter: chanryle-cagara.vercel.app · linkedin.com/in/chanrylejay · github.com/chanrylejay · chanrylecagara@gmail.com.
-- Full legal name in ALL formal documents: **CHANRYLE JAY CAGARA** (never "Chan Ryle Cagara", never "Chanryle Cagara").
+- Full legal name in every application email, cover letter, resume, contract, invoice, and anything else sent to an employer or client: **CHANRYLE JAY CAGARA** (never "Chan Ryle Cagara", never "Chanryle Cagara"). "Chan" is for talking to him, never for outbound text.
 - Honest fit assessment BEFORE composing; if there is a gap, name it transparently.
 - Volume strategy: write the letter for whatever role Chan brings; no ranking or filtering unless he asks.
 - Lead project per role: the mapping lives in [[chan-career-playbook]]. Sales-side rules (Upwork, rates, negotiation): [[chan-freelance-sales-playbook]].

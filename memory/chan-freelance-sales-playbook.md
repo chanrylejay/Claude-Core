@@ -10,9 +10,11 @@ metadata:
 ## Upwork proposal laws (permanent)
 
 ALWAYS: live project links (GitHub + Vercel URLs) in every proposal · match the posted budget
-exactly, one flat number, never ranges, never hourly framing · reference his own production
+exactly, one flat number, never ranges, never hourly framing, but ONLY when that budget is at or
+above the tier price for the scope (T4 add-ons included); when the posted budget is below the
+tier price, quote the tier price as one flat number and say what the posted budget would buy · reference his own production
 systems as proof · offer a free 10-minute diagnostic as the entry (Zero-Call strategy).
-NEVER: imply Upwork client history (profile shows 0 completed jobs) · "first client discount"
+NEVER: imply Upwork client history he has not actually completed (fact as of Jul 2026: profile shows 0 completed jobs; recheck the live profile before writing anything about job history) · "first client discount"
 or review-fishing (reveals inexperience) · over-promise platforms he does not offer.
 SUPERSEDED Jul 6 2026: the old "never imply paid professional systems work" rule is DEAD —
 the Devoted engagement (Jun-Jul 2026, ended cleanly) is real paid solo-developer contract work
@@ -28,9 +30,9 @@ LLM inference (hardware). Full honest current skills: [[chan-skills-ledger]]. Ma
 ## The Zero-Call strategy (Upwork delivery arc)
 
 1 win the bid: get the broken JSON/workflow BEFORE money talk · 2 diagnose + deliver proof
-of life, fund before fix · 2.5 payment holdout: one follow-up, then walk · 3 deliver fix +
+of life, fund before fix · 2.5 payment holdout: one follow-up, then wait 3 business days; walking is Chan's call, never send a walk-away or exit message without his explicit GO · 3 deliver fix +
 import instructions · 3.5 request the review · 4 fallback if the client's test fails ·
-5 nuclear: full refund and exit. An offering is not VALIDATED until 3 clean client deliveries land; internal tests never close that gap. The ready-to-run sales system pack: HAWK v2.0 (Downloads/Projects/Prompt Engineering/Hawk/) + the n8n
+5 nuclear: full refund and exit, Chan's decision only, never mentioned or offered to a client before he says GO. An offering is not VALIDATED until 3 clean client deliveries land; internal tests never close that gap. The ready-to-run sales system pack: HAWK v2.0 (Downloads/Projects/Prompt Engineering/Hawk/) + the n8n
 ARCHITECT PLAYBOOK v2 (Downloads/Projects root). Private methodology, pointers only.
 
 ## Rates and negotiation

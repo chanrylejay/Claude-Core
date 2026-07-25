@@ -84,15 +84,24 @@ Itlog/Gulay; pantry items labeled "hindi kasama sa DA price monitoring".
 Every cron route: export GET delegating to POST (Vercel Cron sends GET) + dual auth
 (x-cron-secret header OR Authorization Bearer) + all three no-store headers
 (Cache-Control, CDN-Cache-Control, Vercel-CDN-Cache-Control; edge cache ignores
-force-dynamic without them). maxDuration 60 on heavy routes. CRON_SECRET lives in Vercel
+force-dynamic without them). maxDuration 60 on EVERY cron route (anything that
+scrapes, parses a PDF, calls DeepSeek, or writes batches; there is no "light" cron here). CRON_SECRET lives in Vercel
 env vars (Production AND Preview); the value is NOT written in the committed kit (it does sit
 inside the frozen archives txt, which is gitignored, and rotation was DECLINED Jul 23 2026 —
-settled, do not re-raise). Manual test:
-curl.exe -X POST the /api/cron/daily URL with the x-cron-secret header. A 504 at exactly
-02:00-02:01 UTC = collision with the scheduled run, not a failure. Site prices lag one day
+settled on the Jul 23 facts, do not re-argue it. NEW exposure evidence is not re-raising: if the
+value is ever committed, pasted in public, or suspected leaked, tell Chan to rotate, once,
+immediately). Manual test: curl.exe -X POST the /api/cron/daily URL with the x-cron-secret
+header. THIS HITS PRODUCTION: it spends paid DeepSeek calls and overwrites today's prices and
+daily_suggestions rows, so it needs Chan's GO each time, same as a push. A 504 at exactly
+02:00-02:01 UTC is a PROBABLE collision with the scheduled run, not proof of one. Confirm by
+querying today's rows in prices and daily_suggestions before calling the pipeline healthy;
+never report success from the 504 alone. Site prices lag one day
 by design (DA posts late; the 10AM run usually ingests yesterday's edition).
 
 ## Model status (UPDATED Jul 23-24 2026, supersedes the txt)
+
+Before ANY model, prompt, or cost decision, read ../../memory/chan-ai-cost-context.md FIRST.
+Where it conflicts with this section or with the "Cost ~$0/month" line above, that file wins.
 
 The txt's "deepseek-chat, migrate before Jul 24 2026" is DONE: ano-ulam migrated to
 deepseek-v4-flash Jul 23 2026 and the 10AM cron ran clean on it. The txt's "v4-flash breaks
