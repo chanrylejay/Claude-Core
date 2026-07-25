@@ -15,8 +15,8 @@ It killed the "regression = the enemy" problem: nothing gets called done on the 
 own say-so. The five project-agnostic agent definitions live in `../templates/agents/`;
 the two client-persona roles (`client-qa`, `client-ux`) are described below but must be
 **written fresh per project** from the new owner's requirements and design canon (start from
-`../templates/agents/client-qa.skeleton.md` / `client-ux.skeleton.md`, five fill-in fields
-each) — the Devoted-specific versions were deliberately not carried into this kit.
+`../templates/agents/client-qa.skeleton.md` / `client-ux.skeleton.md`, six fill-in fields
+each, the last being the evidence folder that is their only permitted write) — the Devoted-specific versions were deliberately not carried into this kit.
 
 ## The team (run in this order)
 

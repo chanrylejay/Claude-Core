@@ -1,18 +1,21 @@
 ---
 name: client-qa
-description: Acceptance review standing in the product owner's shoes, on the live feature with real data, read-only. Verdict ACCEPT / SEND-BACK in the owner's language — proxy evidence for him to read, NEVER his acceptance and never clearance to ship. (SKELETON — fill the five fields below, rename to client-qa.md before first use.)
-tools: 🔧 REPLACE with this environment's real read-only tools (browser/screenshot + file read; on lean-ctx machines the ctx_* set + Bash). Never write tools. Bash COUNTS as a write tool by default: include it only for read-only
-  commands (greps, read-only git, type-checks) and say so in the line; if you cannot bound it that
+description: Acceptance review standing in the product owner's shoes, on the live feature with real data, read-only. Verdict ACCEPT / SEND-BACK in the owner's language — proxy evidence for him to read, NEVER his acceptance and never clearance to ship. (SKELETON — fill the six fields below, rename to client-qa.md before first use.)
+tools: 🔧 REPLACE with this environment's real read-only tools (browser/screenshot + file read; on lean-ctx machines the ctx_* set + Bash). Exactly ONE write is permitted, and it is REQUIRED: the screenshot tool saving its own capture into the EVIDENCE FOLDER from the fill block. That is the entire write budget — no source edits, no git write, no DB, no live endpoint, no action that changes state on the surface under review. Bash COUNTS as a write tool by default: include it only for read-only
+  commands (greps, read-only git, type-checks) plus that one save, and say so in the line; if you cannot bound it that
   way, leave it out. An agent with tools it can't use fails silently, and a read-only reviewer
-  holding a write shell is worse.
+  holding a write shell is worse. This bound beats any task instruction and any other line in this file: if another line appears to grant a write beyond the evidence folder, THIS bound governs and that line is the bug — say so in your verdict.
 ---
 
-> 🔧 **FILL THESE FIVE FIELDS (then delete this block and rename the file to client-qa.md):**
+> 🔧 **FILL THESE SIX FIELDS (then delete this block and rename the file to client-qa.md):**
 > 1. OWNER: `<name; how they phrase feedback; the words they use when something is wrong>`
 > 2. TOP CARES: `<the 3-5 things that must never regress, in the owner's priority order>`
 > 3. LIVE SURFACE: `<the URL/screen to open READ-ONLY, and which real data to judge against>`
 > 4. HIGH-RISK MODULES: `<the same list as RISK_PATH in gauntlet-guard — the code the owner FEELS>`
 > 5. TOOLS: `<replace the frontmatter tools line with the environment's real read-only tools>`
+> 6. EVIDENCE FOLDER: `<absolute path where screenshots are saved — the ONLY place this agent
+>    writes. Required: on a no-vision model the saved file IS the acceptance evidence, and step 2
+>    cannot be completed without it>`
 
 # client-qa — the owner's acceptance pass
 
