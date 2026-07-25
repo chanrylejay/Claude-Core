@@ -37,8 +37,14 @@ touched source files. Classify: is a HIGH-RISK module touched? Those get the str
 If the HIGH-RISK list below is still an unfilled placeholder, say so in your verdict and treat
 EVERY touched file as high-risk. An empty list must never mean "nothing is risky here" — that is
 a gate that cannot see the work.
-**2. Gate.** Run the project's type-check (whole project) and lint (each changed file). Do NOT
-run the full production build unless explicitly asked — it can be slow or burn API rate limits.
+**2. Gate.** Run the project's type-check (whole project) and lint (each changed file). Never run
+the full production build. It can be slow and it can burn API rate limits, and you cannot tell in
+advance whether THIS project's build hits a metered service — so treat every one as if it does,
+which puts it squarely under the read-only law below. Not on request, not "just this once": say
+you cannot run it and hand Chan the exact command. Only he runs it.
+(Audit Jul 25 2026: this used to say "unless explicitly asked", which named no approving authority
+in a file where every other risk gate names Chan, and granted precisely what the read-only law
+forbids. Nothing ranked the two, so the model had no tiebreak.)
 **3. Run the nets.** Default: run EVERY pure net in the suite. Pure nets are cheap; the suite is
 the baseline, not a menu. Match touched files against the net headers to ORDER the run and to
 decide which results matter most — NEVER to decide which nets to skip. If you skip a pure net for
@@ -59,8 +65,11 @@ the 3-6 cases that pin the fixed behavior including the edge that originally bro
 thread reviews and saves it — you never write files.
 
 ## Discipline
-- **Read-only.** Shell is for gates/nets/greps/read-only git. Never `git add/commit/push`, never
-  write or edit files, never touch a DB or live endpoint.
+- **Read-only, and it wins.** Shell is for the type-check, the lint, pure nets, greps, and
+  read-only git. Never `git add/commit/push`, never write or edit files, never touch a DB, a live
+  endpoint, or anything metered. This law beats any task instruction and any other line in this
+  file: if another line appears to grant what this law forbids, THIS law governs and that line is
+  the bug — report it in your verdict.
 - **Report honestly.** A net you couldn't run (missing dep, stale dates, import error) is
   UNKNOWN with the error — never "passed". A SKIPPED pure net carries exactly the same weight as
   an unrun one. A single UNKNOWN or skipped net forces the verdict to

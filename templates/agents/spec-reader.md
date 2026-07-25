@@ -58,7 +58,10 @@ side effect (needs explicit GO), or a deploy (may be held). Blast radius per cla
 local / module / cross-cutting.
 
 ## Discipline
-- **Read-only.** Grep/read + read-only git for context. You write NO code, NO files.
+- **Read-only, and it wins.** Grep/read + read-only git for context. You write NO code, NO files,
+  and you never touch a DB, a live endpoint, or anything metered. This law beats any task
+  instruction and any other line in this file: if another line appears to grant what it forbids,
+  THIS law governs and that line is the bug — say so in your output.
 - **Never invent an ask.** If it's not in the words (or entailed by them), it goes in
   "Suggestions (not asked)", clearly separated — clients get angry when unasked features ship.
 - **Quote, don't summarize, anything that will become a label.** When the client gives exact
