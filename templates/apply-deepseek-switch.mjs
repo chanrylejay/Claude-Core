@@ -5,12 +5,17 @@
 // --no-env writes settings.json only and skips the Windows user env vars. Those env vars are
 // MACHINE-WIDE: they ignore any USERPROFILE override, so a test that points USERPROFILE at a
 // sandbox and then takes the real path still reconfigures the whole machine (that happened,
-// Jul 25 2026). Any test of this script must pass --dry-run, NOT merely --no-env: --no-env only
-// skips the machine-wide env vars, while the settings.json write still lands on the LIVE file.
-// --dry-run redirects that write to settings.json.dryrun and implies --no-env, so it is the only
-// flag that makes a test safe on a machine where Claude access still works (audit Jul 25 2026 —
-// the earlier mandate named the weaker flag and would have written DeepSeek config to the live
-// settings file).
+// Jul 25 2026). THE TEST INVARIANT IS NOT A FLAG: no test may let the settings.json write land on
+// a real path. --dry-run guarantees that unconditionally (it redirects the write to
+// settings.json.dryrun and implies --no-env), so it is the default, and the ONLY safe choice when
+// you cannot control USERPROFILE. --no-env ALONE is NOT safe on a normal machine: it skips only
+// the env vars, and the settings write still hits the LIVE file. The one exception is a test that
+// redirects USERPROFILE into a sandbox, where that write is already contained — _switch_test.mjs
+// does exactly that, which is why it passes --no-env and can still exercise the real-write backup
+// logic that --dry-run would skip.
+// (audit Jul 25 2026 — twice. First the mandate named the weaker flag and would have written
+// DeepSeek config to the live settings file. The correction for THAT was absolute and contradicted
+// this kit's own test net, which is correct as written. State the invariant, not the flag.)
 // The key is NEVER stored in this repo: it goes only into ~/.claude/settings.json (local) and
 // user-level env vars. Playbook: ../workflow/switch-to-deepseek.md
 import { readFileSync, writeFileSync, copyFileSync, existsSync } from "node:fs";

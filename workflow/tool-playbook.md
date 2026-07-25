@@ -4,6 +4,11 @@ Generalized from the Devoted Care tooling saga (a 4-hour hunt on Jul 14 + weeks 
 Environment-specific details (lean-ctx, specific MCPs) may not apply to a new setup —
 the *principles* always do.
 This file is the ONE home for operational tool lessons; TOOLS.md is the historical catalog and points here.
+That claim cuts both ways: because a model treats this file as the destination, a STALE instruction
+here is more dangerous than the same staleness anywhere else. Two laws govern how anything is
+written into this file, and they live in `../lessons/universal-patterns.md` under "Maintaining
+documents": ONE INSTRUCTION, ONE HOME, and a list drifts while the live thing does not. Read them
+before adding a rule here that names a flag, a filename, or a count that some other file also owns.
 
 ## Seeing is verifying
 - **A UI change is verified by LOOKING at it** — take a screenshot and actually view the image.
@@ -44,8 +49,23 @@ apply-deepseek-switch.mjs correctly left ~/.claude/settings.json untouched and s
 user env vars pointing the live CLI at another provider with a fake key. Caught and reverted before
 any restart, but a restart would have broken the very tool being used to fix it.
 The rule: before testing any script, list every side effect it has that is NOT a file write inside
-the sandbox. If it has one, the script needs a flag that skips it and the test always passes that
-flag. apply-deepseek-switch.mjs now has --no-env for exactly this.
+the sandbox — user env vars, the registry, services, global npm state, AND any write to a real
+config path outside the sandbox. The script needs a flag that skips ALL of them, and the test
+always passes that flag.
+
+**Never name that flag here.** Read the script's own usage header and use the flag IT names as
+test-safe. A flag name written in a lessons file drifts, because nobody re-reads a lessons file
+when a script changes; the script's header is read every time.
+
+Tripwire, because this one already bit: for `apply-deepseek-switch.mjs`, `--no-env` alone does NOT
+make a test safe on a normal machine — it skips the machine-wide env vars and still writes the LIVE
+settings.json. `--dry-run` is safe unconditionally. The invariant is that the write must not be
+able to reach a real path, which is why a test that redirects USERPROFILE into a sandbox may use
+the weaker flag and still be safe. Read the header for the current rule. This tripwire may itself
+go stale, and that is the point of the split: a stale WARNING costs a re-read of the header, a
+stale INSTRUCTION costs the machine.
+(Audit Jul 25 2026: this paragraph named `--no-env` as the safe flag. The script header had
+already been corrected that same morning and the correction landed in one file only.)
 
 ## Long-running work
 - **Compressed/summarized shell output can mangle exact values** — re-run tightly scoped or read

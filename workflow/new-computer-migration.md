@@ -37,10 +37,35 @@ by .gitignore, exists in no repo anywhere, and must be hand-copied to an offline
 
 The copied `~/.claude/settings.json` carries the DeepSeek `env` block AND the API key in
 plaintext. On the new machine that means Claude Code points at DeepSeek on first start, against
-the account you just signed into, and your key now exists on a second disk. Decide deliberately:
-keeping the switch is fine if that is the intent, but if you are migrating back to Claude, strip
-the `env` block and the key out of settings.json by hand before the first start, and delete any
-`settings.json.dryrun` that came along with it.
+the account you just signed into, and your key now exists on a second disk.
+
+**THIS IS CHAN'S CALL, NOT THE MODEL'S.** Stop here and ask him: keep the DeepSeek switch, or
+migrate back to Claude? Do not decide it, do not infer it from context, do not start either branch
+without his answer. That holds even when he said "finish the setup" — a DECIDE point in this file
+is always his, and the handoff at the bottom of this file covers path-fixing and verification,
+never a choice. (Audit Jul 25 2026: this said "Decide deliberately" and named nobody, in the one
+file that ends by handing execution to a model. Every comparable decision in this kit names Chan.)
+
+- **KEEP:** leave settings.json as-is; the key is meant to be on this disk. Still run the sweep
+  below, so you know exactly where it landed.
+- **BACK TO CLAUDE:** strip the `env` block and the key out of settings.json by hand before the
+  first start, then run the sweep.
+
+**KEY SWEEP — a search, never a file list.** More than one file in that folder can hold the key:
+`settings.json`, `settings.json.dryrun` (what --dry-run writes), and
+`settings.json.bak-before-deepseek`, which the script OVERWRITES on every run, so after any switch
+it holds an already-DeepSeek config with the key in it. A future script version will add a fourth.
+So do not clean from a list — clean from a search. From PowerShell:
+
+    Get-ChildItem -Path "$env:USERPROFILE\.claude" -Recurse -File |
+      Select-String -Pattern 'sk-' -List |
+      Select-Object -ExpandProperty Path
+
+Print PATHS ONLY. Never echo the matching line and never paste it into chat: the match IS the key.
+Delete or scrub every file it names, then RE-RUN the search and confirm it returns nothing. Not
+done until the second run comes back empty.
+(Audit Jul 25 2026: this step used to enumerate two files while the script wrote three, so a
+migration back to Claude left the API key sitting on the new disk in the .bak-before-deepseek file.)
 
 ## The one gotcha: absolute paths
 
@@ -61,3 +86,7 @@ memories won't attach.
 Copy the folders, open the Claude extension on the new machine, and say:
 "I just migrated from my old computer — read Claude-Core/workflow/new-computer-migration.md
 and finish the setup." Claude does the path-fixing and verification itself.
+
+"Finish the setup" is authority to EXECUTE, never authority to DECIDE. Every DECIDE point in this
+file stops and asks Chan, the DeepSeek keep-or-revert branch above most of all. A model that reads
+this line as blanket permission will answer a question that was never put to it.

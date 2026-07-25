@@ -79,8 +79,23 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 - **The highest-yield audit is of the patches you just wrote.** Four fixes written in one session on
   this kit each introduced a new defect; a re-audit of only the rewritten passages found three more
   that had not existed that morning. Patch, then audit the patch, every time.
+- **ONE INSTRUCTION, ONE HOME.** The single highest-yield law in this kit. When the same
+  operational instruction lives in two files, a fix lands in one and the other keeps issuing the
+  old order — and the stale copy is usually the one a model reaches first, because it is the file
+  that advertises itself as the home for that topic. Only ONE file may CARRY an instruction; every
+  other mention points at it by path. It happened NINE times in a single day (Jul 25 2026) on this
+  kit alone, the worst being a lessons file that named the wrong test flag for a provider-switch
+  script and would have reconfigured the live machine, superseded in the script header that same
+  morning. When you cannot avoid a second mention, mark it explicitly as a WARNING that may go
+  stale rather than an instruction to follow: a stale warning costs a re-read, a stale instruction
+  costs the machine.
+- **A list drifts; the live thing does not.** Wherever a doc would ENUMERATE — files that hold
+  secrets, env vars to delete, flags a script accepts, models a provider serves — write the QUERY
+  that regenerates the list and name the live source of truth. Enumerate only when the list is
+  short, checkable at a glance, and paired with the query that verifies it. Corollary: a cleanup
+  step that lists the files to clean will miss the file the next script version adds.
 - **Patch both copies in the same edit.** A rule bounded in one file and left unbounded in its twin
-  ships as a defect. It happened here twice in one day (a supersede clause, a delete gate).
+  ships as a defect. The count above is why this is not a soft preference.
 - **Never put framing inside an AUDIT input.** An audit input is the document and nothing else.
   Notes explaining what the file is, why it matters, or what to watch for are PRIMING, and the
   auditor spends effort resisting them instead of reading. Measured here Jul 25 2026: a note saying
