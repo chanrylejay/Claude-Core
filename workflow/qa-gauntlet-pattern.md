@@ -1,7 +1,14 @@
 # The QA Gauntlet — agent team pattern
 
-Scope (Chan, Jul 23 2026): built for CLIENT work. Use on client projects and big builds only;
-personal projects keep QA light (self-review + a working check). Exact heavy-vs-light test: the contract, Claude-Core/CLAUDE.md.
+Scope (Chan, Jul 23 2026): built for CLIENT work. Claude-Core/CLAUDE.md is AUTHORITATIVE on the
+heavy-vs-light class and holds the governing copy of the mechanical test — run it THERE, and never
+paraphrase it into this file (a second copy of a rule is a second place for it to rot). Never
+classify by a feeling that something is a personal project: that phrase is a CONSEQUENCE of the
+test, never an input to it, and a personal project that touches production credentials is HEAVY.
+If the class is unclear, ask Chan in one line before starting. If this file ever disagrees with the
+contract, the contract wins immediately and you report the disagreement instead of resolving it
+yourself. (Audit Jul 25 2026: this line used to say "personal projects keep QA light", which read
+as a sufficient classifier and would have shipped a credentials change with no reviewer at all.)
 
 Built on Devoted Care when the client (PO) went on vacation and Claude had to own the QA gate.
 It killed the "regression = the enemy" problem: nothing gets called done on the builder's
@@ -32,7 +39,15 @@ each) — the Devoted-specific versions were deliberately not carried into this 
    every killed finding with the sentence that refuted it, and state both counts in the turn report
    ("N shipped, M killed") so Chan can ask to see the killed list. He can reinstate any of them; a
    refutation is the challenger's opinion, never a deletion. The owner reads only
-   survivors. Optional on small changes; use it whenever review output exceeds a screen.
+   survivors. MANDATORY unless ALL THREE are true — count them, do not weigh them: the change is
+   LIGHT by the contract's mechanical test, the reviewers returned fewer than ten findings in
+   total, and none of them is rated must-fix. If you cannot tell whether a condition holds, it does
+   not hold: run the challenger. Skipping it requires naming the skip and the reason in the turn
+   report, so a skip is something Chan can audit rather than a judgement made silently inside the
+   word "small". Only Chan can waive this. Note that no passing token exists for this role, so
+   `gauntlet-guard.mjs` CANNOT catch a silent skip the way it catches a missing GATE_OK — the turn
+   report is the only channel there is, which is why reporting the skip is mandatory and not
+   advisory (audit Jul 25 2026).
 
 Plus **recon** — read-only codebase/data-flow tracer for "how does X actually work," returning
 cited conclusions instead of file dumps. Use before building, any time.

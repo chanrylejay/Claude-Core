@@ -29,7 +29,7 @@ substantive reply):
 
    If you cannot tell whether a trigger fired, it fired. If none fired, say so in one line in
    your first reply, so the skip is visible rather than silent. Only Chan can waive this.
-2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md).
+2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file, plus [[chan-hard-rules]] always, whether or not it carries a marker. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, and the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md.
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.
 4. Only then reply.

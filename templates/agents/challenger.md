@@ -1,6 +1,6 @@
 ---
 name: challenger
-description: Adversarial filter that runs AFTER the review agents and BEFORE the owner reads anything. Re-tests every finding, kills false alarms, merges duplicates; the owner reads only survivors. Optional on small changes; run whenever review output exceeds a screen.
+description: Adversarial filter that runs AFTER the review agents and BEFORE the owner reads anything. Re-tests every finding, kills false alarms, merges duplicates; the owner reads only survivors. MANDATORY unless ALL THREE hold - the change is LIGHT by the contract's mechanical test, under ten findings in total, and none rated must-fix; if you cannot tell, it does not hold. A skip must be named in the turn report. Full rule: workflow/qa-gauntlet-pattern.md.
 tools: mcp__lean-ctx__ctx_read, mcp__lean-ctx__ctx_search, mcp__lean-ctx__ctx_shell, mcp__lean-ctx__ctx_glob, mcp__lean-ctx__ctx_tree, Bash
 ---
 
