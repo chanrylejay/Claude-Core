@@ -75,9 +75,31 @@ t("explicit startup does NOT drill", !drills(raw(JSON.stringify({ source: "start
 t("EMPTY payload drills", drills(raw("")));
 t("MALFORMED payload drills", drills(raw("{not json")));
 t("payload with no source key drills", drills(raw('{"cwd":"/x"}')));
+t("non-string source drills", drills(raw(JSON.stringify({ source: 42 }))));
+// The case three consecutive fixes missed: an UNKNOWN STRING. It is truthy, so it survived every
+// falsy-guard and then failed `=== "compact"`, taking the normal-start branch — while the comment
+// above it claimed unknown sources resolved to compact (audit Jul 25 2026). The guard allowlists
+// the three known-safe sources now, so anything the platform renames or adds fails to the drill.
+t("UNKNOWN source string drills", drills(raw(JSON.stringify({ source: "compact_v2" }))));
+t("another unknown source drills", drills(raw(JSON.stringify({ source: "restored" }))));
+// and the other two known-safe sources must still NOT drill
+t("resume does not drill", !drills(raw(JSON.stringify({ source: "resume" }))));
+t("clear does not drill", !drills(raw(JSON.stringify({ source: "clear" }))));
+// the drill message must name all three files and the tool, not lean on a rule in a file the
+// model has not reopened yet
+const drillMsg = raw(JSON.stringify({ source: "compact" })).stdout || "";
+t("drill names Claude-Core/memory/MEMORY.md", /Claude-Core\/memory\/MEMORY\.md/.test(drillMsg));
+t("drill names the out-of-root read tool", /node -e/.test(drillMsg));
 
 const src = fs.readFileSync(LIVE, "utf8");
-t("seed write is isolated in its own try/catch", /try \{[\s\S]{0,400}writeFileSync\(seedPath, SEED\)[\s\S]{0,400}\} catch/.test(src));
+// The requirement is a BOUNDARY, not a shape: the path computation AND the write must sit inside
+// the same try, because a throw from resolve() used to reach the outer catch and emit nothing.
+// The first version of this check measured a character distance and broke the moment the try was
+// widened — that is a brittle test, not a real one. Measure the boundary.
+const seedBlock = src.slice(src.indexOf("let seedNote"), src.indexOf("catch (e)"));
+t("the seed try wraps the PATH computation too", /resolve\(cwd\)/.test(seedBlock));
+t("the seed try wraps the WRITE", /writeFileSync\(seedPath, SEED\)/.test(seedBlock));
+t("and the try opens before both of them", seedBlock.indexOf("try {") >= 0 && seedBlock.indexOf("try {") < seedBlock.indexOf("resolve(cwd)"));
 t("a failed seed write still produces a message", /could NOT be written/.test(src));
 
 fs.rmSync(SB, { recursive: true, force: true });

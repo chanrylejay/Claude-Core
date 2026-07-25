@@ -47,20 +47,32 @@ try {
     // "startup" emitted the normal ritual after a compaction — a confidently wrong message on
     // the one path where a silent miss is invisible (audit Jul 25 2026). The asymmetry decides
     // it: guessing compact costs one unnecessary drill, guessing startup costs the drill.
-    const source = typeof payload.source === "string" && payload.source ? payload.source : "compact";
-    // Seed check: plant everywhere except the bare home dir and drive roots. The freeze's
-    // main victim is a brand-new EMPTY folder, so "looks like a repo" checks miss the worst
-    // case (L24-audit finding, Jul 24 2026).
+    // ONLY these three skip the drill. Everything else takes it: missing, empty, non-string, AND
+    // any value this file does not recognise — a renamed or added platform source. Matching the
+    // one dangerous value instead of allowlisting the safe ones missed unknown STRINGS: truthy, so
+    // they survived the guard, failed the equality, and took the else branch, while the comment
+    // claimed unknown sources resolved to compact.
+    // THIRD incomplete pass at this line (audit Jul 25 2026): first it defaulted to startup, then
+    // it caught malformed JSON but not empty input, then empty but not unrecognised. Allowlisting
+    // ends the class instead of the instance. The asymmetry never changed: guessing compact costs
+    // one unnecessary drill, guessing startup costs the drill.
+    const NORMAL_START = new Set(["startup", "resume", "clear"]);
+    const rawSource = typeof payload.source === "string" ? payload.source : "";
+    const source = NORMAL_START.has(rawSource) ? rawSource : "compact";
+
+    // Seed check: plant everywhere except the bare home dir and drive roots. The freeze's main
+    // victim is a brand-new EMPTY folder, so "looks like a repo" checks miss the worst case
+    // (L24-audit finding, Jul 24 2026).
+    // The ENTIRE block sits in ONE try, path computation included. The earlier fix guarded only
+    // the WRITE and left resolve(cwd) and the home resolve outside it, so a throw there still
+    // reached the outer catch, exited 0, and emitted nothing — the same missed drill that fix was
+    // written to kill, one line short. Nothing in here may stop the message.
     let seedNote = "";
-    const norm = resolve(cwd).replace(/[\\/]+$/, "").toLowerCase();
-    const home = resolve(process.env.USERPROFILE || "C:/Users/Chanryle").toLowerCase();
-    const plantHere = norm !== home && !/^[a-z]:$/.test(norm);
-    // The seed write gets its OWN try. It used to share the outer one and run BEFORE emit(), so a
-    // throw here (read-only cwd, permissions) exited 0 having emitted nothing — and after a
-    // compaction that means no DRILL, which is the exact failure this hook exists to prevent
-    // (audit Jul 25 2026). The message must survive a failed write.
-    if (plantHere) {
-      try {
+    try {
+      const norm = resolve(cwd).replace(/[\\/]+$/, "").toLowerCase();
+      const home = resolve(process.env.USERPROFILE || "C:/Users/Chanryle").toLowerCase();
+      const plantHere = norm !== home && !/^[a-z]:$/.test(norm);
+      if (plantHere) {
         const seedPath = join(cwd, "leanctx-seed.js");
         if (existsSync(seedPath)) {
           seedNote = "leanctx-seed.js present. ";
@@ -68,14 +80,15 @@ try {
           writeFileSync(seedPath, SEED);
           seedNote = "leanctx-seed.js was MISSING and has been auto-created (freeze prevention; keep it forever). ";
         }
-      } catch (e) {
-        seedNote = "⚠ leanctx-seed.js could NOT be written here (" + (e?.message ?? e) + ") — the first ctx_* call may freeze this session; plant it by hand or use Bash. ";
       }
+      // the home dir and drive roots are a deliberate skip, not a failure: no note, by design
+    } catch (e) {
+      seedNote = "⚠ leanctx-seed.js could NOT be written here (" + (e?.message ?? e) + ") — the first ctx_* call may freeze this session; plant it by hand or use Bash. ";
     }
     if (source === "compact") {
       emit(
         "SessionStart",
-        "[ritual hook] Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md plus Claude-Core/DIRECTORY.md (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
+        "[ritual hook] Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — both out-of-root, both via Bash node -e, never ctx_read (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
           seedNote,
       );
     } else {
