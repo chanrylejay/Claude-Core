@@ -30,6 +30,18 @@ This file is the ONE home for operational tool lessons; TOOLS.md is the historic
 - Ask the environment before prescribing fixes: Chan is on the **VS Code extension**, not a
   terminal — keystroke/settings advice differs.
 
+## Test sandboxes contain files, never machine state
+
+A test that redirects HOME/USERPROFILE to a temp folder protects FILES and nothing else. Windows
+user environment variables, the registry, installed services, and global npm state are machine-wide
+and ignore the redirect completely. Burned here Jul 25 2026: a sandboxed test of
+apply-deepseek-switch.mjs correctly left ~/.claude/settings.json untouched and still wrote 12 real
+user env vars pointing the live CLI at another provider with a fake key. Caught and reverted before
+any restart, but a restart would have broken the very tool being used to fix it.
+The rule: before testing any script, list every side effect it has that is NOT a file write inside
+the sandbox. If it has one, the script needs a flag that skips it and the test always passes that
+flag. apply-deepseek-switch.mjs now has --no-env for exactly this.
+
 ## Long-running work
 - **Compressed/summarized shell output can mangle exact values** — re-run tightly scoped or read
   the raw log when an exact value matters.

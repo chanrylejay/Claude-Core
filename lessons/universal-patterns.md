@@ -61,6 +61,27 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 - 7-point verdict: rating (provisional until all tests run) · what worked · what broke · one-sentence root cause · fix mapped to a confirmed failure · what NOT to change · the next test set.
 - Design rating and execution rating are different numbers; never issue an execution rating without real data.
 
+## Auditing instruction documents (measured on this kit, Jul 25 2026)
+
+- **A finding list with no refuter is mostly noise.** Measured twice on this kit: 41 of 54 rejected
+  in one head-to-head, 52 of 57 in another. Never patch from an unrefuted audit. One skeptic per
+  file, default-to-refute, checking each claim against the file on disk, is enough.
+- **The scaffolding beats the model.** Opus 5 running a purpose-built audit prompt (PED v7.0.2, in a
+  separate claude.ai window, blind to the session) found 8 real defects on 4 files, 3 of which two
+  parallel Opus 5 fleets had missed the same day on the same files. Same model on both sides. When an
+  audit underperforms, fix the prompt before reaching for more agents.
+- **A blind second instance is worth more than a bigger fleet.** The value is that it cannot see what
+  the working session already decided, so it does not inherit the session's blind spots.
+- **The highest-yield audit is of the patches you just wrote.** Four fixes written in one session on
+  this kit each introduced a new defect; a re-audit of only the rewritten passages found three more
+  that had not existed that morning. Patch, then audit the patch, every time.
+- **Patch both copies in the same edit.** A rule bounded in one file and left unbounded in its twin
+  ships as a defect. It happened here twice in one day (a supersede clause, a delete gate).
+- **Plant a quota prior to test an auditor.** Telling it "four things were changed and each usually
+  breaks something" and seeing whether it returns exactly four is a cheap calibration check.
+- **Verify a mechanical claim mechanically.** Five push-guard bypasses were argued in prose and all
+  five reproduced in ten lines of node. Findings about code get run, not debated.
+
 ## Multi-worker governance (the architect + repo-truth worker + no-repo red-team triangle)
 
 - Read the knowledge base before every build; the compaction summary is lossy and once dropped real client features.
