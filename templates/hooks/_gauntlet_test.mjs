@@ -40,9 +40,17 @@ check("ui NOT script.mjs", !UI_EXT.test("script.mjs"));
 check("ui NOT notes.md", !UI_EXT.test("notes.md"));
 
 // RISK_PATH: never matches a real path until a project adapts it
-check("risk never-matches a real path", !RISK_PATH.test("src/critical/money.ts"));
-check("risk never-matches an api route", !RISK_PATH.test("app/api/deploy/route.ts"));
-check("risk never-matches a bare name", !RISK_PATH.test("anything"));
+// RISK_PATH ships INERT and a project is EXPECTED to adapt it. These pins guard the SHIPPED
+// default only. After adapting, run with RISK_PATH_ADAPTED=1 so the MANDATORY suite does not fail
+// the very adaptation the hook invites — the adapted pattern is the project's to test.
+if (process.env.RISK_PATH_ADAPTED) {
+  console.log("  --  RISK_PATH_ADAPTED set: inert-default pins skipped (adapted pattern is project-owned)");
+  check("adapted RISK_PATH is still a regex", RISK_PATH instanceof RegExp);
+} else {
+  check("risk never-matches a real path", !RISK_PATH.test("src/critical/money.ts"));
+  check("risk never-matches an api route", !RISK_PATH.test("app/api/deploy/route.ts"));
+  check("risk never-matches a bare name", !RISK_PATH.test("anything"));
+}
 
 // ── BEHAVIOUR (sandboxed: a throwaway repo, never this one) ──────────────────────────────────
 const HOOK_SRC = join(dirname(fileURLToPath(import.meta.url)), "gauntlet-guard.mjs");
@@ -168,9 +176,14 @@ if (gitRepo()) {
   console.log("  --  git not available, skipped the git-backed ledger checks");
 }
 
-// no git repo at all must degrade silently, never wedge a turn
+// no git repo must never WEDGE a turn — and must not go quiet either. Without git the shell-edit
+// ledger is blind, which is the exact hole the git check was added to close. This file already
+// settled the shape one section up ("failing open must DEFER the review, never erase it"), and
+// that rule carries no scope limiting it to the nag branch.
 reset();
-check("no git repo degrades to a clean pass", run("done-wall", {}).status === 0);
+const noGit = run("done-wall", {});
+check("no git repo still lets the turn end", noGit.status === 0);
+check("no git repo SAYS the shell-edit check was skipped", /skipp|unverified|no git/i.test(noGit.stderr || ""));
 
 rmSync(SB, { recursive: true, force: true });
 

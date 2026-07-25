@@ -181,6 +181,9 @@ function uiTrack(payload) {
 // the ledger reads empty and the turn looks clean over unreviewed work (audit Jul 25 2026). Ask
 // git what actually changed and fold that in. Best-effort by design: no repo, no git, or any
 // failure just leaves the ledger as it was, because this hook must never wedge a turn.
+let _gitOk = true;
+function gitAvailable() { return _gitOk; }
+
 function gitChanged() {
   try {
     const out = execSync("git status --porcelain --untracked-files=all", {
@@ -190,12 +193,23 @@ function gitChanged() {
       .map((p) => join(join(CLAUDE_DIR, ".."), p.replace(/^"|"$/g, "")))
       .filter((p) => !outOfScope(p));
   } catch {
+    _gitOk = false;
     return [];
   }
 }
 
 function doneWall() {
-  for (const fp of gitChanged()) {
+  // Say so when the shell-edit check could not run. Silence here reads as "nothing changed",
+  // which is the blindness this check exists to remove (audit Jul 25 2026).
+  const shellChanged = gitChanged(); // MUST run before gitAvailable() — it is what sets the flag
+  if (!gitAvailable()) {
+    console.error(
+      "[gauntlet] SHELL-EDIT CHECK SKIPPED: no git here, so files changed through the shell " +
+        "(sed, a formatter, codegen, an applied patch) are NOT in the ledger. The wall is judging " +
+        "only what Edit/Write/ctx_patch reported. Say so before calling anything done.",
+    );
+  }
+  for (const fp of shellChanged) {
     if (CODE_EXT.test(fp)) addLine(CODE_TOUCHED, fp);
     if (UI_EXT.test(fp)) addLine(UI_TOUCHED, fp);
     if (RISK_PATH.test(fp)) addLine(RISK_TOUCHED, fp);

@@ -5,10 +5,23 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 const LIVE = path.join(os.homedir(), ".claude", "hooks", "session-ritual.mjs");
+const TEMPLATE = path.join(path.dirname(fileURLToPath(import.meta.url)), "session-ritual.mjs");
 if (!fs.existsSync(LIVE)) {
   console.error("no installed hook at " + LIVE + " — plant it from templates/global/ first");
+  process.exit(1);
+}
+// MANDATORY-after-edit only means anything if the edit is what runs. Editing the template and
+// running this net used to print "all checks pass" over the previously installed copy — a green
+// verdict on code that never executed, on the hook whose entire job is preventing silent misses
+// (audit Jul 25 2026). Fail CLOSED on drift, same as the unterminated heredoc.
+if (fs.existsSync(TEMPLATE) && fs.readFileSync(TEMPLATE, "utf8") !== fs.readFileSync(LIVE, "utf8")) {
+  console.error("INSTALLED hook does not match the template beside this net:");
+  console.error("  template:  " + TEMPLATE);
+  console.error("  installed: " + LIVE);
+  console.error("re-plant, then re-run — a pass here would certify code you did not edit");
   process.exit(1);
 }
 console.log("testing the INSTALLED hook: " + LIVE);

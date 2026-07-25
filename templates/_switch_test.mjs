@@ -10,7 +10,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 import { tmpdir } from "node:os";
 const SB = path.join(tmpdir(), "apply-deepseek-switch-test-sandbox");
-const SCRIPT = 'C:/Users/Chanryle/Claude-Core/templates/apply-deepseek-switch.mjs';
+// Resolve beside this net, like the other three do. A hardcoded absolute path meant every other
+// checkout spawned nothing and died on the first read of .dryrun, before any verdict printed.
+const SCRIPT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'apply-deepseek-switch.mjs');
+if (!fs.existsSync(SCRIPT)) {
+  console.error('no apply-deepseek-switch.mjs beside this net: ' + SCRIPT);
+  process.exit(1);
+}
 const KEY = 'sk-FAKEKEYFORTESTONLY';
 
 let fail = 0;

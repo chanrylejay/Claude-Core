@@ -5,9 +5,15 @@
 // five bypasses found on Jul 25 2026 — every one of them was a verified silent ALLOW of a live push.
 import { pathToFileURL, fileURLToPath as fileURL } from "node:url";
 import { readFileSync } from "node:fs";
-import { dirname as dirName, join as joinPath } from "node:path";
-const target = process.argv[2] ? pathToFileURL(process.argv[2]).href : "./push-guard.mjs";
-const { isGitPush } = await import(target);
+import { dirname as dirName, join as joinPath, resolve as resolvePath } from "node:path";
+// ONE source of truth for what is under test. The structural assertions further down must read
+// the SAME file the behaviour checks import; they used to read the sibling unconditionally, so
+// candidate mode silently certified the sibling (audit Jul 25 2026).
+const UNDER_TEST = process.argv[2]
+  ? resolvePath(process.argv[2])
+  : joinPath(dirName(fileURL(import.meta.url)), "push-guard.mjs");
+console.log("testing: " + UNDER_TEST);
+const { isGitPush } = await import(pathToFileURL(UNDER_TEST).href);
 
 let pass = 0, fail = 0;
 function assertTrue(desc, cond) {
@@ -72,7 +78,7 @@ check("empty command", "", false);
 // Verified Jul 25 2026: ctx_call({name:"ctx_execute", arguments:{command:"<a push>"}}) exited 0
 // on the old hook and exits 2 now. ctx_execute is lean-ctx's own documented shell path and is
 // reachable ONLY through ctx_call, so the matcher must list ctx_call as well.
-const SRC = readFileSync(joinPath(dirName(fileURL(import.meta.url)), "push-guard.mjs"), "utf8");
+const SRC = readFileSync(UNDER_TEST, "utf8");
 assertTrue("entry block walks ALL of tool_input, not one fixed key", /function walk/.test(SRC));
 assertTrue("entry block no longer reads only tool_input.command", !/const command = payload\?\.tool_input\?\.command/.test(SRC));
 assertTrue("header names ctx_call in the required matcher", /mcp__lean-ctx__ctx_call/.test(SRC));
