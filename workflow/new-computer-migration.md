@@ -33,6 +33,15 @@ by .gitignore, exists in no repo anywhere, and must be hand-copied to an offline
    `%APPDATA%\npm\node_modules\lean-ctx-bin\bin\`. Details: `lessons/lean-ctx-freeze-playbook.md`.
 4. Projects themselves: `git clone` them (keep each repo's `leanctx-seed.js` — see the freeze playbook).
 
+## Before anything: if this machine was switched to DeepSeek
+
+The copied `~/.claude/settings.json` carries the DeepSeek `env` block AND the API key in
+plaintext. On the new machine that means Claude Code points at DeepSeek on first start, against
+the account you just signed into, and your key now exists on a second disk. Decide deliberately:
+keeping the switch is fine if that is the intent, but if you are migrating back to Claude, strip
+the `env` block and the key out of settings.json by hand before the first start, and delete any
+`settings.json.dryrun` that came along with it.
+
 ## The one gotcha: absolute paths
 
 If the new Windows username is NOT `Chanryle`, these files contain hardcoded old paths that

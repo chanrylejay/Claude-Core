@@ -26,7 +26,10 @@ function reset(settings) {
   fs.writeFileSync(path.join(SB, '.claude', 'settings.json'), JSON.stringify(settings, null, 2));
 }
 function run(extra = []) {
-  // ALWAYS --no-env. The env-var writes are machine-wide and ignore the USERPROFILE sandbox.
+  // ALWAYS --no-env: the env-var writes are machine-wide and ignore the USERPROFILE sandbox.
+  // The settings.json write IS sandboxed here, by USERPROFILE, which is why --dry-run is not
+  // forced for every case — the real-run cases exist to exercise the backup logic. On any machine
+  // where you cannot redirect USERPROFILE, use --dry-run instead.
   return spawnSync(process.execPath, [SCRIPT, KEY, "--no-env", ...extra], {
     encoding: 'utf8',
     env: { ...process.env, USERPROFILE: SB },

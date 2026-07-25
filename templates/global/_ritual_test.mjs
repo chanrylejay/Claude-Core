@@ -49,6 +49,20 @@ t("compact demands the failed-read report", /what FAILED to read/.test(b.stdout 
 //    old hook: exit 0, no DRILL. new hook: DRILL emitted plus a seed warning.
 //    Not automated: creating that ACL is not portable. Re-run it by hand after touching the
 //    seed block. The structural check below is the cheap standing guard.
+// 4. SOURCE DETECTION. An unreadable or sourceless payload used to resolve to "startup", which
+//    emitted the NORMAL ritual after a compaction — a confidently wrong message, worse than a
+//    missing one, on the exact path where a silent miss is invisible (audit Jul 25 2026).
+//    The asymmetry decides the default: guessing compact costs one unnecessary drill; guessing
+//    startup costs the drill. Any unknown source now resolves to compact.
+const raw = (input) =>
+  spawnSync(process.execPath, [LIVE, "start"], { input, encoding: "utf8", cwd: SB });
+const drills = (r) => /Run THE DRILL/.test(r.stdout || "");
+t("explicit compact drills", drills(raw(JSON.stringify({ source: "compact" }))));
+t("explicit startup does NOT drill", !drills(raw(JSON.stringify({ source: "startup" }))));
+t("EMPTY payload drills", drills(raw("")));
+t("MALFORMED payload drills", drills(raw("{not json")));
+t("payload with no source key drills", drills(raw('{"cwd":"/x"}')));
+
 const src = fs.readFileSync(LIVE, "utf8");
 t("seed write is isolated in its own try/catch", /try \{[\s\S]{0,400}writeFileSync\(seedPath, SEED\)[\s\S]{0,400}\} catch/.test(src));
 t("a failed seed write still produces a message", /could NOT be written/.test(src));

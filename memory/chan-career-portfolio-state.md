@@ -19,6 +19,12 @@ metadata:
 
 **LinkedIn:** linkedin.com/in/chanrylejay, overhauled Jul 7 2026 (headline, About, Devoted Care entry: live profile STILL shows Freelance Jun 2026-Present but that is now STALE (engagement ended Jul 2026) and must be hand-flipped to past tense Jun 2026 - Jul 2026 per devoted-closure-checklist.md section 3; the portfolio site is already reframed to a completed freelance contract (Jun-Jul 2026). Dates aligned to the resume, skills added). Target 1-2 posts per week; Claude drafts, Chan approves and posts. Open item he still owes: the company-name mismatch between his LinkedIn Skills tags and his Experience entry (two spellings of the client entity; both visible on LinkedIn itself, fix it there).
 
-**Confidentiality rules (permanent):** public case studies carry results and method only. Never client data, PHI, credentials, live URLs, or real-data screenshots. Naming the employer on a resume or in interviews is normal; a PUBLIC named case study needs the client's written OK first. When in doubt, anonymize ("a US home-care agency").
+**Confidentiality rules (permanent) — THIS FILE IS THE CANON. The skills ledger, the career playbook and the sales playbook all point here; if any of them disagrees with this paragraph, this paragraph wins and you fix the other file in the same session.**
+
+Public case studies carry results and method only. Never client data, PHI, credentials, live URLs, or real-data screenshots. Naming the employer on a resume or in interviews is normal.
+
+THREE ENTRIES ARE CONSENT-GATED AND ANONYMISING DOES NOT RELEASE THEM: the client engagement itself, the client CRM integration, and the agency's sanctioned production writes. Each of those identifies the client on its own, so any PUBLIC use — case study, proposal, post, article, portfolio entry, demo caption — needs that client's written OK on file first, whether or not you name them. No OK on file means do not publish it at all; ask Chan.
+
+For everything else that names a client: the written OK first, or anonymize to "a US home-care agency". When in doubt on anything not in the three above, anonymize; when in doubt about whether something IS one of the three, it is, so ask Chan.
 
 **Recurring workflow:** Chan sends job postings one at a time; Claude drafts an ATS-friendly application email per posting. Format rules: [[chan-job-application-email-prefs]].

@@ -42,7 +42,12 @@ function emit(eventName, text) {
 
 try {
   if (mode === "start") {
-    const source = payload.source || "startup";
+    // UNKNOWN source resolves to "compact", never to "startup". Both the stdin read and the
+    // JSON.parse above swallow their errors into an empty payload, and defaulting that to
+    // "startup" emitted the normal ritual after a compaction — a confidently wrong message on
+    // the one path where a silent miss is invisible (audit Jul 25 2026). The asymmetry decides
+    // it: guessing compact costs one unnecessary drill, guessing startup costs the drill.
+    const source = typeof payload.source === "string" && payload.source ? payload.source : "compact";
     // Seed check: plant everywhere except the bare home dir and drive roots. The freeze's
     // main victim is a brand-new EMPTY folder, so "looks like a repo" checks miss the worst
     // case (L24-audit finding, Jul 24 2026).
@@ -78,7 +83,7 @@ try {
         "SessionStart",
         "[ritual hook] Session-start ritual: " +
           seedNote +
-          "Repo CLAUDE.md and the project MEMORY.md index auto-load; still READ Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks, and verify git state before stating current status. Report the ritual in one line naming what was read plus the git head.",
+          "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks — the marked lines only say WHICH files to open — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );
     }
   }

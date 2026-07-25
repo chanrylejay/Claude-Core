@@ -5,7 +5,12 @@
 // --no-env writes settings.json only and skips the Windows user env vars. Those env vars are
 // MACHINE-WIDE: they ignore any USERPROFILE override, so a test that points USERPROFILE at a
 // sandbox and then takes the real path still reconfigures the whole machine (that happened,
-// Jul 25 2026). Any test of this script must pass --no-env.
+// Jul 25 2026). Any test of this script must pass --dry-run, NOT merely --no-env: --no-env only
+// skips the machine-wide env vars, while the settings.json write still lands on the LIVE file.
+// --dry-run redirects that write to settings.json.dryrun and implies --no-env, so it is the only
+// flag that makes a test safe on a machine where Claude access still works (audit Jul 25 2026 —
+// the earlier mandate named the weaker flag and would have written DeepSeek config to the live
+// settings file).
 // The key is NEVER stored in this repo: it goes only into ~/.claude/settings.json (local) and
 // user-level env vars. Playbook: ../workflow/switch-to-deepseek.md
 import { readFileSync, writeFileSync, copyFileSync, existsSync } from "node:fs";

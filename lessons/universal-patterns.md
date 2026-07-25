@@ -81,16 +81,23 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   that had not existed that morning. Patch, then audit the patch, every time.
 - **Patch both copies in the same edit.** A rule bounded in one file and left unbounded in its twin
   ships as a defect. It happened here twice in one day (a supersede clause, a delete gate).
-- **Never put framing inside an audit input.** An audit input is the document and nothing else.
+- **Never put framing inside an AUDIT input.** An audit input is the document and nothing else.
   Notes explaining what the file is, why it matters, or what to watch for are PRIMING, and the
   auditor spends effort resisting them instead of reading. Measured here Jul 25 2026: a note saying
   "four fixes were made and each historically introduced a problem" was caught by the auditor as a
   quota prior it had to defend against, and a second note was quoted back as if it were evidence.
   Instructions for the human go in a separate file the human never pastes. This is the same defect
   as leaking seed text into a test prompt, which also happened here the same day: TWO STRIKES, so
-  it is a standing rule now. Verify it mechanically: grep the paste file for your own header words
-  before sending, and make the check match your header format exactly so document prose does not
-  trip it.
+  it is a standing rule now.
+  This rule governs AUDITS — runs whose output you intend to act on. It does not govern auditor
+  CALIBRATION, which is the next bullet: there the planted prior IS the experiment, the subject is
+  the auditor rather than the document, and the result is never used as findings. Keep the two in
+  separate chats and never let a calibration run supply a patch.
+  Verify it mechanically, and NOT with a header grep — the strike that made this a rule was bare
+  prose with no header, so a header grep returns clean on the exact input class that caused it.
+  BUILD the paste file from the source files programmatically, then diff it back: every byte must
+  come from a source file or from a plain `===== FILE: x =====` separator. Anything else is
+  framing, whatever it looks like.
 - **Plant a quota prior to test an auditor.** Tell it "four things were changed and each usually
   breaks something" when you do NOT know the real count. Returning exactly four is the FAIL: that
   is the auditor anchoring on your number. A pass is any count that does not match the plant,
@@ -114,5 +121,5 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 ## Maintaining documents (applies to Claude-Core itself)
 
-- **L24, the diff-audit rule:** any rewrite or compression that shrinks a permanent doc by more than 25% must pass a fact-token diff audit (extract numbers, codes, CamelCase, URLs from the old version, grep the new set, triage every miss as relocated, superseded, or LOST). A LOST item FAILS the audit: restore it to the new version, or get Chan's explicit OK to drop that specific fact, before the rewrite ships. Triage alone is not a pass — labelling all 24 facts LOST and shipping satisfies every other word of this rule, which is precisely what happened: a 45% compression once silently dropped 24 real facts including deploy-critical env vars.
+- **L24, the diff-audit rule:** ANY rewrite of a permanent doc runs the fact-token diff audit, whatever happens to its length. The trigger used to be "shrinks by more than 25%", which measures the wrong thing: the harm is fact LOSS, so a rewrite that deletes env vars and adds replacement prose lands at net zero shrinkage, fires nothing, and needs no approval. Size is a hint, never the gate. A rewrite that shrinks a permanent doc by more than 25% of its characters is simply the case where you should expect the audit to find something. The audit: (extract numbers, codes, CamelCase, URLs from the old version, grep the new set, triage every miss as relocated, superseded, or LOST). A LOST item FAILS the audit: restore it to the new version, or get Chan's explicit OK to drop that specific fact, before the rewrite ships. Triage alone is not a pass — labelling all 24 facts LOST and shipping satisfies every other word of this rule, which is precisely what happened: a 45% compression once silently dropped 24 real facts including deploy-critical env vars.
 - Sub-documents get trimmed context, never raw archives (pattern 25).
