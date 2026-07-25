@@ -34,6 +34,15 @@ check("heredoc then push", "git commit -F - <<EOF\nmsg\nEOF\ngit push", true);
 check("heredoc then push, quoted delimiter", "cat > f <<'EOF'\nbody\nEOF\ngit push", true);
 check("nested runner", 'bash -c "sh -c \'git push\'"', true);
 check("unterminated heredoc fails CLOSED", "git commit -F - <<EOF\nnever closed", true);
+// command substitution and subshells — five more verified ALLOWs, found by PED on Jul 25 2026
+// AFTER the first round of bypass fixes had already shipped. Cause: the push half required
+// whitespace or end-of-string after "push", and the next character here is ) or a backtick.
+check("command substitution", "echo $(git push)", true);
+check("command substitution, backticks", "echo `git push`", true);
+check("assignment from substitution", "x=$(git push) && echo done", true);
+check("substitution inside double quotes (it executes)", 'echo "$(git push)"', true);
+check("subshell parens", "(cd repo && git push)", true);
+check("brace group", "{ git push; }", true);
 // a heredoc fed to a SHELL is executed, so its body is not data
 check("bash fed by heredoc executes the body", "bash <<EOF\ngit push\nEOF", true);
 
@@ -48,6 +57,7 @@ check("heredoc BODY mentioning push is data, not a command", "cat > doc.md <<EOF
 // caught live Jul 25 2026: the fix for the runner bypass blocked a commit whose MESSAGE quoted one
 check("commit message heredoc quoting a runner example", 'git commit -q -m "$(cat <<\'EOF\'\n  bash -c "git push"   ALLOW -> blocked\nEOF\n)" && git log --oneline -1', false);
 check("shift-looking text in a quoted string", 'echo "a << b"', false);
+check("real git subcommands that merely start with push are not pushes", "git push-to-checkout", false);
 check("empty command", "", false);
 
 console.log("\npush-guard isGitPush: " + pass + " passed, " + fail + " failed");

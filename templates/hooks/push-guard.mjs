@@ -42,6 +42,13 @@ const RUNNER_WORD = /(?:^|[\s;|&(`])(?:[\w.\/\\:-]*[\\\/])?(?:bash|sh|zsh|dash|k
 // when it invokes git (word "git", optionally git.exe / a path to it) AND carries a `push` word arg
 // OUTSIDE quoted strings/heredocs — a commit MESSAGE mentioning "push" must never trip the guard
 // (live false positive, Jul 13: `git commit -m "... push stays GO-gated ..."` got blocked).
+// The push half accepts ANY non-word terminator, not just whitespace or end-of-string. Requiring
+// whitespace let every command-substitution and subshell form through, because the character after
+// "push" is a paren, a backtick or a quote. All verified ALLOW before this fix, and all found by
+// PED AFTER my own first fix had already shipped and been committed (Jul 25 2026):
+//   echo $(git push)   ·   backtick git push backtick   ·   x=$(git push)
+//   echo "$(git push)" ·   (cd repo && git push)
+// The hyphen exclusion keeps real git subcommands like push-to-checkout from matching.
 // Steps 1-3 exist because the quote-strip in step 5, on its own, DELETED five real pushes
 // (audit, Jul 25 2026 — every one verified ALLOW before the fix).
 // ORDER IS LOAD-BEARING: heredoc bodies come out FIRST. Doing the runner recursion first blocked a
@@ -75,6 +82,17 @@ function isGitPush(command, depth = 0) {
         if (isGitPush(m[2], depth + 1)) return true;
       }
     }
+    // Command substitution EXECUTES, including inside double quotes, so the step-5 quote strip
+    // would erase a real push: `echo "$(git push)"` runs the push. Recurse into every $( ) and
+    // backtick span before the strip can see them. A substitution inside SINGLE quotes does not
+    // execute, so treating it as a push is a false positive — accepted, it fails safe and the
+    // form is vanishingly rare.
+    const subst = [/\$\(([\s\S]*?)\)/g, /`([^`]*)`/g];
+    for (const re of subst) {
+      for (const m of bare.matchAll(re)) {
+        if (isGitPush(m[1], depth + 1)) return true;
+      }
+    }
   }
 
   // 3) `git "push" origin main` — a QUOTED subcommand is erased by step 5. Unquote it. Scoped to a
@@ -95,7 +113,7 @@ function isGitPush(command, depth = 0) {
   return bare.split(/(?:&&|\|\||[;|\n])/).some((seg) => {
     return (
       /(?:^|[\s"'(`])(?:[\w.\/\\:-]*[\\\/])?git(?:\.exe)?["']?\s/i.test(" " + seg) &&
-      /\spush(?:\s|$)/i.test(seg + " ")
+      /(?:^|[\s"'(`$])push(?:$|[^\w-])/i.test(" " + seg + " ")
     );
   });
 }
