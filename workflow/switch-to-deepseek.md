@@ -79,6 +79,16 @@ run by older versions of the script, so it can hold an already-DeepSeek config. 
 `.bak-CLAUDE-ORIGINAL` is missing, the machine ran an old script version: strip the `env`
 block and the API key out of settings.json by hand instead of restoring anything.
 
-Restore ~/.claude/settings.json from the `.bak-before-deepseek` backup the script made, delete
-the seven ANTHROPIC_*/CLAUDE_CODE_* user env vars, restart VS Code. Claude returns whenever
-there is an account to return to.
+Then, in this order:
+1. Delete every user env var the script set. There are TWELVE, not seven: ANTHROPIC_BASE_URL,
+   ANTHROPIC_AUTH_TOKEN, ANTHROPIC_MODEL, ANTHROPIC_DEFAULT_OPUS_MODEL,
+   ANTHROPIC_DEFAULT_SONNET_MODEL, ANTHROPIC_DEFAULT_HAIKU_MODEL, CLAUDE_CODE_SUBAGENT_MODEL,
+   CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING, CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY,
+   ANTHROPIC_CUSTOM_MODEL_OPTION, ANTHROPIC_CUSTOM_MODEL_OPTION_NAME,
+   ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION. Leaving ANTHROPIC_BASE_URL or ANTHROPIC_AUTH_TOKEN
+   behind keeps every session pointed at DeepSeek with the key still in your environment.
+2. VS Code: Ctrl+, and UNTICK claudeCode.disableLoginPrompt. Left ticked, the Anthropic sign-in
+   screen never appears and you cannot log back in.
+3. Restart VS Code.
+
+Claude returns whenever there is an account to return to.

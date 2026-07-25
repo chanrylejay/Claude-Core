@@ -97,6 +97,24 @@ check("fail-open KEEPS the touched ledger (debt survives)", existsSync(join(CD, 
 check("fail-open says the pass is still owed", /STILL OWED/.test(openRun.stderr || ""));
 check("fail-open re-blocks on the next turn", run("done-wall", {}).status === 2);
 
+// 3b. UX_SHOT defers the visual verdict — it must NOT clear the turn state.
+//     Before the Jul 25 2026 fix it cleared the wall through the clean-exit branch, deleting
+//     UI_TOUCHED, so Chan's owed verdict was forgotten by the next turn.
+reset();
+run("ui-track", edit("src/page.html"));
+writeFileSync(tok("UX_SHOT"), "saved");
+const shotRun = run("done-wall", {});
+check("UX_SHOT lets the turn end", shotRun.status === 0);
+check("UX_SHOT KEEPS the UI ledger (verdict still owed)", existsSync(join(CD, "UI_TOUCHED")));
+check("UX_SHOT survives the turn", existsSync(tok("UX_SHOT")));
+check("UX_SHOT says the verdict is owed", /OWED/.test(shotRun.stderr || ""));
+check("UX_SHOT re-fires next turn", run("done-wall", {}).status === 0 && existsSync(join(CD, "UI_TOUCHED")));
+// and a real UX_OK from Chan DOES close it
+reset();
+run("ui-track", edit("src/page.html"));
+writeFileSync(tok("UX_OK"), "chan said CLEAN");
+check("UX_OK closes it properly", run("done-wall", {}).status === 0 && !existsSync(join(CD, "UI_TOUCHED")));
+
 // 4. a copy saved under another name must still run (it used to silently disable everything)
 reset();
 const RENAMED = join(CD, "hooks", "gauntlet.hook.mjs");

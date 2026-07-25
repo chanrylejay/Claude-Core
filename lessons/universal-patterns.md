@@ -65,7 +65,11 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 - **A finding list with no refuter is mostly noise.** Measured twice on this kit: 41 of 54 rejected
   in one head-to-head, 52 of 57 in another. Never patch from an unrefuted audit. One skeptic per
-  file, default-to-refute, checking each claim against the file on disk, is enough.
+  file, default-to-refute, checking each claim against the file on disk, is the MINIMUM, and it is
+  what clears a finding for PATCHING. It does not make a finding independently confirmed. Pattern
+  36's bar is the higher one and it still governs: before a finding is stated as fact to anyone
+  outside this machine, or used to justify a change to a live system, an independent blind round
+  must rediscover it.
 - **The scaffolding beats the model.** Opus 5 running a purpose-built audit prompt (PED v7.0.2, in a
   separate claude.ai window, blind to the session) found 8 real defects on 4 files, 3 of which two
   parallel Opus 5 fleets had missed the same day on the same files. Same model on both sides. When an
@@ -87,8 +91,12 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   it is a standing rule now. Verify it mechanically: grep the paste file for your own header words
   before sending, and make the check match your header format exactly so document prose does not
   trip it.
-- **Plant a quota prior to test an auditor.** Telling it "four things were changed and each usually
-  breaks something" and seeing whether it returns exactly four is a cheap calibration check.
+- **Plant a quota prior to test an auditor.** Tell it "four things were changed and each usually
+  breaks something" when you do NOT know the real count. Returning exactly four is the FAIL: that
+  is the auditor anchoring on your number. A pass is any count that does not match the plant,
+  carrying its own reasoning, and best of all an explicit note that the framing was noticed and set
+  aside. Measured Jul 25 2026: PED got exactly this prior, shipped three, and wrote in its own
+  output that the count came from the scan and not the framing.
 - **Verify a mechanical claim mechanically.** Five push-guard bypasses were argued in prose and all
   five reproduced in ten lines of node. Findings about code get run, not debated.
 

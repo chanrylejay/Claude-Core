@@ -25,7 +25,10 @@ const ENV = {
   ANTHROPIC_BASE_URL: "https://api.deepseek.com/anthropic",
   ANTHROPIC_AUTH_TOKEN: key,
   // Main model: Chan chose flash (Jul 24 2026) for cost/speed. For the smarter (pricier) tier,
-  // set these three back to "deepseek-v4-pro".
+  // set ALL FIVE of the model keys below back to "deepseek-v4-pro": ANTHROPIC_MODEL, the three
+  // ANTHROPIC_DEFAULT_* keys, and CLAUDE_CODE_SUBAGENT_MODEL. Flipping only the first three
+  // leaves every subagent (client-qa, client-ux, the reviewers) running the cheaper model after
+  // what was meant to be an upgrade, with nothing to surface it.
   ANTHROPIC_MODEL: "deepseek-v4-flash",
   ANTHROPIC_DEFAULT_OPUS_MODEL: "deepseek-v4-flash",
   ANTHROPIC_DEFAULT_SONNET_MODEL: "deepseek-v4-flash",
@@ -55,7 +58,23 @@ if (dry) {
 } else {
   const BAK = S + ".bak-before-deepseek";
   const ORIG = S + ".bak-CLAUDE-ORIGINAL";
-  if (!existsSync(ORIG)) copyFileSync(existsSync(BAK) ? BAK : S, ORIG);
+  // Only promote a candidate that is actually PRE-switch. An older .bak-before-deepseek can
+  // already hold a DeepSeek config (older versions of this script overwrote it on every run), and
+  // promoting that would put contaminated settings in the file the runbook calls pristine
+  // (audit Jul 25 2026 — the defect my own first fix moved one file downstream instead of ending).
+  const isPreSwitch = (f) => {
+    try {
+      const j = JSON.parse(readFileSync(f, "utf8"));
+      return !(j.env && (j.env.ANTHROPIC_BASE_URL || j.env.ANTHROPIC_AUTH_TOKEN));
+    } catch {
+      return false;
+    }
+  };
+  if (!existsSync(ORIG)) {
+    const candidate = existsSync(BAK) && isPreSwitch(BAK) ? BAK : isPreSwitch(S) ? S : null;
+    if (candidate) copyFileSync(candidate, ORIG);
+    else console.log("  ⚠ no pre-switch settings found — NO pristine backup written. Rollback must be done by hand: strip the env block and the API key out of settings.json.");
+  }
   if (!existsSync(BAK)) copyFileSync(S, BAK);
 }
 const settings = JSON.parse(readFileSync(target, "utf8"));
@@ -63,7 +82,10 @@ settings.env = { ...(settings.env || {}), ...ENV };
 // The /model picker writes a top-level "model" pin (e.g. "opus[1m]"), a Claude-only id that this
 // script used to leave in place. If that pin wins over ANTHROPIC_MODEL, every request asks DeepSeek
 // for a Claude model and 404s, and nothing in the runbook would surface it (audit Jul 25 2026).
-if (settings.model) {
+// Delete ONLY a non-DeepSeek pin. This script also installs a picker entry that writes a
+// legitimate "deepseek-v4-pro" pin, and second runs happen, so an unconditional delete would
+// silently drop Chan back to flash after he deliberately chose pro (audit Jul 25 2026).
+if (settings.model && !/^deepseek/i.test(String(settings.model))) {
   console.log("  removed stale top-level model pin: " + JSON.stringify(settings.model));
   delete settings.model;
 }

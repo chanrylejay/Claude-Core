@@ -176,8 +176,23 @@ function doneWall() {
   const needUX = ui.length > 0 && !existsSync(UX_OK) && !existsSync(UX_SHOT);
   const needQA = risk.length > 0 && !existsSync(QA_OK);
 
+  // A UX_SHOT is a DEFERRAL, not a pass: the screenshot is saved and handed over, and Chan's
+  // verdict is still owed. Clearing the turn state here would delete UI_TOUCHED and the wall
+  // would never fire again — the same cancellation the fail-open branch was patched to stop
+  // (audit Jul 25 2026, found the same day the UX_SHOT marker shipped).
+  const uxDeferred = ui.length > 0 && !existsSync(UX_OK) && existsSync(UX_SHOT);
   if (!needGate && !needUX && !needQA) {
-    clearTurnState(); // clean turn — reset so nothing leaks into the next one
+    if (uxDeferred) {
+      consume(NAG);
+      console.error(
+        "[gauntlet] UX verdict still OWED on: " + ui.join(", ") + "\n" +
+          "  The screenshot was saved and handed to Chan; he has not given CLEAN / POLISH / VIOLATIONS yet.\n" +
+          "  Do NOT call this verified or done. The ledger is kept and this fires again next turn.\n" +
+          "  It clears only when Chan answers and you create .claude/UX_OK.",
+      );
+      process.exit(0);
+    }
+    clearTurnState(); // genuinely clean turn — reset so nothing leaks into the next one
     process.exit(0);
   }
 

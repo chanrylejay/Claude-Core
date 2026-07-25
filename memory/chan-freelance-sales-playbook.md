@@ -12,7 +12,7 @@ metadata:
 ALWAYS: live project links (GitHub + Vercel URLs) in every proposal · match the posted budget
 exactly, one flat number, never ranges, never hourly framing, but ONLY when that budget is at or
 above the tier price for the scope (T4 add-ons included); when the posted budget is below the
-tier price, quote the tier price as one flat number and say what the posted budget would buy · reference his own production
+tier price, quote the tier price as one flat number and say what the posted budget would buy. Where a tier is written as a range, the flat number is the TOP of that range (T1 $20, T3 $250, API add-on $150) unless Chan says otherwise for that job: never invent a figure inside the range, and never quote below the top without his word · reference his own production
 systems as proof · offer a free 10-minute diagnostic as the entry (Zero-Call strategy).
 NEVER: imply Upwork client history he has not actually completed (fact as of Jul 2026: profile shows 0 completed jobs; recheck the live profile before writing anything about job history) · "first client discount"
 or review-fishing (reveals inexperience) · over-promise platforms he does not offer.

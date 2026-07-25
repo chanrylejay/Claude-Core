@@ -60,6 +60,27 @@ run();
 t('pristine backup survives a re-run', read(S() + '.bak-CLAUDE-ORIGINAL').model, 'opus[1m]');
 t('pristine backup is NOT a DeepSeek config', read(S() + '.bak-CLAUDE-ORIGINAL').env?.ANTHROPIC_BASE_URL, undefined);
 
+// ── 4. THE SECOND BUG: a contaminated .bak-before-deepseek must NOT be promoted to pristine
+reset({ model: 'opus[1m]', env: { ANTHROPIC_BASE_URL: 'https://api.deepseek.com/anthropic' } });
+fs.writeFileSync(S() + '.bak-before-deepseek', JSON.stringify({ env: { ANTHROPIC_BASE_URL: 'https://api.deepseek.com/anthropic', ANTHROPIC_AUTH_TOKEN: 'sk-old' } }));
+const contaminated = run();
+t('contaminated backup is NOT promoted to pristine', fs.existsSync(S() + '.bak-CLAUDE-ORIGINAL'), false);
+t('and the script says so out loud', /no pre-switch settings found/.test(contaminated.stdout || ''), true);
+
+// a CLEAN .bak-before-deepseek still gets promoted
+reset({ model: 'opus[1m]', env: {} });
+fs.writeFileSync(S() + '.bak-before-deepseek', JSON.stringify({ model: 'opus[1m]', theme: 'dark', env: {} }));
+run();
+t('clean backup IS promoted', read(S() + '.bak-CLAUDE-ORIGINAL').theme, 'dark');
+
+// ── 5. THE THIRD BUG: a deliberately chosen DeepSeek pin must survive a re-run
+reset({ model: 'deepseek-v4-pro', env: {} });
+run();
+t('a DeepSeek pin is NOT deleted', read(S()).model, 'deepseek-v4-pro');
+reset({ model: 'opus[1m]', env: {} });
+run();
+t('a Claude-only pin IS deleted', read(S()).model, undefined);
+
 fs.rmSync(SB, { recursive: true, force: true });
 console.log('\n' + (fail ? fail + ' FAILURES' : 'all switch-script checks pass'));
 process.exit(fail ? 1 : 0);
