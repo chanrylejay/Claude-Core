@@ -3,11 +3,16 @@
 // Optional arg: a path to a candidate push-guard.mjs to test instead of the sibling one.
 // MANDATORY after ANY edit to push-guard.mjs. Pins the documented false-positive fixes AND the
 // five bypasses found on Jul 25 2026 — every one of them was a verified silent ALLOW of a live push.
-import { pathToFileURL } from "node:url";
+import { pathToFileURL, fileURLToPath as fileURL } from "node:url";
+import { readFileSync } from "node:fs";
+import { dirname as dirName, join as joinPath } from "node:path";
 const target = process.argv[2] ? pathToFileURL(process.argv[2]).href : "./push-guard.mjs";
 const { isGitPush } = await import(target);
 
 let pass = 0, fail = 0;
+function assertTrue(desc, cond) {
+  if (cond) { pass += 1; } else { fail += 1; console.error("FAIL: " + desc); }
+}
 function check(desc, cmd, expected) {
   const got = isGitPush(cmd);
   if (got === expected) { pass += 1; }
@@ -59,6 +64,18 @@ check("commit message heredoc quoting a runner example", 'git commit -q -m "$(ca
 check("shift-looking text in a quoted string", 'echo "a << b"', false);
 check("real git subcommands that merely start with push are not pushes", "git push-to-checkout", false);
 check("empty command", "", false);
+
+// ── PAYLOAD SHAPES. isGitPush only ever sees a string; the ENTRY BLOCK decides which strings
+// it gets handed. It used to read tool_input.command and treat a miss as a pass, so a command
+// nested anywhere else walked through with no inspection, no block, and no token consumed —
+// leaving the GO valid for the rest of its 30-minute window.
+// Verified Jul 25 2026: ctx_call({name:"ctx_execute", arguments:{command:"<a push>"}}) exited 0
+// on the old hook and exits 2 now. ctx_execute is lean-ctx's own documented shell path and is
+// reachable ONLY through ctx_call, so the matcher must list ctx_call as well.
+const SRC = readFileSync(joinPath(dirName(fileURL(import.meta.url)), "push-guard.mjs"), "utf8");
+assertTrue("entry block walks ALL of tool_input, not one fixed key", /function walk/.test(SRC));
+assertTrue("entry block no longer reads only tool_input.command", !/const command = payload\?\.tool_input\?\.command/.test(SRC));
+assertTrue("header names ctx_call in the required matcher", /mcp__lean-ctx__ctx_call/.test(SRC));
 
 console.log("\npush-guard isGitPush: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);

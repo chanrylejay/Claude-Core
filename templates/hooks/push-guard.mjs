@@ -23,8 +23,12 @@
 // closed. Without that wrapper, a broken hook file is a silent ALLOW.
 //
 // Wired in the project's .claude/settings.local.json (PreToolUse). The matcher MUST cover every
-// shell path: "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell" on lean-ctx machines,
-// or a push through lean-ctx walks straight past the guard. Exit codes: 0 = allow,
+// shell path. On lean-ctx machines that is:
+//   Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell|mcp__lean-ctx__ctx_call
+// ctx_call is on that list because lean-ctx's ctx_execute — its own documented "trusted script
+// path", which runs shell — is not a standalone tool: it is invoked as
+// ctx_call({name:"ctx_execute", arguments:{...}}). Miss it and a push walks straight past the
+// guard (audit Jul 25 2026). Re-check this list whenever a new shell-capable tool appears. Exit codes: 0 = allow,
 // 2 = block (stderr is shown to Claude). Test (MANDATORY after any edit): _pushguard_test.mjs in this folder, run: node _pushguard_test.mjs
 
 import { existsSync, unlinkSync, statSync } from "node:fs";
@@ -128,8 +132,19 @@ let raw = "";
 try {
   for await (const chunk of process.stdin) raw += chunk;
   const payload = JSON.parse(raw || "{}");
-  const command = payload?.tool_input?.command ?? "";
-  if (!isGitPush(command)) process.exit(0); // not a push — pass through
+  // Take EVERY string anywhere in tool_input, at any nesting, and test all of them. Reading one
+  // fixed key and treating a miss as a pass was the defect: a tool that carries the command under
+  // any other name (ctx_call nests it under arguments) sailed through with no inspection, no
+  // block, and — worse — no token consumed, so the GO stayed valid for its whole 30-minute window
+  // (audit Jul 25 2026). Only shell tools reach this hook, so scanning all of tool_input is safe.
+  const strings = [];
+  (function walk(v, depth) {
+    if (v == null || depth > 5) return;
+    if (typeof v === "string") return void strings.push(v);
+    if (Array.isArray(v)) return void v.forEach((x) => walk(x, depth + 1));
+    if (typeof v === "object") return void Object.values(v).forEach((x) => walk(x, depth + 1));
+  })(payload?.tool_input, 0);
+  if (!strings.some(isGitPush)) process.exit(0); // not a push — pass through
 
   if (existsSync(TOKEN)) {
     const ageMs = Date.now() - statSync(TOKEN).mtimeMs;

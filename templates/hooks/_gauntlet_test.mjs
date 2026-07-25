@@ -5,6 +5,7 @@
 // broken on Jul 25 2026 (stale token, fail-open erasing the debt, filename entry guard).
 import { CODE_EXT, UI_EXT, RISK_PATH } from "./gauntlet-guard.mjs";
 import { mkdirSync, writeFileSync, existsSync, rmSync, copyFileSync, readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -132,6 +133,44 @@ check("GAUNTLET_OFF disables ledgering", !existsSync(join(CD, "CODE_TOUCHED")));
 reset();
 run("ui-track", { tool_input: { file_path: join(tmpdir(), "somewhere-else", "x.ts") } });
 check("out-of-repo edit is not ledgered", !existsSync(join(CD, "CODE_TOUCHED")));
+
+// ── 7. The ledger only sees Edit / Write / ctx_patch. A file changed through the SHELL — sed -i,
+//    a formatter, codegen, git checkout, an applied patch — never reached uiTrack, so the ledger
+//    read empty and the turn ended clean over unreviewed work. Worse, a shell edit made AFTER
+//    GATE_OK existed left the token standing, defeating the invalidation fix (audit Jul 25 2026).
+//    doneWall now asks git what actually changed. Best-effort: no repo or no git degrades to the
+//    old behaviour rather than wedging the turn.
+function gitRepo() {
+  rmSync(SB, { recursive: true, force: true });
+  mkdirSync(join(CD, "hooks"), { recursive: true });
+  mkdirSync(join(SB, "src"), { recursive: true });
+  copyFileSync(HOOK_SRC, HOOK);
+  try {
+    execSync("git init -q", { cwd: SB, stdio: "ignore" });
+    // commit the baseline so only the change under test appears, as in a real repo
+    execSync("git add -A && git -c user.email=t@t -c user.name=t commit -q -m base --allow-empty", { cwd: SB, stdio: "ignore" });
+    return true;
+  } catch { return false; }
+}
+if (gitRepo()) {
+  writeFileSync(join(SB, "src", "sneaky.ts"), "export const x = 1;\n");
+  check("shell-made code change is caught by the done-wall", run("done-wall", {}).status === 2);
+
+  gitRepo();
+  writeFileSync(join(SB, "src", "sneaky.ts"), "export const x = 1;\n");
+  writeFileSync(tok("GATE_OK"), "net-runner ran");
+  check("git-seen change clears once the agent has run", run("done-wall", {}).status === 0);
+
+  gitRepo();
+  writeFileSync(join(SB, "notes.md"), "# hello\n");
+  check("a markdown change does not trip the code gate", run("done-wall", {}).status === 0);
+} else {
+  console.log("  --  git not available, skipped the git-backed ledger checks");
+}
+
+// no git repo at all must degrade silently, never wedge a turn
+reset();
+check("no git repo degrades to a clean pass", run("done-wall", {}).status === 0);
 
 rmSync(SB, { recursive: true, force: true });
 

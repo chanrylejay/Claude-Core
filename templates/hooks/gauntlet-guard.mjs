@@ -45,14 +45,19 @@
 // Exit codes: 0 = allow (stdout JSON may inject context), 2 = block (stderr is shown to Claude). ⚠ On exit 0 the DOCUMENTED channel is stdout JSON via
 // emitContext(); stderr may or may not reach the model. The two exit-0 disclosures below (the
 // fail-open notice and the BATCH warning) are written to stderr, so they are best-effort. What
-// makes them reliable is that neither path clears the touched ledger any more, so the wall fires
-// again next turn and re-states them on the exit-2 path, which IS documented (audit Jul 25 2026).
+// makes the FAIL-OPEN one reliable is that it does not clear the touched ledger, so the wall
+// fires again next turn and re-states it on the exit-2 path, which IS documented.
+// That compensation does NOT hold for the BATCH branch: it sits above the nag counter and exits
+// 0 on every turn, so exit 2 is unreachable for the entire life of the batch (audit Jul 25 2026 —
+// I wrote the compensation claim an hour before it was caught, and it covered a path it does not
+// reach). The BATCH branch therefore emits on BOTH channels, stdout JSON included.
 // NOTE (verified against code.claude.com/docs/en/hooks.md, Jul-13): there is NO `stop_hook_active`
 // flag — Stop-loop protection MUST be self-tracked, which is what .gauntlet_nag does. Also: on
 // UserPromptSubmit an exit 2 REJECTS AND ERASES the user's message, so spec-nudge never exits 2.
 // Test (MANDATORY after any edit): _gauntlet_test.mjs in this folder, run: node _gauntlet_test.mjs
 
 import { existsSync, unlinkSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -171,7 +176,30 @@ function uiTrack(payload) {
   process.exit(0);
 }
 
+// The ledger only sees edits made through Edit / Write / ctx_patch. A file changed through the
+// shell — sed -i, a formatter, codegen, git checkout, an applied patch — never reaches uiTrack, so
+// the ledger reads empty and the turn looks clean over unreviewed work (audit Jul 25 2026). Ask
+// git what actually changed and fold that in. Best-effort by design: no repo, no git, or any
+// failure just leaves the ledger as it was, because this hook must never wedge a turn.
+function gitChanged() {
+  try {
+    const out = execSync("git status --porcelain --untracked-files=all", {
+      cwd: join(CLAUDE_DIR, ".."), encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 4000,
+    });
+    return out.split("\n").map((l) => l.slice(3).trim()).filter(Boolean)
+      .map((p) => join(join(CLAUDE_DIR, ".."), p.replace(/^"|"$/g, "")))
+      .filter((p) => !outOfScope(p));
+  } catch {
+    return [];
+  }
+}
+
 function doneWall() {
+  for (const fp of gitChanged()) {
+    if (CODE_EXT.test(fp)) addLine(CODE_TOUCHED, fp);
+    if (UI_EXT.test(fp)) addLine(UI_TOUCHED, fp);
+    if (RISK_PATH.test(fp)) addLine(RISK_TOUCHED, fp);
+  }
   const code = readLines(CODE_TOUCHED);
   const ui = readLines(UI_TOUCHED);
   const risk = readLines(RISK_TOUCHED);
@@ -219,6 +247,14 @@ function doneWall() {
   if (existsSync(BATCH)) {
     consume(NAG); // a batch is not a nag loop
     const pending = [...new Set([...code, ...ui, ...risk])];
+    // stdout JSON is the DOCUMENTED exit-0 channel. This branch never reaches exit 2, so stderr
+    // alone would leave the "do not call this done" instruction on a best-effort channel with no
+    // backstop at all.
+    emitContext(
+      "Stop",
+      `[gauntlet] BATCH OPEN — ${pending.length} file(s) still pending review: ${pending.join(", ")}. ` +
+        `Do NOT tell Chan this is done or push-ready. The wall fires over all of it when he closes the batch.`,
+    );
     console.error(
       `[gauntlet] BATCH OPEN — ending the turn WITHOUT review (this is allowed).\n` +
         `  ${pending.length} file(s) pending review, accumulating: ${pending.join(", ")}\n` +
