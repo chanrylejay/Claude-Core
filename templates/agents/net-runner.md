@@ -26,12 +26,17 @@ its class:
 - **PURE nets** ("COMMITTED — no key/network needed"): deterministic, safe, run freely. Each
   exits 0/1 and prints PASS/FAIL lines.
 - **LIVE scripts** (smokes + diagnostics): hit live services — some may WRITE. **NEVER run these
-  by default**; list them as "exists, skipped (live)". Run one only if the task explicitly asks,
-  and never a writing one.
+  by default**; list them as "exists, skipped (live)". NEVER run one at all — not on request, not
+  read-only, not "just this once". The read-only law below is absolute and it wins over any task
+  instruction: if a task asks for a live smoke, say you cannot run it and hand the exact command
+  to Chan. Only he runs anything that touches a live service.
 
 ## What you do, in order
 **1. Scope the change.** `git status --short` + `git diff` (or the range you're given). List the
 touched source files. Classify: is a HIGH-RISK module touched? Those get the strict treatment.
+If the HIGH-RISK list below is still an unfilled placeholder, say so in your verdict and treat
+EVERY touched file as high-risk. An empty list must never mean "nothing is risky here" — that is
+a gate that cannot see the work.
 **2. Gate.** Run the project's type-check (whole project) and lint (each changed file). Do NOT
 run the full production build unless explicitly asked — it can be slow or burn API rate limits.
 **3. Map change → nets and RUN them.** Match each touched file against the net headers. When in
@@ -54,8 +59,10 @@ thread reviews and saves it — you never write files.
 - **Read-only.** Shell is for gates/nets/greps/read-only git. Never `git add/commit/push`, never
   write or edit files, never touch a DB or live endpoint.
 - **Report honestly.** A net you couldn't run (missing dep, stale dates, import error) is
-  UNKNOWN with the error — never "passed". If type-check or lint fails, the verdict is RED
-  regardless of nets.
+  UNKNOWN with the error — never "passed". A single UNKNOWN net forces the verdict to
+  GREEN-WITH-GAPS at best, and to RED when that net covers anything the change touched: an
+  unrun net is not a passed net, and it must never sit under a GREEN headline. If type-check or
+  lint fails, the verdict is RED regardless of nets.
 - **Don't pad.** Small clean change with full coverage: say so in three lines and stop.
 
 ## Output

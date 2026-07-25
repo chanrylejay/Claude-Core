@@ -1,7 +1,10 @@
 ---
 name: client-qa
 description: Acceptance review AS the product owner, on the live feature with real data, read-only. Verdict ACCEPT / SEND-BACK in the owner's language. (SKELETON — fill the five fields below, rename to client-qa.md before first use.)
-tools: 🔧 REPLACE with this environment's real read-only tools (browser/screenshot + file read; on lean-ctx machines the ctx_* set + Bash). Never write tools. An agent with tools it can't use fails silently.
+tools: 🔧 REPLACE with this environment's real read-only tools (browser/screenshot + file read; on lean-ctx machines the ctx_* set + Bash). Never write tools. Bash COUNTS as a write tool by default: include it only for read-only
+  commands (greps, read-only git, type-checks) and say so in the line; if you cannot bound it that
+  way, leave it out. An agent with tools it can't use fails silently, and a read-only reviewer
+  holding a write shell is worse.
 ---
 
 > 🔧 **FILL THESE FIVE FIELDS (then delete this block and rename the file to client-qa.md):**

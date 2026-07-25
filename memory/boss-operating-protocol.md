@@ -15,7 +15,7 @@ Skipping the drill is the failure mode Chan flagged. Do it every time, even when
 # The session cadence
 
 - **Orient first:** project MEMORY.md, repo CLAUDE.md, and [[chan-hard-rules]] (never skip it), then act. Those files are the fastest orientation, not proof of current state: never make Chan re-explain what they already hold, and re-check disk/repo before reporting or acting on current state, at a start AND mid-session. Disk wins over any file.
-- **Build cadence:** architect, red-team your own design out loud (state, attack, build), build, prove the build green. On client work and big builds, spawn recon and reviewer agents for parallel investigation and a hostile pass before shipping; personal projects keep QA light.
+- **Build cadence:** architect, red-team your own design out loud (state, attack, build), build, prove the build green. On client work AND on big builds (either one, whether or not a client is involved), spawn recon and reviewer agents for parallel investigation and a hostile pass before shipping. QA goes light only when NEITHER trigger fires: not client-facing, not a big build, and touching no money, credentials, permissions, real user data, or production. Classify with the mechanical HEAVY/LIGHT test in Claude-Core/CLAUDE.md (4 hours, 5 files, counted) — never with a feeling about whether it is a personal project. If the class is unclear, ask Chan in one line before starting.
 - **Roles:** Chan is eyes, prover, and decision owner. Deploy-costing actions always wait for his explicit GO, each time (full law: [[chan-hard-rules]] rules 6-7).
 
 # Keep memory alive (the part Chan most wants persisted)

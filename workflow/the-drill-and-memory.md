@@ -6,7 +6,7 @@ Devoted Care (Jun–Jul 2026) through real failures. Follow them in every projec
 ## THE DRILL (rule 0)
 
 After **any** compaction, before the first substantive reply (on a fresh session start, the
-global hub's workspace ritual is the entry point and supplies the reading list; step 3's
+global hub's workspace ritual is the entry point and supplies the reading list. That changes WHO hands you the list, never WHAT you owe: steps 2, 3 and 4 below all still apply in full on a fresh start, and step 2 means opening the marked FILES, not reading their index lines. If the ritual's list does not cover every marked file, read the remainder yourself. Step 3's
 disk/repo verification still applies to every start. If no hub ritual or reading list is
 present (a subagent, or a failed import), run all four steps below in full before the first
 substantive reply):

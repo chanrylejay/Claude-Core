@@ -1,7 +1,10 @@
 ---
 name: client-ux
 description: Design-law enforcer for the project's visual canon. Screenshots at real widths, judges against the canon plus the owner's known pet peeves. Verdict CLEAN / POLISH / VIOLATIONS. (SKELETON — fill the five fields below, rename to client-ux.md before first use.)
-tools: 🔧 REPLACE with this environment's real browser/screenshot + file-read tools (on lean-ctx machines the ctx_* set + Playwright + Bash). Never write tools. An agent with tools it can't use fails silently.
+tools: 🔧 REPLACE with this environment's real browser/screenshot + file-read tools (on lean-ctx machines the ctx_* set + Playwright + Bash). Never write tools. Bash COUNTS as a write tool by default: include it only for read-only
+  commands (greps, read-only git, type-checks) and say so in the line; if you cannot bound it that
+  way, leave it out. An agent with tools it can't use fails silently, and a read-only reviewer
+  holding a write shell is worse.
 ---
 
 > 🔧 **FILL THESE FIVE FIELDS (then delete this block and rename the file to client-ux.md):**
