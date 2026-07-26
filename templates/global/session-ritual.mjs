@@ -10,7 +10,7 @@
 // Installed Jul 24 2026 (Bundle 1 of the 13-agent improvement plan). Playbook:
 // Claude-Core/lessons/lean-ctx-freeze-playbook.md and workflow/the-drill-and-memory.md.
 
-import { existsSync, writeFileSync, readdirSync } from "node:fs";
+import { existsSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
 
@@ -118,15 +118,23 @@ try {
         // a deadlock corpse from a previous wedge â€” it must be rebuilt, not trusted.
         const graphsDir = join(process.env.USERPROFILE || "C:/Users/Chanryle", ".local/share/lean-ctx/graphs");
         let haveGraph = false;
+        let metaErrors = 0; // a swallowed error is an invisible failure — count them, then say so
         if (existsSync(graphsDir)) {
           for (const d of readdirSync(graphsDir)) {
             const meta = join(graphsDir, d, "graph.meta.json");
-            if (!existsSync(meta)) continue;
+            if (!existsSync(meta)) continue; // no meta = deadlock corpse, not a usable graph
             try {
               const m = JSON.parse(readFileSync(meta, "utf8"));
               if (String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === root.toLowerCase()) { haveGraph = true; break; }
-            } catch {}
+            } catch { metaErrors += 1; }
           }
+        }
+        // A corrupt meta is expected and skippable. EVERY meta failing is not: that is what a
+        // missing import looks like from in here, and a bare catch made it invisible — the hook
+        // silently re-built the graph on every single session start (audit Jul 26 2026, caught by
+        // this file's own net on its first run).
+        if (metaErrors > 0) {
+          graphNote += "⚠ " + metaErrors + " lean-ctx graph meta file(s) could not be read; the pre-build check may be running blind. ";
         }
         if (!haveGraph) {
           const exe = join(process.env.USERPROFILE || "C:/Users/Chanryle", "AppData/Roaming/npm/node_modules/lean-ctx-bin/bin/lean-ctx.exe");
