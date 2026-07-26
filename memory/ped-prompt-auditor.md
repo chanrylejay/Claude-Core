@@ -7,9 +7,15 @@ metadata:
 
 # PED as the standing prompt auditor (validated Jul 25 2026)
 
-**What it is:** PED (callsign Nautica, production build v6.4.3), Chan's own prompt-engineering system, running in his
-DeepSeek web chat (R1, Deep Think on). The prompt itself lives in the private vault
-(Downloads/Projects/Prompt Engineering/Nautica) and is NEVER published or pasted into any repo.
+**What it is:** PED (callsign Nautica), Chan's own prompt-engineering system. TWO PRODUCTION
+BUILDS, split by runtime, both current: **v7.0.2 on claude.ai, the default whenever Chan has
+Claude access**, and **v6.4.3 in his DeepSeek web chat (R1, Deep Think on)**, which is what
+survives revocation. Neither supersedes the other; the runtime decides. The prompt itself lives
+in the private vault (Downloads/Projects/Prompt Engineering/Nautica) and is NEVER published or
+pasted into any repo. (Audit Jul 26 2026: this opened "production build v6.4.3", unqualified,
+with the runtime split arriving four paragraphs later — first reading wins on a file this long,
+and the wrong reading routed a high-stakes audit to the weaker build while the stronger one was
+available.)
 
 **Why we trust it:** a full seeded-defect + red-team program (Jul 25 2026). v6.3 with a bare
 "audit" caught only theater (1/3) and blessed a safety loophole as a feature; it also classified
@@ -69,8 +75,11 @@ document never enables is a stall, not a breach). Round 5 confirmed both halves:
 clean AND a zero-finding sweep on the control, with all three earlier false findings correctly
 cleared. These checks constrain SHIPPING, never SCANNING, which is why recall survived intact.
 
-WHICH BUILD TO USE: v7.0.2 on claude.ai when Chan has Claude access (strongest auditor by a
-wide margin: 13 real findings to v6.4.3's 3 in the blind championship). v6.4.3 on DeepSeek R1
+WHICH BUILD TO USE: v7.0.2 on claude.ai when Chan has Claude access — it won the blind
+championship by a wide margin, and the finding COUNTS from that championship are OPEN (see
+[[ped-log]] row #3): not citable anywhere, the case study included, until Chan rules on them.
+(Audit Jul 26 2026: this line carried the exact numbers row #3 bans from citation — the T7 fix
+stripped them from one distillation and missed this one.) v6.4.3 on DeepSeek R1
 is the free daily driver and stays production there. Every build kept in the vault, never
 overwritten. Cost gate: v7.0.2 needs Claude access; the no-new-AI-spend-until-a-client rule
 still governs whether that access gets paid for.

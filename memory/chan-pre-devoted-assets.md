@@ -10,6 +10,18 @@ metadata:
 **The era:** Apr-Jun 2026. Self-hosted n8n 2.12.3 + Neon Postgres + Telegram + Gemini/DeepSeek, all $0-8/month, plus a 7-persona prompt-engineering ecosystem and the first shipped web apps. This is the direct ancestor of the QA gauntlet: multi-round adversarial AI audits with Do-Not-Repeat blacklists (Supervisor: 22 rounds, 136 DNR items).
 
 **Live/public today:**
+
+**STANDING GATE — undated, belongs to no snapshot, governs every system in this section** (a
+copy of the GO law at the point of action, licensed by the irreversible-action exception in
+`../lessons/platform-gotchas.md`; the home is [[chan-hard-rules]] rules 6-7): `git push`,
+deploy, public-profile edit, repo rename, and any migration / seed / destructive SQL against a
+live database each need Chan's explicit per-action GO. On ano-ulam and the calculator, push IS
+deploy. The local ano-ulam `.env` points at the PRODUCTION Neon DB, so "local" SQL is live SQL.
+This rule never moves into a dated or superseded block. (Audit Jul 26 2026: the only class-wide
+push gate sat inside a block stamped "SUPERSEDED, do not action" in the resigned-Devoted file,
+and the prod-DB gate sat in a parenthetical under "Housekeeping completed" — live rules filed as
+history, read as history.)
+
 - ano-ulam: ma-anoulam.vercel.app, Filipino meal app, DA price-PDF scraper + 47-recipe cost engine. Strongest showable project of the era.
 - n8n-project-calculator: n8n-project-calculator.vercel.app. Exposes old budget pricing (T1 $15-20) and is worth reframing: draft the new wording for Chan and ship only on his GO (it auto-deploys live).
 - github.com/chanrylejay: shiny-gmail-automation (60 nodes, V4.0) + supervisor repo (48 nodes, zero-AI); their Neon databases are deliberately ISOLATED from each other. Repo name typo "erorr" worth renaming: propose it to Chan, never rename without his GO (a rename breaks every existing link).
