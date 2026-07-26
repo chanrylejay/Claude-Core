@@ -47,6 +47,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `apply-deepseek-switch.mjs` — the one-shot switch script (backs up settings, merges the env block, validates; --dry-run to rehearse). Never holds the key.
 - `agents/` — the QA gauntlet team (5 shipped project-agnostic agents + 2 client-persona skeletons; the review chain is 6 roles):
   - `agents/README.md` — the adaptation checklist and settings.local.json wiring.
+  - `agents/_lawcheck_test.mjs` — regression net pinning each load-bearing runtime law to the agent file that must carry it; the pinned list's ONE home. MANDATORY re-run after any agent-file edit.
   - `agents/spec-reader.md` — ASK-DON'T-ASSUME requirements clarifier.
   - `agents/reviewer.md` — hostile code reviewer.
   - `agents/net-runner.md` — regression-net / anti-churn gate.

@@ -57,18 +57,41 @@ cited conclusions instead of file dumps. Use before building, any time.
 - **Agents deploy alone.** A subagent loads its own file and nothing else. Any law it must obey at
   runtime has to be written IN that file. This document is a map for Chan, never a runtime
   dependency for an agent: when a rule here constrains an agent's behaviour, it is not enforced
-  until the same sentence also appears in that agent's own prompt.
+  until the same sentence also appears in that agent's own prompt. That placement is now
+  MECHANICALLY CHECKED: `../templates/agents/_lawcheck_test.mjs` pins each load-bearing law to
+  the agent file that must carry it and fails when one goes missing. The pinned list lives in the
+  NET and nowhere else (a list drifts; the live thing does not). Adding a law to an agent file?
+  Add its pin to the net in the same edit. MANDATORY re-run after any agent-file edit, same
+  standing as the hook nets.
 
 - **Never fake a gate.** Passing tokens (GATE_OK / UX_OK / QA_OK) exist only if the agent
   actually ran. Enforce with a Stop-hook if the temptation exists (`../templates/hooks/gauntlet-guard.mjs`).
 - **Batch mode** for streaks of tiny fixes: open `.claude/BATCH` (any content) at the start of
   the streak; turns end freely while the touched-file ledger accumulates; delete the file to
   close the batch and the wall fires ONCE over everything touched. Never call a batch done or
-  push-ready while it is open.
+  push-ready while it is open. While `.claude/BATCH` is open, say so in the turn report EVERY
+  turn, with the files accumulated so far: it is a persistent suppression like GAUNTLET_OFF, not
+  a one-shot like PUSH_GO, and an unreported open batch is a done-wall that has been off for an
+  unknown number of turns with nothing to notice. (Audit Jul 26 2026: GAUNTLET_OFF carried this
+  disclosure duty and BATCH, with the identical persistence property, did not.)
 - **Regression nets are deliverables.** A fix without a net that pins it isn't done — that's how
   the same module stops breaking twice.
 - **Agents are the owner's review proxy.** Surface their verdicts to the human in plain
   language; that's what shrinks the review bottleneck.
+- **The turn report is a fixed block, not prose.** Several disclosure duties land there and
+  nowhere else, and an undefined artifact carrying that many duties gets written as one sentence
+  that omits most of them. Every build turn ends with:
+  ```
+  GATES:        tokens earned this turn — GATE_OK / UX_OK / QA_OK, or "none"
+  SKIPPED:      each gate or net not run + the named reason, or "none"
+  CHALLENGER:   N shipped, M killed — or SKIPPED + which mandatory-skip conditions held
+  OFF-SWITCHES: GAUNTLET_OFF present? BATCH open (+ files so far)? or "none"
+  PUSH:         PUSH_GO consumed / not requested — push is deploy is LIVE, Chan's GO each time
+  ```
+  An omitted field is a missing disclosure, not a shorter report; "none" is always writable.
+  (No CHALLENGER_OK token exists — the challenger line in this block is the only channel there
+  is, which is why the field is mandatory. Adding a real token to the done-wall set stays an open
+  option for Chan, raised Jul 25 and again Jul 26 2026.)
 - **No-vision model (DeepSeek endpoint).** The UX/visual pass cannot self-verify: capture the screenshots to FILES and hand them to Chan; his eyes give the CLEAN / POLISH / VIOLATIONS verdict. Never self-pass UX_OK blind. See workflow/switch-to-deepseek.md.
 
 ## The guard hooks (`../templates/hooks/`)
@@ -82,9 +105,23 @@ cited conclusions instead of file dumps. Use before building, any time.
 
 COPY both hooks into the project's `.claude/hooks/` first — run from Claude-Core they silently
 guard the wrong folder (their paths resolve relative to the file). Wire them in the project's
-`.claude/settings.local.json` (hooks → PreToolUse / Stop). On lean-ctx machines the shell
-matcher MUST include `mcp__lean-ctx__ctx_shell` and `mcp__lean-ctx__shell`, or a push through
-lean-ctx walks straight past the guard.
+`.claude/settings.local.json` — four events: PreToolUse (push-guard), PostToolUse (ui-track),
+Stop (done-wall), UserPromptSubmit (spec-nudge). The copy-paste JSON lives in
+`../templates/agents/README.md`; the rules HERE govern that JSON, and if the two ever disagree,
+the JSON is the bug. Two things the wiring gets wrong by default, both fail-open and both silent:
+1. **The shell matcher must name EVERY shell-capable tool this environment exposes.** On lean-ctx
+   machines that is `mcp__lean-ctx__ctx_shell`, `mcp__lean-ctx__shell` AND
+   `mcp__lean-ctx__ctx_call` — lean-ctx's `ctx_execute` runs shell and is reachable only THROUGH
+   `ctx_call`, so dropping that entry is not a weaker guard, it is no guard at all on that path.
+   Diff the list against the shell tools THIS environment actually exposes before wiring; the
+   shipped list is correct for lean-ctx machines only. (Audit Jul 26 2026: this paragraph named
+   only the first two entries while the README carried all three — the fix for the missing third
+   landed in one file and skipped the one the README itself calls the rule's home.)
+2. **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and the
+   done-wall (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits
+   1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice.
+   The non-blocking modes (ui-track, spec-nudge) do not need it. Rewriting a hook command for a
+   new repo, the suffix goes back on.
 Day-one order: push-guard on day one; the done-wall ONLY after client-qa/client-ux exist (a
 wall with no agents behind it fail-opens after 3 nags and trains everyone to ignore it).
 Harder optional variant: make the done-wall demand a verification ARTIFACT (a screenshot file,

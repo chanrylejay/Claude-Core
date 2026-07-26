@@ -43,8 +43,12 @@ doesn't.
 ## Hooks (`../hooks/`) — wiring only
 The concept, the rules, and the never-fake-a-gate law live in ONE home:
 `../../workflow/qa-gauntlet-pattern.md`.
-- **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and gauntlet-guard `done-wall` (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits 1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice. The non-blocking modes (`ui-track`, `spec-nudge`) do not need it. If you rewrite a hook command for a new repo, the suffix goes back on.
-- `push-guard.mjs` — PreToolUse on the shell tools. The matcher above already includes `mcp__lean-ctx__ctx_call`: lean-ctx's `ctx_execute` runs shell and is reachable only THROUGH `ctx_call`, so dropping that entry is not a weaker guard, it is no guard at all on that path. Update the GO-file path per repo, and before anything else diff this matcher against every shell-capable tool THIS environment exposes — the shipped list is correct for lean-ctx machines only.
+- `push-guard.mjs` — PreToolUse on the shell tools. Update the GO-file path per repo.
+- The matcher rule and the `|| exit 2` rule live COMPLETE in the qa-gauntlet home, with their
+  rationale; they are deliberately not restated here. The JSON below is the copy-paste
+  IMPLEMENTATION of those rules: if it ever disagrees with the home, the JSON is the bug.
+  (Audit Jul 26 2026: both rules used to live complete HERE and incomplete in the home this
+  README itself points at, so a model wiring from the home shipped an unguarded ctx_call path.)
 - `gauntlet-guard.mjs` — three modes by argv: `ui-track` (PostToolUse on edit tools),
   `done-wall` (Stop), `spec-nudge` (UserPromptSubmit).
 
