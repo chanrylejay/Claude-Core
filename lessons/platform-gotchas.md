@@ -3,13 +3,17 @@
 Distilled Jul 23 2026 from Documents A v10 and B v9 (verbatim originals in `../archives/`).
 Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, integrations). THIS file = per-platform service behaviors for any future build. One home each, no duplication.
 
+**One exception to no-duplication, and it is deliberate: a rule that gates an IRREVERSIBLE action** — a live deploy, a public commit, a production write, a paid API call — **is restated in full at every site where that action appears.** Single-homing is right for reference facts: miss one and you write a bug and find it in testing. It is wrong for these: miss one and the consequence is already public. For this class the duplication IS the safety mechanism, and a cross-reference is not a substitute. (Audit Jul 26 2026: two sites here carried the dangerous instruction while its gate lived in another section or another file.)
+
+**The GO law, written out once here so the references below resolve to text instead of a pointer:** Chan approves, each time, before any action that reaches production or the public. Push equals deploy on auto-deploy setups. A rebuild is a deploy. A manual cron call hits production and spends real money. A previous GO never carries forward. Full law: `../memory/chan-hard-rules.md` rules 6-7.
+
 ## Vercel
 - Cron sends GET, not POST: export both, GET delegates to POST. Auth is `Authorization: Bearer CRON_SECRET`; support the `x-cron-secret` header too for manual tests.
 - **Hobby cron has a 1-hour flexible window. NEVER two dependent crons: the window can fire B before A (proven live).** Combine into one sequential endpoint; keep the individual routes for manual tests. The dashboard Cron tab shows invocation history (2XX blue, 4XX yellow) for debugging.
 - Edge cache serves stale responses even with `dynamic = "force-dynamic"`. Add `Cache-Control: no-store` plus the CDN and Vercel-CDN variants on dynamic API routes.
 - Serverless timeout 60s on free tier; set `maxDuration` on heavy routes; batch DB round-trips (100+ trips US-to-Singapore fails).
 - `new Date().toISOString()` is UTC; Manila is UTC+8; prefer latest-date-from-DB over a computed "today".
-- Auto-deploy only fires for pushes AFTER the Git connection was made; push a trivial change after connecting.
+- Auto-deploy only fires for pushes AFTER the Git connection was made; activating it takes one trivial push — **and that push deploys LIVE. GO required, same as any other push.** (Audit Jul 26 2026: this read as a bare imperative, and every GO constraint sat either further down the file or in a project-scoped file. This is also the push that produces the FIRST public deploy — see the Netlify note that a public URL exists the instant a build succeeds.)
 - Analytics: `@vercel/analytics/next` for Next.js, `/react` for Vite, script tag for plain HTML; enable in the dashboard first.
 
 ## Neon Postgres
@@ -32,7 +36,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - Push equals deploy on auto-deploy setups (the GO law: Chan's hard rules 6-7).
 
 ## Next.js / npm builds
-- **`npm run build` locally before every deploy push: it is the exact CI command; dev mode skips type checking.** Strict ESLint makes unused vars and `any` hard errors; type API data as Record<string,unknown>.
+- **`npm run build` locally before every deploy push: it is the exact CI command; dev mode skips type checking.** A green local build is not clearance: the push itself is the deploy and still needs Chan's GO, each time (audit Jul 26 2026 — found by the irreversible-action sweep, same class as the Vercel first-push line). Strict ESLint makes unused vars and `any` hard errors; type API data as Record<string,unknown>.
 - next@latest overshoots majors: pin explicitly; `npm audit fix --force` is banned on Next projects. tsconfig target at least es2017 (the TS2802 Set/Map-spread trap).
 - One build at a time: racing builds corrupt .next (MODULE_NOT_FOUND deep in webpack-runtime): kill both, rm -rf .next, rebuild once.
 - Serverless route handlers must AWAIT audit/log writes; un-awaited promises die when the response returns.
@@ -55,7 +59,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - queryReplacement comma-split bug: single-JSON-parameter inserts, ($1::jsonb)->>'field', are the only safe pattern. Postgres errors can route to the SUCCESS output: handle both paths; enable Always Output Data.
 - Postgres node output replaces upstream data in multi-branch flows: add a Set node after conditional gates to carry fields forward.
 - toolWorkflow wraps agent arguments in one query property as a JSON string: JSON.parse in every tool input Code node. Agent tool output property must be named "output", not "response".
-- Error Trigger fires only on PRODUCTION executions and deregisters after any Code-node edit (toggle the workflow off-on). staticData saves on workflow success only, and is PER-WORKFLOW scoped: cross-workflow cache sharing is impossible without a DB. Re-import resets all credentials. Exports strip credentials (safe for GitHub).
+- Error Trigger fires only on PRODUCTION executions and deregisters after any Code-node edit (toggle the workflow off-on). staticData saves on workflow success only, and is PER-WORKFLOW scoped: cross-workflow cache sharing is impossible without a DB. Re-import resets all credentials. Exports strip the STORED credentials — but not secrets typed directly into node bodies, which is exactly where they end up when `N8N_BLOCK_ENV_ACCESS_IN_NODE` blocks env access in Code nodes (see the Windows self-host line below). **Grep an export for keys before any public commit: stripped is not clean.** (Audit Jul 26 2026: this said "safe for GitHub", an affirmative safety certificate. A reader told the artifact is clean never forms the doubt that would send them looking for a guard, so no ban elsewhere could cure it — and a public commit cannot be recalled.)
 - SplitInBatches: never loop a Wait node back upstream; done branch never connects to Wait.
 - Healthchecks.io dead-man-switch on a sleeping-laptop host needs a grace period longer than the sleep cycles (30 min proved right; 5-min ping cadence).
 - Windows self-host: crypto and env access need NODE_FUNCTION_ALLOW_BUILTIN and N8N_BLOCK_ENV_ACCESS_IN_NODE; Gmail OAuth can fail via ngrok (reconnect via localhost).
