@@ -30,9 +30,13 @@ const LAWS = [
   ["recon.md", "THIS law governs and that line is the bug"],
   ["challenger.md", "THIS law governs and that line is the bug"],
   ["spec-reader.md", "THIS law governs and that line is the bug"],
-  // the write-budget supremacy clause — both client skeletons
-  ["client-qa.skeleton.md", "That is the entire write budget"],
-  ["client-ux.skeleton.md", "That is the entire write budget"],
+  // the write-budget supremacy clause — both client skeletons (scope, not count, since G04)
+  ["client-qa.skeleton.md", "are the entire write budget"],
+  ["client-ux.skeleton.md", "are the entire write budget"],
+  ["client-qa.skeleton.md", "missing this section is void"],
+  ["client-ux.skeleton.md", "missing this section is void"],
+  ["client-qa.skeleton.md", "CONFIG INCOMPLETE"],
+  ["client-ux.skeleton.md", "CONFIG INCOMPLETE"],
   // per-agent load-bearing laws
   ["reviewer.md", "never by running them"], // write paths traced on paper, not executed
   ["net-runner.md", "An empty list must never mean"], // unfilled placeholder fails CLOSED

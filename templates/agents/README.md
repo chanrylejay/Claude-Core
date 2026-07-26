@@ -16,8 +16,9 @@ each carries a 🔧 ADAPT PER PROJECT block to fill in when dropping them into a
 tester and `client-ux` design-law enforcer). The Devoted versions embodied that client's
 specific taste and laws, so they were removed from this kit — **write them fresh per project**
 from the new owner's actual requirements and design canon — start from
-`client-qa.skeleton.md` / `client-ux.skeleton.md` (six fill-in fields each, the last being the
-evidence folder that is their only permitted write). Their job descriptions and verdict
+`client-qa.skeleton.md` / `client-ux.skeleton.md` (fill the persistent CONFIG section — five
+values each, the last the evidence folder that is their only write target — and keep the WRITE
+BOUND section verbatim; it declares a copy without it void). Their job descriptions and verdict
 formats are in `../../workflow/qa-gauntlet-pattern.md`; the discipline (read-only on live,
 screenshots at multiple widths, ACCEPT/SEND-BACK verdicts) carries over even though the persona
 doesn't.
