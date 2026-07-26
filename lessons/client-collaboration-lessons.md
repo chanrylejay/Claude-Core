@@ -5,8 +5,9 @@ non-technical product owner. The client relationship ended over communication-st
 incompatibility — these lessons are what to carry, and what to protect against, next time.
 
 ## The workflow that worked
-- **Show-first → approve → deploy.** Build the real thing, screenshot it, get the nod, THEN it
-  ships. Never deploy on assumption. (Mock scope: pattern 31 in universal-patterns.md.)
+- **Show-first → approve → deploy:** pattern 31 in universal-patterns.md — the full law, build
+  mechanics and mock scope included. (Audit Jul 26 2026: this line used to carry the instruction
+  body while its pointer covered mock scope only.)
 - **One module at a time.** A client's list of 8 asks is a backlog, not a batch. Finishing one
   area completely beats touching all eight.
 - **Capture asks VERBATIM** (a spec-reader pass): quote their exact words, extract numbered
@@ -14,9 +15,9 @@ incompatibility — these lessons are what to carry, and what to protect against
   when "that's not what I asked for" comes later.
 - **Keep a "Waiting on Decisions" register** — one list of everything blocked on the client's
   answer. Nothing slips, and the relay person's job becomes one glance.
-- **Order of operations for an existing workflow: Remove → Simplify → Automate → Add.**
-  Adding features to an unproven workflow is how you over-build. Validate the workflow through
-  real daily use FIRST, then invest in the interface.
+- **Order of operations for an existing workflow:** pattern 32 in universal-patterns.md — the
+  one home, validate-first clause included. (Audit Jul 26 2026: this line used to carry the full
+  instruction with a scope clause pattern 32 lacked; two homes, divergent text.)
 
 ## The review bottleneck (the real root cause of friction)
 When one person relays between the client and the AI *and* reviews everything, they drown, and

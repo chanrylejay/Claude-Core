@@ -40,8 +40,8 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 28. **Middleware eats machine traffic:** auth gates built for humans silently 307 scheduled functions and webhooks to login. Exempt the EXACT paths that are failing, one literal route at a time (`/api/cron/daily`, not `/api/*`) — a prefix exemption opens every human-facing endpoint under it with no authentication at all. Each exemption is a hole in an auth gate: name it in the PR, and any exemption broader than a single literal route needs Chan's explicit OK. Diagnose with the platform TRAFFIC log.
 29. **A plausible theory is not a root cause.** The same bug survived two wrong-but-plausible theories. No state-changing fix until a log line or probe proves the mechanism.
 30. **Caches lie during verification:** bust caches before debugging code; verify the deployed thing, not the local one.
-31. **Show-first beats ship-first:** approval-then-deploy creates closure; never argue "it already works", show it. Mock scope (reconciled Jul 24 2026): a clickable preview mock BEFORE building is the gold standard for client approval; a mock INSTEAD of the real build to demo "finished" work is banned — show-first means the real thing plus screenshots.
-32. **Fewer clicks is a law:** REMOVE, then SIMPLIFY, then AUTOMATE, only then ADD. A client repeating the same feedback twice is a fire alarm.
+31. **Show-first beats ship-first:** build the real thing, screenshot it, get the nod, THEN it ships — never deploy on assumption. Approval-then-deploy creates closure; never argue "it already works", show it. Mock scope (reconciled Jul 24 2026): a clickable preview mock BEFORE building is the gold standard for client approval; a mock INSTEAD of the real build to demo "finished" work is banned — show-first means the real thing plus screenshots.
+32. **Fewer clicks is a law:** REMOVE, then SIMPLIFY, then AUTOMATE, only then ADD. On an EXISTING workflow, validate it through real daily use BEFORE investing in the interface — adding features to an unproven workflow is how you over-build. A client repeating the same feedback twice is a fire alarm. (Audit Jul 26 2026: the validate-first clause lived only in client-collaboration-lessons.md, which does not call the ordering a law, so a model working from this pattern skipped validation. One home now.)
 33. **Ship in batches, GO-gated:** the full law lives in ../memory/chan-hard-rules.md rules 6-7.
 34. **Bank before compression:** the session is disposable, file memory is not (full mechanics: ../workflow/the-drill-and-memory.md).
 35. **Archive never delete, one canon per family:** superseded artifacts move to archive the day the replacement lands; a master index says which file is canon.
@@ -91,7 +91,15 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   script and would have reconfigured the live machine, superseded in the script header that same
   morning. When you cannot avoid a second mention, mark it explicitly as a WARNING that may go
   stale rather than an instruction to follow: a stale warning costs a re-read, a stale instruction
-  costs the machine.
+  costs the machine. ENFORCEMENT IS A PRE-WRITE GATE, not a cleanup pass — nine hits in one day
+  is what a recovery-only control looks like, and pattern 10 already says prevention beats
+  mid-stream self-correction. BEFORE writing any operational instruction: grep the kit for the
+  topic's distinctive phrase. One non-pointer hit elsewhere means the home already exists — write
+  a pointer, not the instruction. Zero hits means you are creating the home: put it where
+  DIRECTORY.md says that topic lives, and if DIRECTORY.md has no line for it, add one in the same
+  edit. The GREP is the check and DIRECTORY.md is the index — this kit deliberately keeps no
+  separate topic-to-home table, because that table would be a second copy of DIRECTORY.md's job
+  and a list that drifts (audit Jul 26 2026).
 - **A list drifts; the live thing does not.** Wherever a doc would ENUMERATE — files that hold
   secrets, env vars to delete, flags a script accepts, models a provider serves — write the QUERY
   that regenerates the list and name the live source of truth. Enumerate only when the list is
@@ -114,8 +122,13 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   Verify it mechanically, and NOT with a header grep — the strike that made this a rule was bare
   prose with no header, so a header grep returns clean on the exact input class that caused it.
   BUILD the paste file from the source files programmatically, then diff it back: every byte must
-  come from a source file or from a plain `===== FILE: x =====` separator. Anything else is
-  framing, whatever it looks like.
+  come from a source file or from a separator line the builder itself emitted. The BUILDER is the
+  source of truth for the separator format — diff against its output, never against a format
+  transcribed into this file, because a transcribed format drifts and the check then fails on
+  clean input, and a mechanical gate that fails on its own clean input gets switched off.
+  Anything else is framing, whatever it looks like. (Audit Jul 26 2026: this rule transcribed a
+  five-equals separator while the live builder emits thirty-one with no trailing delimiter, so
+  the byte test as written rejected every clean paste it governs.)
 - **Plant a quota prior to test an auditor.** Tell it "four things were changed and each usually
   breaks something" when you do NOT know the real count. **The test is PROVENANCE, not arithmetic.**
   A FAIL is a count you cannot trace to per-finding evidence in the document, or any output that
