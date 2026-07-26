@@ -17,7 +17,23 @@ if (!fs.existsSync(LIVE)) {
 // running this net used to print "all checks pass" over the previously installed copy — a green
 // verdict on code that never executed, on the hook whose entire job is preventing silent misses
 // (audit Jul 25 2026). Fail CLOSED on drift, same as the unterminated heredoc.
-if (fs.existsSync(TEMPLATE) && fs.readFileSync(TEMPLATE, "utf8") !== fs.readFileSync(LIVE, "utf8")) {
+// FAIL CLOSED means closed on EVERY way this check can be defeated, not just the byte diff:
+//   missing template              → nothing was compared, and it printed a pass anyway
+//   net copied beside the LIVE hook → TEMPLATE resolves to LIVE, a file matches itself, always green
+//   bytes differ                  → the original case
+// The first two used to pass (audit Jul 26 2026). A guard that skips itself is worse than no
+// guard, because it still prints a verdict.
+if (path.resolve(TEMPLATE) === path.resolve(LIVE)) {
+  console.error("this net is sitting beside the INSTALLED hook — the drift check would compare " + LIVE + " to itself");
+  console.error("run it from the templates/global/ copy, where the template it diffs is a different file");
+  process.exit(1);
+}
+if (!fs.existsSync(TEMPLATE)) {
+  console.error("no template beside this net at " + TEMPLATE);
+  console.error("nothing here verifies the installed hook is the code you edited — refusing to certify");
+  process.exit(1);
+}
+if (fs.readFileSync(TEMPLATE, "utf8") !== fs.readFileSync(LIVE, "utf8")) {
   console.error("INSTALLED hook does not match the template beside this net:");
   console.error("  template:  " + TEMPLATE);
   console.error("  installed: " + LIVE);
@@ -90,6 +106,35 @@ t("clear does not drill", !drills(raw(JSON.stringify({ source: "clear" }))));
 const drillMsg = raw(JSON.stringify({ source: "compact" })).stdout || "";
 t("drill names Claude-Core/memory/MEMORY.md", /Claude-Core\/memory\/MEMORY\.md/.test(drillMsg));
 t("drill names the out-of-root read tool", /node -e/.test(drillMsg));
+
+// 5. WIRING. Every test above spawns the hook directly, so all of them stay green even when the
+//    hook is never invoked at all. The matcher used to enumerate "startup|resume|clear|compact",
+//    so the unknown-source allowlist inside the hook — written for "a renamed or added platform
+//    source" — could not be REACHED by one: a fifth source fails the matcher, the process never
+//    starts, and the compacted session gets no DRILL (audit Jul 26 2026). "The hook handles
+//    unknown sources" and "the hook receives them" are two different claims; this net only ever
+//    proved the first.
+const SETTINGS = path.join(os.homedir(), ".claude", "settings.json");
+let cfg = null;
+try { cfg = JSON.parse(fs.readFileSync(SETTINGS, "utf8")); } catch {}
+t("~/.claude/settings.json exists and parses", cfg !== null);
+const ritualEntries = (cfg?.hooks?.SessionStart ?? []).filter((e) =>
+  (e?.hooks ?? []).some((h) => typeof h?.command === "string" && /session-ritual\.mjs/.test(h.command)));
+t("settings.json wires session-ritual.mjs on SessionStart", ritualEntries.length > 0);
+t("the ritual matcher does NOT enumerate sources", ritualEntries.length > 0 && ritualEntries.every((e) => {
+  const m = e.matcher;
+  if (m === undefined || m === "" || m === "*" || m === ".*") return true;
+  return !/startup|resume|clear|compact/.test(m);
+}));
+
+// 6. MODE GATE. argv[2] comes from the settings.json command string — the one file the recovery
+//    skeleton says to rebuild BY HAND. `mode === "start"` with no else exited 0 emitting nothing
+//    on any typo: exit 0, no DRILL, the same signature as the seed-write bug (audit Jul 26 2026).
+const withMode = (...args) =>
+  spawnSync(process.execPath, [LIVE, ...args], { input: JSON.stringify({ source: "compact" }), encoding: "utf8", cwd: SB });
+t("a TYPO'd mode still drills", drills(withMode("srart")));
+t("a MISSING mode still drills", drills(withMode()));
+t("an unrecognised mode says so out loud", /unrecognised mode/.test(withMode("srart").stdout || ""));
 
 const src = fs.readFileSync(LIVE, "utf8");
 // The requirement is a BOUNDARY, not a shape: the path computation AND the write must sit inside

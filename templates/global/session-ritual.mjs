@@ -31,7 +31,19 @@ try {
   payload = JSON.parse(raw || "{}");
 } catch {}
 
-const mode = process.argv[2];
+// MODE GATE. Same asymmetry as the source gate below, and this was the ONE input in the file
+// with no unknown-value defence: `mode === "start"` with no else meant any typo in the
+// settings.json command string — a file the recovery skeleton says to REBUILD BY HAND — exited 0
+// having emitted nothing. Exit 0, no DRILL: the exact signature of the seed-write bug (audit
+// Jul 26 2026). Guessing start costs one unnecessary message; guessing not-start costs the
+// drill. Allowlist the modes this file knows; anything else runs start AND says so, because a
+// wiring typo must be loud. Add a new mode to KNOWN_MODES in the same edit that adds its branch.
+const KNOWN_MODES = new Set(["start"]);
+const rawMode = typeof process.argv[2] === "string" ? process.argv[2] : "";
+const mode = KNOWN_MODES.has(rawMode) ? rawMode : "start";
+const modeNote = KNOWN_MODES.has(rawMode)
+  ? ""
+  : "⚠ this hook was invoked with an unrecognised mode (" + (rawMode || "none") + ") and defaulted to start — fix the command string in ~/.claude/settings.json. ";
 const cwd = payload.cwd || process.cwd();
 
 function emit(eventName, text) {
@@ -88,13 +100,13 @@ try {
     if (source === "compact") {
       emit(
         "SessionStart",
-        "[ritual hook] Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — both out-of-root, both via Bash node -e, never ctx_read (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
+        "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — both out-of-root, both via Bash node -e, never ctx_read (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
           seedNote,
       );
     } else {
       emit(
         "SessionStart",
-        "[ritual hook] Session-start ritual: " +
+        "[ritual hook] " + modeNote + "Session-start ritual: " +
           seedNote +
           "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks — the marked lines only say WHICH files to open — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );

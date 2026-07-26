@@ -34,10 +34,10 @@
     "padding": 0
   },
   "hooks": {
-    "_comment": "lean-ctx adds its own observe (PostToolUse/PreCompact/SessionEnd/SessionStart/Stop/UserPromptSubmit) + rewrite/redirect (PreToolUse) hooks on install; only the CUSTOM session-ritual wiring is preserved here. Re-point the absolute path to the recovery machine's home.",
+    "_comment": "lean-ctx adds its own observe (PostToolUse/PreCompact/SessionEnd/SessionStart/Stop/UserPromptSubmit) + rewrite/redirect (PreToolUse) hooks on install; only the CUSTOM session-ritual wiring is preserved here. Re-point the absolute path to the recovery machine's home. The SessionStart matcher is a CATCH-ALL and must stay one: the hook resolves any unrecognised source to compact, and that defence is unreachable if the matcher enumerates today's source names — a renamed or added platform source would simply never invoke the hook (audit Jul 26 2026). Never list sources here.",
     "SessionStart": [
       {
-        "matcher": "startup|resume|clear|compact",
+        "matcher": ".*",
         "hooks": [
           {
             "type": "command",
