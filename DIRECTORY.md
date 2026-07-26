@@ -64,4 +64,4 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 
 ## portfolio/ — career material
 
-- `devoted-project-summary.md` — confidentiality-safe write-up of the Devoted build for resume/interviews, incl. safe-to-cite numbers.
+- `devoted-project-summary.md` — internal source-material write-up of the Devoted build for resume/interviews; its numbers are gated by the skills-ledger ceiling (the ledger is the canon for facts and claims, the career state file for confidentiality).

@@ -7,9 +7,14 @@ metadata:
 
 # Chan's skills ledger (canonical, as of July 2026)
 
-**This file is a CEILING, not a floor.** Never claim a skill, tool, metric, employer, or date
-that is not written here, and never restate a number larger or a qualifier smaller than it is
-written. If something is missing, ask Chan before writing it.
+**This file is a CEILING, not a floor, and the ceiling is SYSTEM-WIDE.** Never claim a skill,
+tool, metric, employer, date, or number that is not written here, and never restate a number
+larger or a qualifier smaller than it is written. A figure in any OTHER file — a project
+summary, a case-study draft, a section headed as safe to cite — is SOURCE MATERIAL, not
+clearance: it is not usable outbound until it is written here. If something is missing, ask Chan
+before writing it; when he confirms it, add it here in the same session, then use it. Asking is
+the fast path, not the slow one. (Audit Jul 26 2026: the project summary held five figures this
+ledger does not, under a "safe to cite" heading, and nothing ranked the two files.)
 **Consent gate.** Resume and interview use is open. Any PUBLIC named case study, proposal, post,
 or portfolio entry that uses the client-identifying entries below (Devoted Care, AxisCare, the
 agency's production writes) needs that client's written OK on file first; see the confidentiality
