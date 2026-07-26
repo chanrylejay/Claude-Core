@@ -6,10 +6,18 @@ Devoted Care (Jun–Jul 2026) through real failures. Follow them in every projec
 ## THE DRILL (rule 0)
 
 After **any** compaction, before the first substantive reply (on a fresh session start, the
-global hub's workspace ritual is the entry point and supplies the reading list. That changes WHO hands you the list, never WHAT you owe: steps 2, 3 and 4 below all still apply in full on a fresh start, and step 2 means opening the marked FILES, not reading their index lines. If the ritual's list does not cover every marked file, read the remainder yourself. Step 3's
-disk/repo verification still applies to every start. If no hub ritual or reading list is
-present (a subagent, or a failed import), run all four steps below in full before the first
-substantive reply):
+global hub's workspace ritual is the entry point and supplies the reading list. That changes WHO
+hands you the list, never WHAT you owe: ALL FOUR steps below apply in full, every start, every
+branch, with no exception for a ritual start — and step 2 means opening the marked FILES, not
+reading their index lines. If the ritual's list does not cover every marked file, read the
+remainder yourself. If no hub ritual or reading list is present (a subagent, or a failed
+import), the four steps are identical; you assemble the list yourself instead of being handed it.
+(Audit Jul 26 2026: this used to enumerate "steps 2, 3 and 4" for a ritual start while the
+no-ritual branch said "all four", telling a literal reader that a ritual start skips step 1 — and
+a post-compaction start IS a ritual start, so the skip landed exactly where a summary exists to
+be distrusted. An earlier audit CLEARED the same enumeration as unreachable on the grounds that a
+fresh start has no summary; that read missed that only ONE of step 1's four triggers is about
+summaries. The skip is scoped to the TRIGGER now, never the step.)):
 
 1. **Don't trust the summary.** Compaction summaries drop details — on Jul 14 one silently
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
@@ -28,7 +36,10 @@ substantive reply):
      or shipped.
 
    If you cannot tell whether a trigger fired, it fired. If none fired, say so in one line in
-   your first reply, so the skip is visible rather than silent. Only Chan can waive this.
+   your first reply, so the skip is visible rather than silent. Only Chan can waive this. A
+   genuinely cold start with no compaction behind it gives the FIRST trigger nothing to test, so
+   that one cannot fire — but the other three still can, and they still get checked. Skip a
+   trigger that has no subject; never skip the step.
 2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file, plus [[chan-hard-rules]] always, whether or not it carries a marker. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, and the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md.
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.
@@ -51,7 +62,14 @@ substantive reply):
 - **Bank decisions the moment they're made** (a client's GO, a reversal, a locked design call) —
   not at end of session.
 - **Mark recency and priority in the index line** (🔴 READ FIRST, ⭐ importance, dates) so a
-  future session knows what's an anchor vs history.
+  future session knows what's an anchor vs history. ANCHOR PRECEDENCE, mechanical: at most ONE
+  line in a project index carries 🔴 as the current resume point, and writing a new resume anchor
+  INCLUDES removing 🔴 from the previous one in the same edit — the removal is part of the write,
+  not a follow-up task. A file waiting on Chan's ruling is not a resume point, it is a blocker
+  list: mark it 🟡 BLOCKED, never 🔴. Two or more 🔴 lines is a bug in the index, not a choice to
+  make: take the newest-dated 🔴 and name the extras in your first reply. (Audit Jul 26 2026:
+  three 🔴 lines coexisted in one project index, each naming a different immediate next action,
+  and DRILL step 2 dutifully opened all three.)
 - **Session anchors:** for big multi-day pushes, keep one anchor file per effort with a
   top block that's always the current state — newest information at the top.
 
