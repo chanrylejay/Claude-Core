@@ -23,7 +23,7 @@ metadata:
 
 Public case studies carry results and method only. Never client data, PHI, credentials, live URLs, or real-data screenshots. Naming the employer on a resume or in interviews is normal.
 
-THREE ENTRIES ARE CONSENT-GATED AND ANONYMISING DOES NOT RELEASE THEM: the client engagement itself, the client CRM integration, and the agency's sanctioned production writes. Each of those identifies the client on its own, so any PUBLIC use — case study, proposal, post, article, portfolio entry, demo caption — needs that client's written OK on file first, whether or not you name them. No OK on file means do not publish it at all; ask Chan.
+THREE ENTRIES ARE CONSENT-GATED AND ANONYMISING DOES NOT RELEASE THEM: the client engagement itself, the client CRM integration, and the agency's sanctioned production writes. Each of those identifies the client on its own, so any PUBLIC use — case study, proposal, post, article, portfolio entry, demo caption — needs that client's written OK on file first, whether or not you name them. No OK on file means do not publish it at all; ask Chan. OK BANKED (Chan, in session, Jul 26 2026): the past client APPROVED portfolio use — the Experience tab, the featured project, and the shift demo are cleared under that approval, and demo extensions are unblocked by it (each still ships on Chan's own GO like anything public). The location of the written record is not banked; if the artifact itself is ever needed, ask Chan where it lives. Do not re-raise this question.
 
 For everything else that names a client: the written OK first, or anonymize to "a US home-care agency". When in doubt on anything not in the three above, anonymize; when in doubt about whether something IS one of the three, it is, so ask Chan.
 

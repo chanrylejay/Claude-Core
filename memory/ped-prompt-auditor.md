@@ -76,8 +76,9 @@ clean AND a zero-finding sweep on the control, with all three earlier false find
 cleared. These checks constrain SHIPPING, never SCANNING, which is why recall survived intact.
 
 WHICH BUILD TO USE: v7.0.2 on claude.ai when Chan has Claude access — it won the blind
-championship by a wide margin, and the finding COUNTS from that championship are OPEN (see
-[[ped-log]] row #3): not citable anywhere, the case study included, until Chan rules on them.
+championship by a wide margin, and the finding COUNTS from that championship live in
+[[ped-log]] row #3, RESOLVED by Chan Jul 26 2026 — cite from the receipt row, never from here
+(a distillation must not hold a number its receipt holds).
 (Audit Jul 26 2026: this line carried the exact numbers row #3 bans from citation — the T7 fix
 stripped them from one distillation and missed this one.) v6.4.3 on DeepSeek R1
 is the free daily driver and stays production there. Every build kept in the vault, never
