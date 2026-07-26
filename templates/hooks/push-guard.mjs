@@ -132,19 +132,37 @@ let raw = "";
 try {
   for await (const chunk of process.stdin) raw += chunk;
   const payload = JSON.parse(raw || "{}");
-  // Take EVERY string anywhere in tool_input, at any nesting, and test all of them. Reading one
-  // fixed key and treating a miss as a pass was the defect: a tool that carries the command under
-  // any other name (ctx_call nests it under arguments) sailed through with no inspection, no
-  // block, and — worse — no token consumed, so the GO stayed valid for its whole 30-minute window
-  // (audit Jul 25 2026). Only shell tools reach this hook, so scanning all of tool_input is safe.
+  // Take EVERY string in tool_input and test all of them. Reading one fixed key and treating a
+  // miss as a pass was the defect: a tool that carries the command under any other name (ctx_call
+  // nests it under arguments) sailed through with no inspection, no block, and — worse — no token
+  // consumed, so the GO stayed valid for its whole 30-minute window (audit Jul 25 2026). Only
+  // shell tools reach this hook, so scanning all of tool_input is safe.
+  // The depth cap is a STACK GUARD, not a contract. JSON cannot contain cycles, so nothing
+  // recurses forever; the cap only bounds a pathological payload. Hitting it means a string may
+  // have gone UNREAD, and an unread payload is never a pass: it fails CLOSED like every other
+  // limit in this file. It used to return quietly at depth 5 under a comment promising unbounded
+  // nesting — the one silent-allow limit in the file (audit Jul 26 2026). ctx_call nests to 2, so
+  // legitimate traffic sits far below the cap.
+  const MAX_DEPTH = 8;
   const strings = [];
+  let truncated = false;
   (function walk(v, depth) {
-    if (v == null || depth > 5) return;
+    if (v == null) return;
+    if (depth > MAX_DEPTH) { truncated = true; return; }
     if (typeof v === "string") return void strings.push(v);
     if (Array.isArray(v)) return void v.forEach((x) => walk(x, depth + 1));
     if (typeof v === "object") return void Object.values(v).forEach((x) => walk(x, depth + 1));
   })(payload?.tool_input, 0);
-  if (!strings.some(isGitPush)) process.exit(0); // not a push — pass through
+  const foundPush = strings.some(isGitPush);
+  if (truncated && !foundPush) {
+    console.error(
+      "[push-guard] BLOCKED: tool_input nested deeper than " + MAX_DEPTH + " levels, so part of it was " +
+        "never inspected. An unread payload is not a pass. Flatten the call, or raise MAX_DEPTH here " +
+        "if a legitimate tool really nests that deep.",
+    );
+    process.exit(2);
+  }
+  if (!foundPush) process.exit(0); // not a push — pass through
 
   if (existsSync(TOKEN)) {
     const ageMs = Date.now() - statSync(TOKEN).mtimeMs;

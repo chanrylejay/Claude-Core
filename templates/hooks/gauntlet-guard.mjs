@@ -56,7 +56,7 @@
 // UserPromptSubmit an exit 2 REJECTS AND ERASES the user's message, so spec-nudge never exits 2.
 // Test (MANDATORY after any edit): _gauntlet_test.mjs in this folder, run: node _gauntlet_test.mjs
 
-import { existsSync, unlinkSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
+import { existsSync, unlinkSync, readFileSync, writeFileSync, appendFileSync, statSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -234,17 +234,32 @@ function gitChanged() {
     .filter((p) => !outOfScope(p));
 }
 
+// A token is stale iff a file it covers was modified AFTER the token was written. Unreadable
+// token → assume stale (fail toward review). Unstat-able file (deleted since) → false: deletion
+// enters through the ledger-membership rule, and this check must never wedge a turn over it.
+function staleAgainst(tokenPath, files) {
+  if (!existsSync(tokenPath)) return false;
+  let tokenTime;
+  try { tokenTime = statSync(tokenPath).mtimeMs; } catch { return true; }
+  return files.some((f) => {
+    try { return statSync(f).mtimeMs > tokenTime; } catch { return false; }
+  });
+}
+
 function doneWall() {
   // Say so when the shell-edit check could not run. Silence here reads as "nothing changed",
   // which is the blindness this check exists to remove (audit Jul 25 2026).
   const shellChanged = gitChanged(); // MUST run before gitAvailable() — it is what sets the flag
-  if (!gitAvailable()) {
-    console.error(
-      "[gauntlet] SHELL-EDIT CHECK SKIPPED: no git here, so files changed through the shell " +
-        "(sed, a formatter, codegen, an applied patch) are NOT in the ledger. The wall is judging " +
-        "only what Edit/Write/ctx_patch reported. Say so before calling anything done.",
-    );
-  }
+  // A stderr-only block here was the FIFTH exit-0 stderr-only disclosure the header forbids — and
+  // the worst-placed one: with no git the ledger is blind, so the CLEAN branch below is the
+  // likeliest to fire, exit 2 is unreachable, and stderr has no backstop there. Carried as a
+  // PREFIX folded into whichever disclosure this run actually emits, because only ONE JSON object
+  // may go to stdout per run (audit Jul 26 2026 — the net had been pinning the narrow channel).
+  const blindNotice = gitAvailable()
+    ? ""
+    : "[gauntlet] ⚠️ SHELL-EDIT CHECK SKIPPED: no git here, so files changed through the shell " +
+      "(sed, a formatter, codegen, an applied patch) are NOT in the ledger. This wall is judging " +
+      "ONLY what Edit/Write/ctx_patch reported. Say so plainly before calling anything done.\n\n";
   for (const fp of shellChanged) {
     // Same invalidation uiTrack applies, for the same reason: a token attests to the state the
     // agent SAW. A file discovered here was never seen by it. Only a file NEW to the ledger
@@ -257,6 +272,18 @@ function doneWall() {
   const code = readLines(CODE_TOUCHED);
   const ui = readLines(UI_TOUCHED);
   const risk = readLines(RISK_TOUCHED);
+
+  // UNION with the membership rule in the fold-in above: a token dies if a file is NEW to the
+  // ledger, OR if any file it already covers changed AFTER the token was written. Membership
+  // alone conflated "still dirty from before" with "changed AGAIN since the agent looked" — the
+  // second case kept a stale token wherever the ledger survives a turn end, which BATCH,
+  // uxDeferred and fail-open all do by design (audit Jul 26 2026). Time is the honest
+  // discriminator, the same mechanism push-guard's token age already uses. uiTrack keeps its
+  // unconditional consume: it fires AT the edit, so time can tell it nothing new.
+  if (staleAgainst(GATE_OK, code)) consume(GATE_OK);
+  if (staleAgainst(UX_OK, ui)) consume(UX_OK);
+  if (staleAgainst(UX_SHOT, ui)) consume(UX_SHOT);
+  if (staleAgainst(QA_OK, risk)) consume(QA_OK);
 
   const needGate = code.length > 0 && !existsSync(GATE_OK);
   const needUX = ui.length > 0 && !existsSync(UX_OK) && !existsSync(UX_SHOT);
@@ -273,7 +300,7 @@ function doneWall() {
       // This branch is entered BECAUSE UX_SHOT exists, so exit 2 is unreachable for the whole
       // life of the token and stderr has no backstop — the same argument that dual-channelled
       // BATCH, applied to the branch it also covers (audit Jul 25 2026).
-      const msg =
+      const msg = blindNotice +
         "[gauntlet] UX verdict still OWED on: " + ui.join(", ") + "\n" +
         "  The screenshot was saved and handed to Chan; he has not given CLEAN / POLISH / VIOLATIONS yet.\n" +
         "  Do NOT call this verified or done. The ledger is kept and this fires again next turn.\n" +
@@ -283,6 +310,9 @@ function doneWall() {
       process.exit(0);
     }
     clearTurnState(); // genuinely clean turn — reset so nothing leaks into the next one
+    // On a blind machine the "clean" turn is the branch MOST likely to fire (the ledger cannot
+    // fill), so the notice must ride this exit too, on both channels.
+    if (blindNotice) { emitContext("Stop", blindNotice.trim()); console.error(blindNotice.trim()); }
     process.exit(0);
   }
 
@@ -310,11 +340,11 @@ function doneWall() {
     // backstop at all.
     emitContext(
       "Stop",
-      `[gauntlet] BATCH OPEN — ${pending.length} file(s) still pending review: ${pending.join(", ")}. ` +
+      blindNotice + `[gauntlet] BATCH OPEN — ${pending.length} file(s) still pending review: ${pending.join(", ")}. ` +
         `Do NOT tell Chan this is done or push-ready. The wall fires over all of it when he closes the batch.`,
     );
     console.error(
-      `[gauntlet] BATCH OPEN — ending the turn WITHOUT review (this is allowed).\n` +
+      blindNotice + `[gauntlet] BATCH OPEN — ending the turn WITHOUT review (this is allowed).\n` +
         `  ${pending.length} file(s) pending review, accumulating: ${pending.join(", ")}\n` +
         `  ⛔ Do NOT tell Chan this is done/push-ready. When the batch closes (delete .claude/BATCH),\n` +
         `     the wall fires ONCE over ALL of it: ${[needGate && "net-runner", needUX && "client-ux", needQA && "client-qa"].filter(Boolean).join(" + ")}.`,
@@ -332,7 +362,7 @@ function doneWall() {
     // it never cancels it. clearTurnState() here used to erase the debt, so a skipped pass could
     // never fire again in any later turn (audit Jul 25 2026).
     consume(NAG);
-    const openMsg =
+    const openMsg = blindNotice +
       `[gauntlet] ⚠️ FAILING OPEN after ${MAX_NAG} blocks — allowing the stop so you are not trapped.\n` +
       `  ${skipped} did NOT run on: ${[...new Set([...code, ...ui, ...risk])].join(", ")}\n` +
       `  TELL CHAN PLAINLY, in your reply, that this work shipped WITHOUT its review pass.\n` +
@@ -350,7 +380,7 @@ function doneWall() {
   if (needQA) todo.push(`  • client-qa    — acceptance + regression on: ${risk.join(", ")}\n      → then create \`.claude/QA_OK\``);
 
   console.error(
-    `[gauntlet] BLOCKED (${n}/${MAX_NAG}) — you cannot call this done yet. The review gate has not run.\n` +
+    blindNotice + `[gauntlet] BLOCKED (${n}/${MAX_NAG}) — you cannot call this done yet. The review gate has not run.\n` +
       todo.join("\n") +
       `\n\n  Your COMMITS were never blocked; this is only the "done" gate. The QA law: understand → build →\n` +
       `  self-review → test → regression-check → ONLY THEN mark complete. Run the agent(s), create the\n` +

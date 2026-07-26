@@ -4,7 +4,7 @@
 // the RISK_PATH "never-match until adapted" default, and the three BEHAVIOURS that were
 // broken on Jul 25 2026 (stale token, fail-open erasing the debt, filename entry guard).
 import { CODE_EXT, UI_EXT, RISK_PATH } from "./gauntlet-guard.mjs";
-import { mkdirSync, writeFileSync, existsSync, rmSync, copyFileSync, readFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, existsSync, rmSync, copyFileSync, readFileSync, utimesSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
@@ -71,6 +71,7 @@ function run(mode, payload, hookPath = HOOK) {
 }
 const edit = (rel) => ({ tool_input: { file_path: join(SB, rel) } });
 const tok = (n) => join(CD, n);
+const setMtime = (p, secondsAgo) => { const t = Date.now() / 1000 - secondsAgo; utimesSync(p, t, t); };
 
 // 1. a token created mid-turn must NOT cover work done after it
 reset();
@@ -195,6 +196,24 @@ if (gitRepo()) {
   } catch {
     console.log("  --  commit failed in the sandbox, skipped the committed-case check");
   }
+
+  // F2 pin (audit Jul 26 2026): membership alone kept a token when a LEDGERED file was re-edited
+  // through the shell. BATCH keeps the ledger alive across turn ends by design, so it is the
+  // reachable path: ledger a file, write the token, re-edit the file AFTER the token, close the
+  // batch — the token must die on TIME, because membership says "already known, keep it".
+  gitRepo();
+  const known = join(SB, "src", "known.ts");
+  writeFileSync(known, "export const a = 1;\n");
+  writeFileSync(join(CD, "BATCH"), "open");
+  run("done-wall", {}); // BATCH branch: ledgers known.ts, exits 0, ledger and tokens survive
+  writeFileSync(tok("GATE_OK"), "net-runner ran");
+  setMtime(tok("GATE_OK"), 30); // token written half a minute ago...
+  setMtime(known, 5);           // ...and the file re-edited through the shell AFTER it
+  rmSync(join(CD, "BATCH"));    // close the batch: the wall now judges the final state
+  check("a shell RE-edit of a ledgered file kills the token (time, not membership)", run("done-wall", {}).status === 2);
+  check("and that stale token is gone", !existsSync(tok("GATE_OK")));
+  writeFileSync(tok("GATE_OK"), "net-runner re-ran on the final state");
+  check("a token postdating every ledgered file clears the wall (no perpetual nag)", run("done-wall", {}).status === 0);
 } else {
   console.log("  --  git not available, skipped the git-backed ledger checks");
 }
@@ -206,7 +225,14 @@ if (gitRepo()) {
 reset();
 const noGit = run("done-wall", {});
 check("no git repo still lets the turn end", noGit.status === 0);
-check("no git repo SAYS the shell-edit check was skipped", /skipp|unverified|no git/i.test(noGit.stderr || ""));
+check("no git repo SAYS the shell-edit check was skipped (stderr)", /skipp|unverified|no git/i.test(noGit.stderr || ""));
+// stdout JSON is the DOCUMENTED exit-0 channel; this branch never reaches exit 2, so stderr has
+// no backstop here. The old pin certified the narrow channel — the exact pattern this file
+// records elsewhere as "the net had been certifying the bug" (audit Jul 26 2026).
+check("no git repo says it on STDOUT too", /skipp|unverified|no git/i.test(noGit.stdout || ""));
+check("and the notice is ONE valid json object", (() => {
+  try { JSON.parse(noGit.stdout); return true; } catch { return false; }
+})());
 
 rmSync(SB, { recursive: true, force: true });
 

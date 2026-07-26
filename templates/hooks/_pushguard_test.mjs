@@ -4,7 +4,8 @@
 // MANDATORY after ANY edit to push-guard.mjs. Pins the documented false-positive fixes AND the
 // five bypasses found on Jul 25 2026 — every one of them was a verified silent ALLOW of a live push.
 import { pathToFileURL, fileURLToPath as fileURL } from "node:url";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { dirname as dirName, join as joinPath, resolve as resolvePath } from "node:path";
 // ONE source of truth for what is under test. The structural assertions further down must read
 // the SAME file the behaviour checks import; they used to read the sibling unconditionally, so
@@ -82,6 +83,24 @@ const SRC = readFileSync(UNDER_TEST, "utf8");
 assertTrue("entry block walks ALL of tool_input, not one fixed key", /function walk/.test(SRC));
 assertTrue("entry block no longer reads only tool_input.command", !/const command = payload\?\.tool_input\?\.command/.test(SRC));
 assertTrue("header names ctx_call in the required matcher", /mcp__lean-ctx__ctx_call/.test(SRC));
+
+// ── THE ENTRY BLOCK, end to end (audit Jul 26 2026). isGitPush only ever sees strings; walk
+// decides which strings it gets. These spawn the real hook, which resolves its GO token to
+// ../PUSH_GO relative to itself — a stray token there would be CONSUMED by the push case and
+// flip it to exit 0. Skip rather than eat a live GO.
+const TOKEN_PATH = joinPath(dirName(UNDER_TEST), "..", "PUSH_GO");
+if (existsSync(TOKEN_PATH)) {
+  console.log("  --  ../PUSH_GO exists; skipped the entry-block checks (they would consume it)");
+} else {
+  const nest = (d, leaf) => { let v = leaf; for (let i = 0; i < d; i++) v = { w: v }; return v; };
+  const runGuard = (p) => spawnSync(process.execPath, [UNDER_TEST], { input: JSON.stringify(p), encoding: "utf8" });
+  assertTrue("entry: shallow non-push passes through", runGuard({ tool_input: { command: "git status" } }).status === 0);
+  assertTrue("entry: a nested push is caught and blocked", runGuard({ tool_input: nest(4, { command: "git push" }) }).status === 2);
+  const deep = runGuard({ tool_input: nest(30, { command: "echo hi" }) });
+  assertTrue("entry: past the depth cap fails CLOSED", deep.status === 2);
+  assertTrue("entry: the cap breach explains itself", /never inspected|nested deeper/i.test(deep.stderr || ""));
+  assertTrue("comment no longer promises unbounded nesting", !/at any nesting/i.test(SRC));
+}
 
 console.log("\npush-guard isGitPush: " + pass + " passed, " + fail + " failed");
 process.exit(fail ? 1 : 0);
