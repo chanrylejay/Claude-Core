@@ -125,7 +125,14 @@ try {
             if (!existsSync(meta)) continue; // no meta = deadlock corpse, not a usable graph
             try {
               const m = JSON.parse(readFileSync(meta, "utf8"));
-              if (String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === root.toLowerCase()) { haveGraph = true; break; }
+              if (String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === root.toLowerCase()) {
+                // A graph with ZERO files indexed is NOT usable: the server still wedges on it,
+                // and its meta made this check call it "complete" and skip the rebuild forever
+                // (proven Jul 26 2026 — cached 0-file graph + seed planted after = WEDGED). The
+                // seed is planted EARLIER in this same hook run, so a rebuild now finds >= 1 file.
+                haveGraph = Number(m.files_indexed) >= 1;
+                break;
+              }
             } catch { metaErrors += 1; }
           }
         }

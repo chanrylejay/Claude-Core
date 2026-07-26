@@ -40,6 +40,36 @@ Signature on disk: `graph.db` created, **`graph.meta.json` never written**, and 
 Last line in the server's own trace log before it dies: `globset: built glob set` — it is setting
 up the file walk, then never returns.
 
+## TWO MECHANISMS, TWO DIFFERENT FAILURE MODES — neither one is redundant (measured Jul 26 2026)
+
+The seed file and the graph pre-build look like belt and braces. They are not. They cover
+different halves of the bug, and REMOVING EITHER ONE re-opens a freeze:
+
+| mechanism | what it guarantees | what it does NOT cover |
+|---|---|---|
+| `leanctx-seed.js` | files_indexed >= 1 | first-build-inside-the-server (ano-ulam had the seed and 97 files and STILL froze) |
+| graph pre-build | the first build happens OUTSIDE the MCP server | a folder with ZERO indexable files |
+
+Measured with a six-cell matrix, each cell a fresh folder with the shared lean-ctx state purged
+between them:
+- no fix, no seed -> WEDGE (the control; the bug reproduces)
+- pre-build, NO seed, one indexable file -> PASS
+- pre-build, NO seed, real code -> PASS
+- pre-build, NO seed, only .txt/.md (files_indexed 0) -> **WEDGE**
+- pre-build, WITH seed, only .txt/.md -> PASS
+
+So: for any folder holding at least one indexable file the pre-build alone is enough, and for a
+folder holding none the SEED is what saves it. Keep both. Do not "simplify" either away; the
+ritual net pins both, including that the seed is planted BEFORE the pre-build runs.
+
+**A zero-file graph is not a usable graph.** A build over a folder with nothing indexable still
+writes a valid graph.meta.json with `files_indexed: 0`. The hook used to read "meta exists" as
+"graph is fine" and skip the rebuild forever — while a 0-file graph is exactly the state that
+wedges. Proven: cache a 0-file graph, plant the seed afterwards, and ctx_read still WEDGED. The
+hook now requires meta AND files_indexed >= 1, and since the seed is planted earlier in the same
+hook run, the rebuild always finds at least one file. Re-proven after the fix: the identical
+scenario now answers in 2.5s.
+
 ## THE FIX — automatic, machine-wide, every workspace (Jul 26 2026)
 
 The SessionStart hook (`templates/global/session-ritual.mjs`) now PRE-BUILDS the graph from the

@@ -186,6 +186,25 @@ fs.rmSync(fakeHome, { recursive: true, force: true });
 
 const src = fs.readFileSync(LIVE, "utf8");
 
+// 7b. ZERO-FILE GRAPHS ARE NOT USABLE (audit Jul 26 2026). A graph can be COMPLETE (meta
+//     written) with files_indexed = 0, and the server still wedges on it — so trusting meta
+//     alone made the hook skip the rebuild forever. Proven: cached 0-file graph + seed planted
+//     afterwards = ctx_read WEDGED. Usable now means meta EXISTS **and** files_indexed >= 1.
+t("a zero-file graph does not count as usable", /files_indexed\) >= 1/.test(fs.readFileSync(LIVE, "utf8")));
+
+// 7c. THE SEED IS LOAD-BEARING — do not "simplify" it away. Measured Jul 26 2026 with a 6-cell
+//     matrix: the graph pre-build alone saves every folder holding >= 1 indexable file, but a
+//     folder with ZERO indexable files (only .txt/.md) still WEDGES without the seed and PASSES
+//     with it. The two mechanisms cover DIFFERENT failure modes:
+//       seed      -> guarantees files_indexed >= 1
+//       pre-build -> guarantees the first build happens OUTSIDE the MCP server
+//     Neither alone is sufficient: ano-ulam had the seed and 97 files and still froze.
+t("the hook still plants the seed", /writeFileSync\(seedPath, SEED\)/.test(fs.readFileSync(LIVE, "utf8")));
+t("the seed is planted BEFORE the graph pre-build runs", (() => {
+  const s = fs.readFileSync(LIVE, "utf8");
+  return s.indexOf("writeFileSync(seedPath, SEED)") < s.indexOf("\"graph\", \"build\"");
+})());
+
 // 8. IMPORT COMPLETENESS (audit Jul 26 2026). readFileSync was CALLED and never IMPORTED, so
 //    every graph dir holding a meta threw a ReferenceError, the bare catch ate it, and the hook
 //    re-built the graph on EVERY session start instead of once per workspace. A ReferenceError
