@@ -24,7 +24,7 @@ agency" or ask Chan.
 state any of them in the present tense.
 
 **Positioning line:** "AI-native systems builder. Ships production platforms solo: full-stack web, API integrations, and AI automation, proven on a US home-care operations platform he shipped solo (in production Jun-Jul 2026)."
-**Metrics to cite:** solo-built 10-module production system, in production with daily users through Jul 2026 · sanctioned production CRM writes with audit trails and kill switches · SMS automation (10DLC) · AI triage pipeline in production · a 12.5k-line OpenAPI spec read end to end · multi-agent orchestration at scale (143-agent blind bug hunt with adversarial verification).
+**Metrics to cite:** solo-built 10-module production system, in production with daily users through Jul 2026 · sanctioned production CRM writes with audit trails and kill switches · SMS automation (10DLC) · AI triage pipeline in production · a 12.5k-line OpenAPI spec read end to end · multi-agent orchestration at scale (143-agent blind bug hunt with adversarial verification) · ~50-caregiver roster matched per shift · 15/19 client match-spec fields mapped and overlaid across engines · 36-test taxonomy regression net + 17-test push-guard net · 16-commit reviewed production batches (these five confirmed by Chan, Jul 26 2026 — promoted from the project summary per the two-canon precedence rule).
 
 ## Skills inventory
 - **Full-stack production:** Next.js 14 + TypeScript + Tailwind · Supabase (Auth, RLS, migrations, PostgREST gotchas) · Neon · Vercel + Netlify (serverless, scheduled functions, deploy debugging via API) · build/CI discipline.
