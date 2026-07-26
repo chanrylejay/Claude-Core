@@ -48,8 +48,14 @@ file that ends by handing execution to a model. Every comparable decision in thi
 
 - **KEEP:** leave settings.json as-is; the key is meant to be on this disk. Still run the sweep
   below, so you know exactly where it landed.
-- **BACK TO CLAUDE:** strip the `env` block and the key out of settings.json by hand before the
-  first start, then run the sweep.
+- **BACK TO CLAUDE:** do the HAND ROLLBACK from `workflow/switch-to-deepseek.md` (Rollback
+  section) by hand before the first start — THREE objects in settings.json, not two: the `env`
+  block, the API key inside it, AND the top-level `"model"` pin if its value starts with
+  `deepseek`. The switch script preserves a DeepSeek pin deliberately, so it rides along in the
+  copied folder; strip only the first two and the new machine boots pinned to a DeepSeek model
+  against the Claude account you just signed into, with nothing to surface it (audit Jul 26
+  2026: this branch used to name only the first two). JSON-validate the file, then run the
+  sweep.
 
 **KEY SWEEP — a search, never a file list.** More than one file in that folder can hold the key:
 `settings.json`, `settings.json.dryrun` (what --dry-run writes), and
