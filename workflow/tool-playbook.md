@@ -3,7 +3,12 @@
 Generalized from the Devoted Care tooling saga (a 4-hour hunt on Jul 14 + weeks of scars).
 Environment-specific details (lean-ctx, specific MCPs) may not apply to a new setup —
 the *principles* always do.
-This file is the ONE home for operational tool lessons; TOOLS.md is the historical catalog and points here.
+This file is the ONE home for CROSS-CUTTING operational tool lessons — the ones that hold no
+matter which tool you are holding. Tool-specific incident playbooks own their own operational
+rules and are deliberately not duplicated here (`../lessons/lean-ctx-freeze-playbook.md` is one);
+TOOLS.md is the historical catalog and points here. (Audit Jul 26 2026: this line used to claim
+ONE home for ALL operational tool lessons, which was false as written — freeze rules live in the
+freeze playbook — and a model that believed it would stop reading at the wrong file.)
 That claim cuts both ways: because a model treats this file as the destination, a STALE instruction
 here is more dangerous than the same staleness anywhere else. Two laws govern how anything is
 written into this file, and they live in `../lessons/universal-patterns.md` under "Maintaining
@@ -37,6 +42,18 @@ before adding a rule here that names a flag, a filename, or a count that some ot
   around one. Stop, say which gate fired and on what, and ask Chan. Writing past a denial through
   the shell is the single place this kit could talk itself around a closed gate, so it is named
   here and banned here. NEVER ask the user to hand-paste an edit — that's a failure.
+- **One class of deny is MACHINERY, not a decision:** entries a tool's own SessionStart hook
+  re-writes into settings on every start. No person placed them and removing them never sticks, so
+  stopping to ask Chan about one is a permanent stall, not caution. The only known instance is
+  lean-ctx's; WHICH tools it currently covers is recorded in
+  `../lessons/lean-ctx-freeze-playbook.md` under Known Bugs, changes without notice, and is read
+  THERE — never from memory and never copied here (a list drifts; the live thing does not).
+  Everything else that is denied — every guard hook, every deny a person or a permission prompt
+  placed — falls under the ban above with no exception. **If you cannot tell which kind you are
+  looking at, it is the banned kind: stop and ask.** (Audit Jul 26 2026: this file classified
+  EVERY permission deny as a decision while the freeze playbook treats the lean-ctx deny as
+  permanent machinery and names the shell route past it. Both were right about their own case and
+  neither knew about the other.)
 - Ask the environment before prescribing fixes: Chan is on the **VS Code extension**, not a
   terminal — keystroke/settings advice differs.
 
@@ -55,17 +72,22 @@ always passes that flag.
 
 **Never name that flag here.** Read the script's own usage header and use the flag IT names as
 test-safe. A flag name written in a lessons file drifts, because nobody re-reads a lessons file
-when a script changes; the script's header is read every time.
+when a script changes; the script's header is read every time. That includes any flag mentioned
+anywhere on this page: **if the header disagrees with this file, the header wins.**
 
-Tripwire, because this one already bit: for `apply-deepseek-switch.mjs`, `--no-env` alone does NOT
-make a test safe on a normal machine — it skips the machine-wide env vars and still writes the LIVE
-settings.json. `--dry-run` is safe unconditionally. The invariant is that the write must not be
-able to reach a real path, which is why a test that redirects USERPROFILE into a sandbox may use
-the weaker flag and still be safe. Read the header for the current rule. This tripwire may itself
-go stale, and that is the point of the split: a stale WARNING costs a re-read of the header, a
-stale INSTRUCTION costs the machine.
-(Audit Jul 25 2026: this paragraph named `--no-env` as the safe flag. The script header had
-already been corrected that same morning and the correction landed in one file only.)
+Tripwire — a WARNING about what already went wrong, never a statement of what is safe now. For
+`apply-deepseek-switch.mjs`, a flag that skips only the machine-wide env vars can still write the
+LIVE settings.json on a normal machine; on Jul 25 2026 that flag was `--no-env`, and this
+paragraph had it recorded as safe while the script header had already been corrected that same
+morning. Carry the INVARIANT, because it does not drift: the write must never be able to reach a
+real path. That is why a test that redirects USERPROFILE into a sandbox may use a weaker flag and
+still be safe, and why no flag named on this page is ever a current safety guarantee. A stale
+WARNING costs a re-read of the header; a stale INSTRUCTION costs the machine.
+(Audit Jul 26 2026: the previous tripwire said a named flag was "safe unconditionally" three
+sentences after the ban on naming flags here — the ban's own defect class, installed by the fix
+for it, with the header-wins corrective arriving only AFTER the guarantee. Audit Jul 25 2026: the
+version before that named `--no-env` as the safe flag while the header had been corrected the
+same morning.)
 
 ## Long-running work
 - **Compressed/summarized shell output can mangle exact values** — re-run tightly scoped or read

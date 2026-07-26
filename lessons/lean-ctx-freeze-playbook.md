@@ -62,6 +62,10 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
     re-run with the payloads inlined. This state is not "not reproducible".
 - **Monitor tool = shell escape hatch** in Claude Code when natives are denied and ctx_* are dead —
   it executes bash and is not on the deny list. (Since Jul 23 2026 native Bash itself works; Monitor is the backup.)
+  This escape applies to the lean-ctx hook deny and NOTHING else: a deny a person placed, and any
+  guard hook firing, is a DECISION and is never routed around. The boundary rule lives in
+  `../workflow/tool-playbook.md` under "Editing files reliably" (audit Jul 26 2026 — this bullet
+  used to offer the shell with no boundary at all, one file away from the ban it walked past).
 - **Canary pattern** for live verification: background Agent → TaskOutput with a hard timeout →
   TaskStop if it never returns. A canary with a 0-byte transcript = wedged at bootstrap.
 - `lean-ctx doctor` (and `--fix`) is the first official check on any weirdness.
