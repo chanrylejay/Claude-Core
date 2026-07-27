@@ -46,6 +46,12 @@ before adding a rule here that names a flag, a filename, or a count that some ot
 - **So measure, never introspect.** Tool-choice drift cannot be felt from inside a session. Count
   the actual calls in the transcripts before believing any claim about your habits, including your
   own. The count is the finding; the explanation comes second and has to fit the count.
+- **Count the right thing, or the number proves less than it looks.** A raw call count cannot
+  separate drift from correct behaviour: a session working mostly OUT of the workspace root SHOULD
+  be shell-heavy, and its zero cached-tool calls are right, not a defect. The narrow metric is
+  shell READS of paths INSIDE the root. The Jul 27 2026 count above measured the wide number, so it
+  proves the drift is real and OVERSTATES its size. Kept as written, with this caveat attached,
+  because a measurement that gets quietly restated later is worse than one that carries its limit.
 - **When an outage ends, say out loud that it ended.** A workaround adopted during a real failure
   quietly becomes the new normal, because nothing ever fails again to remind you it was temporary.
 

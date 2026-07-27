@@ -153,6 +153,13 @@ try {
           } else {
             graphNote = "âš  lean-ctx binary not found, graph NOT pre-built â€” if the first ctx_* call hangs, that is the first-build deadlock: run 'lean-ctx graph build' in this folder, then retry. ";
           }
+          // THE CANARY (playbook: lessons/lean-ctx-freeze-playbook.md). The fix is proven by a ctx
+          // call and by nothing else: a session that works happily for an hour without one has
+          // tested NOTHING, because the deadlock only fires on the first ctx call inside the MCP
+          // server. It lived only in a playbook the normal flow never opens, so it is emitted here.
+          // Scoped to runs that had to BUILD: an established workspace has nothing left to prove,
+          // and an instruction repeated every session becomes wallpaper.
+          graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs, run 'lean-ctx graph build' here from a shell, retry, and log it in the playbook's Recurrence log. ";
         }
       }
     } catch (e) {

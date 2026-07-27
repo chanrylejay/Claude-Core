@@ -1,6 +1,6 @@
 ---
 name: chan-ai-cost-context
-description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. His Claude access is expected to be revoked around Jul 25 2026; he switches to cheap models (his own DeepSeek API key). Keep the kit lean and mechanical so weaker models can run it.
+description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. A Jul 25 2026 revocation of his Claude access was PREDICTED and is NOT confirmed here: never state his current model or provider from this line, and never run the DeepSeek switch until Chan confirms in-session. Keep the kit lean and mechanical so weaker models can run it.
 metadata:
   type: user
 ---

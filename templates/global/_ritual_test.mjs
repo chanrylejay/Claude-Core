@@ -145,7 +145,56 @@ t("an unrecognised mode says so out loud", /unrecognised mode/.test(withMode("sr
 //    never a wedge. The corpse case (graph dir with db but no meta counts as "no graph") is the
 //    same code path as fires-on-fresh and cannot be pinned directly: the graph-dir hash for a
 //    given root is not computable from out here.
-const GB = path.join(os.homedir(), ".local", "share", "lean-ctx", "graphs");
+// SANDBOX LAW (workflow/tool-playbook.md, "Test sandboxes contain files, never machine state"):
+// these tests used to build and delete graphs in the REAL ~/.local/share/lean-ctx, a machine-state
+// write with no skip flag - exactly what that law bans. Found by audit Jul 27 2026.
+// Containment needs TWO DIFFERENT variables because two different programs are involved, and each
+// reads its own. MEASURED by isolation Jul 27 2026, one variable at a time:
+//     USERPROFILE only  -> LEAKED   (lean-ctx ignores it)
+//     HOME only         -> LEAKED   (lean-ctx ignores it too; HOME does nothing here)
+//     XDG_DATA_HOME only-> CONTAINED
+// So: the HOOK derives its graphs dir and its binary path from USERPROFILE, and lean-ctx.exe puts
+// its state under XDG_DATA_HOME. Redirect USERPROFILE alone (the obvious fix, and the one two
+// separate audits proposed) and the net goes GREEN while lean-ctx writes to the live machine.
+// HOME and XDG_STATE_HOME are set below as cheap insurance with NO measured effect - do not cite
+// them as the reason this works.
+// The binary is hardlinked, not copied: 95 MB, 2ms, no disk cost.
+const LIVE_GB = path.join(os.homedir(), ".local", "share", "lean-ctx", "graphs");
+const liveGraphCount = () => (fs.existsSync(LIVE_GB) ? fs.readdirSync(LIVE_GB).length : 0);
+// A COUNT is not enough: the test workspace path is stable, so lean-ctx updates an existing live
+// graph dir rather than adding one, and the count never moves while state is really being written
+// (measured Jul 27 2026 - a leak passed this check). Ask the direct question as well.
+const liveGraphsFor = (root) => {
+  if (!fs.existsSync(LIVE_GB)) return [];
+  const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+  return fs.readdirSync(LIVE_GB).filter((d) => {
+    try {
+      const m = JSON.parse(fs.readFileSync(path.join(LIVE_GB, d, "graph.meta.json"), "utf8"));
+      return String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === want;
+    } catch { return false; }
+  });
+};
+const liveBefore = liveGraphCount();
+const FAKE_HOME = path.join(os.tmpdir(), "ritual-hook-sandbox-home");
+const REAL_EXE = path.join(os.homedir(), "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin", "lean-ctx.exe");
+const FAKE_BIN = path.join(FAKE_HOME, "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin");
+fs.rmSync(FAKE_HOME, { recursive: true, force: true });
+fs.mkdirSync(FAKE_BIN, { recursive: true });
+const HAVE_EXE = fs.existsSync(REAL_EXE);
+if (HAVE_EXE) {
+  try { fs.linkSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
+  catch { fs.copyFileSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
+} else {
+  console.log("  note: lean-ctx binary absent on this machine; the pre-build pins below are SKIPPED, loudly");
+}
+// Every home-ish variable the toolchain might read, all pointed inside the sandbox.
+const SANDBOX_ENV = {
+  USERPROFILE: FAKE_HOME,
+  HOME: FAKE_HOME,
+  XDG_DATA_HOME: path.join(FAKE_HOME, ".local", "share"),
+  XDG_STATE_HOME: path.join(FAKE_HOME, ".local", "state"),
+};
+const GB = path.join(FAKE_HOME, ".local", "share", "lean-ctx", "graphs");
 const graphDirsFor = (root) => {
   if (!fs.existsSync(GB)) return [];
   const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
@@ -165,12 +214,29 @@ fs.mkdirSync(SB2, { recursive: true });
 fs.writeFileSync(path.join(SB2, "app.js"), "module.exports = 1;\n");
 for (const d of graphDirsFor(SB2)) fs.rmSync(path.join(GB, d), { recursive: true, force: true });
 
-const g1 = runAt(SB2);
-t("fresh workspace: hook PRE-BUILDS the graph and says so", /PRE-BUILT/.test(g1.stdout || ""));
-t("fresh workspace: a COMPLETE graph (with meta) now exists", graphDirsFor(SB2).length === 1);
-const g2 = runAt(SB2);
-t("second start: pre-build SKIPPED, graph already complete", !/PRE-BUILT/.test(g2.stdout || ""));
-t("second start: the ritual message still emits", /Session-start ritual/.test(g2.stdout || ""));
+const g1 = HAVE_EXE ? runAt(SB2, SANDBOX_ENV) : null;
+const g2 = HAVE_EXE ? runAt(SB2, SANDBOX_ENV) : null;
+if (!HAVE_EXE) {
+  console.log("  skip  7 pre-build pins (no lean-ctx binary) - a REDUCED run, not a green one");
+} else {
+  t("fresh workspace: hook PRE-BUILDS the graph and says so", /PRE-BUILT/.test(g1.stdout || ""));
+  t("fresh workspace: a COMPLETE graph (with meta) now exists", graphDirsFor(SB2).length === 1);
+  t("second start: pre-build SKIPPED, graph already complete", !/PRE-BUILT/.test(g2.stdout || ""));
+  t("second start: the ritual message still emits", /Session-start ritual/.test(g2.stdout || ""));
+
+  // 7a. THE CANARY IS EMITTED (audit Jul 27 2026). The freeze fix is proven by a ctx call and by
+  //     nothing else, and the instruction used to live only in a playbook the normal session flow
+  //     never opens - so Chan's own Jul 26 test ran 22 shell calls, 1 question, 0 ctx calls and
+  //     proved nothing. It rides the pre-build, and ONLY the pre-build.
+  t("fresh workspace: the CANARY instruction is emitted", /CANARY:/.test(g1.stdout || ""));
+  t("second start: the canary does NOT nag again", !/CANARY:/.test(g2.stdout || ""));
+
+  // Containment is MEASURED two ways, because one of them is blind on its own: no live graph may
+  // exist for the test workspace (catches an update-in-place leak), and the live dir count may not
+  // grow (catches a leak from any other path).
+  t("no LIVE graph exists for the test workspace", liveGraphsFor(SB2).length === 0);
+  t("the live lean-ctx graph dir did not grow", liveGraphCount() === liveBefore);
+}
 
 // a machine without the binary must get a NOTE, exit 0, and a living session â€” never a throw
 const SB3 = path.join(os.tmpdir(), "ritual-hook-graphtest-noexe");
@@ -181,12 +247,28 @@ fs.mkdirSync(path.join(fakeHome, ".local", "share", "lean-ctx", "graphs"), { rec
 const g3 = runAt(SB3, { USERPROFILE: fakeHome });
 t("missing lean-ctx binary: NOTE in message, exit 0", g3.status === 0 && /NOT pre-built/.test(g3.stdout || ""));
 
-for (const d of graphDirsFor(SB2)) fs.rmSync(path.join(GB, d), { recursive: true, force: true });
 fs.rmSync(SB2, { recursive: true, force: true });
 fs.rmSync(SB3, { recursive: true, force: true });
 fs.rmSync(fakeHome, { recursive: true, force: true });
+fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // takes every sandboxed graph with it
 
 const src = fs.readFileSync(LIVE, "utf8");
+
+// 7z. THE GRAPH TESTS STAY SANDBOXED (audit Jul 27 2026). These read this net's OWN source,
+//     because the defect they guard against is a future edit re-pointing the tests at live state.
+//     XDG_DATA_HOME is the load-bearing one (measured by isolation, see the block above): without
+//     it lean-ctx writes to the real dir whatever USERPROFILE says, and this net goes green while
+//     polluting the machine.
+const SELF = fs.readFileSync(new URL(import.meta.url), "utf8");
+// Scoped to the SANDBOX_ENV literal ON PURPOSE. Testing SELF as a whole made these two pins match
+// the search strings inside their OWN lines, so they passed with the redirects deleted (caught by
+// mutation, Jul 27 2026). A source-reading pin must never be able to satisfy itself.
+const ENV_BLOCK = (SELF.match(/const SANDBOX_ENV = \{[\s\S]*?\};/) || [""])[0];
+t("the SANDBOX_ENV block is findable at all", ENV_BLOCK.length > 0);
+t("graph tests redirect USERPROFILE into a sandbox", /USERPROFILE: FAKE_HOME/.test(ENV_BLOCK));
+t("graph tests redirect XDG_DATA_HOME (the ONE that actually contains lean-ctx)", /XDG_DATA_HOME:/.test(ENV_BLOCK));
+t("the graphs dir under test is the sandbox, not the live one", /const GB = path\.join\(FAKE_HOME/.test(SELF));
+t("the sandbox is removed at the end", /rmSync\(FAKE_HOME/.test(SELF));
 
 // 7b. ZERO-FILE GRAPHS ARE NOT USABLE (audit Jul 26 2026). A graph can be COMPLETE (meta
 //     written) with files_indexed = 0, and the server still wedges on it — so trusting meta

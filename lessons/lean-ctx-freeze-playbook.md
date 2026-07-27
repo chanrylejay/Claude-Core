@@ -98,6 +98,12 @@ proved nothing. The real proof came from a probe run afterwards (1.95s against t
 it answers, the fix held for that folder. If it hangs, do not wait: run `lean-ctx graph build` in
 that folder from a shell, retry, and add a line to the Recurrence log below.
 
+This is the ONE exception to "Never test by calling `ctx_*` live" in the Diagnostic toolkit below,
+and it is bounded three ways: ONE call, on FIRST open, on a workspace with NO reported symptom.
+Investigating a folder that has ALREADY hung stays banned and still goes to the bounded CLI repro.
+(Audit Jul 27 2026: the canary was added the same day and the two rules did not know about each
+other, so a model that recalled the ban would skip the canary and report the ritual complete.)
+
 ## The OLD root-cause theory (Jul 22, superseded — kept because the recovery recipe still works)
 
 1. lean-ctx rebuilds its per-project **code graph on EVERY live-session connect** — a valid graph on
@@ -132,8 +138,20 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
 
 ## Diagnostic toolkit (how to investigate lean-ctx without hanging yourself)
 
-- **Never test by calling `ctx_*` live** — a wedged server hangs your session; its `timeout_ms`
-  params are enforced by the wedged server itself and never fire.
+- **Never call `ctx_*` live to INVESTIGATE a suspected freeze** — a wedged server hangs your
+  session; its `timeout_ms` params are enforced by the wedged server itself and never fire. The
+  ONE exception is the first-open canary above: a single deliberate call on a workspace with no
+  reported symptom, which is the only thing that proves the fix held there.
+- **The hook and lean-ctx read DIFFERENT variables to find the same folder** (measured by
+  isolation, Jul 27 2026, one variable at a time). The hook derives the graphs dir and the binary
+  path from `USERPROFILE`. lean-ctx.exe puts its state under `XDG_DATA_HOME`. Results:
+  USERPROFILE alone LEAKED, HOME alone LEAKED (HOME does nothing here), XDG_DATA_HOME alone
+  CONTAINED. Nothing is wrong in a normal session, where both resolve under the real home. It
+  matters when you sandbox: **a test that redirects only USERPROFILE does not contain lean-ctx at
+  all** — it writes to live state while the hook reads an empty fake and reports success. Redirect
+  `USERPROFILE` **and** `XDG_DATA_HOME`, and provision the binary inside the fake home (hardlink
+  it, it is 95 MB, 2ms). (This bullet first said HOME was the load-bearing variable. That was
+  inferred from an all-four test and was WRONG; isolating each variable is what found it.)
 - **Bounded CLI repro** (safe, definitive): pipe JSON-RPC into the binary under `timeout`:
   `( printf '%s\n' "$INIT"; sleep 1; printf '%s\n' "$INITIALIZED"; sleep 1; printf '%s\n' "$TOOLS_CALL"; sleep 5 ) | timeout 30 lean-ctx.exe`
   ⚠ INLINE the JSON-RPC payloads as literals. Do NOT put them in shell variables: the Bash-tool
@@ -167,7 +185,18 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
    `Expand-Archive` (NOT tar), swap the exe in `%APPDATA%/npm/node_modules/lean-ctx-bin/bin/`.
 3. **The native-tool deny re-adds itself** — lean-ctx's SessionStart hook re-writes
    the deny list into `~/.claude/settings.json` on every
-   session start. Removing it never sticks; treat it as permanent. CORRECTION (verified Jul 23 2026): the deny now covers Read/Grep/Glob only — native Bash WORKS and is the primary escape hatch; Monitor is the backup if Bash is ever denied again.
+   session start. Removing it never sticks; treat the entries it writes as permanent machinery.
+   **WHAT IT COVERS IS VOLATILE, so never reason from a remembered deny list.** Verified Jul 23
+   2026 as Read/Grep/Glob only, with native Bash working. Then on Jul 26 2026 the Bash TOOL ITSELF
+   went denied mid-session, on even `echo` (Recurrence log). Both are true of their own date; this
+   line is the one home for the current answer, so update it here when it changes again.
+   **The one standing rule for a denied tool, and it fails closed:** if no person and no permission
+   prompt placed that deny this session, it is this machinery — switch to the next working shell
+   (PowerShell is the proven escape, Jul 26 2026; Monitor is the backup), keep going, and SAY that
+   you did. If a person or a prompt placed it, or **you cannot tell which**, it is a DECISION and
+   is never routed around: stop and ask Chan. That precedence, and the ban it is an exception to,
+   live in `../workflow/tool-playbook.md` under "Diagnose before crusading"; this rule is the
+   machinery-side exception to it and nothing wider.
 
 - The Bash-tool rewrite hook STRIPS leading VAR= assignments from commands before they run. On Jul 23 2026 this caused 3 silent failures in a row: commands ran with empty variables and reported success. Workaround (now a hub section 3 rule): use literal absolute paths, and node -e when a value must be read and used without printing it.
 
@@ -176,8 +205,11 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
   which disproved the empty-graph theory this playbook had carried since Jul 22. Root-caused
   offline the same day (see THE REAL ROOT CAUSE) and FIXED machine-wide in the SessionStart hook.
   Also learned that day: the Bash TOOL itself went denied mid-session, not just Read/Grep/Glob —
-  PowerShell was the working escape hatch. If Bash returns "Permission to use Bash has been
-  denied" on even `echo`, do not debug the command; switch to PowerShell and keep going.
+  PowerShell was the working escape hatch. This entry is the dated OBSERVATION only. The standing
+  rule for classifying a deny and escaping it lives in Known Bugs #3 above, one home, and it fails
+  closed when the class is unclear. (Audit Jul 27 2026: this used to end with an unconditional
+  "switch to PowerShell and keep going", which is a standing order to route around any future Bash
+  deny, including one a person placed. It was the last word in the file and nothing overrode it.)
 - Jul 23 2026, my-portfolio-v1: froze again. The repo was OLD but HTML-only, and the global rule
 only said "new or near-empty workspace", so the seed never got written. Fix: global CLAUDE.md
 sections 3 and 5 now require the seed check in EVERY workspace before the first ctx_* call.
