@@ -43,7 +43,9 @@ if (fs.readFileSync(TEMPLATE, "utf8") !== fs.readFileSync(LIVE, "utf8")) {
 console.log("testing the INSTALLED hook: " + LIVE);
 
 let fail = 0;
+let ran = 0; // the net prints its OWN count: a count copied into a doc goes stale in silence
 const t = (name, cond) => {
+  ran += 1;
   if (cond) console.log("  ok  " + name);
   else { fail += 1; console.log("FAIL  " + name); }
 };
@@ -238,5 +240,5 @@ t("a failed seed write still produces a message", /could NOT be written/.test(sr
 
 for (const d of graphDirsFor(SB)) fs.rmSync(path.join(GB, d), { recursive: true, force: true });
 fs.rmSync(SB, { recursive: true, force: true });
-console.log("\nsession-ritual hook: " + (fail ? fail + " FAILED" : "all checks pass"));
+console.log("\nsession-ritual hook: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));
 process.exit(fail ? 1 : 0);

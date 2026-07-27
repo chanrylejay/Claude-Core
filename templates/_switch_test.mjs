@@ -20,7 +20,9 @@ if (!fs.existsSync(SCRIPT)) {
 const KEY = 'sk-FAKEKEYFORTESTONLY';
 
 let fail = 0;
+let ran = 0; // the net prints its OWN count: a count copied into a doc goes stale in silence
 const t = (name, got, want) => {
+  ran++;
   const ok = JSON.stringify(got) === JSON.stringify(want);
   if (!ok) fail++;
   console.log(`${ok ? '  ok  ' : 'FAIL  '}${name}  want=${JSON.stringify(want)} got=${JSON.stringify(got)}`);
@@ -91,5 +93,5 @@ run();
 t('a Claude-only pin IS deleted', read(S()).model, undefined);
 
 fs.rmSync(SB, { recursive: true, force: true });
-console.log('\n' + (fail ? fail + ' FAILURES' : 'all switch-script checks pass'));
+console.log('\n' + (fail ? fail + ' FAILURES of ' + ran : ran + ' passed, 0 failed') + ' (switch script)');
 process.exit(fail ? 1 : 0);
