@@ -86,6 +86,18 @@ ANSWERED in 1.9s after the real hook ran. Nothing else changed.
 Manual fallback if you are ever mid-freeze without the hook: interrupt, kill lean-ctx.exe, clear
 the locks, run `lean-ctx graph build` in the workspace, reload the window.
 
+## THE LIVE CANARY (added Jul 27 2026)
+
+The fix is proven by a ctx call and by nothing else. A session that opens a new workspace, works
+happily for an hour and never calls a ctx tool has tested NOTHING, because the deadlock only ever
+fires on the first ctx call inside the MCP server. This is not hypothetical: Chan's Jul 26 test
+session in ano-ulam ran 22 shell calls, 1 question and 0 ctx calls, so it looked like a pass and
+proved nothing. The real proof came from a probe run afterwards (1.95s against the same folder).
+
+**On the first open of any workspace, make ONE deliberate ctx call early.** That is the canary. If
+it answers, the fix held for that folder. If it hangs, do not wait: run `lean-ctx graph build` in
+that folder from a shell, retry, and add a line to the Recurrence log below.
+
 ## The OLD root-cause theory (Jul 22, superseded — kept because the recovery recipe still works)
 
 1. lean-ctx rebuilds its per-project **code graph on EVERY live-session connect** — a valid graph on

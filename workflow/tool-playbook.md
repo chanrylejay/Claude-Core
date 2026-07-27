@@ -32,6 +32,23 @@ before adding a rule here that names a flag, a filename, or a count that some ot
 - When an MCP/tool disconnects: don't panic-fix, don't restart-loop. It usually reconnects.
   Note what still works and route around it.
 
+## The always-loaded tool wins by default, not by merit
+- **A tool you have to load loses to a tool that is already there.** Measured Jul 27 2026 across 16
+  sessions on this machine: before Jul 24 the cached-read tool carried the work (613 calls in one
+  session against 280 shell calls). After Jul 24 it fell to ZERO in three sessions out of four while
+  shell calls kept climbing. Nobody decided this and no rule changed. Three forces did it: the work
+  moved to paths the cached tool cannot reach, an outage trained the habit away and the habit
+  outlived the outage, and in some harnesses the tool is deferred so its first call costs an extra
+  round trip while the shell is always loaded.
+- **The cost is invisible per call and large in total.** A cached re-read costs a fraction of a full
+  read. A session that never touches the cached tool can pay for hundreds of full reads without one
+  moment where the wrong choice is visible.
+- **So measure, never introspect.** Tool-choice drift cannot be felt from inside a session. Count
+  the actual calls in the transcripts before believing any claim about your habits, including your
+  own. The count is the finding; the explanation comes second and has to fit the count.
+- **When an outage ends, say out loud that it ended.** A workaround adopted during a real failure
+  quietly becomes the new normal, because nothing ever fails again to remind you it was temporary.
+
 ## Editing files reliably (especially on Windows)
 - **EOL-aware editing:** detect `\r\n` vs `\n` before string-matching; normalize for the match,
   write back in the original EOL. CRLF mismatches are the #1 cause of "anchor not found."
