@@ -190,13 +190,18 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
    2026 as Read/Grep/Glob only, with native Bash working. Then on Jul 26 2026 the Bash TOOL ITSELF
    went denied mid-session, on even `echo` (Recurrence log). Both are true of their own date; this
    line is the one home for the current answer, so update it here when it changes again.
-   **The one standing rule for a denied tool, and it fails closed:** if no person and no permission
-   prompt placed that deny this session, it is this machinery — switch to the next working shell
-   (PowerShell is the proven escape, Jul 26 2026; Monitor is the backup), keep going, and SAY that
-   you did. If a person or a prompt placed it, or **you cannot tell which**, it is a DECISION and
-   is never routed around: stop and ask Chan. That precedence, and the ban it is an exception to,
-   live in `../workflow/tool-playbook.md` under "Diagnose before crusading"; this rule is the
-   machinery-side exception to it and nothing wider.
+   **The one standing rule for a denied tool, OBSERVABLE and fail-closed (rewritten Jul 27 2026:
+   the first version keyed on "did a person place it", which a session cannot observe from
+   inside, so its permissive branch matched every deny - found by PED on Opus 5):**
+   Read/Grep/Glob denied is this machinery: use ctx, nothing to ask. Any OTHER tool denied (Bash
+   included): if you can SEE the decision in this session (Chan said no, a permission prompt was
+   declined, a guard hook fired), it is a DECISION and is never routed around. Otherwise you
+   cannot tell from inside, so ask Chan in one line ("Bash just got denied - did you do that? If
+   not I switch to PowerShell"). His "not me" makes it machinery: switch (PowerShell proven
+   Jul 26 2026, Monitor backup), keep going, and SAY you switched. That is exactly how the real
+   Jul 26 event ran, and it cost one line. The ban this is the exception to lives in
+   `../workflow/tool-playbook.md` under "Editing files reliably (especially on Windows)"; this
+   rule is the machinery-side exception and nothing wider.
 
 - The Bash-tool rewrite hook STRIPS leading VAR= assignments from commands before they run. On Jul 23 2026 this caused 3 silent failures in a row: commands ran with empty variables and reported success. Workaround (now a hub section 3 rule): use literal absolute paths, and node -e when a value must be read and used without printing it.
 

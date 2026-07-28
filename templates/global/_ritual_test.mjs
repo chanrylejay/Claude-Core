@@ -44,6 +44,7 @@ console.log("testing the INSTALLED hook: " + LIVE);
 
 let fail = 0;
 let ran = 0; // the net prints its OWN count: a count copied into a doc goes stale in silence
+let reduced = false; // a skipped section can NEVER end in a green verdict (audit Jul 27 2026)
 const t = (name, cond) => {
   ran += 1;
   if (cond) console.log("  ok  " + name);
@@ -54,10 +55,75 @@ const SB = path.join(os.tmpdir(), "ritual-hook-test");
 fs.rmSync(SB, { recursive: true, force: true });
 fs.mkdirSync(SB, { recursive: true });
 
-const run = (source) =>
-  spawnSync(process.execPath, [LIVE, "start"], {
-    input: JSON.stringify({ source }), encoding: "utf8", cwd: SB,
+// SANDBOX, HOISTED ABOVE EVERY SPAWN (audit Jul 27 2026, found by PED on Fable 5: the first
+// sandbox covered section 7 only. Sections 1-6 spawned the hook with NO env override, so the
+// graph pre-build ran against the REAL machine: the net's first spawn wrote a permanent live
+// graph for this tmp workspace, the containment baseline was captured AFTER that leak, the
+// workspace pin watched SB2 while SB leaked, and the old bottom cleanup read the sandbox graphs
+// dir after it was deleted. Proven live the same day: a green "49 passed, 0 failed" run,
+// containment pins included, while writing real machine state.)
+//
+// SANDBOX LAW (workflow/tool-playbook.md, "Test sandboxes contain files, never machine state").
+// Containment needs TWO DIFFERENT variables because two different programs are involved, and each
+// reads its own. MEASURED by isolation Jul 27 2026, one variable at a time:
+//     USERPROFILE only  -> LEAKED   (lean-ctx ignores it)
+//     HOME only         -> LEAKED   (lean-ctx ignores it too; HOME does nothing here)
+//     XDG_DATA_HOME only-> CONTAINED
+// So: the HOOK derives its graphs dir and its binary path from USERPROFILE, and lean-ctx.exe puts
+// its state under XDG_DATA_HOME. HOME and XDG_STATE_HOME are cheap insurance with NO measured
+// effect - do not cite them as the reason this works.
+// The binary is hardlinked, not copied: 95 MB, 2ms, no disk cost.
+const LIVE_GB = path.join(os.homedir(), ".local", "share", "lean-ctx", "graphs");
+const liveGraphCount = () => (fs.existsSync(LIVE_GB) ? fs.readdirSync(LIVE_GB).length : 0);
+// A COUNT is not enough: a stable test path means lean-ctx updates an existing live graph dir in
+// place and the count never moves during a real leak (measured Jul 27 2026). Ask directly too.
+const liveGraphsFor = (root) => {
+  if (!fs.existsSync(LIVE_GB)) return [];
+  const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+  return fs.readdirSync(LIVE_GB).filter((d) => {
+    try {
+      const m = JSON.parse(fs.readFileSync(path.join(LIVE_GB, d, "graph.meta.json"), "utf8"));
+      return String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === want;
+    } catch { return false; }
   });
+};
+const liveBefore = liveGraphCount(); // BEFORE the first spawn, or it proves nothing
+const FAKE_HOME = path.join(os.tmpdir(), "ritual-hook-sandbox-home");
+const REAL_EXE = path.join(os.homedir(), "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin", "lean-ctx.exe");
+const FAKE_BIN = path.join(FAKE_HOME, "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin");
+fs.rmSync(FAKE_HOME, { recursive: true, force: true });
+fs.mkdirSync(FAKE_BIN, { recursive: true });
+const HAVE_EXE = fs.existsSync(REAL_EXE);
+if (HAVE_EXE) {
+  try { fs.linkSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
+  catch { fs.copyFileSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
+}
+// Every home-ish variable the toolchain might read, all pointed inside the sandbox.
+const SANDBOX_ENV = {
+  USERPROFILE: FAKE_HOME,
+  HOME: FAKE_HOME,
+  XDG_DATA_HOME: path.join(FAKE_HOME, ".local", "share"),
+  XDG_STATE_HOME: path.join(FAKE_HOME, ".local", "state"),
+};
+const GB = path.join(FAKE_HOME, ".local", "share", "lean-ctx", "graphs");
+const graphDirsFor = (root) => {
+  if (!fs.existsSync(GB)) return [];
+  const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
+  return fs.readdirSync(GB).filter((d) => {
+    try {
+      const m = JSON.parse(fs.readFileSync(path.join(GB, d, "graph.meta.json"), "utf8"));
+      return String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === want;
+    } catch { return false; }
+  });
+};
+// ONE spawn gate. Default env is the sandbox; a test passing its own env REPLACES it and owns
+// its containment. No spawn in this file may bypass this helper (pinned in 7z).
+const spawnHook = (args, opts = {}) => {
+  const env = Object.assign({}, process.env, opts.env || SANDBOX_ENV);
+  return spawnSync(process.execPath, [LIVE, ...args], Object.assign({ encoding: "utf8" }, opts, { env }));
+};
+
+const run = (source) => spawnHook(["start"], { input: JSON.stringify({ source }), cwd: SB });
 
 // 1. normal startup
 const a = run("startup");
@@ -85,8 +151,7 @@ t("compact demands the failed-read report", /what FAILED to read/.test(b.stdout 
 //    missing one, on the exact path where a silent miss is invisible (audit Jul 25 2026).
 //    The asymmetry decides the default: guessing compact costs one unnecessary drill; guessing
 //    startup costs the drill. Any unknown source now resolves to compact.
-const raw = (input) =>
-  spawnSync(process.execPath, [LIVE, "start"], { input, encoding: "utf8", cwd: SB });
+const raw = (input) => spawnHook(["start"], { input, cwd: SB });
 const drills = (r) => /Run THE DRILL/.test(r.stdout || "");
 t("explicit compact drills", drills(raw(JSON.stringify({ source: "compact" }))));
 t("explicit startup does NOT drill", !drills(raw(JSON.stringify({ source: "startup" }))));
@@ -132,8 +197,7 @@ t("the ritual matcher does NOT enumerate sources", ritualEntries.length > 0 && r
 // 6. MODE GATE. argv[2] comes from the settings.json command string â€” the one file the recovery
 //    skeleton says to rebuild BY HAND. `mode === "start"` with no else exited 0 emitting nothing
 //    on any typo: exit 0, no DRILL, the same signature as the seed-write bug (audit Jul 26 2026).
-const withMode = (...args) =>
-  spawnSync(process.execPath, [LIVE, ...args], { input: JSON.stringify({ source: "compact" }), encoding: "utf8", cwd: SB });
+const withMode = (...args) => spawnHook(args, { input: JSON.stringify({ source: "compact" }), cwd: SB });
 t("a TYPO'd mode still drills", drills(withMode("srart")));
 t("a MISSING mode still drills", drills(withMode()));
 t("an unrecognised mode says so out loud", /unrecognised mode/.test(withMode("srart").stdout || ""));
@@ -145,69 +209,7 @@ t("an unrecognised mode says so out loud", /unrecognised mode/.test(withMode("sr
 //    never a wedge. The corpse case (graph dir with db but no meta counts as "no graph") is the
 //    same code path as fires-on-fresh and cannot be pinned directly: the graph-dir hash for a
 //    given root is not computable from out here.
-// SANDBOX LAW (workflow/tool-playbook.md, "Test sandboxes contain files, never machine state"):
-// these tests used to build and delete graphs in the REAL ~/.local/share/lean-ctx, a machine-state
-// write with no skip flag - exactly what that law bans. Found by audit Jul 27 2026.
-// Containment needs TWO DIFFERENT variables because two different programs are involved, and each
-// reads its own. MEASURED by isolation Jul 27 2026, one variable at a time:
-//     USERPROFILE only  -> LEAKED   (lean-ctx ignores it)
-//     HOME only         -> LEAKED   (lean-ctx ignores it too; HOME does nothing here)
-//     XDG_DATA_HOME only-> CONTAINED
-// So: the HOOK derives its graphs dir and its binary path from USERPROFILE, and lean-ctx.exe puts
-// its state under XDG_DATA_HOME. Redirect USERPROFILE alone (the obvious fix, and the one two
-// separate audits proposed) and the net goes GREEN while lean-ctx writes to the live machine.
-// HOME and XDG_STATE_HOME are set below as cheap insurance with NO measured effect - do not cite
-// them as the reason this works.
-// The binary is hardlinked, not copied: 95 MB, 2ms, no disk cost.
-const LIVE_GB = path.join(os.homedir(), ".local", "share", "lean-ctx", "graphs");
-const liveGraphCount = () => (fs.existsSync(LIVE_GB) ? fs.readdirSync(LIVE_GB).length : 0);
-// A COUNT is not enough: the test workspace path is stable, so lean-ctx updates an existing live
-// graph dir rather than adding one, and the count never moves while state is really being written
-// (measured Jul 27 2026 - a leak passed this check). Ask the direct question as well.
-const liveGraphsFor = (root) => {
-  if (!fs.existsSync(LIVE_GB)) return [];
-  const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
-  return fs.readdirSync(LIVE_GB).filter((d) => {
-    try {
-      const m = JSON.parse(fs.readFileSync(path.join(LIVE_GB, d, "graph.meta.json"), "utf8"));
-      return String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === want;
-    } catch { return false; }
-  });
-};
-const liveBefore = liveGraphCount();
-const FAKE_HOME = path.join(os.tmpdir(), "ritual-hook-sandbox-home");
-const REAL_EXE = path.join(os.homedir(), "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin", "lean-ctx.exe");
-const FAKE_BIN = path.join(FAKE_HOME, "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin");
-fs.rmSync(FAKE_HOME, { recursive: true, force: true });
-fs.mkdirSync(FAKE_BIN, { recursive: true });
-const HAVE_EXE = fs.existsSync(REAL_EXE);
-if (HAVE_EXE) {
-  try { fs.linkSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
-  catch { fs.copyFileSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
-} else {
-  console.log("  note: lean-ctx binary absent on this machine; the pre-build pins below are SKIPPED, loudly");
-}
-// Every home-ish variable the toolchain might read, all pointed inside the sandbox.
-const SANDBOX_ENV = {
-  USERPROFILE: FAKE_HOME,
-  HOME: FAKE_HOME,
-  XDG_DATA_HOME: path.join(FAKE_HOME, ".local", "share"),
-  XDG_STATE_HOME: path.join(FAKE_HOME, ".local", "state"),
-};
-const GB = path.join(FAKE_HOME, ".local", "share", "lean-ctx", "graphs");
-const graphDirsFor = (root) => {
-  if (!fs.existsSync(GB)) return [];
-  const want = root.replace(/\\/g, "/").replace(/\/+$/, "").toLowerCase();
-  return fs.readdirSync(GB).filter((d) => {
-    try {
-      const m = JSON.parse(fs.readFileSync(path.join(GB, d, "graph.meta.json"), "utf8"));
-      return String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === want;
-    } catch { return false; }
-  });
-};
-const runAt = (dir, env) =>
-  spawnSync(process.execPath, [LIVE, "start"], { input: JSON.stringify({ source: "startup", cwd: dir }), encoding: "utf8", cwd: dir, env: Object.assign({}, process.env, env || {}) });
-
+const runAt = (dir, env) => spawnHook(["start"], { input: JSON.stringify({ source: "startup", cwd: dir }), cwd: dir, env });
 const SB2 = path.join(os.tmpdir(), "ritual-hook-graphtest");
 fs.rmSync(SB2, { recursive: true, force: true });
 fs.mkdirSync(SB2, { recursive: true });
@@ -217,7 +219,8 @@ for (const d of graphDirsFor(SB2)) fs.rmSync(path.join(GB, d), { recursive: true
 const g1 = HAVE_EXE ? runAt(SB2, SANDBOX_ENV) : null;
 const g2 = HAVE_EXE ? runAt(SB2, SANDBOX_ENV) : null;
 if (!HAVE_EXE) {
-  console.log("  skip  7 pre-build pins (no lean-ctx binary) - a REDUCED run, not a green one");
+  reduced = true;
+  console.log("  skip  graph pre-build pins (no lean-ctx binary) - REDUCED run, will NOT exit green");
 } else {
   t("fresh workspace: hook PRE-BUILDS the graph and says so", /PRE-BUILT/.test(g1.stdout || ""));
   t("fresh workspace: a COMPLETE graph (with meta) now exists", graphDirsFor(SB2).length === 1);
@@ -231,11 +234,6 @@ if (!HAVE_EXE) {
   t("fresh workspace: the CANARY instruction is emitted", /CANARY:/.test(g1.stdout || ""));
   t("second start: the canary does NOT nag again", !/CANARY:/.test(g2.stdout || ""));
 
-  // Containment is MEASURED two ways, because one of them is blind on its own: no live graph may
-  // exist for the test workspace (catches an update-in-place leak), and the live dir count may not
-  // grow (catches a leak from any other path).
-  t("no LIVE graph exists for the test workspace", liveGraphsFor(SB2).length === 0);
-  t("the live lean-ctx graph dir did not grow", liveGraphCount() === liveBefore);
 }
 
 // a machine without the binary must get a NOTE, exit 0, and a living session â€” never a throw
@@ -244,13 +242,60 @@ fs.rmSync(SB3, { recursive: true, force: true });
 fs.mkdirSync(SB3, { recursive: true });
 const fakeHome = path.join(os.tmpdir(), "ritual-fake-home");
 fs.mkdirSync(path.join(fakeHome, ".local", "share", "lean-ctx", "graphs"), { recursive: true });
-const g3 = runAt(SB3, { USERPROFILE: fakeHome });
+const g3 = runAt(SB3, { USERPROFILE: fakeHome, XDG_DATA_HOME: path.join(fakeHome, ".local", "share") });
 t("missing lean-ctx binary: NOTE in message, exit 0", g3.status === 0 && /NOT pre-built/.test(g3.stdout || ""));
+// Audit Jul 27 2026, found by PED on Fable 5: the canary used to sit after the if/else, so this
+// exact branch told the model the fix was ABSENT and then commanded the probing call that fires
+// the deadlock. The missing-binary message must forbid the probe, never order it.
+t("missing binary: the CANARY is NOT emitted", !/CANARY:/.test(g3.stdout || ""));
+t("missing binary: the note forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(g3.stdout || ""));
+
+// 7d. THE WARNING REACHES THE OUTPUT (audit Jul 27 2026, found by PED on Opus 5: both pre-build
+//     branches ASSIGNED graphNote, wiping the metaErrors warning one line after building it, and
+//     the pin guarding it grepped the SOURCE for the warning string - green forever, through the
+//     wipe. This is the runtime replacement: a corrupt meta must WARN in stdout AND survive.)
+if (HAVE_EXE) {
+  const BLIND_HOME = path.join(os.tmpdir(), "ritual-blindmeta-home");
+  fs.rmSync(BLIND_HOME, { recursive: true, force: true });
+  fs.mkdirSync(path.join(BLIND_HOME, ".local", "share", "lean-ctx", "graphs", "bogus"), { recursive: true });
+  fs.writeFileSync(path.join(BLIND_HOME, ".local", "share", "lean-ctx", "graphs", "bogus", "graph.meta.json"), "{not json");
+  const BLIND_BIN = path.join(BLIND_HOME, "AppData", "Roaming", "npm", "node_modules", "lean-ctx-bin", "bin");
+  fs.mkdirSync(BLIND_BIN, { recursive: true });
+  try { fs.linkSync(REAL_EXE, path.join(BLIND_BIN, "lean-ctx.exe")); }
+  catch { fs.copyFileSync(REAL_EXE, path.join(BLIND_BIN, "lean-ctx.exe")); }
+  const SB4 = path.join(os.tmpdir(), "ritual-blindmeta-ws");
+  fs.rmSync(SB4, { recursive: true, force: true });
+  fs.mkdirSync(SB4, { recursive: true });
+  const m1 = runAt(SB4, { USERPROFILE: BLIND_HOME, HOME: BLIND_HOME, XDG_DATA_HOME: path.join(BLIND_HOME, ".local", "share"), XDG_STATE_HOME: path.join(BLIND_HOME, ".local", "state") });
+  t("an unreadable graph meta WARNS in the EMITTED message", /running blind/.test(m1.stdout || ""));
+  t("the PRE-BUILT note does not WIPE that warning", /running blind/.test(m1.stdout || "") && /PRE-BUILT/.test(m1.stdout || ""));
+  fs.rmSync(BLIND_HOME, { recursive: true, force: true });
+  fs.rmSync(SB4, { recursive: true, force: true });
+}
+
+// 7e. A THROW KEEPS ITS MANNERS (audit Jul 27 2026, PED on Opus 5 found the wipe; its proposed
+//     fix - emit the canary on the failure path - was REJECTED, because a deliberate probe on a
+//     folder whose build FAILED is the deadlock, which is PED-on-Fable-5's finding re-introduced.
+//     The synthesis: report the failure, forbid the probe, order the manual build first.)
+//     Forced here: the graphs PATH is a file, so existsSync passes and readdirSync throws.
+const THROW_HOME = path.join(os.tmpdir(), "ritual-throw-home");
+fs.rmSync(THROW_HOME, { recursive: true, force: true });
+fs.mkdirSync(path.join(THROW_HOME, ".local", "share", "lean-ctx"), { recursive: true });
+fs.writeFileSync(path.join(THROW_HOME, ".local", "share", "lean-ctx", "graphs"), "not a directory");
+const SB5 = path.join(os.tmpdir(), "ritual-throw-ws");
+fs.rmSync(SB5, { recursive: true, force: true });
+fs.mkdirSync(SB5, { recursive: true });
+const m2 = runAt(SB5, { USERPROFILE: THROW_HOME, HOME: THROW_HOME, XDG_DATA_HOME: path.join(THROW_HOME, ".local", "share") });
+t("a throwing pre-build still exits 0", m2.status === 0);
+t("a throwing pre-build reports the failure", /pre-build FAILED/.test(m2.stdout || ""));
+t("a throwing pre-build does NOT emit the canary", !/CANARY:/.test(m2.stdout || ""));
+t("a throwing pre-build forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(m2.stdout || ""));
+fs.rmSync(THROW_HOME, { recursive: true, force: true });
+fs.rmSync(SB5, { recursive: true, force: true });
 
 fs.rmSync(SB2, { recursive: true, force: true });
 fs.rmSync(SB3, { recursive: true, force: true });
 fs.rmSync(fakeHome, { recursive: true, force: true });
-fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // takes every sandboxed graph with it
 
 const src = fs.readFileSync(LIVE, "utf8");
 
@@ -269,6 +314,11 @@ t("graph tests redirect USERPROFILE into a sandbox", /USERPROFILE: FAKE_HOME/.te
 t("graph tests redirect XDG_DATA_HOME (the ONE that actually contains lean-ctx)", /XDG_DATA_HOME:/.test(ENV_BLOCK));
 t("the graphs dir under test is the sandbox, not the live one", /const GB = path\.join\(FAKE_HOME/.test(SELF));
 t("the sandbox is removed at the end", /rmSync\(FAKE_HOME/.test(SELF));
+// Split-string signatures so no pin can match its own line (the Jul 27 lesson, applied forward).
+const SPAWN_SIG = "spawnSync(process.execPath, [" + "LIVE";
+t("every hook spawn goes through the ONE sandboxed gate", SELF.split(SPAWN_SIG).length - 1 === 1);
+const RED_SIG = "REDUCED" + " RUN";
+t("a reduced run exits NON-GREEN", new RegExp(RED_SIG + "[\\s\\S]{0,300}?process\\.exit\\(1\\)").test(SELF));
 
 // 7b. ZERO-FILE GRAPHS ARE NOT USABLE (audit Jul 26 2026). A graph can be COMPLETE (meta
 //     written) with files_indexed = 0, and the server still wedges on it — so trusting meta
@@ -309,7 +359,12 @@ if (missing.length) console.log("     called but not imported: " + missing.join(
 // 9. The graph-meta catch must not be silent â€” a swallowed error is how the missing import
 //    stayed invisible. It counts what it ate and surfaces it.
 t("the graph-meta catch is not a bare swallow", /catch \{ metaErrors/.test(src));
-t("swallowed meta errors surface in the message", /could not be read/.test(src));
+// (audit Jul 27 2026, found by PED on Opus 5: the pin that used to sit here grepped the SOURCE
+// for the warning string, so it stayed green while runtime assignments destroyed the warning.
+// The runtime replacement is 7d above. These two pin the APPEND SHAPE that makes a wipe
+// impossible: after the let-init, no plain assignment may touch graphNote again.)
+t("the PRE-BUILT note APPENDS, never assigns", /graphNote \+= "lean-ctx graph PRE-BUILT/.test(src));
+t("after its init, graphNote is only ever APPENDED to", [...src.matchAll(/graphNote *=[^=+]/g)].length === 1);
 // The requirement is a BOUNDARY, not a shape: the path computation AND the write must sit inside
 // the same try, because a throw from resolve() used to reach the outer catch and emit nothing.
 // The first version of this check measured a character distance and broke the moment the try was
@@ -320,7 +375,19 @@ t("the seed try wraps the WRITE", /writeFileSync\(seedPath, SEED\)/.test(seedBlo
 t("and the try opens before both of them", seedBlock.indexOf("try {") >= 0 && seedBlock.indexOf("try {") < seedBlock.indexOf("resolve(cwd)"));
 t("a failed seed write still produces a message", /could NOT be written/.test(src));
 
-for (const d of graphDirsFor(SB)) fs.rmSync(path.join(GB, d), { recursive: true, force: true });
+// CONTAINMENT, asserted over the ENTIRE run, after every workspace has been exercised. The old
+// pins lived inside section 7 with the baseline captured after the leak they existed to catch.
+for (const ws of [SB, SB2, SB3]) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
+t("the live lean-ctx graph dir did not grow during this run", liveGraphCount() === liveBefore);
+fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // one teardown, takes every sandboxed graph with it
 fs.rmSync(SB, { recursive: true, force: true });
+
+// A REDUCED run never certifies (audit Jul 27 2026, found by PED on Opus 5: with the binary
+// absent every graph pin was skipped and this file still printed "N passed, 0 failed" with exit
+// 0 - the exact verdict-printing skipped guard its own drift section calls worse than no guard).
+if (reduced) {
+  console.log("\nsession-ritual hook: REDUCED RUN - " + ran + " ran, " + fail + " failed, graph pins SKIPPED (no lean-ctx binary). NOT a certification.");
+  process.exit(1);
+}
 console.log("\nsession-ritual hook: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));
 process.exit(fail ? 1 : 0);

@@ -149,21 +149,26 @@ try {
             // 90s ceiling: ano-ulam (97 files) builds in ~8s, so a timeout here means something is
             // wrong and the session should proceed rather than hang on its own safety net.
             execFileSync(exe, ["graph", "build"], { cwd, timeout: 90000, stdio: "ignore", windowsHide: true });
-            graphNote = "lean-ctx graph PRE-BUILT for this workspace (first-build-in-server deadlocks; see lessons/lean-ctx-freeze-playbook.md). ";
+            // += , never = : both branches used to ASSIGN, destroying the metaErrors warning one
+            // line after building it, on exactly the runs it was written for (audit Jul 27 2026,
+            // found by PED on Opus 5 - and the pin guarding it grepped the SOURCE, so it stayed
+            // green through the wipe).
+            graphNote += "lean-ctx graph PRE-BUILT for this workspace (first-build-in-server deadlocks; see lessons/lean-ctx-freeze-playbook.md). ";
+            // THE CANARY rides a SUCCESSFUL pre-build and NOTHING else (audit Jul 27 2026, found
+            // by PED on Fable 5: it used to sit after the if/else, so the missing-binary branch
+            // said "graph NOT pre-built" and then COMMANDED the probing call that fires that
+            // exact deadlock). A failure path never gets it: probing an unbuilt folder IS the bug.
+            graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs, run 'lean-ctx graph build' here from a shell, retry, and log it in the playbook's Recurrence log. ";
           } else {
-            graphNote = "âš  lean-ctx binary not found, graph NOT pre-built â€” if the first ctx_* call hangs, that is the first-build deadlock: run 'lean-ctx graph build' in this folder, then retry. ";
+            graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Run 'lean-ctx graph build' in this folder from a shell first; after it succeeds, ONE ctx_* call verifies the fix held. ";
           }
-          // THE CANARY (playbook: lessons/lean-ctx-freeze-playbook.md). The fix is proven by a ctx
-          // call and by nothing else: a session that works happily for an hour without one has
-          // tested NOTHING, because the deadlock only fires on the first ctx call inside the MCP
-          // server. It lived only in a playbook the normal flow never opens, so it is emitted here.
-          // Scoped to runs that had to BUILD: an established workspace has nothing left to prove,
-          // and an instruction repeated every session becomes wallpaper.
-          graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs, run 'lean-ctx graph build' here from a shell, retry, and log it in the playbook's Recurrence log. ";
         }
       }
     } catch (e) {
-      graphNote = "âš  graph pre-build FAILED (" + (e?.message ?? e) + ") â€” if the first ctx_* call hangs, that is the first-build deadlock: run 'lean-ctx graph build' in this folder from a terminal, then retry. Bash/node reads work regardless. ";
+      // += so a throw cannot destroy what was already built (the metaErrors warning above),
+      // and NO canary here: a folder whose pre-build FAILED is exactly where a deliberate probe
+      // wedges the session. Manual build first, then verify (audit Jul 27 2026, both PED runs).
+      graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make a deliberate ctx_* probe here - run 'lean-ctx graph build' in this folder from a shell first; after it succeeds, ONE ctx_* call verifies the fix held. Bash/node reads work regardless. ";
     }
     if (source === "compact") {
       emit(
