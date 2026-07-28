@@ -111,6 +111,10 @@ if (HAVE_EXE) {
 fs.mkdirSync(path.join(FAKE_HOME, "Claude-Core", "memory"), { recursive: true });
 fs.writeFileSync(path.join(FAKE_HOME, "Claude-Core", "CLAUDE.md"), "# sandbox-contract-opening-line\nbody of the sandbox contract\n");
 fs.writeFileSync(path.join(FAKE_HOME, "Claude-Core", "memory", "MEMORY.md"), "# small index\n- one line\n");
+// v3 verifies the @import WIRING, so the sandbox carries a correctly wired hub; broken and
+// unreadable wiring get their own homes in 7i.
+fs.mkdirSync(path.join(FAKE_HOME, ".claude"), { recursive: true });
+fs.writeFileSync(path.join(FAKE_HOME, ".claude", "CLAUDE.md"), "# sandbox hub\n@" + path.join(FAKE_HOME, "Claude-Core", "CLAUDE.md").replace(/\\/g, "/") + "\n");
 // Every home-ish variable the toolchain might read, all pointed inside the sandbox.
 const SANDBOX_ENV = {
   USERPROFILE: FAKE_HOME,
@@ -305,10 +309,18 @@ if (!HAVE_EXE) {
   t("sentinel deleted: no canary of any kind, the nag is dead", !/CANARY/.test(g2b.stdout || ""));
   t("sentinel deleted: pre-build still SKIPPED", !/PRE-BUILT/.test(g2b.stdout || ""));
 
-  // CONTRACT GROUNDING (same GO): the check is machine-graded now - the hook must quote the
-  // contract AS IT SITS ON DISK, which in this sandbox is a planted file with a known opening.
+  // CONTRACT GROUNDING v3 (audit Jul 28 2026, BOTH F5 auditors, blind and independent): v2
+  // emitted the exact string it told the model to find, so it passed in both states. Pins:
+  // wiring reported honestly, split form emitted, the JOINED line NEVER emitted, no paste on
+  // the healthy path.
+  const SB_FIRST = "# sandbox-contract-opening-line";
+  const SB_CUT = Math.max(1, Math.floor(SB_FIRST.length / 2));
   t("session start carries the CONTRACT CHECK line", /CONTRACT CHECK/.test(g1.stdout || ""));
-  t("and it quotes the on-disk opening line, not a memory", /sandbox-contract-opening-line/.test(g1.stdout || ""));
+  t("intact wiring is reported as WIRING, not as a load", /proves the wiring, not the load/.test(g1.stdout || ""));
+  t("the SPLIT form of the opening line is emitted", (g1.stdout || "").includes(SB_FIRST.slice(0, SB_CUT) + "<SPLIT>" + SB_FIRST.slice(SB_CUT)));
+  t("the JOINED line is NEVER emitted (a probe must not satisfy itself)", !(g1.stdout || "").includes(SB_FIRST));
+  t("the join instruction rides the message", /join these two fragments/.test(g1.stdout || ""));
+  t("healthy wiring does NOT paste the contract body", !/BEGIN CONTRACT/.test(g1.stdout || ""));
   t("a healthy small index draws NO cap warning", !/PAST the 200-line/.test(g1.stdout || ""));
 
 }
@@ -325,7 +337,8 @@ t("missing lean-ctx binary: NOTE in message, exit 0", g3.status === 0 && /NOT pr
 // exact branch told the model the fix was ABSENT and then commanded the probing call that fires
 // the deadlock. The missing-binary message must forbid the probe, never order it.
 t("missing binary: the CANARY is NOT emitted", !/CANARY:/.test(g3.stdout || ""));
-t("missing binary: the note forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(g3.stdout || ""));
+t("missing binary: forbids EVERY ctx call, not just a probe", /Do NOT make ANY ctx_\* call/.test(g3.stdout || ""));
+t("missing binary: names the Bash fallback in the same breath", /Use Bash node -e/.test(g3.stdout || ""));
 t("missing binary: the note orders an indexable file BEFORE the build", /Make sure ONE indexable file exists/.test(g3.stdout || ""));
 // g3's fake home holds no Claude-Core at all, which doubles as the missing-contract case:
 // the one state the OLD self-graded check could never distinguish from success.
@@ -347,6 +360,35 @@ t("an over-cap MEMORY.md draws the LOUD warning", /PAST the 200-line/.test(cap.s
 t("the warning names the index and its size", /Claude-Core\/memory\/MEMORY\.md is 201 lines/.test(cap.stdout || ""));
 fs.rmSync(CAP_HOME, { recursive: true, force: true });
 fs.rmSync(SB7, { recursive: true, force: true });
+
+// 7i. THE WIRING CHECK (rebuilt Jul 28 2026, both F5 auditors). v2's check supplied its own
+//     evidence. v3 verifies the @import against disk. Three states: intact (pinned above),
+//     mispointed, and unreadable hub - and both failure states PASTE the contract, so the
+//     session is never without it. UNKNOWN is never fine.
+const WIRE_HOME = path.join(os.tmpdir(), "ritual-wire-home");
+fs.rmSync(WIRE_HOME, { recursive: true, force: true });
+fs.mkdirSync(path.join(WIRE_HOME, "Claude-Core"), { recursive: true });
+fs.mkdirSync(path.join(WIRE_HOME, ".claude"), { recursive: true });
+fs.writeFileSync(path.join(WIRE_HOME, "Claude-Core", "CLAUDE.md"), "# wire-home contract\nrule zero lives here\n");
+fs.writeFileSync(path.join(WIRE_HOME, ".claude", "CLAUDE.md"), "# hub\n@C:/Somewhere/Else/CLAUDE.md\n");
+const SB8 = path.join(os.tmpdir(), "ritual-wire-ws");
+fs.rmSync(SB8, { recursive: true, force: true });
+fs.mkdirSync(SB8, { recursive: true });
+const WIRE_ENV = { USERPROFILE: WIRE_HOME, HOME: WIRE_HOME, XDG_DATA_HOME: path.join(WIRE_HOME, ".local", "share") };
+const w1 = runAt(SB8, WIRE_ENV);
+t("a MISPOINTED @import is reported as NOT auto-loaded", /treat the contract as NOT auto-loaded/.test(w1.stdout || ""));
+t("and it names where the import actually points", /Somewhere\/Else/.test(w1.stdout || ""));
+t("broken wiring PASTES the contract body", /BEGIN CONTRACT/.test(w1.stdout || "") && /rule zero lives here/.test(w1.stdout || ""));
+fs.rmSync(path.join(WIRE_HOME, ".claude", "CLAUDE.md"), { force: true });
+const w2 = runAt(SB8, WIRE_ENV);
+t("an UNREADABLE hub is UNVERIFIED, never fine", /wiring is UNVERIFIED/.test(w2.stdout || ""));
+t("unverified wiring pastes the contract too", /BEGIN CONTRACT/.test(w2.stdout || ""));
+fs.rmSync(WIRE_HOME, { recursive: true, force: true });
+fs.rmSync(SB8, { recursive: true, force: true });
+
+// The dead class, pinned at the source: the hook may never order a FIND of a line it printed
+// whole. The search string is split here so this pin cannot match itself.
+t("the hook never orders a FIND of a whole printed line", !fs.readFileSync(LIVE, "utf8").includes("FIND that exact line in your" + " loaded context"));
 
 // 7d. THE WARNING REACHES THE OUTPUT (audit Jul 27 2026, found by PED on Opus 5: both pre-build
 //     branches ASSIGNED graphNote, wiping the metaErrors warning one line after building it, and
@@ -386,7 +428,8 @@ const m2 = runAt(SB5, { USERPROFILE: THROW_HOME, HOME: THROW_HOME, XDG_DATA_HOME
 t("a throwing pre-build still exits 0", m2.status === 0);
 t("a throwing pre-build reports the failure", /pre-build FAILED/.test(m2.stdout || ""));
 t("a throwing pre-build does NOT emit the canary", !/CANARY:/.test(m2.stdout || ""));
-t("a throwing pre-build forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(m2.stdout || ""));
+t("a throwing pre-build forbids EVERY ctx call, not just a probe", /Do NOT make ANY ctx_\* call/.test(m2.stdout || ""));
+t("a throwing pre-build names the Bash fallback", /Use Bash node -e/.test(m2.stdout || ""));
 t("a throwing pre-build orders an indexable file BEFORE the build", /make sure ONE indexable file exists/i.test(m2.stdout || ""));
 fs.rmSync(THROW_HOME, { recursive: true, force: true });
 fs.rmSync(SB5, { recursive: true, force: true });
@@ -412,7 +455,8 @@ if (HAVE_EXE) {
   })());
   t("zero-file build: the CANARY is NOT emitted", !/CANARY:/.test(z.stdout || ""));
   t("zero-file build: says the canary is OFF and why", /canary is OFF/.test(z.stdout || ""));
-  t("zero-file build: forbids the probe", /Do NOT make a deliberate ctx_\*/.test(z.stdout || ""));
+  t("zero-file build: forbids EVERY ctx call, not just a probe", /Do NOT make ANY ctx_\* call/.test(z.stdout || ""));
+  t("zero-file build: names the Bash fallback", /Use Bash node -e/.test(z.stdout || ""));
   t("zero-file build: orders the seed before the rebuild", /plant it by hand/.test(z.stdout || ""));
   fs.rmSync(SB6, { recursive: true, force: true });
 }

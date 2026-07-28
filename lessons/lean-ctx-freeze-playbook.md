@@ -100,7 +100,7 @@ build` in that folder yourself and it indexed at least one file.** That is the c
 pre-build means NO canary, and no hook message at all counts as NO pre-build: probing an unbuilt
 folder does not test the fix, it fires the deadlock. A hook message that WARNED instead of saying
 PRE-BUILT (seed unwritable, zero files indexed, binary missing, build failed) is a branch where
-the probe IS the deadlock: do the manual fix the warning names first. (Added Jul 28 2026: the
+ANY ctx call IS the deadlock, not only a probe (widened Jul 28 2026, PED on Opus 5): do the manual fix the warning names first. (Added Jul 28 2026: the
 order used to be unconditional, found by PED on Opus 5 from the no-message end and by PED on
 Fable 5 from the zero-file end - the same hole seen from both sides.) If the call answers, the
 fix held for that folder. If it HANGS, the session is already WEDGED and any shell call queues

@@ -197,10 +197,10 @@ try {
               if (sentinel) graphNote += "When the call answers, DELETE the sentinel so future sessions stop nagging: node -e \"require('fs').unlinkSync('" + sentinel.replace(/\\/g, "/") + "')\". ";
             } else {
               const why = builtIndexed === 0 ? "indexed ZERO files" : "could not be verified (no readable graph meta for this root)";
-              graphNote += "WARNING: the graph pre-build ran but " + why + " - a zero-file graph is the exact state the server wedges on, so the canary is OFF. Do NOT make a deliberate ctx_* probe. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' here from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
+              graphNote += "WARNING: the graph pre-build ran but " + why + " - a zero-file graph is the exact state the server wedges on, so the canary is OFF. Do NOT make ANY ctx_* call here, probe or ordinary read. Use Bash node -e for in-root reads until the fix is done (the section-3 exception; say you took it). Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' here from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
             }
           } else {
-            graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
+            graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make ANY ctx_* call here, probe or ordinary read - the first build inside the server IS the deadlock and it fires on whichever ctx call comes first (audit Jul 28 2026, PED on Opus 5: the old ban named only the probe, and the model's next ORDINARY read wedged the session). Use Bash node -e for in-root reads until the fix is done (the section-3 exception; say you took it). Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
           }
         } else if (graphDir && existsSync(join(graphDir, "canary-pending"))) {
           // THE RE-NAG (built Jul 28 2026): a usable graph EXISTS here, so a ctx call REBUILDS
@@ -213,18 +213,44 @@ try {
       // += so a throw cannot destroy what was already built (the metaErrors warning above),
       // and NO canary here: a folder whose pre-build FAILED is exactly where a deliberate probe
       // wedges the session. Manual build first, then verify (audit Jul 27 2026, both PED runs).
-      graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make a deliberate ctx_* probe here - make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. Bash/node reads work regardless. ";
+      graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make ANY ctx_* call here, probe or ordinary read - it fires on whichever ctx call comes first. Use Bash node -e for in-root reads until the fix is done (the section-3 exception; say you took it). Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
     }
-    // CONTRACT GROUNDING (built Jul 28 2026 on Chan's GO): the hub's presence check graded
-    // ITSELF - a model that hallucinates a plausible contract sentence passes its own test.
-    // Deterministic code cannot hallucinate. This reads the contract OFF DISK and hands the
-    // model a sentence to FIND in context; string matching is the one thing a weak model does
-    // reliably. Read failure is LOUD and orders degraded mode. Every failure is a note.
+    // CONTRACT GROUNDING v3 (rebuilt Jul 28 2026; v2 lived HOURS - both F5 auditors, Fable 5
+    // and Opus 5 independently and blind, found that it printed the contract's opening line and
+    // then ordered the model to FIND that line in context. The message IS context, so the check
+    // passed in BOTH states - the probe-satisfies-itself class this kit's own net kills with
+    // split-string signatures, missed in the one new place it mattered. v1 asked for a quote
+    // from memory, which a hallucination passes. No hook can see the model's context, so:
+    //   1. verify what code CAN verify: the @import WIRING, against disk (Opus's design);
+    //   2. broken or unverifiable wiring PASTES the whole contract into the message - the
+    //      failure then costs ~1,300 tokens instead of a contract-less session, the same
+    //      asymmetry as every default in this file, and UNKNOWN takes the paste (Opus);
+    //   3. intact wiring arms the load probe with the opening line SPLIT by an ASCII marker,
+    //      join-then-search - the emitted halves can never match the joined search, so a hit
+    //      can only be the real loaded contract (Fable's design, the net's own pattern).
     let contractNote = "";
     try {
-      const c = readFileSync(join(process.env.USERPROFILE || "C:/Users/Chanryle", "Claude-Core/CLAUDE.md"), "utf8");
-      const firstLine = (c.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim();
-      contractNote = "CONTRACT CHECK: the contract on disk opens with \"" + firstLine + "\" and is " + c.length + " chars. FIND that exact line in your loaded context: present means the @import fired; absent means it did NOT, so read the file with Bash node -e before real work. ";
+      const home = process.env.USERPROFILE || "C:/Users/Chanryle";
+      const contractPath = join(home, "Claude-Core/CLAUDE.md");
+      const c = readFileSync(contractPath, "utf8"); // past this line the contract IS readable
+      let wired = null; // null = could not check; UNKNOWN is never "fine", it takes the paste
+      let target = "";
+      try {
+        const hubTxt = readFileSync(join(home, ".claude/CLAUDE.md"), "utf8");
+        const imp = hubTxt.match(/^@(.+CLAUDE\.md)\s*$/m);
+        target = imp ? imp[1].trim() : "";
+        wired = target !== "" && resolve(target).replace(/\\/g, "/").toLowerCase() === resolve(contractPath).replace(/\\/g, "/").toLowerCase();
+      } catch { wired = null; }
+      if (wired === true) {
+        const firstLine = (c.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim();
+        const cut = Math.max(1, Math.floor(firstLine.length / 2));
+        contractNote = "CONTRACT CHECK: the hub's @import resolves to the contract on disk (" + c.length + " chars), so the auto-load WIRING is INTACT - which proves the wiring, not the load. Load test: join these two fragments, deleting the <SPLIT> marker, into the contract's real opening line: \"" + firstLine.slice(0, cut) + "<SPLIT>" + firstLine.slice(cut) + "\". FIND that exact joined line, contiguous, in your loaded context OUTSIDE this message - this message never contains it whole, so a hit can only be the real loaded contract. Present means the @import fired; absent means it did NOT, so read " + contractPath.replace(/\\/g, "/") + " with Bash node -e before real work. ";
+      } else {
+        const why = wired === null
+          ? "the hub could not be read, so the wiring is UNVERIFIED"
+          : (target ? "the hub's @import points at " + target + ", not at the contract" : "the hub has no @import line");
+        contractNote = "WARNING: " + why + " - treat the contract as NOT auto-loaded. Fix both absolute paths per hub section 7. The full contract is pasted below so this session is not flying blind; it IS the operating contract, use it.\n---BEGIN CONTRACT---\n" + c + "\n---END CONTRACT---\n";
+      }
     } catch (e) {
       contractNote = "WARNING: the working contract could NOT be read from disk (" + (e?.message ?? e) + "). Assume the @import also failed: enter DEGRADED MODE per hub section 2 and say so in your first line. ";
     }
