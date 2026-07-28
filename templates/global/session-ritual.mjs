@@ -158,7 +158,7 @@ try {
             // by PED on Fable 5: it used to sit after the if/else, so the missing-binary branch
             // said "graph NOT pre-built" and then COMMANDED the probing call that fires that
             // exact deadlock). A failure path never gets it: probing an unbuilt folder IS the bug.
-            graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs, run 'lean-ctx graph build' here from a shell, retry, and log it in the playbook's Recurrence log. ";
+            graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs the session is WEDGED: run the freeze playbook's Recovery recipe WHOLE (interrupt, kill lean-ctx.exe, clear the locks, reload the window), never a bare rebuild-and-retry, then log it in the Recurrence log. ";
           } else {
             graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Run 'lean-ctx graph build' in this folder from a shell first; after it succeeds, ONE ctx_* call verifies the fix held. ";
           }
@@ -173,7 +173,7 @@ try {
     if (source === "compact") {
       emit(
         "SessionStart",
-        "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md â€” both out-of-root, both via Bash node -e, never ctx_read (the index lines are summaries, and summaries are what you are not trusting); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head â€” same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
+        "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md â€” opened by WHERE THEY SIT: Bash node -e when they are outside THIS workspace root, which is every root except Claude-Core itself; ctx_read when Claude-Core IS the root; and never from the index lines, which are summaries, and summaries are what you are not trusting; verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head â€” same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
           seedNote + graphNote,
       );
     } else {

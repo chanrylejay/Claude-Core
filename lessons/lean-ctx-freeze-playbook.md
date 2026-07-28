@@ -95,8 +95,13 @@ session in ano-ulam ran 22 shell calls, 1 question and 0 ctx calls, so it looked
 proved nothing. The real proof came from a probe run afterwards (1.95s against the same folder).
 
 **On the first open of any workspace, make ONE deliberate ctx call early.** That is the canary. If
-it answers, the fix held for that folder. If it hangs, do not wait: run `lean-ctx graph build` in
-that folder from a shell, retry, and add a line to the Recurrence log below.
+it answers, the fix held for that folder. If it HANGS, the session is already WEDGED and any shell
+call queues behind it: run the Recovery recipe below WHOLE and in order (interrupt, kill
+lean-ctx.exe, clear the locks, reload the window). A bare `lean-ctx graph build` plus a retry is
+NOT enough - a ctx call made before the window reload hangs on the dead connection forever and
+looks exactly like a fresh freeze. (Rewritten Jul 27 2026: this line used to order exactly that
+bare rebuild-and-retry, two of the four required steps, found by PED on Opus 5.) Then add a line
+to the Recurrence log below.
 
 This is the ONE exception to "Never test by calling `ctx_*` live" in the Diagnostic toolkit below,
 and it is bounded three ways: ONE call, on FIRST open, on a workspace with NO reported symptom.

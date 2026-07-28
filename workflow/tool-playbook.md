@@ -29,8 +29,12 @@ before adding a rule here that names a flag, a filename, or a count that some ot
   change and VALIDATE THE CONFIG FILE before building workarounds.
 - A corrupt settings/config JSON fails *silently* and disables everything in it — always
   JSON-validate after any settings edit. Never race two writers on the same config file.
-- When an MCP/tool disconnects: don't panic-fix, don't restart-loop. It usually reconnects.
-  Note what still works and route around it.
+- When an MCP/tool DISCONNECTS on its own: don't panic-fix, don't restart-loop. It usually
+  reconnects. Note what still works and route around it. A tool that is DENIED is not a
+  disconnect and this bullet does not cover it: classify first under "Editing files reliably"
+  below, where the deny rule lives. If you cannot tell a disconnect from a deny, treat it as a
+  deny: stop and ask. (Boundary added Jul 27 2026: this bullet used to grant the route-around
+  with no edge, two sections above the ban, found by PED on Opus 5.)
 
 ## The always-loaded tool wins by default, not by merit
 - **A tool you have to load loses to a tool that is already there.** Measured Jul 27 2026 across 16

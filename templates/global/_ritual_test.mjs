@@ -54,6 +54,10 @@ const t = (name, cond) => {
 const SB = path.join(os.tmpdir(), "ritual-hook-test");
 fs.rmSync(SB, { recursive: true, force: true });
 fs.mkdirSync(SB, { recursive: true });
+// Workspace paths DECLARED at top scope so the end-of-run containment loop can see all of them.
+// SB4 used to be declared inside if(HAVE_EXE), out of scope at the loop, so the loop said
+// "every workspace" while covering three of five (audit Jul 27 2026, found by PED on Opus 5).
+const SB4 = path.join(os.tmpdir(), "ritual-blindmeta-ws");
 
 // SANDBOX, HOISTED ABOVE EVERY SPAWN (audit Jul 27 2026, found by PED on Fable 5: the first
 // sandbox covered section 7 only. Sections 1-6 spawned the hook with NO env override, so the
@@ -233,6 +237,9 @@ if (!HAVE_EXE) {
   //     proved nothing. It rides the pre-build, and ONLY the pre-build.
   t("fresh workspace: the CANARY instruction is emitted", /CANARY:/.test(g1.stdout || ""));
   t("second start: the canary does NOT nag again", !/CANARY:/.test(g2.stdout || ""));
+  // C1 (audit Jul 27 2026): the canary used to order a bare rebuild-and-retry on a hang, while
+  // the playbook's own recurrence log says a ctx call before the window reload hangs forever.
+  t("the canary sends a hang to the FULL recovery, not a bare retry", /reload the window/.test(g1.stdout || ""));
 
 }
 
@@ -263,7 +270,6 @@ if (HAVE_EXE) {
   fs.mkdirSync(BLIND_BIN, { recursive: true });
   try { fs.linkSync(REAL_EXE, path.join(BLIND_BIN, "lean-ctx.exe")); }
   catch { fs.copyFileSync(REAL_EXE, path.join(BLIND_BIN, "lean-ctx.exe")); }
-  const SB4 = path.join(os.tmpdir(), "ritual-blindmeta-ws");
   fs.rmSync(SB4, { recursive: true, force: true });
   fs.mkdirSync(SB4, { recursive: true });
   const m1 = runAt(SB4, { USERPROFILE: BLIND_HOME, HOME: BLIND_HOME, XDG_DATA_HOME: path.join(BLIND_HOME, ".local", "share"), XDG_STATE_HOME: path.join(BLIND_HOME, ".local", "state") });
@@ -377,7 +383,11 @@ t("a failed seed write still produces a message", /could NOT be written/.test(sr
 
 // CONTAINMENT, asserted over the ENTIRE run, after every workspace has been exercised. The old
 // pins lived inside section 7 with the baseline captured after the leak they existed to catch.
-for (const ws of [SB, SB2, SB3]) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
+for (const ws of [SB, SB2, SB3, SB4, SB5]) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
+t("the containment loop covers every workspace this net spawns into", (() => {
+  const loop = (SELF.match(/for \(const ws of \[([^\]]*)\]\)/) || ["", ""])[1];
+  return ["SB", "SB2", "SB3", "SB4", "SB5"].every((n) => new RegExp("\\b" + n + "\\b").test(loop));
+})());
 t("the live lean-ctx graph dir did not grow during this run", liveGraphCount() === liveBefore);
 fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // one teardown, takes every sandboxed graph with it
 fs.rmSync(SB, { recursive: true, force: true });
