@@ -112,7 +112,15 @@ bare rebuild-and-retry, two of the four required steps, found by PED on Opus 5.)
 to the Recurrence log below.
 
 This is the ONE exception to "Never test by calling `ctx_*` live" in the Diagnostic toolkit below,
-and it is bounded four ways: ONE call, on FIRST open, on a workspace with NO reported symptom, and only AFTER a pre-build you can SEE.
+and it is bounded four ways: ONE call, on FIRST open (or on any later open while a canary-pending sentinel exists, see below), on a workspace with NO reported symptom, and only AFTER a pre-build you can SEE.
+
+Since Jul 28 2026 the hook PERSISTS the canary: a VERIFIED build writes a canary-pending file
+into that project's graph dir, and every later session re-nags while the file exists - safe,
+because a usable graph means a ctx call REBUILDS and never first-builds. Deleting the file after
+a successful call IS the acknowledgment; the hook message names the exact delete command. An
+ignored canary used to vanish forever (measured Jul 26: 22 shell calls, 0 ctx calls, never asked
+again); now it survives being ignored and dies only when proven. Failure paths and zero-file
+builds never get a sentinel: probing those states IS the deadlock.
 Investigating a folder that has ALREADY hung stays banned and still goes to the bounded CLI repro.
 (Audit Jul 27 2026: the canary was added the same day and the two rules did not know about each
 other, so a model that recalled the ban would skip the canary and report the ritual complete.)
