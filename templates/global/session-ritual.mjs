@@ -118,6 +118,7 @@ try {
         // a deadlock corpse from a previous wedge â€” it must be rebuilt, not trusted.
         const graphsDir = join(process.env.USERPROFILE || "C:/Users/Chanryle", ".local/share/lean-ctx/graphs");
         let haveGraph = false;
+        let graphDir = ""; // captured for the canary re-nag below
         let metaErrors = 0; // a swallowed error is an invisible failure — count them, then say so
         if (existsSync(graphsDir)) {
           for (const d of readdirSync(graphsDir)) {
@@ -131,6 +132,7 @@ try {
                 // (proven Jul 26 2026 — cached 0-file graph + seed planted after = WEDGED). The
                 // seed is planted EARLIER in this same hook run, so a rebuild now finds >= 1 file.
                 haveGraph = Number(m.files_indexed) >= 1;
+                if (haveGraph) graphDir = join(graphsDir, d);
                 break;
               }
             } catch { metaErrors += 1; }
@@ -157,6 +159,7 @@ try {
             // Jul 25) and the folder held nothing else - the old code called that PRE-BUILT and
             // commanded the probe in the same message as the seed's may-freeze warning.
             let builtIndexed = -1; // -1 = no readable meta found for this root after the build
+            let builtDir = "";
             if (existsSync(graphsDir)) {
               for (const d of readdirSync(graphsDir)) {
                 const meta = join(graphsDir, d, "graph.meta.json");
@@ -165,6 +168,7 @@ try {
                   const m = JSON.parse(readFileSync(meta, "utf8"));
                   if (String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === root.toLowerCase()) {
                     builtIndexed = Number(m.files_indexed) || 0;
+                    builtDir = join(graphsDir, d);
                     break;
                   }
                 } catch {} // leaves -1; the could-not-be-verified branch below SAYS so out loud
@@ -176,7 +180,21 @@ try {
               // THE CANARY rides a VERIFIED pre-build and NOTHING else (audits Jul 27-28 2026,
               // both PED runs). Failure paths and zero-file "successes" never get it: probing
               // either state IS the deadlock.
+              // CANARY PERSISTENCE (built Jul 28 2026 on Chan's GO): a one-shot canary was
+              // measured being ignored (Jul 26: 22 shell calls, 0 ctx calls), and once the graph
+              // exists the pre-build skips, so the folder stayed unproven FOREVER. The sentinel
+              // makes the nag survive being ignored and die when verified. It rides ONLY a
+              // VERIFIED build; failure paths and zero-file builds never get one.
+              let sentinel = "";
+              try {
+                if (builtDir) {
+                  sentinel = join(builtDir, "canary-pending");
+                  writeFileSync(sentinel, "unverified freeze fix: delete this file after one successful ctx_* call in " + root + "\n");
+                }
+              } catch { sentinel = ""; }
+              if (!sentinel) graphNote += "NOTE: canary state could not be persisted; the canary below applies to THIS session only. ";
               graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs the session is WEDGED: run the freeze playbook's Recovery recipe WHOLE and in order (interrupt, kill lean-ctx.exe, clear the locks, make sure an indexable file exists, reload the window; the recipe is the authority if this list ever drifts), never a bare rebuild-and-retry, then log it in the Recurrence log. ";
+              if (sentinel) graphNote += "When the call answers, DELETE the sentinel so future sessions stop nagging: node -e \"require('fs').unlinkSync('" + sentinel.replace(/\\/g, "/") + "')\". ";
             } else {
               const why = builtIndexed === 0 ? "indexed ZERO files" : "could not be verified (no readable graph meta for this root)";
               graphNote += "WARNING: the graph pre-build ran but " + why + " - a zero-file graph is the exact state the server wedges on, so the canary is OFF. Do NOT make a deliberate ctx_* probe. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' here from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
@@ -184,6 +202,11 @@ try {
           } else {
             graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
           }
+        } else if (graphDir && existsSync(join(graphDir, "canary-pending"))) {
+          // THE RE-NAG (built Jul 28 2026): a usable graph EXISTS here, so a ctx call REBUILDS
+          // and never first-builds - the safe case - but no session has ever proven this folder
+          // with the one deliberate call. Nag until the sentinel is deleted.
+          graphNote += "CANARY (unverified from an earlier session): the freeze fix for this folder has never been proven by a ctx call. Make ONE deliberate ctx_* call early; if it answers, delete " + join(graphDir, "canary-pending").replace(/\\/g, "/") + " so the nagging stops; if it hangs, run the freeze playbook's Recovery recipe WHOLE, then log it in the Recurrence log. ";
         }
       }
     } catch (e) {
@@ -192,17 +215,49 @@ try {
       // wedges the session. Manual build first, then verify (audit Jul 27 2026, both PED runs).
       graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make a deliberate ctx_* probe here - make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. Bash/node reads work regardless. ";
     }
+    // CONTRACT GROUNDING (built Jul 28 2026 on Chan's GO): the hub's presence check graded
+    // ITSELF - a model that hallucinates a plausible contract sentence passes its own test.
+    // Deterministic code cannot hallucinate. This reads the contract OFF DISK and hands the
+    // model a sentence to FIND in context; string matching is the one thing a weak model does
+    // reliably. Read failure is LOUD and orders degraded mode. Every failure is a note.
+    let contractNote = "";
+    try {
+      const c = readFileSync(join(process.env.USERPROFILE || "C:/Users/Chanryle", "Claude-Core/CLAUDE.md"), "utf8");
+      const firstLine = (c.split(/\r?\n/).find((l) => l.trim().length > 0) || "").trim();
+      contractNote = "CONTRACT CHECK: the contract on disk opens with \"" + firstLine + "\" and is " + c.length + " chars. FIND that exact line in your loaded context: present means the @import fired; absent means it did NOT, so read the file with Bash node -e before real work. ";
+    } catch (e) {
+      contractNote = "WARNING: the working contract could NOT be read from disk (" + (e?.message ?? e) + "). Assume the @import also failed: enter DEGRADED MODE per hub section 2 and say so in your first line. ";
+    }
+    // INDEX CAP TRIPWIRE (same GO): the auto-loader reads only the FIRST 200 lines / 25KB of a
+    // MEMORY.md index. Anything past that exists on disk and silently never loads - the exact
+    // silent-miss class this kit exists to kill. Warn BEFORE it bites, for both indexes.
+    let memNote = "";
+    try {
+      const projKey = resolve(cwd).replace(/^([A-Za-z]):/, (m0, d0) => d0.toLowerCase() + "-").replace(/[\\/]+/g, "-");
+      const checks = [
+        ["Claude-Core/memory/MEMORY.md", join(process.env.USERPROFILE || "C:/Users/Chanryle", "Claude-Core/memory/MEMORY.md")],
+        ["this project's MEMORY.md", join(process.env.USERPROFILE || "C:/Users/Chanryle", ".claude/projects", projKey, "memory/MEMORY.md")],
+      ];
+      for (const [label, mp] of checks) {
+        if (!existsSync(mp)) continue;
+        const txt = readFileSync(mp, "utf8");
+        const lines = txt.split(/\r?\n/).length;
+        if (lines > 200 || txt.length > 25000) {
+          memNote += "WARNING: " + label + " is " + lines + " lines / " + txt.length + " chars - PAST the 200-line/25KB auto-load cap, so its tail is silently NOT loading. Trim it this session. ";
+        }
+      }
+    } catch {}
     if (source === "compact") {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md â€” opened by WHERE THEY SIT: Bash node -e when they are outside THIS workspace root, which is every root except Claude-Core itself; ctx_read when Claude-Core IS the root; and never from the index lines, which are summaries, and summaries are what you are not trusting; verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head â€” same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
-          seedNote + graphNote,
+          seedNote + graphNote + contractNote + memNote,
       );
     } else {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Session-start ritual: " +
-          seedNote + graphNote +
+          seedNote + graphNote + contractNote + memNote +
           "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks â€” the marked lines only say WHICH files to open â€” and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );
     }

@@ -105,6 +105,12 @@ if (HAVE_EXE) {
   try { fs.linkSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
   catch { fs.copyFileSync(REAL_EXE, path.join(FAKE_BIN, "lean-ctx.exe")); }
 }
+// The hook now opens every session with a CONTRACT CHECK read from disk and an index-cap
+// measurement. The sandbox provides both files, so every default spawn exercises the healthy
+// path; dedicated homes below exercise absence and overflow.
+fs.mkdirSync(path.join(FAKE_HOME, "Claude-Core", "memory"), { recursive: true });
+fs.writeFileSync(path.join(FAKE_HOME, "Claude-Core", "CLAUDE.md"), "# sandbox-contract-opening-line\nbody of the sandbox contract\n");
+fs.writeFileSync(path.join(FAKE_HOME, "Claude-Core", "memory", "MEMORY.md"), "# small index\n- one line\n");
 // Every home-ish variable the toolchain might read, all pointed inside the sandbox.
 const SANDBOX_ENV = {
   USERPROFILE: FAKE_HOME,
@@ -278,13 +284,32 @@ if (!HAVE_EXE) {
   //     never opens - so Chan's own Jul 26 test ran 22 shell calls, 1 question, 0 ctx calls and
   //     proved nothing. It rides the pre-build, and ONLY the pre-build.
   t("fresh workspace: the CANARY instruction is emitted", /CANARY:/.test(g1.stdout || ""));
-  t("second start: the canary does NOT nag again", !/CANARY:/.test(g2.stdout || ""));
+  t("second start: the first-time CANARY line is not repeated", !/CANARY:/.test(g2.stdout || ""));
   // C1 (audit Jul 27 2026): the canary used to order a bare rebuild-and-retry on a hang, while
   // the playbook's own recurrence log says a ctx call before the window reload hangs forever.
   t("the canary sends a hang to the FULL recovery, not a bare retry", /reload the window/.test(g1.stdout || ""));
   // A-F1 companion (audit Jul 28 2026): the inline recovery lists dropped the recipe's
   // indexable-file step - the ONE step the seed-failed branch needs, so the reload looped.
   t("the canary's recovery list includes the indexable-file step", /make sure an indexable file exists/.test(g1.stdout || ""));
+
+  // 7g. THE SENTINEL (built Jul 28 2026 on Chan's GO): the canary nag must SURVIVE being ignored
+  //     and die only when verified. A fresh VERIFIED build plants canary-pending in the graph
+  //     dir; every later start re-nags while it exists; deleting it is the acknowledgment.
+  const sbDirs = graphDirsFor(SB2);
+  const sent = sbDirs.length === 1 ? path.join(GB, sbDirs[0], "canary-pending") : "";
+  t("fresh build PERSISTS the canary sentinel", sent !== "" && fs.existsSync(sent));
+  t("the message names the sentinel and how to retire it", /DELETE the sentinel/.test(g1.stdout || ""));
+  t("second start with a pending sentinel: the nag RETURNS", /CANARY \(unverified/.test(g2.stdout || ""));
+  if (sent) fs.rmSync(sent, { force: true });
+  const g2b = runAt(SB2, SANDBOX_ENV);
+  t("sentinel deleted: no canary of any kind, the nag is dead", !/CANARY/.test(g2b.stdout || ""));
+  t("sentinel deleted: pre-build still SKIPPED", !/PRE-BUILT/.test(g2b.stdout || ""));
+
+  // CONTRACT GROUNDING (same GO): the check is machine-graded now - the hook must quote the
+  // contract AS IT SITS ON DISK, which in this sandbox is a planted file with a known opening.
+  t("session start carries the CONTRACT CHECK line", /CONTRACT CHECK/.test(g1.stdout || ""));
+  t("and it quotes the on-disk opening line, not a memory", /sandbox-contract-opening-line/.test(g1.stdout || ""));
+  t("a healthy small index draws NO cap warning", !/PAST the 200-line/.test(g1.stdout || ""));
 
 }
 
@@ -302,6 +327,26 @@ t("missing lean-ctx binary: NOTE in message, exit 0", g3.status === 0 && /NOT pr
 t("missing binary: the CANARY is NOT emitted", !/CANARY:/.test(g3.stdout || ""));
 t("missing binary: the note forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(g3.stdout || ""));
 t("missing binary: the note orders an indexable file BEFORE the build", /Make sure ONE indexable file exists/.test(g3.stdout || ""));
+// g3's fake home holds no Claude-Core at all, which doubles as the missing-contract case:
+// the one state the OLD self-graded check could never distinguish from success.
+t("missing contract: the warning is LOUD", /contract could NOT be read from disk/.test(g3.stdout || ""));
+t("missing contract: DEGRADED MODE is ordered", /DEGRADED MODE/.test(g3.stdout || ""));
+
+// 7h. THE CAP TRIPWIRE (same GO): an index past 200 lines / 25KB silently stops loading its
+//     tail - the silent-miss class. Force a 201-line index and demand the loud warning.
+const CAP_HOME = path.join(os.tmpdir(), "ritual-caphome");
+fs.rmSync(CAP_HOME, { recursive: true, force: true });
+fs.mkdirSync(path.join(CAP_HOME, "Claude-Core", "memory"), { recursive: true });
+fs.writeFileSync(path.join(CAP_HOME, "Claude-Core", "CLAUDE.md"), "# cap-home contract\n");
+fs.writeFileSync(path.join(CAP_HOME, "Claude-Core", "memory", "MEMORY.md"), Array.from({ length: 201 }, (_, i) => "- line " + i).join("\n"));
+const SB7 = path.join(os.tmpdir(), "ritual-capwarn-ws");
+fs.rmSync(SB7, { recursive: true, force: true });
+fs.mkdirSync(SB7, { recursive: true });
+const cap = runAt(SB7, { USERPROFILE: CAP_HOME, XDG_DATA_HOME: path.join(CAP_HOME, ".local", "share") });
+t("an over-cap MEMORY.md draws the LOUD warning", /PAST the 200-line/.test(cap.stdout || ""));
+t("the warning names the index and its size", /Claude-Core\/memory\/MEMORY\.md is 201 lines/.test(cap.stdout || ""));
+fs.rmSync(CAP_HOME, { recursive: true, force: true });
+fs.rmSync(SB7, { recursive: true, force: true });
 
 // 7d. THE WARNING REACHES THE OUTPUT (audit Jul 27 2026, found by PED on Opus 5: both pre-build
 //     branches ASSIGNED graphNote, wiping the metaErrors warning one line after building it, and
