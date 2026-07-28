@@ -50,6 +50,8 @@ const t = (name, cond) => {
   if (cond) console.log("  ok  " + name);
   else { fail += 1; console.log("FAIL  " + name); }
 };
+// Normalised path compare, shared by the wiring pins and the spawn gate.
+const asPath = (x) => path.resolve(String(x)).replace(/\\/g, "/").toLowerCase();
 
 const SB = path.join(os.tmpdir(), "ritual-hook-test");
 fs.rmSync(SB, { recursive: true, force: true });
@@ -58,6 +60,7 @@ fs.mkdirSync(SB, { recursive: true });
 // SB4 used to be declared inside if(HAVE_EXE), out of scope at the loop, so the loop said
 // "every workspace" while covering three of five (audit Jul 27 2026, found by PED on Opus 5).
 const SB4 = path.join(os.tmpdir(), "ritual-blindmeta-ws");
+const SB6 = path.join(os.tmpdir(), "ritual-zerofile-ws"); // same top-scope law as SB4
 
 // SANDBOX, HOISTED ABOVE EVERY SPAWN (audit Jul 27 2026, found by PED on Fable 5: the first
 // sandbox covered section 7 only. Sections 1-6 spawned the hook with NO env override, so the
@@ -120,9 +123,29 @@ const graphDirsFor = (root) => {
     } catch { return false; }
   });
 };
-// ONE spawn gate. Default env is the sandbox; a test passing its own env REPLACES it and owns
-// its containment. No spawn in this file may bypass this helper (pinned in 7z).
+// ONE spawn gate. Default env is the sandbox. A test MAY pass its own env, and the boundary is
+// stated AND enforced here instead of left to the caller (audit Jul 28 2026, found by PED on
+// Opus 5: "owns its containment" was an undefined boundary - nothing forced a custom env to
+// carry XDG_DATA_HOME, the one variable measured load-bearing, so the next custom-env spawn
+// could write live machine state with every pin green). It must redirect BOTH USERPROFILE (the
+// hook reads it) and XDG_DATA_HOME (lean-ctx.exe reads it), and neither may resolve to the real
+// one. Fail CLOSED: refuse to spawn at all.
+// The gate also REGISTERS every cwd it spawns into, so the containment loop at the bottom is
+// derived from what actually ran instead of a hand-kept list. A list drifts; the live thing
+// does not (same audit: the old width pin re-read the same five names it guarded).
+const SPAWNED_IN = new Set();
 const spawnHook = (args, opts = {}) => {
+  if (opts.env) {
+    const e = opts.env;
+    if (!e.USERPROFILE || !e.XDG_DATA_HOME ||
+        asPath(e.USERPROFILE) === asPath(os.homedir()) ||
+        asPath(e.XDG_DATA_HOME) === asPath(path.join(os.homedir(), ".local", "share"))) {
+      console.error("spawnHook: a custom env must redirect USERPROFILE and XDG_DATA_HOME away from the real home");
+      console.error("  refusing to spawn - this is how the net writes live machine state while printing green");
+      process.exit(1);
+    }
+  }
+  if (opts.cwd) SPAWNED_IN.add(path.resolve(opts.cwd));
   const env = Object.assign({}, process.env, opts.env || SANDBOX_ENV);
   return spawnSync(process.execPath, [LIVE, ...args], Object.assign({ encoding: "utf8" }, opts, { env }));
 };
@@ -197,6 +220,25 @@ t("the ritual matcher does NOT enumerate sources", ritualEntries.length > 0 && r
   if (m === undefined || m === "" || m === "*" || m === ".*") return true;
   return !/startup|resume|clear|compact/.test(m);
 }));
+// The wired command must name the file this net TESTS (audit Jul 28 2026, found by PED on
+// Opus 5). The pin above proves only that SOMETHING called session-ritual.mjs is wired; a
+// command aimed at the template copy, a stale copy, or a path broken by a machine move
+// satisfied it while this net certified LIVE - "a pass here would certify code you did not
+// edit", the net's own words. Fail CLOSED: an unresolvable path is a FAIL, never a pass.
+const wired = ritualEntries.flatMap((e) => (e?.hooks ?? [])
+  .map((h) => (typeof h?.command === "string" ? h.command : ""))
+  .filter((c) => /session-ritual\.mjs/.test(c))
+  .map((c) => {
+    const m = c.match(/"([^"]*session-ritual\.mjs)"|'([^']*session-ritual\.mjs)'|(\S*session-ritual\.mjs)/);
+    const rawPath = m ? (m[1] ?? m[2] ?? m[3]) : "";
+    if (!rawPath) return "";
+    return asPath(rawPath
+      .replace(/%USERPROFILE%/gi, os.homedir())
+      .replace(/\$\{HOME\}|\$HOME\b/g, os.homedir())
+      .replace(/^~(?=[\\/])/, os.homedir()));
+  }));
+t("every wired ritual command yields a resolvable path", wired.length > 0 && wired.every(Boolean));
+t("the WIRED hook path IS the file this net tests", wired.length > 0 && wired.every((p) => p === asPath(LIVE)));
 
 // 6. MODE GATE. argv[2] comes from the settings.json command string â€” the one file the recovery
 //    skeleton says to rebuild BY HAND. `mode === "start"` with no else exited 0 emitting nothing
@@ -240,6 +282,9 @@ if (!HAVE_EXE) {
   // C1 (audit Jul 27 2026): the canary used to order a bare rebuild-and-retry on a hang, while
   // the playbook's own recurrence log says a ctx call before the window reload hangs forever.
   t("the canary sends a hang to the FULL recovery, not a bare retry", /reload the window/.test(g1.stdout || ""));
+  // A-F1 companion (audit Jul 28 2026): the inline recovery lists dropped the recipe's
+  // indexable-file step - the ONE step the seed-failed branch needs, so the reload looped.
+  t("the canary's recovery list includes the indexable-file step", /make sure an indexable file exists/.test(g1.stdout || ""));
 
 }
 
@@ -256,6 +301,7 @@ t("missing lean-ctx binary: NOTE in message, exit 0", g3.status === 0 && /NOT pr
 // the deadlock. The missing-binary message must forbid the probe, never order it.
 t("missing binary: the CANARY is NOT emitted", !/CANARY:/.test(g3.stdout || ""));
 t("missing binary: the note forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(g3.stdout || ""));
+t("missing binary: the note orders an indexable file BEFORE the build", /Make sure ONE indexable file exists/.test(g3.stdout || ""));
 
 // 7d. THE WARNING REACHES THE OUTPUT (audit Jul 27 2026, found by PED on Opus 5: both pre-build
 //     branches ASSIGNED graphNote, wiping the metaErrors warning one line after building it, and
@@ -296,8 +342,35 @@ t("a throwing pre-build still exits 0", m2.status === 0);
 t("a throwing pre-build reports the failure", /pre-build FAILED/.test(m2.stdout || ""));
 t("a throwing pre-build does NOT emit the canary", !/CANARY:/.test(m2.stdout || ""));
 t("a throwing pre-build forbids probing until a manual build", /Do NOT make a deliberate ctx_\*/.test(m2.stdout || ""));
+t("a throwing pre-build orders an indexable file BEFORE the build", /make sure ONE indexable file exists/i.test(m2.stdout || ""));
 fs.rmSync(THROW_HOME, { recursive: true, force: true });
 fs.rmSync(SB5, { recursive: true, force: true });
+
+// 7f. THE CANARY GATES ON THE BUILT GRAPH, NOT ON EXIT 0 (audit Jul 28 2026, found by PED on
+//     Fable 5): a CLI build over a folder with nothing indexable exits 0 and writes
+//     files_indexed: 0 - the proven wedge state - and the old success branch then COMMANDED the
+//     probe, in the same message as the seed's may-freeze warning. Forcing, no ACLs needed:
+//     pre-create leanctx-seed.js as a DIRECTORY, so the hook's existsSync sees it present and
+//     skips the write, while the workspace holds only a .txt. If lean-ctx ever starts indexing
+//     that state, the forcing pin fails LOUDLY - the forcing needs a new trick then, not the hook.
+if (HAVE_EXE) {
+  fs.rmSync(SB6, { recursive: true, force: true });
+  fs.mkdirSync(path.join(SB6, "leanctx-seed.js"), { recursive: true }); // a DIR wearing the seed's name
+  fs.writeFileSync(path.join(SB6, "notes.txt"), "no parse targets here\n");
+  const z = runAt(SB6, SANDBOX_ENV);
+  t("zero-file build: exits 0", z.status === 0);
+  t("zero-file build: the forcing took (sandbox meta says 0 files)", (() => {
+    const dirs = graphDirsFor(SB6);
+    if (dirs.length !== 1) return false;
+    try { return Number(JSON.parse(fs.readFileSync(path.join(GB, dirs[0], "graph.meta.json"), "utf8")).files_indexed) === 0; }
+    catch { return false; }
+  })());
+  t("zero-file build: the CANARY is NOT emitted", !/CANARY:/.test(z.stdout || ""));
+  t("zero-file build: says the canary is OFF and why", /canary is OFF/.test(z.stdout || ""));
+  t("zero-file build: forbids the probe", /Do NOT make a deliberate ctx_\*/.test(z.stdout || ""));
+  t("zero-file build: orders the seed before the rebuild", /plant it by hand/.test(z.stdout || ""));
+  fs.rmSync(SB6, { recursive: true, force: true });
+}
 
 fs.rmSync(SB2, { recursive: true, force: true });
 fs.rmSync(SB3, { recursive: true, force: true });
@@ -383,11 +456,12 @@ t("a failed seed write still produces a message", /could NOT be written/.test(sr
 
 // CONTAINMENT, asserted over the ENTIRE run, after every workspace has been exercised. The old
 // pins lived inside section 7 with the baseline captured after the leak they existed to catch.
-for (const ws of [SB, SB2, SB3, SB4, SB5]) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
-t("the containment loop covers every workspace this net spawns into", (() => {
-  const loop = (SELF.match(/for \(const ws of \[([^\]]*)\]\)/) || ["", ""])[1];
-  return ["SB", "SB2", "SB3", "SB4", "SB5"].every((n) => new RegExp("\\b" + n + "\\b").test(loop));
-})());
+// The set is filled by the ONE spawn gate, so it covers exactly the workspaces this net spawned
+// into. The old version was a hand-kept list guarded by a pin that re-read the SAME list, so a
+// sixth workspace would have been uncovered with the pin green (audit Jul 28 2026, PED on
+// Opus 5). That pin is deleted, not rewritten: there is no list left to drift.
+t("the containment check covered at least one workspace", SPAWNED_IN.size > 0);
+for (const ws of SPAWNED_IN) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
 t("the live lean-ctx graph dir did not grow during this run", liveGraphCount() === liveBefore);
 fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // one teardown, takes every sandboxed graph with it
 fs.rmSync(SB, { recursive: true, force: true });

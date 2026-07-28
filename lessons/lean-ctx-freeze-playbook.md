@@ -94,17 +94,25 @@ fires on the first ctx call inside the MCP server. This is not hypothetical: Cha
 session in ano-ulam ran 22 shell calls, 1 question and 0 ctx calls, so it looked like a pass and
 proved nothing. The real proof came from a probe run afterwards (1.95s against the same folder).
 
-**On the first open of any workspace, make ONE deliberate ctx call early.** That is the canary. If
-it answers, the fix held for that folder. If it HANGS, the session is already WEDGED and any shell
-call queues behind it: run the Recovery recipe below WHOLE and in order (interrupt, kill
-lean-ctx.exe, clear the locks, reload the window). A bare `lean-ctx graph build` plus a retry is
+**On the first open of any workspace, make ONE deliberate ctx call early - but ONLY after a
+pre-build you can SEE: this session's hook message says PRE-BUILT, or you ran `lean-ctx graph
+build` in that folder yourself and it indexed at least one file.** That is the canary. NO visible
+pre-build means NO canary, and no hook message at all counts as NO pre-build: probing an unbuilt
+folder does not test the fix, it fires the deadlock. A hook message that WARNED instead of saying
+PRE-BUILT (seed unwritable, zero files indexed, binary missing, build failed) is a branch where
+the probe IS the deadlock: do the manual fix the warning names first. (Added Jul 28 2026: the
+order used to be unconditional, found by PED on Opus 5 from the no-message end and by PED on
+Fable 5 from the zero-file end - the same hole seen from both sides.) If the call answers, the
+fix held for that folder. If it HANGS, the session is already WEDGED and any shell call queues
+behind it: run the Recovery recipe below WHOLE and in order (interrupt, kill lean-ctx.exe, clear
+the locks, make sure an indexable file exists, reload the window). A bare `lean-ctx graph build` plus a retry is
 NOT enough - a ctx call made before the window reload hangs on the dead connection forever and
 looks exactly like a fresh freeze. (Rewritten Jul 27 2026: this line used to order exactly that
 bare rebuild-and-retry, two of the four required steps, found by PED on Opus 5.) Then add a line
 to the Recurrence log below.
 
 This is the ONE exception to "Never test by calling `ctx_*` live" in the Diagnostic toolkit below,
-and it is bounded three ways: ONE call, on FIRST open, on a workspace with NO reported symptom.
+and it is bounded four ways: ONE call, on FIRST open, on a workspace with NO reported symptom, and only AFTER a pre-build you can SEE.
 Investigating a folder that has ALREADY hung stays banned and still goes to the bounded CLI repro.
 (Audit Jul 27 2026: the canary was added the same day and the two rules did not know about each
 other, so a model that recalled the ban would skip the canary and report the ritual complete.)
@@ -145,8 +153,9 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
 
 - **Never call `ctx_*` live to INVESTIGATE a suspected freeze** — a wedged server hangs your
   session; its `timeout_ms` params are enforced by the wedged server itself and never fire. The
-  ONE exception is the first-open canary above: a single deliberate call on a workspace with no
-  reported symptom, which is the only thing that proves the fix held there.
+  ONE exception is the first-open canary above, under exactly the bounds stated THERE and no
+  others - not restated here, because a restated bound goes stale while the real one moves
+  (audit Jul 28 2026: this line used to carry three of the four bounds).
 - **The hook and lean-ctx read DIFFERENT variables to find the same folder** (measured by
   isolation, Jul 27 2026, one variable at a time). The hook derives the graphs dir and the binary
   path from `USERPROFILE`. lean-ctx.exe puts its state under `XDG_DATA_HOME`. Results:

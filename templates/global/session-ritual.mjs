@@ -149,18 +149,40 @@ try {
             // 90s ceiling: ano-ulam (97 files) builds in ~8s, so a timeout here means something is
             // wrong and the session should proceed rather than hang on its own safety net.
             execFileSync(exe, ["graph", "build"], { cwd, timeout: 90000, stdio: "ignore", windowsHide: true });
-            // += , never = : both branches used to ASSIGN, destroying the metaErrors warning one
-            // line after building it, on exactly the runs it was written for (audit Jul 27 2026,
-            // found by PED on Opus 5 - and the pin guarding it grepped the SOURCE, so it stayed
-            // green through the wipe).
-            graphNote += "lean-ctx graph PRE-BUILT for this workspace (first-build-in-server deadlocks; see lessons/lean-ctx-freeze-playbook.md). ";
-            // THE CANARY rides a SUCCESSFUL pre-build and NOTHING else (audit Jul 27 2026, found
-            // by PED on Fable 5: it used to sit after the if/else, so the missing-binary branch
-            // said "graph NOT pre-built" and then COMMANDED the probing call that fires that
-            // exact deadlock). A failure path never gets it: probing an unbuilt folder IS the bug.
-            graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs the session is WEDGED: run the freeze playbook's Recovery recipe WHOLE (interrupt, kill lean-ctx.exe, clear the locks, reload the window), never a bare rebuild-and-retry, then log it in the Recurrence log. ";
+            // VERIFY THE BUILD BEFORE TRUSTING IT (audit Jul 28 2026, found by PED on Fable 5):
+            // a CLI build over a folder with nothing indexable EXITS 0 and writes a valid meta
+            // with files_indexed: 0 - the exact graph the server wedges on. Process success is
+            // not usability; the gate below is the SAME predicate the cached-graph check uses.
+            // The branch it exists for is real: the seed write FAILED higher up (ACL-proven
+            // Jul 25) and the folder held nothing else - the old code called that PRE-BUILT and
+            // commanded the probe in the same message as the seed's may-freeze warning.
+            let builtIndexed = -1; // -1 = no readable meta found for this root after the build
+            if (existsSync(graphsDir)) {
+              for (const d of readdirSync(graphsDir)) {
+                const meta = join(graphsDir, d, "graph.meta.json");
+                if (!existsSync(meta)) continue;
+                try {
+                  const m = JSON.parse(readFileSync(meta, "utf8"));
+                  if (String(m.project_root || "").replace(/\/+$/, "").toLowerCase() === root.toLowerCase()) {
+                    builtIndexed = Number(m.files_indexed) || 0;
+                    break;
+                  }
+                } catch {} // leaves -1; the could-not-be-verified branch below SAYS so out loud
+              }
+            }
+            if (builtIndexed >= 1) {
+              // += , never = (audit Jul 27 2026, PED on Opus 5: assignments wiped the warning).
+              graphNote += "lean-ctx graph PRE-BUILT for this workspace (" + builtIndexed + " file(s) indexed; first-build-in-server deadlocks; see lessons/lean-ctx-freeze-playbook.md). ";
+              // THE CANARY rides a VERIFIED pre-build and NOTHING else (audits Jul 27-28 2026,
+              // both PED runs). Failure paths and zero-file "successes" never get it: probing
+              // either state IS the deadlock.
+              graphNote += "CANARY: make ONE deliberate ctx_* call early this session - it is the only proof the freeze fix held for this folder. If it hangs the session is WEDGED: run the freeze playbook's Recovery recipe WHOLE and in order (interrupt, kill lean-ctx.exe, clear the locks, make sure an indexable file exists, reload the window; the recipe is the authority if this list ever drifts), never a bare rebuild-and-retry, then log it in the Recurrence log. ";
+            } else {
+              const why = builtIndexed === 0 ? "indexed ZERO files" : "could not be verified (no readable graph meta for this root)";
+              graphNote += "WARNING: the graph pre-build ran but " + why + " - a zero-file graph is the exact state the server wedges on, so the canary is OFF. Do NOT make a deliberate ctx_* probe. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' here from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
+            }
           } else {
-            graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Run 'lean-ctx graph build' in this folder from a shell first; after it succeeds, ONE ctx_* call verifies the fix held. ";
+            graphNote += "WARNING: lean-ctx binary not found, graph NOT pre-built. Do NOT make a deliberate ctx_* probe here - the first build inside the server IS the deadlock. Make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. ";
           }
         }
       }
@@ -168,7 +190,7 @@ try {
       // += so a throw cannot destroy what was already built (the metaErrors warning above),
       // and NO canary here: a folder whose pre-build FAILED is exactly where a deliberate probe
       // wedges the session. Manual build first, then verify (audit Jul 27 2026, both PED runs).
-      graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make a deliberate ctx_* probe here - run 'lean-ctx graph build' in this folder from a shell first; after it succeeds, ONE ctx_* call verifies the fix held. Bash/node reads work regardless. ";
+      graphNote += "WARNING: graph pre-build FAILED (" + (e?.message ?? e) + "). Do NOT make a deliberate ctx_* probe here - make sure ONE indexable file exists (the seed; plant it by hand if the note above says the hook could not write it), then run 'lean-ctx graph build' in this folder from a shell; after it indexes at least one file, ONE ctx_* call verifies the fix held. Bash/node reads work regardless. ";
     }
     if (source === "compact") {
       emit(
