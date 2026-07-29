@@ -18,7 +18,7 @@ metadata:
 **Why:** his own instruction after the first drafted job email. This is a durable preference for the whole "send a posting, get an email" workflow, not a one-off edit.
 **How to apply:** every draft leads with or clearly includes the AI-assisted angle and the flexible-hours interest, on top of matching the specific posting's keywords. Positioning canon: [[chan-career-portfolio-state]].
 
-**Contact info for signatures:** phone 09157096854, email chanrylecagara@gmail.com.
+**Contact info for signatures:** phone 09560228640, email chanrylecagara@gmail.com. (Number updated Jul 28 2026 on Chan's word. It replaced TWO different old numbers that had drifted apart: one here, a different one in the resume, neither knowing about the other. THIS LINE IS THE ONE HOME for the number; any file that needs it points here rather than copying it.)
 
 **Cover-letter standing rules (absorbed Jul 24 2026 from job-hunting-supplementary.txt):**
 - ALL FOUR links in every cover letter: chanryle-cagara.vercel.app · linkedin.com/in/chanrylejay · github.com/chanrylejay · chanrylecagara@gmail.com.
