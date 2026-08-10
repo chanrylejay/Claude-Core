@@ -156,6 +156,14 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 - Reviewers scope-creep into designing fixes/test suites; give every reviewer explicit scope language ("Score and flag only; no test design unless asked"). Proven twice on the same reviewer.
 - Consultation exception: a single targeted patch backed by CONFIRMED real failure data may skip the full review round; major upgrades and new capabilities never skip it.
 - **Reachability check, both directions.** Before claiming any code is live or any protection is active, name the entry point: which file calls it, at which line. If the chain does not trace to a route, a script, or an INSTALLED hook, it is not live however correct it reads. Cost a wrong conclusion twice in one session, once from each seat (Jul 31 2026): the architect confirmed the push-guard TEMPLATE was well built and never checked it was installed — main had no protection at all; the repo-truth worker confirmed a capless fallback's control flow was reachable INSIDE its function and never checked the function is called — the whole subtree was dead. Local correctness in both cases, reachability asked about in neither. The seat predicts the error: the architect cannot see the machine so it verifies artifacts, the worker is paying per token so it stops at the function boundary.
+- **The direction of that failure is stable, so it is predictable.** The architect seat fails by trusting
+  documents at full confidence — a banked note, a vendor page, a stale releases listing, a README; a stale
+  page reads exactly like a current one. Six instances in one session (Aug 11 2026): endpoint caching, the
+  installed version (twice), tiered effort, the daemon, and dropping a scope qualifier while relaying a doc
+  — that last one manufactures a claim the source never made. The rule: any claude.ai claim about machine
+  state, the bill, or an installed version is a HYPOTHESIS until the CLI measures it, and the brief must
+  write it as one. The CLI's counter-rule already exists (push back on wrong briefs); this is the
+  drafting-side mirror of it.
 
 ## Maintaining documents (applies to Claude-Core itself)
 

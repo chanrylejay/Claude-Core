@@ -224,6 +224,12 @@ Drop a small real `.js` file in the repo root so `files_indexed ≥ 1`:
    Jul 26 event ran, and it cost one line. The ban this is the exception to lives in
    `../workflow/tool-playbook.md` under "Editing files reliably (especially on Windows)"; this
    rule is the machinery-side exception and nothing wider.
+   **Aug 11 2026 (lean-ctx v3.9.18): the deny list is regenerated state, and its shape changed.**
+   v3.9.18 moved `Read` OFF `permissions.deny` — it is now `Grep, Glob` only — and the SessionStart
+   hook still re-writes the deny block into settings.json every start, so a hand-edit survives only
+   until the next start. `Read` is still effectively denied at runtime, but by redirect + shadow
+   mode (doctor: "native tools denied → ctx_* mandatory", confirmed empirically Aug 11) rather than
+   by the deny list. Functional claim unchanged, mechanism changed.
 
 - The Bash-tool rewrite hook STRIPS leading VAR= assignments from commands before they run. On Jul 23 2026 this caused 3 silent failures in a row: commands ran with empty variables and reported success. Workaround (now a hub section 3 rule): use literal absolute paths, and node -e when a value must be read and used without printing it.
 
