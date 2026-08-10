@@ -1,4 +1,9 @@
-# Switch Claude Code to DeepSeek — run the day Claude access dies
+# Switch Claude Code to DeepSeek — the runbook, already RUN and permanent
+
+STATUS (Aug 11 2026): this switch is DONE and the state is PERMANENT. Claude Code in VS Code runs
+DeepSeek and Claude access there is not coming back (Chan, Aug 11 2026). This file stays as the
+procedure for a re-install, a model-name change, or the rollback path. Read it as history plus
+procedure, never as a decision still pending.
 
 Verified from DeepSeek's official docs Jul 24 2026 (their Anthropic-compatible endpoint plus
 their own Claude Code guide). Do NOT run this while Claude access still works: the switch

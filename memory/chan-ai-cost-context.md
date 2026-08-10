@@ -1,13 +1,13 @@
 ---
 name: chan-ai-cost-context
-description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. A Jul 25 2026 revocation of his Claude access was PREDICTED and is NOT confirmed here: never state his current model or provider from this line, and never run the DeepSeek switch until Chan confirms in-session. Keep the kit lean and mechanical so weaker models can run it.
+description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. CONFIRMED Aug 11 2026: Claude access in VS Code is gone permanently, the CLI runs DeepSeek v4 flash, and Claude runs as the planning agent at claude.ai. The switch is DONE; do not re-run it. Keep the kit lean and mechanical so weaker models can run it.
 metadata:
   type: user
 ---
 
 # AI cost context (updated Jul 24 2026, closure day)
 
-**The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access is expected to be revoked around Jul 25 2026, so that premise is gone.
+**The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access in VS Code is gone for good (confirmed Aug 11 2026), so that premise is gone. He now runs his own DeepSeek key in the CLI and uses claude.ai as the planning agent.
 
 **Current posture (last updated Jul 29 2026, the switch is now DONE):**
 - Chan confirmed in-session Jul 29 2026: his Claude access is gone and he switched to DeepSeek. The model is now deepseek-v4-flash, and this session IS the first proof the kit works on a weaker model. The contract check fired, the drill ran, the rules loaded, the push gate held - all of it worked on first contact with DeepSeek, before any adjustments.
