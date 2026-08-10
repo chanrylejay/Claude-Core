@@ -5,9 +5,7 @@ generalisable lesson behind it — the REACHABILITY CHECK — lives in
 `../lessons/universal-patterns.md` under Multi-worker governance; it is
 referenced here, not duplicated.
 
-NOTE: claude.ai drafted the original protocol as `DEEPSEEK-RELAY.md`. It was not
-on this machine when this file was written (Jul 31 2026). If Chan has a copy,
-reconcile this file against it rather than keeping two.
+NOTE: this protocol is live and in use as of Aug 11 2026. `DEEPSEEK-RELAY.md`, the original claude.ai draft name, is superseded by this file.
 
 ## The three parties
 
@@ -66,9 +64,11 @@ do not fix silently).
 - **A brief that is wrong is the brief-writer's failure.** The agent pushes back
   on a field that does not exist, a wrong signature, or a wrong assumption,
   rather than obeying it. Precedent: `needsManualPrice` cost 203 drafts.
-- **The relay file.** `data/relay.md` in the project carries evidence between
-  the two agents, newest entry on top, each under a `## <date> <who>` heading.
-  Chan carries the file; uploads beat pastes for anything large.
+- **The relay file.** Each workspace names its own relay home, newest entry on
+  top, each under a `## <date> <who>` heading. A normal project uses
+  `data/relay.md`; Claude-Core itself uses `LOCAL-ONLY-relay.md`, which the
+  existing `LOCAL-ONLY-*` gitignore rule keeps out of the public repo. Chan
+  carries the file; uploads beat pastes for anything large.
 - **GO law is unchanged.** Push to main = live deploy = Chan's explicit GO each
   time. A previous GO never carries forward. Approval once is not approval
   forever.

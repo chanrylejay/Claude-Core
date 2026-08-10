@@ -10,6 +10,15 @@ contract, the contract wins immediately and you report the disagreement instead 
 yourself. (Audit Jul 25 2026: this line used to say "personal projects keep QA light", which read
 as a sufficient classifier and would have shipped a credentials change with no reviewer at all.)
 
+INSTALL STATE on Chan's machine (measured Aug 11 2026, by the CLI):
+- Subagents: `~/.claude/agents/` does NOT exist. The 9 files in `templates/agents/` are installed
+  nowhere. The 6-role chain below is a pattern, not a running system.
+- `gauntlet-guard.mjs`: wired in no workspace. Nothing mechanically blocks a "done" claim.
+- `push-guard.mjs`: wired in exactly ONE workspace, `my-portfolio-v1`, via its
+  `.claude/settings.local.json`. That copy is 10281 bytes against the template's 11261 and is a
+  DRIFTED older version. Not wired for Claude-Core, ano-ulam, or globally.
+- Re-measure before trusting any line above; this is a STATE record, not a design claim.
+
 Built on Devoted Care when the client (PO) went on vacation and Claude had to own the QA gate.
 It killed the "regression = the enemy" problem: nothing gets called done on the builder's
 own say-so. The five project-agnostic agent definitions live in `../templates/agents/`;
