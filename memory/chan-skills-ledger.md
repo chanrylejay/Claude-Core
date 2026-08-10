@@ -48,7 +48,7 @@ state any of them in the present tense.
 
 ## The origin story (from Document C section J; use it in interviews)
 Started non-technical: BS IT but no coding career; customer support, then admin, then content operations. The Clone v15 briefing recorded the starting point: "has four hours of n8n build experience documented."
-From that point, evenings and weekends alongside a full-time job (while a 6-month Top Performer at Accenture), by June 2026: 7 production prompt systems · 2 deployed n8n automation systems · 2 deployed web apps · 1 viral product (Ano Ulam, 1K+ likes, 300+ shares, users' comments became the roadmap) · 60+ stress tests, 22+ audit rounds, 40+ bugs fixed · portfolio across 10 platforms.
+From that point, evenings and weekends alongside a full-time job (while a 6-month Top Performer at Accenture), by June 2026: 7 production prompt systems · 2 deployed n8n automation systems · 2 deployed web apps · 1 viral product (Ano Ulam; posted to the App Builders PH Facebook group, ~30K members, and per Chan it became the single most viral post in that group and pulled in new members; users' comments became the roadmap. NUMBERS UNSETTLED: the Jun 2026 archive recorded 1K+ likes / 300+ shares, Chan recalls ~7K likes by the time he stopped in Jul 2026 but said "or something". VERIFY against the live post before ANY career-facing use, and cite the verified figure, never the recollection) · 60+ stress tests, 22+ audit rounds, 40+ bugs fixed · portfolio across 10 platforms.
 Then June-July 2026: first paid client, and the entire Devoted Care platform shipped solo (see [[chan-career-portfolio-state]] and `../portfolio/devoted-project-summary.md`).
 The arc IS the pitch: proof of learning velocity, discipline, and shipping.
 

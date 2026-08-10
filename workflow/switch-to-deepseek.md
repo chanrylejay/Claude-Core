@@ -67,6 +67,7 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 - BREAKS: **vision**. The endpoint rejects image and document content. The verify-visually law
   survives with one change: the model still drives Playwright and takes the screenshot, but
   CHAN's eyes do the looking. Never let a blind model claim a screen "looks right".
+- The endpoint's full ignore/reject list (cache_control, image blocks, silent model-name fallback, the context-meter accounting) lives in `../lessons/platform-gotchas.md` under `## DeepSeek API`. This runbook holds the switch facts; that file holds the endpoint facts.
 - Weaker model discipline: one subagent at a time, never a parallel fleet and never a Workflow
   fan-out (that is what "heavy" means here, it is not a judgement call); small steps; trust the files over
   memory; the checklists ARE the intelligence now.

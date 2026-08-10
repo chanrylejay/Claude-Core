@@ -133,3 +133,58 @@ Migration mechanics: `../lessons/engineering-lessons.md`.
 Official spec → distilled catalogued reference doc (a send-on-demand txt, never the raw spec
 in context) → live validation via USER-RUN read-only Bruno calls with sanitized paste-back →
 bank corrections into the reference (r1.0 → r1.1). Raw specs and dumps stay out of context.
+
+## Visual iteration: ask what leads, measure, sweep — THEN show
+
+Earned the hard way on ano-ulam, Jul 28 2026. A single header spacing problem
+took roughly eight rounds of Chan's time. His note afterwards: *"i think we
+should improve more understanding me so we didnt have many iterations for this
+simple spacing issue"*. He was right, and every round was avoidable.
+
+**The four mistakes, in the order they cost time:**
+
+1. **Never asked what should dominate.** Title or image? I assumed "balanced".
+   He wanted the type to lead, and only said so at round five: *"bro you should
+   not have make the plate bigger, instead you should made the title bigger!"*
+   One question at the start replaces most of the loop. For any hero, banner or
+   card: **ask which element leads before touching sizes.**
+
+2. **Bundled unrequested changes into requested fixes.** While fixing a clipped
+   image I also switched the row to bottom-aligned, because it tidied the
+   leftover space. It dropped the wordmark down the page and he had to spend a
+   turn asking *"bro the title became much lower what happened why it moved?"*.
+   His review budget got spent on my change instead of his request. **Fix only
+   what was asked; propose the extra separately.**
+
+3. **Guessed pixels instead of measuring.** Rounds of nudging values by eye.
+   The moment I measured in the browser — the wordmark renders at exactly
+   `fontSize x 4.3` in that face — the arithmetic became closed-form and it
+   converged immediately. **Measure the real geometry first: glyph widths,
+   container widths, the transparent margin inside a PNG. Then compute the
+   value instead of trying one.**
+
+4. **Spot-checked one screen width.** Chan found the gap still open on 412px
+   and 430px phones. When I finally swept 21 widths from 320 to 1600 in one
+   pass, it converged AND surfaced two more breakages nobody had reported
+   (a plate clipped by the header at 639px, a 112px gap at 640px).
+   **Sweep the range before showing anything. Spot-checking one viewport is how
+   a responsive bug ships.**
+
+**The sweep is cheap and there is no excuse for skipping it.** No Playwright
+package needed: from the already-open page, create hidden iframes at each
+width, read getBoundingClientRect inside them, assert the invariants, remove
+them. One tool call covers every breakpoint.
+
+**Assert invariants, not appearances.** Overlapping white type on a white plate
+is invisible, not obviously broken, so "it looks fine" is not a check. Encode
+the actual rule — glyph's right edge must clear the image's visible left edge,
+image must not exceed its row, image must not reach the element below — and
+print the number. A negative clearance is a caught bug; a screenshot is an
+opinion.
+
+**Why:** visual work has no compiler. Without a stated hierarchy, measured
+geometry and a swept range, the only error-detector left is the user's eyes,
+and burning those is the most expensive way to build.
+**How to apply:** before the first pixel — ask what leads. Before the first
+change — measure. Before the first screenshot — sweep. Show once, not eight
+times.

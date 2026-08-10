@@ -20,11 +20,12 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 
 - `the-drill-and-memory.md` — THE DRILL (don't trust summaries; verify disk) + the memory-system mechanics and discipline.
 - `qa-gauntlet-pattern.md` — the 6-role agent review chain and the guard hooks that make it real.
-- `tool-playbook.md` — operational lessons: visual verification, diagnose-before-crusading, EOL-aware editing, DB discipline.
+- `tool-playbook.md` — operational lessons: visual verification, the ask-measure-sweep rule for visual iteration, diagnose-before-crusading, EOL-aware editing, DB discipline.
 - `new-project-checklist.md` — the starting ritual for any real build: docs skeleton, live-data verification, write-safety day one, ship cadence.
 - `new-computer-migration.md` — moving Claude's brain to a new PC: what to copy, what to reinstall, the absolute-path gotcha.
 - `devoted-closure-checklist.md` — the closure-day runbook (closure was Jul 24 2026): status flips done, LinkedIn/resume sweeps, tooling-cost revisit, week-1 momentum kit.
 - `switch-to-deepseek.md` — pointing Claude Code at DeepSeek the day Claude access dies: one command + one checkbox, models, NO-vision caveat, rollback.
+- `two-model-relay.md` — the agent + claude.ai collaboration protocol: roles, authority split, the branch-first loop, the brief format, standing rules (REACHABILITY CHECK referenced, not duplicated). — pointing Claude Code at DeepSeek the day Claude access dies: one command + one checkbox, models, NO-vision caveat, rollback.
 
 ## lessons/ — universal lessons (project-agnostic)
 

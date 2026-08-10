@@ -20,13 +20,16 @@ pdf-parse v2, Vercel Analytics. Cost ~$0/month.
 1-hour window fired them out of order, Jun 4 2026; never split them again).
 - INGEST: scrape da.gov.ph/price-monitoring for the Daily Price Index PDF link (URLs change
   daily, never hardcode; pick Daily Price Index ~380KB, NOT Daily Retail Price Range ~1.5MB)
-  → pdf-parse → first 16,000 chars to DeepSeek → CSV out (JSON banned: ~27K cap; default CSV at
-  50+ items, 100+ WILL truncate) → JS Map dedup → batch upsert via ($1::jsonb) jsonb_array_elements
-  (2 queries total, never 100+ round trips) → already-ingested check (DA re-publishing
-  yesterday's PDF is EXPECTED, not a bug).
+  → pdf-parse → parsed IN CODE by lib/da-parser.ts (NOT by DeepSeek since Jul 28 2026; see
+  Model status) → health floor: under 100 priced rows tries the DeepSeek fallback once, then
+  REFUSES to write at all, leaving yesterday's prices live → batch upsert via ($1::jsonb)
+  jsonb_array_elements (2 queries total, never 100+ round trips) → already-ingested check (DA
+  re-publishing yesterday's PDF is EXPECTED, not a bug). The old JSON-vs-CSV cap lore now
+  applies only to the fallback path.
 - SUGGEST: today's prices → PriceMap → yesterday's prices for trends → yesterday's meal IDs
   as excludeIds (rotation) → findCheapestMeals(47 recipes, ..., 8, excludeIds) → DeepSeek
-  writes "Bakit?" reasoning ONLY → cache in daily_suggestions.
+  writes "Bakit?" reasoning ONLY → REFUSES to write if zero recipes could be costed → cache in
+  daily_suggestions.
 - USER VISIT: cached reads only, ZERO AI calls per visit.
 
 ## The recipe engine (lib/recipes.ts) — the crown jewel, 47 hardcoded recipes
@@ -104,22 +107,68 @@ Before ANY model, prompt, or cost decision, read ../../memory/chan-ai-cost-conte
 Where it conflicts with this section or with the "Cost ~$0/month" line above, that file wins.
 
 The txt's "deepseek-chat, migrate before Jul 24 2026" is DONE: ano-ulam migrated to
-deepseek-v4-flash Jul 23 2026 and the 10AM cron ran clean on it. The txt's "v4-flash breaks
-tool calling" note is stale (predates the V4 retirement; ano-ulam uses no tool calling).
+deepseek-v4-flash Jul 23 2026. **That migration BROKE the site and this canon said it "ran
+clean" for five days.** Corrected Jul 28 2026 against live Neon and Vercel data. Prices per day
+went 144 (Jul 22, deepseek-chat) → 46 (Jul 23) → 0, 0, 0 (Jul 24-26) → 22 (Jul 27), and the
+homepage served ZERO meals throughout. Nobody had verified the OUTPUT; a Jul 26 session checked
+that lib/deepseek.ts said "deepseek-v4-flash" and called the migration handled, which is
+display-not-data.
+
+ROOT CAUSE, measured: v4-flash is a REASONING model and its hidden reasoning is billed against
+max_tokens. At the inherited 8192, reasoning consumed all 8192 and the API returned an EMPTY
+string with finish_reason "length" and no error. Reasoning length varies run to run (measured
+6018 / 8192 / 10962 / 14221 on identical input), which is why some days produced partial rows
+and others nothing. 32000 does produce a correct 204-row extraction, but the call then takes
+~82s and Vercel Hobby kills a function at 60s; deepseek-v4-pro is worse at ~95s. So DeepSeek
+CANNOT do the daily extraction on this plan at any setting. The PDF is now read in code.
+Whenever an LLM step goes quiet, print usage.completion_tokens_details before theorising.
+
+The txt's "v4-flash breaks tool calling" note is stale (predates the V4 retirement; ano-ulam
+uses no tool calling).
 DeepSeek account: Maya Visa top-up, $2 minimum, PH email-only registration, NO free credits.
 
 ## Closed decisions (final; never revisit)
 
 AI recipes BANNED · CSV over JSON for extraction · one combined cron · receipt list over
 card grid · no Imported/Local labels · no brand variants · no ₱0 optionals · never link
-billing to Google AI Studio (kills the free tier) · no dish photos on cards (OG images
-later, maybe) · all 5 macros shown · nutrition client-side, never an API.
+billing to Google AI Studio (kills the free tier) · dish photos REVERSED Jul 28 2026, they are IN (see Design canon below) · all 5 macros shown · nutrition client-side, never an API.
+
+
+## Design canon (Chan's rulings, Jul 28 2026)
+
+The project had no design canon before this. These are Chan's own words and
+judgments, not inference.
+
+- **Dish photos are IN.** The old closed decision said no photos on cards. It is
+  reversed: Jam's mockup plus Chan's spouse both wanted them, and adding them is
+  what he was doing when he stopped work on the project. The performance worry he
+  raised to Jam ("mahirap maglagay ng images sa website since babagal sya") is
+  settled: Next.js on Vercel serves AVIF/WebP, resizes per device, lazy-loads and
+  CDN-caches. A handful of images is not the problem. The photos themselves are.
+- **"Jam"'s mockup is a SOURCE, not a spec.** Chan, Jul 28 2026: *"i actually dont
+  like the whole design of jam the one who emailed me it looks really busy, i think
+  we should improve it instead of copy it, i just like the big picture of the dish
+  on the side it looks good."* Take the big side photo. Do NOT take the stacked
+  panels: her header carries a date chip, a title block, a cream recommendation
+  card and a translucent ticker pill, then repeats the same dish name and price in
+  the meal card right below. The shipped version puts the recommendation on the
+  gradient as type instead.
+  Mockup image kept at: C:/Users/Chanryle/Downloads/Projects/ano ulam/jam-mockup-jun2026.png
+  It is Jam's work and the repo is PUBLIC, so it never gets committed.
+- **The gradient STAYS.** 2 people of 181 asked to kill it (8 likes). It is the
+  look people recognise from the viral post. Settled; do not re-raise without new
+  evidence.
+- **Busy is the failure mode to watch.** The rule that came out of the Jam review:
+  do not add a panel when type on the existing surface will do.
 
 ## Do-not-reintroduce bug list
 
 Galunggong ₱0 · optional-₱0 display · stale-suggestions LIMIT 1 · Vercel edge cache stale ·
 two-cron race · Pass 3 overflow · batch-insert duplicates · Neon string numbers · 100+ DB
-round-trip timeout. (Mechanisms above; generic platform versions live in
+round-trip timeout · reasoning-model max_tokens starvation (empty answer written over good
+data) · naive line.split(",") on quoted CSV · unguarded writes that publish an empty day ·
+/api/cron/ingest with NO auth check (the secret was read and never compared; fixed Jul 28 2026).
+(Mechanisms above; generic platform versions live in
 ../../lessons/platform-gotchas.md — that file descends from THIS project's scars.)
 
 ## Working with Chan on this project (updated for the Claude Code era)
@@ -132,17 +181,30 @@ only Chan's real test outputs are valid data; ask instead of fabricating history
 
 ## v3 kickoff — STEP 0 (added Jul 25 2026)
 
-Before new AI-feature work in v3: run the PDF-to-CSV extractor prompt AND the "Bakit" explainer
-prompt through PED (validated auditor, see ../../memory/ped-prompt-auditor.md; use the stress-test
-invocation). Any AI-feature prompt that ships gets a PED pass first, then log it in
-../../memory/ped-log.md. Prompts stay private (open-source policy above); PED audits them locally.
+UPDATED Jul 28 2026. The gate stands, but its scope changed and Chan set the timing:
+
+- The PDF-to-CSV extractor prompt is NO LONGER the primary path. lib/da-parser.ts reads the
+  sheet in code; that prompt now runs only as a fallback when the DA changes its layout. Its PED
+  audit drops to low priority accordingly (it is still a shipping prompt, just a rare one).
+- The "Bakit" explainer prompt still ships in the hot path and still needs a PED pass.
+  **Chan's call, Jul 28 2026: defer that audit to the actual v3 work, not before it.**
+
+Any AI-feature prompt that ships gets a PED pass first, then log it in ../../memory/ped-log.md.
+Prompts stay private (open-source policy above); PED audits them locally.
 
 ## Status snapshot (Jun 6 2026 — VERIFY before acting; the project resumes post-Devoted)
 
-Possibly-still-open from the txt + Doc A: Reddit post (account was blocked), README update to
-V2.2, and the dev-project-instructions V2.1→V2.2 fix (superseded for AI sessions by THIS canon;
-still open for the repo's own docs). This project is side-project lane (a) in
+Possibly-still-open from the txt + Doc A: Reddit post (account was blocked) and the
+dev-project-instructions V2.1→V2.2 fix (superseded for AI sessions by THIS canon; still open for
+the repo's own docs). **README: DONE Jul 28 2026** (commit ee174ac, rewritten to match the real
+architecture). This project is side-project lane (a) in
 ../../workflow/devoted-closure-checklist.md's week-1 momentum kit.
+
+V2 ROADMAP, searched Jul 28 2026: there is no unbuilt idea list anywhere. The only roadmap that
+ever existed was the viral Facebook comment backlog (cooking instructions, protein filters,
+macros/nutrition) and ALL THREE shipped in V2.2. A fresh roadmap has to come from the live FB
+thread (350+ comments) or from a new product decision by Chan. Details:
+~/.claude/projects/c--Users-Chanryle-Downloads-Projects-Github-ano-ulam/memory/ano-ulam-roadmap-is-empty.md
 
 Related reading before a work session: ../../memory/chan-ai-cost-context.md (the model/tool
 reality after Jul 25 2026) and LOCAL-ONLY-security-rulings items 3 and 5 (env + migration

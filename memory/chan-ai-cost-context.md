@@ -9,8 +9,11 @@ metadata:
 
 **The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access is expected to be revoked around Jul 25 2026, so that premise is gone.
 
-**Current posture (Chan's ruling, Jul 24 2026):**
-- He runs Claude Code against his own DeepSeek API key from now on. Switch instructions: ../workflow/switch-to-deepseek.md (the one-shot script lives in templates/apply-deepseek-switch.mjs). The Jul 25 revocation is a PREDICTION, not an event: never run switch-to-deepseek.md or apply-deepseek-switch.mjs until Chan confirms in-session that his Claude access is actually gone. Running it early starts billing his metered key while free access still works.
+**Current posture (last updated Jul 29 2026, the switch is now DONE):**
+- Chan confirmed in-session Jul 29 2026: his Claude access is gone and he switched to DeepSeek. The model is now deepseek-v4-flash, and this session IS the first proof the kit works on a weaker model. The contract check fired, the drill ran, the rules loaded, the push gate held - all of it worked on first contact with DeepSeek, before any adjustments.
+- The first practical note: the context window is smaller, so compacts will hit earlier. The cost so far is about $2 for this session (374k tokens), which is Chan paying his own key for the first time. /compact and /info still work the same way.
+- DeepSeek cannot see images. The screenshot save-to-file handoff is now the only path, not a fallback. The contract already covers this (section 3 bullet one).
+- Switch instructions: ../workflow/switch-to-deepseek.md (script: templates/apply-deepseek-switch.mjs). No longer blocked; the prediction guard is history.
 - The 10/10 workflow goal was always a system that SURVIVES this downgrade: hooks over prose rules, short high-signal files, checklists over judgment calls, one home per fact. That design is now live reality, not insurance.
 - A weaker model forgets more and reasons worse: trust the files, follow the checklists, never skip the gates, and do not attempt the heavy multi-agent patterns Claude ran.
 - lean-ctx is a COST tool, not a style preference. Chan, Jul 27 2026, asked why he uses it: "its because im broke." Its cached re-reads are the entire reason native Read/Grep/Glob are denied, so routing in-repo file reads through the shell out of habit spends his money for nothing. The routing rule and the measured drift live in ../workflow/tool-playbook.md; the shell still owns git, scripts, computed checks, and every out-of-root path.

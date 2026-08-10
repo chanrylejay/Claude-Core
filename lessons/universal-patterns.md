@@ -155,6 +155,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 - Two independent confirmations for high-stakes changes, never one.
 - Reviewers scope-creep into designing fixes/test suites; give every reviewer explicit scope language ("Score and flag only; no test design unless asked"). Proven twice on the same reviewer.
 - Consultation exception: a single targeted patch backed by CONFIRMED real failure data may skip the full review round; major upgrades and new capabilities never skip it.
+- **Reachability check, both directions.** Before claiming any code is live or any protection is active, name the entry point: which file calls it, at which line. If the chain does not trace to a route, a script, or an INSTALLED hook, it is not live however correct it reads. Cost a wrong conclusion twice in one session, once from each seat (Jul 31 2026): the architect confirmed the push-guard TEMPLATE was well built and never checked it was installed — main had no protection at all; the repo-truth worker confirmed a capless fallback's control flow was reachable INSIDE its function and never checked the function is called — the whole subtree was dead. Local correctness in both cases, reachability asked about in neither. The seat predicts the error: the architect cannot see the machine so it verifies artifacts, the worker is paying per token so it stops at the function boundary.
 
 ## Maintaining documents (applies to Claude-Core itself)
 
@@ -170,3 +171,36 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   the exact fact class its own worked example was written from. The two-round rule and L24 both
   check a document against REALITY; this one checks it against ITSELF, and nothing else here does.
 - Sub-documents get trimmed context, never raw archives (pattern 25).
+
+## Briefing a fan-out: the schema IS the contract
+
+Earned on ano-ulam, 29 Jul 2026. A 14-agent workflow found 203 good Filipino
+dishes and then drafted 203 unusable recipes. The research half was fine; the
+drafting half failed, and every systematic cause was in MY brief, not in the
+agents.
+
+1. **I invented a field that did not exist.** The schema told agents to flag
+   unpriceable items in `needsManualPrice`. The codebase has no such thing; the
+   real mechanism was a 7th positional argument. 54 drafts were therefore
+   silently unusable. **Grep the codebase for every field name you put in a
+   schema before you send it.** A schema is a contract with the code, not a
+   wish.
+2. **I handed over a vocabulary that then changed underneath them.** Halfway
+   through the run the unit system gained a new member, so the drafts encode a
+   convention that no longer exists. **Freeze the inputs, or re-run the phase
+   that consumed the stale ones.**
+3. **I never mentioned a transform that silently rewrites their output.** A
+   cost function quietly raised some quantities and not others, so identical
+   authoring produced two behaviours. **Tell agents about the code that will
+   mutate what they write.**
+
+The reviewer agent caught all three, which is the argument for always having
+one. But a reviewer finding your own brief was wrong is expensive: it costs the
+whole generation phase. Ten minutes checking the schema against the repo would
+have saved 861k tokens of drafting.
+
+**Why:** in a fan-out, the brief is the only thing every agent shares, so a
+flaw there is the one bug that reproduces perfectly across all of them.
+**How to apply:** before launching, verify every field name, every enum and
+every convention in the prompt against the actual code. Then ask what will
+transform the output after they hand it over, and say so in the prompt.
