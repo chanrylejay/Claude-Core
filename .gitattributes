@@ -1,0 +1,6 @@
+# Hooks and nets are compared BYTE-FOR-BYTE against their installed copies
+# (templates/global/_ritual_test.mjs fails closed on drift). core.autocrlf
+# would rewrite the working tree to CRLF while the committed blob stays LF,
+# which false-fails that check on every fresh checkout. Pin them to LF.
+*.mjs text eol=lf
+*.js  text eol=lf
