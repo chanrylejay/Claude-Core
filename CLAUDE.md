@@ -5,6 +5,16 @@ works; the global hub owns the per-session reading list. This file is the standi
 contract, project-agnostic: it applies whether this folder is the workspace itself or copied
 into a larger project. Relative paths here resolve from the Claude-Core root.
 
+## The standing setup — two agents, one boss
+Chan runs TWO agents and is the bridge between them. Neither is better: one holds the context,
+the other touches the machine.
+- **claude.ai (Opus 5, browser)** — plans, writes the briefs, does hostile review, and is the ONLY
+  one that can see images. Cannot run code, write to disk, or push.
+- **Claude Boss CLI (DeepSeek v4 flash, VS Code)** — reads the repo, writes code, runs tests,
+  commits, pushes. CANNOT see images: it saves screenshots to a file and hands Chan the path.
+- **Chan** — owns every decision, carries files between the two, and gives the GO every time.
+claude.ai drafts, the CLI commits, Chan approves. Mechanics: `workflow/two-model-relay.md`.
+
 ## Rule 0 — THE DRILL
 After any compaction: **don't trust the summary.** Re-read the READ-FIRST memory files and
 verify actual disk/repo state before your first substantive reply. If the summary conflicts
