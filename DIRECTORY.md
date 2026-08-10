@@ -24,7 +24,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `new-project-checklist.md` — the starting ritual for any real build: docs skeleton, live-data verification, write-safety day one, ship cadence.
 - `new-computer-migration.md` — moving Claude's brain to a new PC: what to copy, what to reinstall, the absolute-path gotcha.
 - `devoted-closure-checklist.md` — the closure-day runbook (closure was Jul 24 2026): status flips done, LinkedIn/resume sweeps, tooling-cost revisit, week-1 momentum kit.
-- `switch-to-deepseek.md` — pointing Claude Code at DeepSeek the day Claude access dies: one command + one checkbox, models, NO-vision caveat, rollback.
+- `switch-to-deepseek.md` — the DeepSeek switch runbook, RUN Jul 2026 and now permanent; kept as the re-install / model-change / rollback procedure. NO-vision caveat inside.
 - `two-model-relay.md` — the agent + claude.ai collaboration protocol: roles, authority split, the branch-first loop, the brief format, standing rules (REACHABILITY CHECK referenced, not duplicated).
 
 ## lessons/ — universal lessons (project-agnostic)
