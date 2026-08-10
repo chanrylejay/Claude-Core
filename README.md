@@ -60,9 +60,15 @@ session with no operating contract at all.
   `workflow/qa-gauntlet-pattern.md`; write the persona agents fresh per project.
 - What survives from that project here is the *lessons*, not the client's data.
 
-## The private GitHub repo
+## The GitHub repo (PUBLIC by decision)
 
-This folder IS a **private** GitHub repo (github.com/chanrylejay/Claude-Core, created Jul 24 2026) for backup and one-command migration.
+This folder IS a **PUBLIC** GitHub repo (github.com/chanrylejay/Claude-Core). Public is Chan's
+deliberate choice, Aug 11 2026: a private repo cannot be handed to the claude.ai half of the
+relay, and the relay is the workflow. The consequence is a standing law — **everything written
+into this kit is world-readable.** Write every memory and lesson file public-safe: no keys, no
+client data, no credentials, and nothing about Chan's money, clients, or private life that he
+would not post himself. If a fact cannot be written public-safe, it goes in a `LOCAL-ONLY-*`
+file, which `.gitignore` already excludes.
 `archives/` is excluded via `.gitignore` — the frozen originals hold client names and terms, so
 they stay local-only (plus offline backup). Never commit client data or credentials, and keep
 the archives exclusion forever. Never connect this repo to Vercel, Netlify, Bolt, or any

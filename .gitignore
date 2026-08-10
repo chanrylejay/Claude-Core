@@ -9,3 +9,6 @@ memory/LOCAL-ONLY-*
 *.key
 *credential*
 *.zip
+settings.json
+settings.local.json
+*.bak*
