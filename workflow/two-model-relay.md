@@ -68,7 +68,7 @@ do not fix silently).
   top, each under a `## <date> <who>` heading. A normal project uses
   `data/relay.md`; Claude-Core itself uses `LOCAL-ONLY-relay.md`, which the
   existing `LOCAL-ONLY-*` gitignore rule keeps out of the public repo. Chan
-  carries the file; uploads beat pastes for anything large.
+  carries the file; uploads beat pastes for anything large. Chan saves claude.ai's messages into the relay file and the CLI READS them (ctx_read compresses ~79%); pasting into chat rides every turn verbatim and is the expensive path.
 - **GO law is unchanged.** Push to main = live deploy = Chan's explicit GO each
   time. A previous GO never carries forward. Approval once is not approval
   forever.
