@@ -71,6 +71,8 @@ if (st) {
   }
   const sl = JSON.stringify(st.statusLine || "");
   t("statusLine wires deepseek-meter.mjs", sl.includes("deepseek-meter.mjs"));
+  const ups = JSON.stringify((st.hooks || {}).UserPromptSubmit || "");
+  t("UserPromptSubmit wires session-ritual.mjs nudge (the chat-panel gauge)", ups.includes("session-ritual.mjs") && ups.includes("nudge"));
 }
 
 // 3. live-fire the INSTALLED files, sandboxed child env (no token, no keys, throwaway home)
@@ -96,6 +98,18 @@ if (fs.existsSync(met)) {
   const r = spawnSync(process.execPath, [met], { input: "{}", encoding: "utf8", env: { ...env, DSMETER_FAKE_BALANCE: "1.00", DSMETER_FAKE_NOW: new Date().toISOString() }, timeout: 20000 });
   t("LIVE: installed meter renders a DS statusline", /DS /.test(r.stdout || ""));
 } else t("LIVE: installed meter renders a DS statusline", false);
+// live-fire the NUDGE on the installed hook: a red transcript must speak exactly once
+{
+  const tj = path.join(SBH, "t.jsonl");
+  fs.writeFileSync(tj, JSON.stringify({ message: { usage: { input_tokens: 2000, cache_read_input_tokens: 380000 } } }) + "\n");
+  const nEnv = { ...env, USERPROFILE: SBH, HOME: SBH };
+  const inl = JSON.stringify({ transcript_path: tj });
+  const rit = path.join(HOOKS, "session-ritual.mjs");
+  const n1 = spawnSync(process.execPath, [rit, "nudge"], { input: inl, encoding: "utf8", env: nEnv, timeout: 20000 });
+  t("LIVE: nudge speaks ONCE on a red transcript", n1.status === 0 && /RED band: 382K/.test(n1.stdout || ""));
+  const n2 = spawnSync(process.execPath, [rit, "nudge"], { input: inl, encoding: "utf8", env: nEnv, timeout: 20000 });
+  t("LIVE: the second prompt at the same band is SILENT", n2.status === 0 && !(n2.stdout || "").trim());
+}
 fs.rmSync(SBH, { recursive: true, force: true });
 
 // 4. trap-4 shadow scan: project-scoped push-guard wiring under this repo.

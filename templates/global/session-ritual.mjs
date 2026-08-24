@@ -10,7 +10,7 @@
 // Installed Jul 24 2026 (Bundle 1 of the 13-agent improvement plan). Playbook:
 // Claude-Core/lessons/lean-ctx-freeze-playbook.md and workflow/the-drill-and-memory.md.
 
-import { existsSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, writeFileSync, readFileSync, readdirSync, statSync, openSync, readSync, closeSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
 
@@ -41,6 +41,7 @@ try {
 // wiring typo must be loud. Add a new mode to KNOWN_MODES in the same edit that adds its branch.
 const KNOWN_MODES = new Set(["start"]);
 const rawMode = typeof process.argv[2] === "string" ? process.argv[2] : "";
+
 const mode = KNOWN_MODES.has(rawMode) ? rawMode : "start";
 const modeNote = KNOWN_MODES.has(rawMode)
   ? ""
@@ -51,6 +52,66 @@ function emit(eventName, text) {
   process.stdout.write(
     JSON.stringify({ hookSpecificOutput: { hookEventName: eventName, additionalContext: text } }),
   );
+}
+
+// ── nudge mode (UserPromptSubmit): the gauge's voice in the chat panel ──────────────────────
+// Aug 2026, Chan's finding: the statusline is a TERMINAL surface; in the VS Code extension
+// panel it played to an empty room for three batches (a display feature is verified only on
+// the owner's actual surface — hard rule 1 now names that class). The hook already speaks in
+// this panel at boot, so band crossings speak the same way: SILENT until context crosses a
+// threshold, then ONE line, remembered per session so it never repeats. Zero output on the
+// normal turn; any failure is silence (informational → fail open, by the kit's own
+// classification). Thresholds are parity-pinned byte-equal to the meter's (ritual net).
+const NUDGE_YELLOW = 150000, NUDGE_RED = 280000; // must equal deepseek-meter.mjs bands
+if (rawMode === "nudge") {
+  try {
+    const home = process.env.USERPROFILE || "C:/Users/Chanryle";
+    let tp = payload.transcript_path || "";
+    if (!tp) { // fallback: newest jsonl under the projects root (same rule as the meter)
+      const root = process.env.RITUAL_PROJECTS || join(home, ".claude", "projects");
+      let newest = null;
+      const walk = (d) => { for (const e of readdirSync(d)) { const p = join(d, e); const st = statSync(p);
+        if (st.isDirectory()) walk(p); else if (e.endsWith(".jsonl") && (!newest || st.mtimeMs > newest.m)) newest = { p, m: st.mtimeMs }; } };
+      walk(root); if (newest) tp = newest.p;
+    }
+    if (tp && existsSync(tp)) {
+      const sz = statSync(tp).size, take = Math.min(sz, 262144);
+      const fd = openSync(tp, "r"); const buf = Buffer.alloc(take);
+      readSync(fd, buf, 0, take, sz - take); closeSync(fd);
+      const tail = buf.toString("utf8");
+      const ui = tail.lastIndexOf('"usage"');
+      let ctx = 0;
+      if (ui >= 0) for (const m of tail.slice(ui, ui + 400).matchAll(/"(?:input_tokens|cache_read_input_tokens|cache_creation_input_tokens)"\s*:\s*(\d+)/g)) ctx += Number(m[1]);
+      const band = ctx >= NUDGE_RED ? 2 : ctx >= NUDGE_YELLOW ? 1 : 0;
+      const statePath = join(home, ".claude", "ctx-band-state.json");
+      let st = {}; try { st = JSON.parse(readFileSync(statePath, "utf8")); } catch {}
+      const key = tp.split("\\").join("/");
+      const rec = st[key] || {};
+      const lines = [];
+      if (band > (rec.band || 0)) {
+        const k = Math.round(ctx / 1000);
+        lines.push(band === 2
+          ? "[gauge] ctx entered the RED band: " + k + "K (threshold 280K) — compact or /clear at the next task boundary; if everything is banked, /clear is the free move."
+          : "[gauge] ctx entered the yellow band: " + k + "K (threshold 150K) — a compact here is still cheap; plan the boundary.");
+        rec.band = band;
+      }
+      try { // cap trip, mid-session, once (mirrors the boot costNote's condition)
+        const cap = Number(readFileSync(join(home, ".claude", "deepseek-cap.txt"), "utf8").trim());
+        const ms = JSON.parse(readFileSync(join(home, ".claude", "deepseek-meter-state.json"), "utf8"));
+        const dayKey = new Date(Date.now() + 480 * 60000).toISOString().slice(0, 10);
+        if (Number.isFinite(cap) && cap > 0 && ms.day_key === dayKey && Number(ms.day_spent) >= cap && !rec.capFired) {
+          lines.push("[gauge] SPEND CAP HIT today (-$" + Number(ms.day_spent).toFixed(2) + " >= $" + cap.toFixed(2) + "): stop non-essential work and say so.");
+          rec.capFired = true;
+        }
+      } catch {}
+      if (lines.length) {
+        st[key] = rec;
+        try { mkdirSync(join(home, ".claude"), { recursive: true }); writeFileSync(statePath, JSON.stringify(st)); } catch {}
+        emit("UserPromptSubmit", lines.join(" "));
+      }
+    }
+  } catch {}
+  process.exit(0);
 }
 
 try {

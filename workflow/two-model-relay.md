@@ -84,7 +84,10 @@ do not fix silently).
   caught it because the corrected wording was missing, then found the ` (1)` copy and
   reapplied). Corrections ship as `-fix1`, `-fix2`, `-v2`; the brief names the exact file;
   and every brief states one MARKER STRING the applied tree must contain, so an agent can
-  prove it applied the intended version before committing.
+  prove it applied the intended version before committing. The marker must be a SOURCE
+  literal verifiable by grep; a rendered or computed string can never serve (found live
+  Aug 2026: a brief named the gauge's rendered "ctx NNK", which no grep of source can ever
+  match).
 - **Every patch carries its SHA-256 in the brief; the agent verifies BEFORE applying.**
   `sha256sum <file>` (or `certutil -hashfile <file> SHA256`) must match the brief's line, or
   the run STOPS. The marker-string rule above proves the right version AFTER applying; the

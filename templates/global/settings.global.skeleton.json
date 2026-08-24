@@ -47,6 +47,9 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "node \"C:/Users/Chanryle/.claude/hooks/session-ritual.mjs\" nudge" } ] }
+    ],
     "SessionStart": [
       {
         "matcher": ".*",

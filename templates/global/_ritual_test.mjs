@@ -310,6 +310,44 @@ fs.writeFileSync(path.join(CAP_HOME2, ".claude", "deepseek-meter-state.json"), "
 t("corrupt state stays silent, never a throw", (() => { const r = capSpawn(); return r.status === 0 && !/SPEND CAP HIT/.test(r.stdout || ""); })());
 fs.rmSync(CAP_HOME2, { recursive: true, force: true });
 
+// 4e. THE NUDGE (UserPromptSubmit gauge voice, Aug 2026). Sandboxed home per net law.
+const NH = path.join(os.tmpdir(), "ritual-nudge-home");
+fs.rmSync(NH, { recursive: true, force: true });
+fs.mkdirSync(path.join(NH, ".claude"), { recursive: true });
+const tjn = (name, ctx) => { const f = path.join(NH, name + ".jsonl");
+  fs.writeFileSync(f, JSON.stringify({ message: { usage: { input_tokens: 2000, cache_read_input_tokens: ctx - 2000 } } }) + "\n"); return f; };
+const nspawn = (tpath) => spawnHook(["nudge"], { input: JSON.stringify({ transcript_path: tpath }), cwd: SB, env: { USERPROFILE: NH, HOME: NH, XDG_DATA_HOME: path.join(NH, ".local", "share") } });
+const said = (r) => { try { return JSON.parse(r.stdout).hookSpecificOutput.additionalContext; } catch { return ""; } };
+let NA = tjn("a", 90000);
+let rr = nspawn(NA);
+t("nudge: dim context is pure silence (no output at all)", rr.status === 0 && !(rr.stdout || "").trim());
+fs.writeFileSync(NA, JSON.stringify({ message: { usage: { input_tokens: 2000, cache_read_input_tokens: 161000 } } }) + "\n");
+rr = nspawn(NA);
+t("nudge: yellow crossing speaks once with the number", /yellow band: 163K/.test(said(rr)));
+rr = nspawn(NA);
+t("nudge: same band next prompt is silent (crossing remembered)", !(rr.stdout || "").trim());
+fs.writeFileSync(NA, JSON.stringify({ message: { usage: { input_tokens: 2000, cache_read_input_tokens: 380000 } } }) + "\n");
+rr = nspawn(NA);
+t("nudge: red crossing speaks with the free-move advice", /RED band: 382K/.test(said(rr)) && /\/clear is the free move/.test(said(rr)));
+const NB = tjn("b", 310000);
+rr = nspawn(NB);
+t("nudge: a DIFFERENT session gets its own crossing (per-transcript state)", /RED band/.test(said(rr)));
+fs.writeFileSync(path.join(NH, "broken.jsonl"), "{not json\n");
+rr = nspawn(path.join(NH, "broken.jsonl"));
+t("nudge: an unusable transcript is silence, exit 0, never a throw", rr.status === 0 && !(rr.stdout || "").trim());
+fs.writeFileSync(path.join(NH, ".claude", "deepseek-cap.txt"), "1.00");
+const todayM = new Date(Date.now() + 480 * 60000).toISOString().slice(0, 10);
+fs.writeFileSync(path.join(NH, ".claude", "deepseek-meter-state.json"), JSON.stringify({ day_key: todayM, day_spent: 1.5 }));
+rr = nspawn(NB);
+t("nudge: mid-session cap trip speaks once", /SPEND CAP HIT today \(-\$1\.50 >= \$1\.00/.test(said(rr)));
+rr = nspawn(NB);
+t("nudge: cap already fired for this session stays silent", !(rr.stdout || "").trim());
+const hookSrcN = fs.readFileSync(TEMPLATE, "utf8");
+const meterSrcN = fs.readFileSync(path.join(path.dirname(TEMPLATE), "deepseek-meter.mjs"), "utf8");
+t("nudge thresholds parity: 150000/280000 byte-equal across hook and meter",
+  /NUDGE_YELLOW = 150000, NUDGE_RED = 280000/.test(hookSrcN) && /ctx >= 280000/.test(meterSrcN) && /ctx >= 150000/.test(meterSrcN));
+fs.rmSync(NH, { recursive: true, force: true });
+
 // 7. GRAPH PRE-BUILD (the Jul 26 2026 freeze fix). lean-ctx deadlocks on a project's FIRST graph
 //    build when it runs inside the MCP server, so the hook pre-builds from the CLI at session
 //    start. Pins: fires on a fresh workspace AND says so in the message, skips when a complete
