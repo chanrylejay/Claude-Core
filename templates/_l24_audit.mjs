@@ -11,7 +11,11 @@
 // class list below mirrors that home. New fact-bearing class discovered → add it THERE and
 // HERE in the same edit; _l24_test.mjs pins the two lists in sync.
 // Reads are RAW (git show + fs), never through a compressing layer — exact-token work reads
-// raw, always.
+// raw, always — and LINE ENDINGS ARE NORMALIZED (\r\n and \r become \n) on every read: on a
+// Windows checkout the worktree is CRLF while the blob is LF, so a quoted literal that wraps
+// across a line exists in two spellings that fail to match each other and false-LOSTs
+// (reproduced Aug 24 2026 — the CLI's dogfood flagged a phrase this normalization proves was
+// never lost). Normalization cannot hide a real deletion; the net pins both directions.
 
 import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -37,6 +41,7 @@ let base = "HEAD";
 if (args[0] === "--base") { base = args[1]; args.splice(0, 2); }
 if (!args.length) { console.error("usage: node _l24_audit.mjs [--base <ref>] <file>..."); process.exit(1); }
 
+const norm = (t) => t.replace(/\r\n?/g, "\n");
 function tokens(text) {
   const out = new Set();
   for (const re of CLASSES) for (const m of text.matchAll(re)) out.add(m[1] ?? m[0]);
@@ -51,7 +56,7 @@ function repoCorpus() {
       const p = join(d, e);
       const s = statSync(p);
       if (s.isDirectory()) walk(p);
-      else if (/\.(md|json)$/.test(e)) { try { buf += "\n" + readFileSync(p, "utf8"); } catch {} }
+      else if (/\.(md|json)$/.test(e)) { try { buf += "\n" + norm(readFileSync(p, "utf8")); } catch {} }
     }
   };
   walk(".");
@@ -62,9 +67,9 @@ let lostTotal = 0;
 const corpus = repoCorpus();
 for (const f of args) {
   let old = "";
-  try { old = execFileSync("git", ["show", `${base}:${f}`], { encoding: "utf8" }); }
+  try { old = norm(execFileSync("git", ["show", `${base}:${f}`], { encoding: "utf8" })); }
   catch { console.log(`${f}: no ${base} version (new file) — nothing to audit`); continue; }
-  const now = readFileSync(f, "utf8");
+  const now = norm(readFileSync(f, "utf8"));
   let inPlace = 0, reloc = 0;
   const lost = [];
   for (const tok of tokens(old)) {
