@@ -31,7 +31,7 @@ every request. The session habits, re-ranked Aug 2026 after external audit (thei
    size, read from the last provider-reported usage in the active transcript — exact, zero
    tokens. Dim under 150K (a compact there costs ~3 cents), yellow to 280K, red `⚠compact`
    past it (real dollars on a long day). The gauge is the trigger the blind endpoint denied
-   us: when it goes red at a task boundary, compact or /clear. In the VS Code extension panel (no statusline surface) the SAME thresholds speak as one-time [gauge] lines via the session hook on band crossings — silent otherwise, parity-pinned to the meter. Everything below shrinks with it: at 100K a cold
+   us: when it goes red at a task boundary, compact or /clear. In the VS Code extension panel (no statusline surface) the SAME thresholds speak as one-time [gauge] lines via the session hook on band crossings — silent otherwise, parity-pinned to the meter, and the line MANDATES verbatim relay because the panel renders hook output only through the model voice (Chan eyes, Aug 25). Everything below shrinks with it: at 100K a cold
    reload is ~$0.02 and the peak premium is coffee money; at 400K both are real. The others are
    advisories that bind in proportion to context weight, never trades against Chan's sleep or
    schedule; the tripwire informs, Chan decides.

@@ -94,6 +94,13 @@ do not fix silently).
   hash proves it before. A matching hash on a failed apply also localizes the fault: the
   bytes are intended, so the BASE is wrong — re-cut against the true parent (this exact case
   happened Aug 2026). One line in the brief, one command on receipt.
+- **Status assertions cite their SOURCE FILE by path — and the planner's receipts see
+  tracked files only.** `git grep` is structurally blind to untracked and gitignored files,
+  so machine-local state (LOCAL-ONLY-*, archives/) can be proven or refuted ONLY by the
+  machine agent's raw read (found live Aug 25: the planner's receipts disproved a "stopped
+  batch" claim that a gitignored relay file was accurately making — the fact was right, the
+  accusation was wrong, and the file needed correcting, not the reader doubting). When
+  receipts conflict, first ask whether the disputed source is untracked.
 - **A cross-agent measurement disagreement is itself a STOP.** When the planner's outside
   check (fetched tree, net rerun) disagrees with the agent's runtime report, neither
   authority wins by default (audit Aug 2026: the old authority split named winners per

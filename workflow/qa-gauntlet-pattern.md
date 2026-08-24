@@ -146,7 +146,12 @@ the JSON is the bug. Two things the wiring gets wrong by default, both fail-open
    After the reload, `node templates/verify-install.mjs` answers "is this machine armed?" in
    one command (byte-equality of installed hooks, wiring incl. traps 1-2, live-fire of the
    INSTALLED files, trap-4 shadow scan) — the fresh-machine bootstrap AND the post-install
-   proof; its net is `templates/_bootstrap_test.mjs`. reachability check, applied to hook loading itself.) THE ONE-RELOAD LAW: every settings and
+   proof; its net is `templates/_bootstrap_test.mjs`. reachability check, applied to hook loading itself.)
+   INSTALL-BEFORE-NETS: when a batch touches an installed hook, the install happens BEFORE
+   the net run — the ritual net compares template against the installed copy and correctly
+   refuses a stale install (the CLI caught a brief ordering this backwards, Aug 25). And a
+   hook FILE edit with unchanged settings needs NO reload: the command spawns the file fresh
+   per event; only WIRING loads at session start. THE ONE-RELOAD LAW: every settings and
    hook change in a batch lands BEFORE a single reload — each extra reload is a cold cache
    reload at miss price, and Aug 24 2026 spent three where one sufficed.
 4. **A project-scoped guard cannot gate a machine-wide action.** `git push` reaches ANY repo the

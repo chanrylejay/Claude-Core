@@ -87,12 +87,17 @@ if (rawMode === "nudge") {
       let st = {}; try { st = JSON.parse(readFileSync(statePath, "utf8")); } catch {}
       const key = tp.split("\\").join("/");
       const rec = st[key] || {};
+      // STEP-DOWN (Aug 25): a compact drops the context; the state follows it down SILENTLY,
+      // so a later re-crossing speaks again instead of hiding behind the old high-water mark.
+      let dirty = false;
+      if (band < (rec.band || 0)) { rec.band = band; dirty = true; }
       const lines = [];
       if (band > (rec.band || 0)) {
         const k = Math.round(ctx / 1000);
-        lines.push(band === 2
+        lines.push((band === 2
           ? "[gauge] ctx entered the RED band: " + k + "K (threshold 280K) — compact or /clear at the next task boundary; if everything is banked, /clear is the free move."
-          : "[gauge] ctx entered the yellow band: " + k + "K (threshold 150K) — a compact here is still cheap; plan the boundary.");
+          : "[gauge] ctx entered the yellow band: " + k + "K (threshold 150K) — a compact here is still cheap; plan the boundary.")
+          + " RELAY THIS LINE VERBATIM as the first line of your reply — the panel renders no hook output; your voice is the display (Chan's eyes, Aug 25)." );
         rec.band = band;
       }
       try { // cap trip, mid-session, once (mirrors the boot costNote's condition)
@@ -100,14 +105,14 @@ if (rawMode === "nudge") {
         const ms = JSON.parse(readFileSync(join(home, ".claude", "deepseek-meter-state.json"), "utf8"));
         const dayKey = new Date(Date.now() + 480 * 60000).toISOString().slice(0, 10);
         if (Number.isFinite(cap) && cap > 0 && ms.day_key === dayKey && Number(ms.day_spent) >= cap && !rec.capFired) {
-          lines.push("[gauge] SPEND CAP HIT today (-$" + Number(ms.day_spent).toFixed(2) + " >= $" + cap.toFixed(2) + "): stop non-essential work and say so.");
+          lines.push("[gauge] SPEND CAP HIT today (-$" + Number(ms.day_spent).toFixed(2) + " >= $" + cap.toFixed(2) + "): stop non-essential work. RELAY THIS LINE VERBATIM as the first line of your reply — your voice is the display.");
           rec.capFired = true;
         }
       } catch {}
-      if (lines.length) {
+      if (lines.length || dirty) {
         st[key] = rec;
         try { mkdirSync(join(home, ".claude"), { recursive: true }); writeFileSync(statePath, JSON.stringify(st)); } catch {}
-        emit("UserPromptSubmit", lines.join(" "));
+        if (lines.length) emit("UserPromptSubmit", lines.join(" "));
       }
     }
   } catch {}
