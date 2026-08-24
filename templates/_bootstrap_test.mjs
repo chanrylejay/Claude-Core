@@ -96,7 +96,19 @@ install();
 // the scan reads the REPO's .claude, which we must not touch; assert instead that the good
 // run carried zero trap-4 warnings on this clean repo, proving the scan ran quiet.
 r = run();
-t("clean repo carries no trap-4 shadow warning", r.status === 0 && !/trap 4: project scope/.test(r.stdout));
+t("clean repo carries no trap-4 shadow finding", r.status === 0 && !/FAIL {2}no project-level shadow guard/.test(r.stdout));
+
+// mutation: a project-level shadow guard must make the machine NOT ARMED (audit Aug 2026 —
+// this pin replaces one that certified the old warning-only behaviour)
+install();
+fs.mkdirSync(path.join(ROOT, ".claude"), { recursive: true });
+const shadowPath = path.join(ROOT, ".claude", "settings.local.json");
+const hadShadow = fs.existsSync(shadowPath) ? fs.readFileSync(shadowPath, "utf8") : null;
+fs.writeFileSync(shadowPath, JSON.stringify({ hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ command: "node push-guard.mjs || exit 2" }] }] } }, null, 2));
+r = run();
+t("a project-level shadow guard makes the machine NOT ARMED", r.status === 1 && /FAIL {2}no project-level shadow guard/.test(r.stdout));
+t("the shadow finding names the file and the law", /push gating is user-level by law/.test(r.stdout));
+if (hadShadow === null) fs.rmSync(shadowPath, { force: true }); else fs.writeFileSync(shadowPath, hadShadow);
 
 fs.rmSync(FH, { recursive: true, force: true });
 console.log("\nbootstrap net: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));

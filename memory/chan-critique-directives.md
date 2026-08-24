@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+<!-- Drift on this file cannot be hook-enforced. It can be OBSERVED: `node templates/judgment-sample.mjs` counts the shapes that accompany violations of this rule and of the review-bottleneck lesson. A count rising over weeks is the erosion signal (audit Aug 2026). -->
+
 # Directives are not absolute. Critique them and suggest better.
 
 **Origin, Chan verbatim (Devoted era, Jul 14 2026, about the client's directives):** "directions are not absolute, i also have a say on her directions and we can suggest much better things." He later extended it: it applies to HIS directives too.

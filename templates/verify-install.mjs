@@ -98,10 +98,17 @@ if (fs.existsSync(met)) {
 } else t("LIVE: installed meter renders a DS statusline", false);
 fs.rmSync(SBH, { recursive: true, force: true });
 
-// 4. trap-4 shadow scan: project-scoped push-guard wiring under this repo
+// 4. trap-4 shadow scan: project-scoped push-guard wiring under this repo.
+// FAILURE, not a warning (audit Aug 2026): a single drifted byte failed this check while a
+// shadow guard — the ONE condition that can substitute an UNVERIFIED guard for the verified
+// one on the next push — only produced a note. The verdict was the defect. Live-firing the
+// user-level files proves nothing about a project-level guard that was never fired, so the
+// machine is NOT ARMED until the shadow is gone.
 for (const f of ["settings.json", "settings.local.json"]) {
   const p = path.join(ROOT, ".claude", f);
-  if (fs.existsSync(p) && fs.readFileSync(p, "utf8").includes("push-guard")) w(`project-level ${f} also wires a push-guard — trap 4: project scope cannot gate machine-wide pushes; remove the shadow copy`);
+  const shadowed = fs.existsSync(p) && fs.readFileSync(p, "utf8").includes("push-guard");
+  t(`no project-level shadow guard (trap 4: ${f})`, !shadowed);
+  if (shadowed) console.log(`      ${p} wires its own push-guard; the guard live-fired above is the USER-level one. Delete the shadow copy: push gating is user-level by law.`);
 }
 
 console.log("\n  ⚠  trap 3 reminder: wired is not LOADED — if settings or hooks changed this session, reload the window and run this again.");

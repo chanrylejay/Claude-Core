@@ -85,6 +85,12 @@ do not fix silently).
   reapplied). Corrections ship as `-fix1`, `-fix2`, `-v2`; the brief names the exact file;
   and every brief states one MARKER STRING the applied tree must contain, so an agent can
   prove it applied the intended version before committing.
+- **Every patch carries its SHA-256 in the brief; the agent verifies BEFORE applying.**
+  `sha256sum <file>` (or `certutil -hashfile <file> SHA256`) must match the brief's line, or
+  the run STOPS. The marker-string rule above proves the right version AFTER applying; the
+  hash proves it before. A matching hash on a failed apply also localizes the fault: the
+  bytes are intended, so the BASE is wrong — re-cut against the true parent (this exact case
+  happened Aug 2026). One line in the brief, one command on receipt.
 - **A cross-agent measurement disagreement is itself a STOP.** When the planner's outside
   check (fetched tree, net rerun) disagrees with the agent's runtime report, neither
   authority wins by default (audit Aug 2026: the old authority split named winners per

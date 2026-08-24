@@ -165,6 +165,16 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
   write it as one. The CLI's counter-rule already exists (push back on wrong briefs); this is the
   drafting-side mirror of it.
 
+## The layer budget: a new layer must retire two
+Every mechanism looks cheap the day it ships and costs attention every day after. Standing
+rule for this kit (audit Aug 2026, three reviewers converging): do not add a layer — a rule,
+a hook, a net, a document — unless it either replaces something that exists or removes work a
+human is doing by hand. When a new thing cannot name what it retires, that is the signal to
+solve the problem inside an existing layer instead. A rule violated twice becomes a hook or a
+test; a rule never exercised in months is a deletion candidate. Growth is not the same as
+maturity: a kit that only accretes eventually spends more of its operator on itself than on
+the work.
+
 ## Gates that always fire teach everyone to ignore them
 A staleness (or safety) gate whose condition is satisfied by ordinary activity is worse than
 no gate: every session sees it fire, learns the signal means nothing, and stops reading it.
