@@ -49,10 +49,28 @@ function tokens(text) {
 }
 function repoCorpus() {
   // every tracked-ish doc in the worktree, for RELOCATED checks; raw reads only
+  // RELOCATED MEANS A TRACKED KIT HOME (fourth and fifth first-contact catches, Aug 24
+  // 2026). Fourth: a delivery brief in the repo root QUOTED the tokens its batch retired, so
+  // the audit found each one alive inside its own obituary. Fifth: a gitignored LOCAL-ONLY
+  // file on one machine silently absorbed a loss as a "relocation" into a file no clone will
+  // ever have. Both are the same hole: preservation must mean a home every clone gets, so
+  // the corpus is `git ls-files` — tracked .md/.json only. Untracked, gitignored, and
+  // transient files are all excluded at once. If git is unavailable, fall back to a full
+  // walk minus root transients (degraded-loose for gitignored files, and says so).
+  const TRANSIENT = /^(CODING-BRIEF-.*\.md|FIX-.*\.md)$/;
   let buf = "";
+  try {
+    const files = execFileSync("git", ["ls-files", "*.md", "*.json"], { encoding: "utf8" })
+      .split(/\r?\n/).filter(Boolean);
+    for (const f of files) { try { buf += "\n" + norm(readFileSync(f, "utf8")); } catch {} }
+    return buf;
+  } catch {
+    console.log("  ⚠ git ls-files unavailable — corpus falls back to a directory walk (gitignored files may mask losses)");
+  }
   const walk = (d) => {
     for (const e of readdirSync(d)) {
       if (e === ".git" || e === "node_modules") continue;
+      if (d === "." && TRANSIENT.test(e)) continue;
       const p = join(d, e);
       const s = statSync(p);
       if (s.isDirectory()) walk(p);

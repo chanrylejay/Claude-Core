@@ -54,6 +54,23 @@ t("failure names the restore-or-OK rule", /Chan's explicit OK/.test(r.stdout));
 fs.writeFileSync(path.join(SB, "doc.md"), "Deploy uses the main key at https://x.example and never on Fridays.\n");
 r = run();
 t("money and version losses are caught", /\$4\.50/.test(r.stdout) && /2\.1\.3/.test(r.stdout) && r.status === 1);
+// TRANSIENT-CORPUS pin (fourth catch, Aug 24 2026): a delivery brief quoting a retired token
+// must NOT count as relocation — the brief dies at cleanup and takes the evidence with it.
+fs.writeFileSync(path.join(SB, "doc.md"), 'Deploy uses the main key at https://x.example on Fridays. Budget $4.50, v2.1.3.\n');
+fs.writeFileSync(path.join(SB, "CODING-BRIEF-test.md"), 'retiring the modal "never" per plan\n');
+r = run();
+t("a token quoted only in a root delivery brief is STILL LOST", r.status === 1 && /LOST: "never"/i.test(r.stdout));
+fs.rmSync(path.join(SB, "CODING-BRIEF-test.md"), { force: true });
+
+// GITIGNORED-CORPUS pin (fifth catch, Aug 24 2026): a token whose only remaining home is a
+// gitignored local file is STILL LOST — no clone will ever have that home.
+fs.writeFileSync(path.join(SB, ".gitignore"), "LOCAL-ONLY-*\n");
+fs.writeFileSync(path.join(SB, "LOCAL-ONLY-notes.md"), 'the modal "never" lives here only\n');
+r = run();
+t("a token found only in a gitignored file is STILL LOST", r.status === 1 && /LOST: "never"/i.test(r.stdout));
+fs.rmSync(path.join(SB, "LOCAL-ONLY-notes.md"), { force: true });
+fs.rmSync(path.join(SB, ".gitignore"), { force: true });
+
 // CRLF pins (Aug 24 2026, the CLI's false-LOST reproduced): a Windows-style CRLF worktree
 // over an LF blob must not false-LOST a line-wrapping quoted literal — and normalization must
 // not hide a REAL deletion of that same literal.
