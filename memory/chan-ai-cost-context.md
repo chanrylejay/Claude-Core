@@ -26,7 +26,12 @@ reconstruction: ../lessons/platform-gotchas.md, DeepSeek API section — one hom
 any cost reasoning. What changed in one line: off-peak is ~2x the old flat rate, PEAK (09:00-12:00
 and 14:00-18:00 Manila) is ~4x, and cache hits are no longer ~free, so context size now bills on
 every request. The session habits, re-ranked Aug 2026 after external audit (their math at 100K contexts said "cents"; our telemetry at 360-410K said dollars — so the habits are WEIGHT-CONDITIONAL, and one is master):
-0. **MASTER HABIT — keep the context small.** Everything below shrinks with it: at 100K a cold
+0. **MASTER HABIT — keep the context small.** And now you can SEE it (Aug 2026, Chan's
+   finding that the habit had no UI): the statusline's `ctx NNK` segment is the LIVE context
+   size, read from the last provider-reported usage in the active transcript — exact, zero
+   tokens. Dim under 150K (a compact there costs ~3 cents), yellow to 280K, red `⚠compact`
+   past it (real dollars on a long day). The gauge is the trigger the blind endpoint denied
+   us: when it goes red at a task boundary, compact or /clear. Everything below shrinks with it: at 100K a cold
    reload is ~$0.02 and the peak premium is coffee money; at 400K both are real. The others are
    advisories that bind in proportion to context weight, never trades against Chan's sleep or
    schedule; the tripwire informs, Chan decides.

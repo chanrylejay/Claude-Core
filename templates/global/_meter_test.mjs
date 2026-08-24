@@ -156,6 +156,25 @@ fs.writeFileSync(path.join(H8, ".claude", "deepseek-cap.txt"), "banana");
 out = spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:08:00Z", DSMETER_FAKE_BALANCE: "8.40" })).stdout;
 t("a malformed cap is silent, never an error", !/⚠CAP/.test(out) && /DS /.test(out));
 
+// 4c. live context segment (Aug 2026, Chan's finding: the compact habit had no UI). Reads
+//     the LAST usage block of the newest transcript jsonl; seam DSMETER_PROJECTS.
+const H9 = mkHome("ctx");
+const PROJ = path.join(H9, "projects-fake");
+const sess = (name, lines) => { fs.mkdirSync(path.join(PROJ, name), { recursive: true }); fs.writeFileSync(path.join(PROJ, name, "s.jsonl"), lines.join("\n") + "\n"); };
+const ctxRun = () => spawnMeter(keyed(H9, { DSMETER_FAKE_NOW: "2026-08-24T12:00:00Z", DSMETER_FAKE_BALANCE: "9.00", DSMETER_PROJECTS: PROJ })).stdout;
+let o = ctxRun();
+t("no transcripts: no ctx segment", !/ctx \d+K/.test(o));
+sess("a", ['{"message":{"usage":{"input_tokens":1200,"cache_read_input_tokens":98000,"cache_creation_input_tokens":800}}}',
+           '{"message":{"usage":{"input_tokens":2000,"cache_read_input_tokens":380000,"cache_creation_input_tokens":1000}}}']);
+o = ctxRun();
+t("ctx reads the LAST usage block and sums input-side tokens (383K, red, compact nudge)", /ctx 383K ⚠compact/.test(o));
+sess("a", ['{"message":{"usage":{"input_tokens":500,"cache_read_input_tokens":90000}}}']);
+o = ctxRun();
+t("a light context renders dim with no nudge", /ctx 91K/.test(o) && !/⚠compact/.test(o));
+fs.writeFileSync(path.join(PROJ, "a", "s.jsonl"), "{broken json\nno usage here\n");
+o = ctxRun();
+t("a transcript with no usage block stays silent, never an error", !/ctx \d+K/.test(o) && /DS /.test(o));
+
 // 5. wiring: the skeleton must point the statusLine at THIS meter, or a rebuilt machine
 //    silently keeps the old ccusage line that cannot see DeepSeek numbers.
 try {

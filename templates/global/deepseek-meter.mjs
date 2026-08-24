@@ -26,7 +26,7 @@
 //   DSMETER_FAKE_NOW      — ISO datetime; overrides the clock for peak windows AND day rollover.
 // NEVER blocks, never throws to the caller: a broken meter must render its brokenness, exit 0.
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, openSync, readSync, closeSync } from "node:fs";
 import { join } from "node:path";
 import https from "node:https";
 
@@ -123,6 +123,43 @@ function fetchBalance(key) {
   });
 }
 
+function readCtx() {
+  // LIVE CONTEXT SIZE — the UI the endpoint denies us (Aug 2026, Chan's finding: the habit
+  // said "compact at 400K" on a machine with no way to SEE 400K). Claude Code writes every
+  // response's provider-reported usage into the active session's transcript jsonl, so the
+  // LAST usage block's input-side tokens ARE the current context, exact, on disk. We read
+  // the tail of the most recently written transcript. Zero model tokens; any failure = no
+  // segment, silently (this is a gauge, not a gate).
+  try {
+    const root = process.env.DSMETER_PROJECTS || join(HOME, ".claude", "projects");
+    let newest = null;
+    const walk = (d) => {
+      for (const e of readdirSync(d)) {
+        const p = join(d, e);
+        const st = statSync(p);
+        if (st.isDirectory()) walk(p);
+        else if (e.endsWith(".jsonl") && (!newest || st.mtimeMs > newest.m)) newest = { p, m: st.mtimeMs };
+      }
+    };
+    walk(root);
+    if (!newest) return null;
+    const sz = statSync(newest.p).size;
+    const fd = openSync(newest.p, "r");
+    const take = Math.min(sz, 262144);
+    const buf = Buffer.alloc(take);
+    readSync(fd, buf, 0, take, sz - take);
+    closeSync(fd);
+    const tail = buf.toString("utf8");
+    // simpler and robust: find the LAST "usage" block and sum its input-side numbers
+    const ui = tail.lastIndexOf('"usage"');
+    if (ui < 0) return null;
+    const seg = tail.slice(ui, ui + 400);
+    let tok = 0;
+    for (const m of seg.matchAll(/"(?:input_tokens|cache_read_input_tokens|cache_creation_input_tokens)"\s*:\s*(\d+)/g)) tok += Number(m[1]);
+    return tok > 0 ? tok : null;
+  } catch { return null; }
+}
+
 function readCap() {
   // Soft spend cap: a number (USD) in ~/.claude/deepseek-cap.txt. Absent/invalid = no cap.
   try {
@@ -131,7 +168,7 @@ function readCap() {
   } catch { return null; }
 }
 
-function render(balance, staleMin, today, peak, note, cap) {
+function render(balance, staleMin, today, peak, note, cap, ctx) {
   const RED = "\u001b[31m", YEL = "\u001b[33m", DIM = "\u001b[2m", OFF = "\u001b[0m";
   const bal = balance === null ? "?" : "$" + balance.toFixed(2);
   const low = balance !== null && balance < 2;
@@ -142,7 +179,16 @@ function render(balance, staleMin, today, peak, note, cap) {
     ? RED + "PEAK 2x > " + peak.nextManila + OFF
     : "off-peak > " + YEL + peak.nextManila + OFF;
   const capStr = cap !== null && today >= cap ? " " + RED + "⚠CAP $" + today.toFixed(2) + "/$" + cap.toFixed(2) + OFF : "";
-  return "DS " + balStr + " | " + todayStr + capStr + " | " + peakStr + (note ? " " + DIM + note + OFF : "");
+  // thresholds from the measured economics: under 150K a compact costs ~3 cents and hits are
+  // coffee money; past 280K both are real dollars on a long day.
+  let ctxStr = "";
+  if (ctx !== null) {
+    const k = Math.round(ctx / 1000);
+    ctxStr = ctx >= 280000 ? " | " + RED + "ctx " + k + "K ⚠compact" + OFF
+           : ctx >= 150000 ? " | " + YEL + "ctx " + k + "K" + OFF
+           : " | " + DIM + "ctx " + k + "K" + OFF;
+  }
+  return "DS " + balStr + " | " + todayStr + capStr + ctxStr + " | " + peakStr + (note ? " " + DIM + note + OFF : "");
 }
 
 try {
@@ -176,7 +222,7 @@ try {
     }
   }
   writeState(st);
-  process.stdout.write(render(balance, staleMin, st.day_spent || 0, peakState(now), balance === null ? "(balance unreachable)" : "", readCap()));
+  process.stdout.write(render(balance, staleMin, st.day_spent || 0, peakState(now), balance === null ? "(balance unreachable)" : "", readCap(), readCtx()));
   process.exit(0);
 } catch (e) {
   // A broken meter renders its brokenness and never blocks the status bar.
