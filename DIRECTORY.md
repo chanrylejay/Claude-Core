@@ -10,7 +10,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `CLAUDE.md` — the operating contract; auto-loads into EVERY session via the @import in the global hub.
 - `TOOLS.md` — historical catalog of the Devoted-era tools; operational rules live in `workflow/tool-playbook.md`.
 - `DIRECTORY.md` — this file.
-- `.gitignore` — repo exclusions for the private GitHub move: archives/, LOCAL-ONLY-* files, and secret patterns (.env*, keys, credentials, zips) never get committed.
+- `.gitignore` — repo exclusions (the repo is PUBLIC by decision, README, so these are the publish line): archives/, LOCAL-ONLY-* files, secret patterns (.env*, keys, credentials, zips), settings files, and *.code-workspace never get committed.
 - `.gitattributes` — pins `*.mjs` and `*.js` to LF: hooks and nets are compared byte-for-byte against their installed copies (templates/global/_ritual_test.mjs fails closed on drift), and core.autocrlf would rewrite the working tree to CRLF while the committed blob stays LF, false-failing that check on every fresh checkout (found Aug 11 2026).
 
 ## memory/ — who Chan is

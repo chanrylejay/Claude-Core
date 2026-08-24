@@ -35,7 +35,18 @@
     "padding": 0
   },
   "hooks": {
-    "_comment": "lean-ctx adds its own observe (PostToolUse/PreCompact/SessionEnd/SessionStart/Stop/UserPromptSubmit) + rewrite/redirect (PreToolUse) hooks on install; only the CUSTOM session-ritual wiring is preserved here. Re-point the absolute path to the recovery machine's home. The SessionStart matcher is a CATCH-ALL and must stay one: the hook resolves any unrecognised source to compact, and that defence is unreachable if the matcher enumerates today's source names — a renamed or added platform source would simply never invoke the hook (audit Jul 26 2026). Never list sources here.",
+    "_comment": "lean-ctx adds its own observe (PostToolUse/PreCompact/SessionEnd/SessionStart/Stop/UserPromptSubmit) + rewrite/redirect (PreToolUse) hooks on install; only the CUSTOM session-ritual + push-guard wiring is preserved here. push-guard is USER-LEVEL (Aug 24 2026, qa-gauntlet trap 4): copy push-guard.mjs + _pushguard_test.mjs from templates/hooks/ into ~/.claude/hooks/ at recovery, keep the full shell matcher (ctx_call included) and the || exit 2 wrapper — both fail OPEN and silent if dropped. Re-point the absolute path to the recovery machine's home. The SessionStart matcher is a CATCH-ALL and must stay one: the hook resolves any unrecognised source to compact, and that defence is unreachable if the matcher enumerates today's source names — a renamed or added platform source would simply never invoke the hook (audit Jul 26 2026). Never list sources here.",
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell|mcp__lean-ctx__ctx_call",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.claude/hooks/push-guard.mjs\" || exit 2"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": ".*",

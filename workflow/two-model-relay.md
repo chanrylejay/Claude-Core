@@ -11,9 +11,13 @@ NOTE: this protocol is live and in use as of Aug 11 2026. `DEEPSEEK-RELAY.md`, t
 
 - **Chan** — owns every decision. Gives GO. His eyes are the final gate.
 - **claude.ai** (browser, Opus 5) — architecture, briefs, hostile review. Can
-  see images and hold the whole codebase; cannot run code, write to disk, or
-  push. Has read the full kit: global hub, Claude-Core, the project canon,
-  memory.
+  see images and hold the whole codebase. Since Aug 2026 it also builds: a
+  per-conversation sandbox clones the public repo, runs the kit's own nets, and
+  produces tested patches — but it holds no credentials and its disk is
+  disposable, so it can never push and never touches the live machine. Has read
+  the full kit: global hub, Claude-Core, the project canon, memory. (Superseded
+  Aug 24 2026: "cannot run code, write to disk" was falsified by two shipped,
+  net-proven batches; step 6 below is now literal, not aspirational.)
 - **The agent** (Claude Code, DeepSeek) — reads the repo, writes code, runs
   tests, commits, pushes. Can execute and measure; cannot see images and has a
   small context window.
@@ -55,8 +59,9 @@ do not fix silently).
 
 ## Standing rules
 
-- **One-writer rule.** claude.ai drafts, the agent commits. Memory writes land
-  only from the machine where the files live.
+- **One-writer rule.** claude.ai drafts and proves (sandbox commits are patch
+  vehicles, they never reach origin); the agent lands the commit on the real
+  repo. Memory writes land only from the machine where the files live.
 - **Reachability check.** Before claiming any code is live or any protection is
   active, name the entry point, file and line. If the chain does not trace to a
   route, a script, or an INSTALLED hook, it is not live. The full lesson is in

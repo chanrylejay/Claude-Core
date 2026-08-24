@@ -73,7 +73,7 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
   survives with one change: the model still drives Playwright and takes the screenshot, but
   CHAN's eyes do the looking. Never let a blind model claim a screen "looks right".
 - The endpoint's full ignore/reject list (cache_control, image blocks, silent model-name fallback, the context-meter accounting) lives in `../lessons/platform-gotchas.md` under `## DeepSeek API`. This runbook holds the switch facts; that file holds the endpoint facts.
-- Weaker model discipline: one subagent at a time, never a parallel fleet and never a Workflow
+- Small-context discipline: one subagent at a time, never a parallel fleet and never a Workflow
   fan-out (that is what "heavy" means here, it is not a judgement call); small steps; trust the files over
   memory; the checklists ARE the intelligence now.
 - The QA gauntlet on DeepSeek: the CHECKS are mandatory, the subagent FLEET is a strong-Claude optimization. Do NOT spawn the agents; run each check yourself inline and in order (spec-read the ask, hostile self-review of the diff, type/lint + regression, then the UI step), and create a gauntlet token ONLY after you actually ran that step. Token split by what a blind model can honestly self-certify: GATE_OK and the non-visual parts of QA_OK you self-certify after running; UX_OK involves LOOKING, so never self-pass it blind. Capture the Playwright shot to a FILE and create .claude/UX_SHOT; the done-wall UX branch clears on that marker (not on faking UX_OK), and the visual verdict stays owed to Chan (his eyes give CLEAN / POLISH / VIOLATIONS).

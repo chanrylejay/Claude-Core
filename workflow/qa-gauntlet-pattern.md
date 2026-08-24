@@ -115,8 +115,11 @@ cited conclusions instead of file dumps. Use before building, any time.
 
 COPY both hooks into the project's `.claude/hooks/` first — run from Claude-Core they silently
 guard the wrong folder (their paths resolve relative to the file). Wire them in the project's
-`.claude/settings.local.json` — four events: PreToolUse (push-guard), PostToolUse (ui-track),
-Stop (done-wall), UserPromptSubmit (spec-nudge). The copy-paste JSON lives in
+`.claude/settings.local.json` — three events: PostToolUse (ui-track),
+Stop (done-wall), UserPromptSubmit (spec-nudge). (Superseded Aug 24 2026: push-guard is no
+longer wired per-project — it moved to USER level after the escape in trap 4 below; the other
+three stay per-project because their subject matter — this project's gauntlet state — is
+genuinely project-scoped.) The copy-paste JSON lives in
 `../templates/agents/README.md`; the rules HERE govern that JSON, and if the two ever disagree,
 the JSON is the bug. Two things the wiring gets wrong by default, both fail-open and both silent:
 1. **The shell matcher must name EVERY shell-capable tool this environment exposes.** On lean-ctx
@@ -130,6 +133,22 @@ the JSON is the bug. Two things the wiring gets wrong by default, both fail-open
 2. **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and the
    done-wall (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits
    1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice.
+3. **Wired is not loaded.** Settings hooks are read at SESSION START only: a hook installed
+   mid-session is on disk, wired, and net-green, yet inactive until the window reloads, so the
+   gate fail-opens with nothing to notice until then. Install order: copy, wire, RELOAD, then
+   live-prove the block. (Found live Aug 24 2026 by the CLI while installing push-guard — the
+   reachability check, applied to hook loading itself.)
+4. **A project-scoped guard cannot gate a machine-wide action.** `git push` reaches ANY repo the
+   shell can cd into, but a hook in one project's `.claude/settings.local.json` loads only for
+   sessions rooted in THAT project — so a session rooted anywhere else pushes the guarded repo
+   ungated, silently, forever. Proven live Aug 24 2026: a tokenless dry-run push of Claude-Core
+   from an ano-ulam-rooted session sailed through a freshly installed, net-green, correctly
+   wired project guard. THE LAW: **push-guard wires at USER level** — hook at
+   `~/.claude/hooks/push-guard.mjs`, wiring in `~/.claude/settings.json` (skeleton carries it),
+   ONE token at `~/.claude/PUSH_GO` for every push from every session. Measure a protection's
+   scope against where the ACTION can originate, never against where the asset lives. The
+   live proof after install: reproduce the escape — a tokenless dry-run of the guarded repo
+   FROM a session rooted in a different project must be REFUSED.
    The non-blocking modes (ui-track, spec-nudge) do not need it. Rewriting a hook command for a
    new repo, the suffix goes back on.
 Day-one order: push-guard on day one; the done-wall ONLY after client-qa/client-ux exist (a

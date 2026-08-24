@@ -44,7 +44,10 @@ doesn't.
 ## Hooks (`../hooks/`) — wiring only
 The concept, the rules, and the never-fake-a-gate law live in ONE home:
 `../../workflow/qa-gauntlet-pattern.md`.
-- `push-guard.mjs` — PreToolUse on the shell tools. Update the GO-file path per repo.
+- `push-guard.mjs` — USER-LEVEL since Aug 24 2026 (`~/.claude/hooks/`, wired in
+  `~/.claude/settings.json`, one machine-wide token): a per-project push gate was escaped live
+  from a session rooted elsewhere — trap 4 in the qa-gauntlet home. Not part of this per-project
+  JSON any more.
 - The matcher rule and the `|| exit 2` rule live COMPLETE in the qa-gauntlet home, with their
   rationale; they are deliberately not restated here. The JSON below is the copy-paste
   IMPLEMENTATION of those rules: if it ever disagrees with the home, the JSON is the bug.
@@ -60,7 +63,6 @@ COPY both hooks into the project's `.claude/hooks/` first — never run them fro
 ```json
 {
   "hooks": {
-    "PreToolUse": [{ "matcher": "Bash|PowerShell|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell|mcp__lean-ctx__ctx_call", "hooks": [{ "type": "command", "command": "node .claude/hooks/push-guard.mjs || exit 2" }] }],
     "PostToolUse": [{ "matcher": "Edit|Write|mcp__lean-ctx__ctx_patch", "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs ui-track" }] }],
     "Stop": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs done-wall || exit 2" }] }],
     "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "node .claude/hooks/gauntlet-guard.mjs spec-nudge" }] }]

@@ -1,6 +1,6 @@
 ---
 name: chan-ai-cost-context
-description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. CONFIRMED Aug 11 2026: Claude access in VS Code is gone permanently, the CLI runs DeepSeek v4 flash, and Claude runs as the planning agent at claude.ai. The switch is DONE; do not re-run it. Keep the kit lean and mechanical so weaker models can run it.
+description: The AI cost posture. During the Devoted engagement (ended Jul 24 2026) the company paid for Claude and effort stayed MAX by Chan's ruling. CONFIRMED Aug 11 2026: Claude access in VS Code is gone permanently, the CLI runs DeepSeek v4 flash, and Claude runs as the planning agent at claude.ai. The switch is DONE; do not re-run it. Keep the kit lean and mechanical so any model can run it.
 metadata:
   type: user
 ---
@@ -10,12 +10,12 @@ metadata:
 **The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access in VS Code is gone for good (confirmed Aug 11 2026), so that premise is gone. He now runs his own DeepSeek key in the CLI and uses claude.ai as the planning agent.
 
 **Current posture (last updated Jul 29 2026, the switch is now DONE):**
-- Chan confirmed in-session Jul 29 2026: his Claude access is gone and he switched to DeepSeek. The model is now deepseek-v4-flash, and this session IS the first proof the kit works on a weaker model. The contract check fired, the drill ran, the rules loaded, the push gate held - all of it worked on first contact with DeepSeek, before any adjustments.
+- Chan confirmed in-session Jul 29 2026: his Claude access is gone and he switched to DeepSeek. The model is now deepseek-v4-flash, and this session IS the first proof the kit works on a different, smaller-context model. The contract check fired, the drill ran, the rules loaded, the push gate held - all of it worked on first contact with DeepSeek, before any adjustments.
 - The first practical note (Jul 29, SUPERSEDED Aug 24 2026): the window is not smaller — v4-flash carries a 1M-token context — but a big window is a cost trap under the Aug 16 pricing, so the compact-early habit below replaces the old worry. The cost of that first session was about $2 (374k tokens), Chan paying his own key for the first time. /compact and /info still work the same way.
 - DeepSeek cannot see images. The screenshot save-to-file handoff is now the only path, not a fallback. The contract already covers this (section 3 bullet one).
 - Switch instructions: ../workflow/switch-to-deepseek.md (script: templates/apply-deepseek-switch.mjs). No longer blocked; the prediction guard is history.
 - The 10/10 workflow goal was always a system that SURVIVES this downgrade: hooks over prose rules, short high-signal files, checklists over judgment calls, one home per fact. That design is now live reality, not insurance.
-- A weaker model forgets more and reasons worse: trust the files, follow the checklists, never skip the gates, and do not attempt the heavy multi-agent patterns Claude ran.
+- Under a smaller context window ANY model forgets more midstream: trust the files, follow the checklists, never skip the gates, and scale multi-agent patterns to the context window at hand. (Reworded Aug 24 2026 on Chan's fairness ruling — the CLI is a collaborator, not a lesser; the same session it was reworded, the CLI caught a defect the planner's clean sandbox could not see.)
 - lean-ctx is a COST tool, not a style preference. Chan, Jul 27 2026, asked why he uses it: "its because im broke." Its cached re-reads are the entire reason native Read/Grep/Glob are denied, so routing in-repo file reads through the shell out of habit spends his money for nothing. The routing rule and the measured drift live in ../workflow/tool-playbook.md; the shell still owns git, scripts, computed checks, and every out-of-root path.
 - If he ever pays for Claude again, or a future client provides access, revisit effort and model choice then. Financial guard-rail: money decisions get a deliberate slow-down review, see [[chan-career-playbook]].
 

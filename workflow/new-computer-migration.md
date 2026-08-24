@@ -11,8 +11,9 @@ Moving = copy two folders + one file, reinstall a few tools, fix paths if the us
 | MCP server registrations + CLI state | `C:\Users\Chanryle\.claude.json` (single file, sibling of the folder above) | `C:\Users\<You>\.claude.json` |
 | Claude-Core (this kit) | `C:\Users\Chanryle\Claude-Core\` | same place, or anywhere — but then update the two path lines in global CLAUDE.md: the root line at the top and the import in section 2 |
 
-Best practice: keep Claude-Core in a **private GitHub repo** — then "copying" is just `git clone`,
-and it's backed up forever.
+Claude-Core lives in a **PUBLIC GitHub repo by Chan's decision** (Aug 11 2026; rationale and the
+public-safe writing law: README) — so "copying" is just `git clone`, and it's backed up forever.
+(Superseded Aug 24 2026: this line predated the public ruling and said "private".)
 
 A repo backs up only what was PUSHED, and only what is TRACKED. Before the old machine is
 retired, in Claude-Core and in every project repo, run `git status --short` and
@@ -20,7 +21,7 @@ retired, in Claude-Core and in every project repo, run `git status --short` and
 that check is clean. Then run `git status --ignored --short`: everything it lists is excluded
 by .gitignore, exists in no repo anywhere, and must be hand-copied to an offline drive.
 
-**But the repo backs up only the TRACKED, PUSHED part of Claude-Core, and nothing of ~/.claude.** Everything .gitignore excludes lives in no repo at all. Read the LIVE Claude-Core/.gitignore rather than trusting any list written here, because a list drifts and the file does not (as of Jul 25 2026 it excludes archives/, LOCAL-ONLY-*, memory/LOCAL-ONLY-*, .env*, *.pem, *.key, *credential*, *.zip). `git status --ignored --short` prints exactly what must be hand-copied to an offline drive; archives/ and memory/LOCAL-ONLY-security-rulings.md are both in there today, and a tracked file points at that security file as the sole home of six settled rulings. A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
+**But the repo backs up only the TRACKED, PUSHED part of Claude-Core, and nothing of ~/.claude.** Everything .gitignore excludes lives in no repo at all. Read the LIVE Claude-Core/.gitignore rather than trusting any list written here, because a list drifts and the file does not (as of Jul 25 2026 it excludes archives/, LOCAL-ONLY-*, memory/LOCAL-ONLY-*, .env*, *.pem, *.key, *credential*, *.zip). `git status --ignored --short` prints exactly what must be hand-copied to an offline drive; archives/ and memory/LOCAL-ONLY-security-rulings.md are both in there today, and a tracked file points at that security file as the sole home of six settled rulings. A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs, ~/.claude/hooks/push-guard.mjs + its net _pushguard_test.mjs (from `templates/hooks/`; user-level since Aug 24 2026, qa-gauntlet trap 4), and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
 
 ## What to reinstall (the tools — these do NOT copy)
 

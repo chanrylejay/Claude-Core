@@ -57,7 +57,7 @@ First real job, queued: PED audits ano-ulam's PDF-to-CSV extractor prompt as ste
 and its self-compliance rows never caught it. v6.4.3 closes it with the Step 0 -> FULL lock.
 The deepest lesson from the whole hunt, banked as a standing law below.
 
-**THE LESSON (applies to prompts AND to Claude-Core itself):** a weak model obeys the exact words
+**THE LESSON (applies to prompts AND to Claude-Core itself):** a literal-minded model obeys the exact words
 of a rule, not its intent. The most dangerous defect hides mid-paragraph inside the loudest safety
 rule, and a detector only catches it if its trigger words literally cover the defect. Widen the
 words, not the hope. Audit sentence by sentence; a safe overall theme never clears an individual
