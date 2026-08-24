@@ -273,17 +273,49 @@ try {
         }
       }
     } catch {}
+    // DEEPSEEK PEAK-PRICE TRIPWIRE (added Aug 24 2026). DeepSeek moved v4-flash to peak/off-peak
+    // billing on Aug 16 2026 16:00 UTC; peak = 01:00-04:00 and 06:00-10:00 UTC = 09:00-12:00 and
+    // 14:00-18:00 Manila, at DOUBLE the off-peak rate. The model cannot know the wall clock unless
+    // told, so this hook tells it — hooks over prose rules. Boundaries are start-inclusive,
+    // end-exclusive; if DeepSeek publishes an exact boundary rule, change it HERE and in
+    // lessons/platform-gotchas.md (DeepSeek API) in the same edit. Habits and price table:
+    // memory/chan-ai-cost-context.md and platform-gotchas. Like every note in this file, a
+    // failure here is a silent skip, never a throw: a hook that wedges a session over a price
+    // warning would cost more than the warning saves.
+    // TEST SEAM: the net cannot control the wall clock, so RITUAL_HOOK_FAKE_UTC_MIN (an integer
+    // 0..1439, minutes past UTC midnight) overrides it. Unset, non-integer, or out of range =
+    // real clock. Production never sets it; the net sets it per-spawn via the sandboxed env gate.
+    let costNote = "";
+    try {
+      const fake = Number.parseInt(process.env.RITUAL_HOOK_FAKE_UTC_MIN ?? "", 10);
+      const now = new Date();
+      const mins = Number.isInteger(fake) && fake >= 0 && fake < 1440
+        ? fake
+        : now.getUTCHours() * 60 + now.getUTCMinutes();
+      const PEAK_UTC = [[60, 240], [360, 600]]; // [01:00,04:00) and [06:00,10:00) UTC
+      const inPeak = PEAK_UTC.some(([a, b]) => mins >= a && mins < b);
+      const fmtManila = (utcMin) => {
+        const m = (utcMin + 480) % 1440; // Manila = UTC+8, no DST
+        return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+      };
+      const bounds = [60, 240, 360, 600];
+      let next = bounds.find((b) => b > mins);
+      if (next === undefined) next = bounds[0]; // past 10:00 UTC wraps to tomorrow's first peak
+      costNote = inPeak
+        ? "DEEPSEEK PEAK PRICING IS ACTIVE (2x, until " + fmtManila(next) + " Manila): keep this session cheap — plan, read, and batch; defer heavy generation, big file churn, and anything compactable to off-peak (before 09:00, 12:00-14:00, or after 18:00 Manila) unless Chan says run it now. Say the peak state in your first line so he can decide. "
+        : "DeepSeek off-peak rate is active (peak = 09:00-12:00 and 14:00-18:00 Manila at 2x; next boundary " + fmtManila(next) + " Manila). ";
+    } catch {}
     if (source === "compact") {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — opened by WHERE THEY SIT: Bash node -e when they are outside THIS workspace root, which is every root except Claude-Core itself; ctx_read when Claude-Core IS the root; and never from the index lines, which are summaries, and summaries are what you are not trusting; verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
-          seedNote + graphNote + contractNote + memNote,
+          seedNote + graphNote + contractNote + memNote + costNote,
       );
     } else {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Session-start ritual: " +
-          seedNote + graphNote + contractNote + memNote +
+          seedNote + graphNote + contractNote + memNote + costNote +
           "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks — the marked lines only say WHICH files to open — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );
     }

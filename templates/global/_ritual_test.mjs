@@ -258,6 +258,36 @@ t("a TYPO'd mode still drills", drills(withMode("srart")));
 t("a MISSING mode still drills", drills(withMode()));
 t("an unrecognised mode says so out loud", /unrecognised mode/.test(withMode("srart").stdout || ""));
 
+// 4b. DEEPSEEK PEAK-PRICE TRIPWIRE (hook edit Aug 24 2026). The wall clock is driven through
+//     RITUAL_HOOK_FAKE_UTC_MIN — passed per-spawn through the ONE sandboxed gate, never exported
+//     process-wide, so no other section's spawn can inherit a fake clock. Boundaries are
+//     start-inclusive, end-exclusive, and a pin sits ON every edge, because an off-by-one here
+//     is not a crash, it is a silent 2x bill.
+const atMin = (v) => spawnHook(["start"], {
+  input: JSON.stringify({ source: "startup" }), cwd: SB,
+  env: Object.assign({}, SANDBOX_ENV, { RITUAL_HOOK_FAKE_UTC_MIN: String(v) }),
+});
+const costStates = (r) => {
+  const s = r.stdout || "";
+  return (/PEAK PRICING IS ACTIVE/.test(s) ? 1 : 0) + (/off-peak rate is active/.test(s) ? 1 : 0);
+};
+t("00:59 UTC is off-peak", /off-peak rate is active/.test(atMin(59).stdout || ""));
+t("01:00 UTC opens peak (start-inclusive)", /PEAK PRICING IS ACTIVE/.test(atMin(60).stdout || ""));
+t("03:59 UTC is still peak", /PEAK PRICING IS ACTIVE/.test(atMin(239).stdout || ""));
+t("04:00 UTC closes peak (end-exclusive)", /off-peak rate is active/.test(atMin(240).stdout || ""));
+t("06:00 UTC opens the second window", /PEAK PRICING IS ACTIVE/.test(atMin(360).stdout || ""));
+t("10:00 UTC closes it", /off-peak rate is active/.test(atMin(600).stdout || ""));
+t("peak names its own END in Manila time", /until 12:00 Manila/.test(atMin(61).stdout || ""));
+t("late off-peak wraps to TOMORROW'S first peak", /next boundary 09:00 Manila/.test(atMin(601).stdout || ""));
+t("off-peak still teaches the schedule", /peak = 09:00-12:00 and 14:00-18:00 Manila/.test(atMin(241).stdout || ""));
+t("exactly ONE cost state per message, never both, never neither",
+  costStates(atMin(0)) === 1 && costStates(atMin(100)) === 1);
+t("an invalid seam value falls back to the real clock, not to silence", costStates(atMin("banana")) === 1);
+t("the COMPACT branch carries the cost state too",
+  costStates(spawnHook(["start"], { input: JSON.stringify({ source: "compact" }), cwd: SB,
+    env: Object.assign({}, SANDBOX_ENV, { RITUAL_HOOK_FAKE_UTC_MIN: "61" }) })) === 1);
+t("a real-clock default spawn carries exactly one cost state", costStates(run("startup")) === 1);
+
 // 7. GRAPH PRE-BUILD (the Jul 26 2026 freeze fix). lean-ctx deadlocks on a project's FIRST graph
 //    build when it runs inside the MCP server, so the hook pre-builds from the CLI at session
 //    start. Pins: fires on a fresh workspace AND says so in the message, skips when a complete
