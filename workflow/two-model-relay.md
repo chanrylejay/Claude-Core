@@ -77,6 +77,14 @@ do not fix silently).
 - **GO law is unchanged.** Push to main = live deploy = Chan's explicit GO each
   time. A previous GO never carries forward. Approval once is not approval
   forever.
+- **Every delivery file gets a UNIQUE name; a corrected patch NEVER reuses one.** Browsers
+  save a second copy as `name (1).patch` rather than overwriting, so a "refreshed" patch
+  under the old name leaves the stale file sitting in Downloads under the name the brief
+  told the agent to apply (found live Aug 24 2026: the CLI applied the stale bootstrap patch,
+  caught it because the corrected wording was missing, then found the ` (1)` copy and
+  reapplied). Corrections ship as `-fix1`, `-fix2`, `-v2`; the brief names the exact file;
+  and every brief states one MARKER STRING the applied tree must contain, so an agent can
+  prove it applied the intended version before committing.
 - **A cross-agent measurement disagreement is itself a STOP.** When the planner's outside
   check (fetched tree, net rerun) disagrees with the agent's runtime report, neither
   authority wins by default (audit Aug 2026: the old authority split named winners per
