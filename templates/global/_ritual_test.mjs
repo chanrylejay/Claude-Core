@@ -288,6 +288,28 @@ t("the COMPACT branch carries the cost state too",
     env: Object.assign({}, SANDBOX_ENV, { RITUAL_HOOK_FAKE_UTC_MIN: "61" }) })) === 1);
 t("a real-clock default spawn carries exactly one cost state", costStates(run("startup")) === 1);
 
+// 4c. SOFT SPEND CAP note (Aug 2026). The hook reads cap + meter state under USERPROFILE, so a
+//     dedicated fake home per case keeps this sandboxed like everything else.
+const CAP_HOME2 = path.join(os.tmpdir(), "ritual-cap-home");
+fs.rmSync(CAP_HOME2, { recursive: true, force: true });
+fs.mkdirSync(path.join(CAP_HOME2, ".claude"), { recursive: true });
+fs.mkdirSync(path.join(CAP_HOME2, "Claude-Core", "memory"), { recursive: true });
+fs.writeFileSync(path.join(CAP_HOME2, "Claude-Core", "CLAUDE.md"), "# cap-sandbox-contract\nbody\n");
+fs.writeFileSync(path.join(CAP_HOME2, "Claude-Core", "memory", "MEMORY.md"), "# idx\n- x\n");
+fs.writeFileSync(path.join(CAP_HOME2, ".claude", "CLAUDE.md"), "# hub\n@" + path.join(CAP_HOME2, "Claude-Core", "CLAUDE.md").replace(/\\/g, "/") + "\n");
+const CAP_ENV = { USERPROFILE: CAP_HOME2, HOME: CAP_HOME2, XDG_DATA_HOME: path.join(CAP_HOME2, ".local", "share"), RITUAL_HOOK_FAKE_UTC_MIN: "300" }; // 300 UTC min = 13:00 Manila on the fake clock's day
+const capSpawn = () => spawnHook(["start"], { input: JSON.stringify({ source: "startup", cwd: SB }), cwd: SB, env: CAP_ENV });
+t("no cap file: no cap note", !/SPEND CAP HIT/.test(capSpawn().stdout || ""));
+const todayManila = new Date(Date.now() + 480 * 60000).toISOString().slice(0, 10);
+fs.writeFileSync(path.join(CAP_HOME2, ".claude", "deepseek-meter-state.json"), JSON.stringify({ day_key: todayManila, day_spent: 1.25 }));
+fs.writeFileSync(path.join(CAP_HOME2, ".claude", "deepseek-cap.txt"), "1.00");
+t("cap met + today's state: the note fires with both numbers", /SPEND CAP HIT today \(-\$1\.25 >= \$1\.00/.test(capSpawn().stdout || ""));
+fs.writeFileSync(path.join(CAP_HOME2, ".claude", "deepseek-meter-state.json"), JSON.stringify({ day_key: "2020-01-01", day_spent: 9.99 }));
+t("stale (another day's) state stays silent", !/SPEND CAP HIT/.test(capSpawn().stdout || ""));
+fs.writeFileSync(path.join(CAP_HOME2, ".claude", "deepseek-meter-state.json"), "{not json");
+t("corrupt state stays silent, never a throw", (() => { const r = capSpawn(); return r.status === 0 && !/SPEND CAP HIT/.test(r.stdout || ""); })());
+fs.rmSync(CAP_HOME2, { recursive: true, force: true });
+
 // 7. GRAPH PRE-BUILD (the Jul 26 2026 freeze fix). lean-ctx deadlocks on a project's FIRST graph
 //    build when it runs inside the MCP server, so the hook pre-builds from the CLI at session
 //    start. Pins: fires on a fresh workspace AND says so in the message, skips when a complete

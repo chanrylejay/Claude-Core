@@ -301,9 +301,22 @@ try {
       const bounds = [60, 240, 360, 600];
       let next = bounds.find((b) => b > mins);
       if (next === undefined) next = bounds[0]; // past 10:00 UTC wraps to tomorrow's first peak
-      costNote = inPeak
+      // SOFT SPEND CAP (Aug 2026): informational brake, honestly labeled — it blocks nothing.
+      // Reads the meter's state + ~/.claude/deepseek-cap.txt; both live under USERPROFILE so
+      // the net's FAKE_HOME redirection sandboxes them. Any failure = silent skip.
+      let capNote = "";
+      try {
+        const homeDir = process.env.USERPROFILE || "C:/Users/Chanryle";
+        const cap = Number(readFileSync(join(homeDir, ".claude", "deepseek-cap.txt"), "utf8").trim());
+        const st = JSON.parse(readFileSync(join(homeDir, ".claude", "deepseek-meter-state.json"), "utf8"));
+        const dayKey = new Date(now.getTime() + 480 * 60_000).toISOString().slice(0, 10); // Manila date
+        if (Number.isFinite(cap) && cap > 0 && st.day_key === dayKey && Number(st.day_spent) >= cap) {
+          capNote = "SPEND CAP HIT today (-$" + Number(st.day_spent).toFixed(2) + " >= $" + cap.toFixed(2) + " in ~/.claude/deepseek-cap.txt): stop non-essential work, and say the cap state in your first line so Chan decides. ";
+        }
+      } catch {}
+      costNote = capNote + (inPeak
         ? "DEEPSEEK PEAK PRICING IS ACTIVE (2x, until " + fmtManila(next) + " Manila): keep this session cheap — plan, read, and batch; defer heavy generation, big file churn, and anything compactable to off-peak (before 09:00, 12:00-14:00, or after 18:00 Manila) unless Chan says run it now. Say the peak state in your first line so he can decide. "
-        : "DeepSeek off-peak rate is active (peak = 09:00-12:00 and 14:00-18:00 Manila at 2x; next boundary " + fmtManila(next) + " Manila). ";
+        : "DeepSeek off-peak rate is active (peak = 09:00-12:00 and 14:00-18:00 Manila at 2x; next boundary " + fmtManila(next) + " Manila). ");
     } catch {}
     if (source === "compact") {
       emit(

@@ -77,6 +77,11 @@ do not fix silently).
 - **GO law is unchanged.** Push to main = live deploy = Chan's explicit GO each
   time. A previous GO never carries forward. Approval once is not approval
   forever.
+- **A cross-agent measurement disagreement is itself a STOP.** When the planner's outside
+  check (fetched tree, net rerun) disagrees with the agent's runtime report, neither
+  authority wins by default (audit Aug 2026: the old authority split named winners per
+  QUESTION, not for a dispute between them): both sides paste their evidence, nothing
+  further ships, Chan arbitrates.
 - **Stand downs are real.** When claude.ai or Chan says nothing starts, nothing
   starts. Verification and discussion are fine; writes to code are not.
 

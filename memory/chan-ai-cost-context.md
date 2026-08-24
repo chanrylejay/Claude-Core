@@ -25,7 +25,12 @@ runbook exists if that ever changes). Full price table, peak windows, and the ve
 reconstruction: ../lessons/platform-gotchas.md, DeepSeek API section — one home, read it before
 any cost reasoning. What changed in one line: off-peak is ~2x the old flat rate, PEAK (09:00-12:00
 and 14:00-18:00 Manila) is ~4x, and cache hits are no longer ~free, so context size now bills on
-every request. The four session habits, in order of dollars saved:
+every request. The session habits, re-ranked Aug 2026 after external audit (their math at 100K contexts said "cents"; our telemetry at 360-410K said dollars — so the habits are WEIGHT-CONDITIONAL, and one is master):
+0. **MASTER HABIT — keep the context small.** Everything below shrinks with it: at 100K a cold
+   reload is ~$0.02 and the peak premium is coffee money; at 400K both are real. The others are
+   advisories that bind in proportion to context weight, never trades against Chan's sleep or
+   schedule; the tripwire informs, Chan decides.
+The four session habits, in order of dollars saved:
 1. **Work off-peak.** Peak = 09:00-12:00 and 14:00-18:00 Manila at double price. The session-ritual
    hook announces the live peak/off-peak state at every session start (installed-hook check: this
    is real only where the Aug 24 hook version is planted; reachability applies). Heavy generation
@@ -43,6 +48,13 @@ The scoreboard for all four is the money meter in the VS Code status bar (balanc
 observed spend, live peak state; zero token cost — it renders outside the model's context).
 Installed-hook check applies: it is real only where templates/global/deepseek-meter.mjs is
 planted and wired in settings statusLine. If the bar shows nothing, the install slipped — say so.
+
+**Soft spend cap (Aug 2026, auditor suggestion, informational brake not a lock):** write a
+number (USD) into `~/.claude/deepseek-cap.txt` and two things happen — the meter renders a red
+⚠CAP segment once today's observed spend meets it, and the session hook's cost note tells the
+model to stop non-essential work and say so in its first line. No file = no cap. It blocks
+nothing mechanically (labeled honestly per the seatbelt/lock rule in the qa-gauntlet home);
+the hard-block hook is a deferred upgrade.
 
 **The free-tier toolbelt already exists (archive Doc B v9 §5 + §8; verify staleness before relying):** the Msty Studio rig on the ThinkPad (12 configured providers, free-model failover priority chain, snap/load/next snapshot protocol for zero-loss model switches) and the Vibe Coding Stack (Cline + DeepSeek API at ~₱0.50/session, OpenRouter free models 50 req/day as backup, GitHub Copilot Free / Cursor Free quotas, Bolt free-tier economics). Philippines is NOT eligible for DeepSeek's free token grant (May 2026 status; re-verify). Standing money rule: no new AI spend until a client is secured.
 

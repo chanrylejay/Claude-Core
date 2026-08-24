@@ -117,6 +117,7 @@ version before that named `--no-env` as the safe flag while the header had been 
 same morning.)
 
 ## Long-running work
+- **EXACT-VALUE CARVE-OUT (Aug 2026, three auditors): drill verification, L24 audits, and any edit to a memory file READ RAW — Bash-level reads, never ctx_*.** The lean-ctx routing rule stands for exploration and bulk reading; it never applies to work whose whole point is exact tokens. The old escape clause ("re-run tightly or read raw") was self-judged; this carve-out names the classes so nothing is left to judgment.
 - **Compressed/summarized shell output can mangle exact values** — re-run tightly scoped or read
   the raw log when an exact value matters.
 - A production `npm run build` in a repo with a running dev server can clobber it

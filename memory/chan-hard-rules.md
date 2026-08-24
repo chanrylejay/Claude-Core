@@ -31,3 +31,9 @@ metadata:
 10. **Never write a third-party's production DB. Ever.** Read-only forever unless the DB is ours. Before any write or DDL call, confirm the tool name and project ref point at OUR database. Destructive SQL goes through a review-first artifact; archive, never delete.
 
 11. **Design judgment mandate.** Do not just execute edit lists, his or a client's. FIRST establish whether the surface is covered by LOCKED CANON: a reference design, an approved mock, a client-supplied artifact, or a rule Chan has already ruled on. On a covered surface rule 1 wins: match it exactly, and raise any rating gap with Chan rather than closing it yourself. ONLY on a surface no reference and no approval covers may you self-rate it 1 to 10 against the design canon and close the gap in the same pass. Chan resolves every conflict; no agent, and no reading of the canon, resolves one for him. Use the Impeccable skill for ANY UI work that changes what a screen looks like: layout, spacing, type, colour, component structure, copy on screen. Doubt resolves toward using it, never toward skipping it. The only exempt UI edits are ones that change nothing visible. See [[chan-judgment-mandate]] and [[chan-critique-directives]].
+
+12. **Inbound code is gated like outbound.** `npm install`, `pip install`, `curl | sh`, and any
+package/script fetch EXECUTES a stranger's code on the machine that holds the keys (audit
+Aug 2026) — at least the attack surface of a push. New packages need Chan's GO or a prior
+allowlist entry; installs default to `--ignore-scripts` and say so when scripts were needed;
+piping a download straight into a shell is forbidden — download, look, then run.

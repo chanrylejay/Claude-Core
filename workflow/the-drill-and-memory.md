@@ -35,12 +35,17 @@ summaries. The skip is scoped to the TRIGGER now, never the step.)):
    - You cannot name, from a FILE rather than from the summary, the last substantive thing built
      or shipped.
 
-   If you cannot tell whether a trigger fired, it fired. If none fired, say so in one line in
+   If you cannot tell whether a trigger fired, it fired. The transcript read is BOUNDED
+   (audit Aug 2026: "line by line if necessary" told a literal reader to cat the whole file
+   and refill the context the compaction just emptied): grep the raw transcript for the
+   disputed quote/list, or tail it with a stated line budget — through raw Bash, never a
+   compressing reader. Widen the window only if the target is not found, and say the budget
+   you used. If none fired, say so in one line in
    your first reply, so the skip is visible rather than silent. Only Chan can waive this. A
    genuinely cold start with no compaction behind it gives the FIRST trigger nothing to test, so
    that one cannot fire — but the other three still can, and they still get checked. Skip a
    trigger that has no subject; never skip the step.
-2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file, plus [[chan-hard-rules]] always, whether or not it carries a marker. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, and the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md.
+2. **Re-read the READ-FIRST memory files themselves, not their index lines.** The marked lines only tell you WHICH files to open; a one-line pointer is a summary, and this whole procedure exists because summaries are not trusted. Open every marked file, plus [[chan-hard-rules]] always, whether or not it carries a marker. Drill reads are RAW reads — Bash-level, never through a compressing layer: the first trigger is exact-wording work, which the read layer itself admits it can mangle (three auditors, Aug 2026; the routing carve-out lives in ../workflow/tool-playbook.md). Read both indexes RAW and IN FULL, not from the auto-loaded copy: auto-load truncates at 200 lines / 25KB and a marker past the cap dies silently — the pointer net (templates/_pointer_test.mjs) pins headroom. The markers are split across two indexes: the ⭐/🛑 markers in the Core memory index Claude-Core/memory/MEMORY.md, and the 🔴 READ-FIRST markers in the project memory index ~/.claude/projects/<key>/memory/MEMORY.md.
 3. **Verify actual disk/repo state** — what's committed, what's pushed, what's running —
    instead of believing the summary's claims. Disk wins over summary, always.
 4. Only then reply.

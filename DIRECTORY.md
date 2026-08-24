@@ -44,6 +44,8 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 
 ## templates/ — reusable infrastructure
 
+- `_l24_audit.mjs` — the L24 rewrite audit as a deterministic script (worktree vs a git ref; triage in-place / relocated / LOST; exit 1 on loss) + `_l24_test.mjs`, its net, which also pins the script's class list in sync with the law's floor in universal-patterns. Hand-running L24 is the fallback only.
+- `_pointer_test.mjs` — the pointer-integrity net: every memory file indexed exactly once, every index link resolves, cap headroom, DIRECTORY coverage of TRACKED files, contract paths exist; untracked delivery transients (CODING-BRIEF-*/FIX-*/*.patch, root only) and untracked kit additions ALREADY indexed here pass with notes; any other untracked file fails as a stray. MANDATORY after any file add, rename, or delete.
 - `leanctx-seed.js` — copy into any workspace root; gives the lean-ctx graph indexer one parse target so it never freezes (keep + commit it).
 - `project-claude-md.md` — starter CLAUDE.md for any new repo: what it is, the stack, the run command.
 - `apply-deepseek-switch.mjs` — the one-shot switch script (backs up settings, merges the env block, validates; --dry-run to rehearse). Never holds the key.

@@ -134,6 +134,28 @@ const rSet = spawnMeter({ DSMETER_HOME: H7, DSMETER_FAKE_BALANCE: "3.33" });
 t("a standalone run finds the key in settings.json", /3\.33/.test(rSet.stdout));
 t("that key never reaches stdout either", !rSet.stdout.includes("sk-from-settings"));
 
+// 4b. soft spend cap (Aug 2026): render only when a valid cap is met, silence otherwise
+const H8 = mkHome("cap");
+const capRun = (bal, capTxt) => {
+  if (capTxt !== null) fs.writeFileSync(path.join(H8, ".claude", "deepseek-cap.txt"), capTxt);
+  else fs.rmSync(path.join(H8, ".claude", "deepseek-cap.txt"), { force: true });
+  return spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:00:00Z", DSMETER_FAKE_BALANCE: "9.00" })).stdout;
+};
+capRun("9.00", null); // seed day at 9.00
+fs.rmSync(path.join(H8, ".claude", "deepseek-meter-state.json"), { force: true });
+spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:00:00Z", DSMETER_FAKE_BALANCE: "9.00" }));
+let out = spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:05:00Z", DSMETER_FAKE_BALANCE: "8.40" })).stdout; // spent 0.60, no cap yet
+t("no cap file: no ⚠CAP segment", !/⚠CAP/.test(out));
+fs.writeFileSync(path.join(H8, ".claude", "deepseek-cap.txt"), "0.50");
+out = spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:06:00Z", DSMETER_FAKE_BALANCE: "8.40" })).stdout;
+t("cap met renders ⚠CAP with spent/cap", /⚠CAP \$0\.60\/\$0\.50/.test(out));
+fs.writeFileSync(path.join(H8, ".claude", "deepseek-cap.txt"), "5.00");
+out = spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:07:00Z", DSMETER_FAKE_BALANCE: "8.40" })).stdout;
+t("under a raised cap the segment disappears", !/⚠CAP/.test(out));
+fs.writeFileSync(path.join(H8, ".claude", "deepseek-cap.txt"), "banana");
+out = spawnMeter(keyed(H8, { DSMETER_FAKE_NOW: "2026-08-24T12:08:00Z", DSMETER_FAKE_BALANCE: "8.40" })).stdout;
+t("a malformed cap is silent, never an error", !/⚠CAP/.test(out) && /DS /.test(out));
+
 // 5. wiring: the skeleton must point the statusLine at THIS meter, or a rebuilt machine
 //    silently keeps the old ccusage line that cannot see DeepSeek numbers.
 try {

@@ -108,7 +108,13 @@ cited conclusions instead of file dumps. Use before building, any time.
 
 - **push-guard.mjs** — PreToolUse hook that blocks `git push` unless an explicit GO file
   (`.claude/PUSH_GO`) exists; the file is consumed one-shot. Encodes "push = deploy = LIVE =
-  owner's explicit GO each time."
+  owner's explicit GO each time." SEATBELT, NOT A LOCK (audit Aug 2026, labeled by its own
+  standard): the gated agent can also `touch` the token, so this stops accidents and
+  confusion, not a determined or misdirected agent — the LOCK is the credential (a
+  passphrase-protected deploy key loaded via `ssh-add -t 1800` on Chan's GO; documented
+  upgrade path, Chan's call). The gauntlet guard below is likewise COMPLETION-CLAIM
+  enforcement, not commit prevention, and its escape file is a NORM shell access can violate —
+  trust each control for exactly what it is.
 - **gauntlet-guard.mjs** — Stop hook that blocks calling a build turn "done" until the gauntlet
   tokens exist. Commit itself is never blocked; only the *claim of done*. Escape hatch:
   `.claude/GAUNTLET_OFF` — CHAN'S FILE ONLY. Claude never creates or restores it: if genuinely stuck, say so in one line and ask him for it by name. Unlike PUSH_GO it is persistent, not one-shot, so once it exists every mode stays off for all later turns and sessions with nothing to notice. If it already exists, say so in the turn report before calling anything done.
@@ -137,7 +143,9 @@ the JSON is the bug. Two things the wiring gets wrong by default, both fail-open
    mid-session is on disk, wired, and net-green, yet inactive until the window reloads, so the
    gate fail-opens with nothing to notice until then. Install order: copy, wire, RELOAD, then
    live-prove the block. (Found live Aug 24 2026 by the CLI while installing push-guard — the
-   reachability check, applied to hook loading itself.)
+   reachability check, applied to hook loading itself.) THE ONE-RELOAD LAW: every settings and
+   hook change in a batch lands BEFORE a single reload — each extra reload is a cold cache
+   reload at miss price, and Aug 24 2026 spent three where one sufficed.
 4. **A project-scoped guard cannot gate a machine-wide action.** `git push` reaches ANY repo the
    shell can cd into, but a hook in one project's `.claude/settings.local.json` loads only for
    sessions rooted in THAT project — so a session rooted anywhere else pushes the guarded repo

@@ -123,7 +123,15 @@ function fetchBalance(key) {
   });
 }
 
-function render(balance, staleMin, today, peak, note) {
+function readCap() {
+  // Soft spend cap: a number (USD) in ~/.claude/deepseek-cap.txt. Absent/invalid = no cap.
+  try {
+    const v = Number(readFileSync(join(HOME, ".claude", "deepseek-cap.txt"), "utf8").trim());
+    return Number.isFinite(v) && v > 0 ? v : null;
+  } catch { return null; }
+}
+
+function render(balance, staleMin, today, peak, note, cap) {
   const RED = "\u001b[31m", YEL = "\u001b[33m", DIM = "\u001b[2m", OFF = "\u001b[0m";
   const bal = balance === null ? "?" : "$" + balance.toFixed(2);
   const low = balance !== null && balance < 2;
@@ -133,7 +141,8 @@ function render(balance, staleMin, today, peak, note) {
   const peakStr = peak.inPeak
     ? RED + "PEAK 2x > " + peak.nextManila + OFF
     : "off-peak > " + YEL + peak.nextManila + OFF;
-  return "DS " + balStr + " | " + todayStr + " | " + peakStr + (note ? " " + DIM + note + OFF : "");
+  const capStr = cap !== null && today >= cap ? " " + RED + "⚠CAP $" + today.toFixed(2) + "/$" + cap.toFixed(2) + OFF : "";
+  return "DS " + balStr + " | " + todayStr + capStr + " | " + peakStr + (note ? " " + DIM + note + OFF : "");
 }
 
 try {
@@ -167,7 +176,7 @@ try {
     }
   }
   writeState(st);
-  process.stdout.write(render(balance, staleMin, st.day_spent || 0, peakState(now), balance === null ? "(balance unreachable)" : ""));
+  process.stdout.write(render(balance, staleMin, st.day_spent || 0, peakState(now), balance === null ? "(balance unreachable)" : "", readCap()));
   process.exit(0);
 } catch (e) {
   // A broken meter renders its brokenness and never blocks the status bar.
