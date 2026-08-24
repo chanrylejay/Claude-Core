@@ -29,8 +29,9 @@
     ]
   },
   "statusLine": {
+    "_comment": "The DeepSeek money meter (balance, today's observed spend, live peak/off-peak state; zero token cost, renders outside the model's context). SUPERSEDES the old 'ccusage statusline' Aug 24 2026: ccusage computes from cache-token accounting the DeepSeek endpoint never returns (lessons/platform-gotchas.md, DeepSeek API), so it had nothing to show here. Re-point the absolute path on a recovery machine. Regression net: templates/global/_meter_test.mjs, MANDATORY after any meter edit.",
     "type": "command",
-    "command": "ccusage statusline",
+    "command": "node \"C:/Users/Chanryle/.claude/hooks/deepseek-meter.mjs\"",
     "padding": 0
   },
   "hooks": {

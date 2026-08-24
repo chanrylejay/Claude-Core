@@ -39,6 +39,10 @@ every request. The four session habits, in order of dollars saved:
    (hours-to-days idle) is a cold reload. Measured Aug 24: a 1-hour 73-request session with ~7 cold
    reloads billed $0.80; the all-day 561-request 8/10 session with ~11 billed $1.04 at the OLD rate.
    Batch the day's work into one sitting where life allows.
+The scoreboard for all four is the money meter in the VS Code status bar (balance, today's
+observed spend, live peak state; zero token cost — it renders outside the model's context).
+Installed-hook check applies: it is real only where templates/global/deepseek-meter.mjs is
+planted and wired in settings statusLine. If the bar shows nothing, the install slipped — say so.
 
 **The free-tier toolbelt already exists (archive Doc B v9 §5 + §8; verify staleness before relying):** the Msty Studio rig on the ThinkPad (12 configured providers, free-model failover priority chain, snap/load/next snapshot protocol for zero-loss model switches) and the Vibe Coding Stack (Cline + DeepSeek API at ~₱0.50/session, OpenRouter free models 50 req/day as backup, GitHub Copilot Free / Cursor Free quotas, Bolt free-tier economics). Philippines is NOT eligible for DeepSeek's free token grant (May 2026 status; re-verify). Standing money rule: no new AI spend until a client is secured.
 
