@@ -54,3 +54,18 @@ belongs to the client + their counsel, never to the builder or an AI session. Th
 unblock: Safe-Harbor de-identification done LOCALLY before any vendor sees the data. A vendor
 BAA alone is not compliance. BAA vendor reality (as of mid-2026): Supabase needs Team plan +
 add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.
+
+- **The stated ask and the real ask live at different altitudes.** A written client request
+  described a full end-to-end workflow mock; the daily operator's real pain, surfaced only in
+  casual chat, was one status→group auto-sort ("we drag cards manually and lose people").
+  Both were true. Build the operator's small ask FIRST (it took minutes on clean data and
+  made her the champion), then reveal it as one gear of the owner's big machine. Match
+  altitude to audience: recipes with operators, journeys with owners. And when a client asks
+  "what should we automate?", their casual chat afterwards IS the answer — capture verbatim.
+- **Platform-native beats custom rescue.** Mid-trial doubt ("nothing visual, client won't get
+  it") tempts a custom web-app rescue. The client's own words asked for it "in [the platform]
+  they pay for"; the fix each time was native features (dashboard, forms, groups, automations)
+  plus ONE flow diagram screenshot. A custom app from a week-old contractor is a dependency,
+  not a deliverable — park it as a late-phase item. Corollary: when morale says "we built the
+  wrong thing," re-read the client's actual request verbatim before building anything new;
+  twice the gap was presentation, not substance.
