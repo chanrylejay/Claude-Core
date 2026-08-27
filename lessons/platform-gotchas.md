@@ -15,6 +15,8 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - `new Date().toISOString()` is UTC; Manila is UTC+8; prefer latest-date-from-DB over a computed "today".
 - Auto-deploy only fires for pushes AFTER the Git connection was made; activating it takes one trivial push — **and that push deploys LIVE. GO required, same as any other push.** (Audit Jul 26 2026: this read as a bare imperative, and every GO constraint sat either further down the file or in a project-scoped file. This is also the push that produces the FIRST public deploy — see the Netlify note that a public URL exists the instant a build succeeds.)
 - Analytics: `@vercel/analytics/next` for Next.js, `/react` for Vite, script tag for plain HTML; enable in the dashboard first.
+- **Set the function region explicitly** — the default (US East) can be an ocean away from
+  your DB and users; put the DB in the same region as the serverless functions.
 
 ## Neon Postgres
 - **NUMERIC returns STRINGS in JS: always parseFloat before the frontend.** TEXT-stored JSON needs JSON.parse, and `::jsonb` casts before JSON operators in SQL.
@@ -41,6 +43,13 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 - One build at a time: racing builds corrupt .next (MODULE_NOT_FOUND deep in webpack-runtime): kill both, rm -rf .next, rebuild once.
 - Serverless route handlers must AWAIT audit/log writes; un-awaited promises die when the response returns.
 - Write architecture: see universal-patterns pattern 41 (the write-function spine).
+- **Middleware runs on the edge:** no Node `crypto` — use Web Crypto HMAC; the matcher must
+  exclude `/api`, `_next`, and the login route or the login POST redirects to itself (silent
+  infinite spinner).
+- **Google-font fetching happens at build time** (offline/walled builds fail there — not a
+  code bug).
+- **Don't run `npm run build` while the dev server is up** — it clobbers the build dir and
+  kills dev.
 
 ## DeepSeek API
 - **JSON output hard-caps near 27K characters: default to CSV at 50+ items — 100+ WILL truncate as JSON (CSV is 3-5x more compact).** Remove response_format json_object when requesting CSV.
@@ -80,6 +89,18 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
 ## Bolt.new
 - **NEVER connect Bolt to GitHub on a live project: it auto-pushes on any change and triggers auto-deploys (caused a production rollback once).** Bolt is a one-way launchpad: scaffold, download ZIP, VS Code, GitHub Desktop, deploy.
 - Verify immediately after scaffold: the DB client (it may swap Neon for Supabase), the schema names, and the full logic flow (it omits critical sections).
+- **Token economics observed:** ~100K for a scaffold prompt, ~80K for a single bug-fix
+  conversation. Budget accordingly; merge remaining prompts with a strict build ORDER and a
+  "finish the current file cleanly and STOP" clause so a token death never leaves half-written
+  files.
+- **Watch for silent infrastructure substitution:** if the tool can't see your DATABASE_URL it
+  may provision its OWN database and invent seed data. Leash clause that fixes it: "The database
+  already exists and is populated. Verify with <known-answer query>. If the env var is missing
+  or the query fails, STOP and tell me — do not fall back to any other database."
+- **Secrets:** create .env files manually in the file tree; never type secrets into an agent
+  prompt (it becomes conversation history). Check the tool's default deploy config (it may
+  target a different host than yours — harmless, ignorable).
+- **"Website" vs "App" mode chips matter** — pick the one that scaffolds a server.
 
 ## n8n (platform behaviors that survive versions)
 - **"Execute Once": chained nodes run once PER INPUT ITEM; a 22-item output upstream multiplies everything downstream (22 x 18 = 396 runs, discovered in a 2-hour production debug).** Enable Execute Once on DB queries, fetches, API calls that must run once.

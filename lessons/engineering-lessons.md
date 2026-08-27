@@ -59,3 +59,26 @@
 
 - Empty tables are findings, not dead ends: schema-without-data means scaffolded-but-never-wired; investigate the wiring, not the data.
 - AI-built micro-app sprawl mirrors its source boards 1:1 across platforms (Supabase/Netlify/Monday); map the WHOLE sprawl before consolidating anything.
+
+## Reviewing AI-generated code (Bolt-class output, Aug 2026)
+
+A checklist that caught 6 real bugs in generated code:
+1. **String-interpolation vs SQL placeholders:** `${i}` where `$${i}` was meant → literal
+   `LIMIT 1 OFFSET 2`. Grep every hand-built query string.
+2. **Run the full production build** — generated code often passes dev but fails `next build`
+   type-checking (= failed deploys).
+3. **Data pages need explicit dynamic rendering** or they freeze as build-time snapshots.
+4. **Payload audit:** list views that SELECT * including long-text columns for thousands of rows.
+5. **Double-writes** when both a helper and its calling route log the same event.
+6. **Dead module-level queries** executing at import.
+Also verify the golden rule survived: zero invented/hardcoded data; empty query renders an
+honest empty state.
+
+## Secret hygiene (the habit, not the incident)
+
+- **Secrets never enter chats, prompts, or commits** — env fields/files only; verify .gitignore
+  covers every .env variant BEFORE the first push; strip env files from any zip shared anywhere.
+- **The reflex is the point:** "this particular window is probably safe" is how keys end up in
+  the wrong window. Rotation after exposure is ten seconds of insurance.
+- **When the human declines a security recommendation:** log it once, state it's their call,
+  stop nagging. Trust survives; the record exists.

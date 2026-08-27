@@ -69,3 +69,38 @@ add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.
   not a deliverable — park it as a late-phase item. Corollary: when morale says "we built the
   wrong thing," re-read the client's actual request verbatim before building anything new;
   twice the gap was presentation, not substance.
+
+## Two-model relay refinements (client build, Aug 2026)
+
+- **Address model-to-model briefs peer-to-peer, not boss-to-intern.** Peers don't obey
+  checkpoints — they agree to them, so every STOP gate ships with its *reason* (e.g. "hold
+  after the seed so I can verify counts before we build on them").
+- **Division of labor that worked:** web model = architect/reviewer/data authority (cannot
+  reach runtime); CLI model = hands with runtime truth (repo, live DB, dev server).
+  Disagreements route through the human with evidence; the architect folds to runtime truth
+  and better data — and says so explicitly when beaten.
+- **Verification checkpoints beat trust:** pre-declare expected artifacts (e.g. exact
+  per-table seed counts) and gate the next phase on them.
+- **Push-guard ceremony:** the agent never pushes to a deploying branch without the human's
+  explicit GO (a one-shot token file works well). Push = deploy, so gates first, always:
+  tsc → build → dev-verify → then push.
+- **Bank-before-clear:** the agent writes state to repo docs + project memory, the human
+  clears context. A daily fresh-session ritual with a NEXT-SESSION-BRIEF file beats riding a
+  conversation into auto-compaction.
+
+## Product/demo principles that landed (client build, Aug 2026)
+
+- **Seed the demo with the client's real data.** "A demo" is fine; "a demo that already
+  knows your business" makes decisions.
+- **Scaffold broad, go deep on one:** build the whole business so the owner sees themselves;
+  make exactly one module (the ally's daily pain) deep. Real-but-read-only beats
+  fake-but-interactive everywhere else.
+- **Wins-first dashboards; "needs attention" panels over feature tours.**
+- **Honesty as feature:** "Verified ready: 1/N" + "M unknown" — the gap IS the pitch. Render
+  such numbers dynamically; hardcoded figures rot and contradict the UI.
+- **Design guardrails must be absolute to survive** ("no <color> anywhere"); when the design
+  authority contradicts its own rule, change the spec, not the rule.
+- **AI-drafter pattern:** the system prompt carries all the quality; the model is swappable;
+  JSON-forcing response modes beat fence-stripping.
+- **Free-tier full stack is real:** scaffolder + serverless Postgres + hobby deploy + budget
+  LLM API ≈ $0 to a live, branded, data-seeded internal tool in a day.
