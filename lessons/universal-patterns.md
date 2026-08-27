@@ -33,7 +33,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 24. **Multi-session build management:** number the micro-sessions, one deliverable each, end each with a handoff paragraph, never load files the session will not touch.
 25. **Trimmed context documents per sub-project:** instructions = lean behavior layer; context doc = deep knowledge layer; never duplicate between the two; never hand a sub-instance the raw full archive.
 
-## CLI-era patterns (26-42)
+## CLI-era patterns (26-46)
 
 26. **Silent fallbacks poison production:** any helper that quietly degrades to mock data WILL feed a real surface. Fallbacks are for layout, never for facts; gate real-record consumers on an explicit live flag.
 27. **Racing builds corrupt artifacts:** two builds (or build plus dev server) over one artifact dir corrupt it confusingly. Kill all, wipe, rebuild once. Never use grep-filtered build output as a success signal.
@@ -52,6 +52,43 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 40. **Brief the client's AI:** clients feed deliverables to their own AI. Embed an honest briefing in the deliverable (what it is, what changed, what is intentionally absent, how to verify). Context-not-persuasion survives adversarial review.
 41. **The write-function spine:** routes never touch the DB directly; every write goes through named write functions in one shared lib, and audit logging (before/after plus a frozen actor) is a Definition-of-Done line on every write. (Moved from platform-gotchas Jul 24 2026: architecture, not a platform behavior.)
 42. **Never hand an AI code agent a broad redesign prompt:** it produces oscillating, unpredictable changes. Scope exact changes; the agent executes and makes zero design decisions. (Proven in the Ano Ulam era; still true with stronger agents on personal-taste surfaces.)
+43. **When a client's tools contain AI agents, audit provenance before trusting any data you
+    import.** Agentic assistants inside SaaS tools generate plausible-looking records —
+    named people, complete-looking rows, scaffolding items — indistinguishable from real data
+    by inspection. On one engagement, ~97% of a client workspace's boards were agent-generated,
+    and agent-invented "workers" were seeded into a product and reached a demo script as its
+    hero example. **Most platforms record a creator on every record: use that, not
+    name-matching or plausibility.** Store the source-system creator id as a column so the
+    filter is structural rather than a blocklist that rots. Boards can be MIXED — classify
+    per item, never per source. Corollary: the fabricated rows were the ones with the most
+    complete field coverage, because a generator fills every field and humans do not.
+    **Completeness is a contamination signal, not a quality signal.**
+44. **Revealed preference beats stated requirements.** When users are asked what they want,
+    they describe their current workaround. What they have already BUILT for themselves,
+    unasked, is the real requirement. On one engagement a client had ~370 auto-generated
+    boards, ~90 abandoned template attempts, and exactly one board they made by hand and used
+    daily — and that board was the product spec. Look for the artefact people maintain
+    without being told to. It outranks any questionnaire, and it changes the pitch from "here
+    is what I built for you" to "you already built this; I finished it."
+45. **A number shown to a stakeholder gets confirmed by a human, never derived.** A headcount
+    moved three times in one session (71 → 53 → 30) because each value was derived from
+    whichever data source was in view, and each source counted a different entity: a
+    contaminated import, an event log of sessions attended, and the actual roster. One
+    question to the person who owns the process settled it in a sentence. **Derivation
+    answers "what is in this table"; only a human answers "what does the business count".**
+    Before any figure reaches a report, a dashboard or a deck, name the entity and have
+    someone who owns it confirm the definition — then write that definition next to the
+    number in code, or it drifts again.
+46. **Surveillance-shaped features die, and take their data with them.** A per-person work
+    view where only the manager watches teaches people to keep real work elsewhere — the
+    same mechanism that leaves a "task board" holding placeholder rows and no assignees.
+    Three fixes, all cheap: **put the manager in the same view with their own overdue items
+    visible**; give the manager COMMENT rights rather than EDIT rights on other people's
+    work, matching how bottom-up teams actually operate; and **never describe the feature as
+    visibility for the boss** — describe it as "so nothing you are working on gets
+    forgotten." Same feature, and the framing decides whether real work goes into it.
+    Related: **an empty row for a person with no data says "you belong here"; omitting them
+    says "this is not for you."**
 
 ## How Chan stress-tests AI systems (the methodology)
 

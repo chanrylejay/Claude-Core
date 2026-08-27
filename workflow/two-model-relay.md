@@ -108,6 +108,16 @@ do not fix silently).
   further ships, Chan arbitrates.
 - **Stand downs are real.** When claude.ai or Chan says nothing starts, nothing
   starts. Verification and discussion are fine; writes to code are not.
+- **A stop-gate needs its reason attached, and an answer is part of passing it.** A brief that
+  says "report X before building Y" is passed only when X is reported — building Y and not
+  mentioning X is a skipped gate even when the work is correct. Pre-declare the artefact, state
+  why it gates the next phase, and treat silence on it as a failure to verify rather than an
+  implicit pass.
+- **The planning half should carry static reads; the machine half carries runtime.** Cloning
+  the repo into the planner's sandbox removes whole categories of question from the agent's
+  context budget — greps, file contents, line numbers, colour audits all become free. Reserve
+  the agent's tokens for what only it can see: live database state, what a test returned, what
+  is actually on disk. **Ask it for numbers and verdicts, never for file contents.**
 
 ## When to bank
 

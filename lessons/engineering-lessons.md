@@ -54,6 +54,12 @@
 - **Archive, never delete** (pattern 35) — files, columns, features. Everything reversible until proven safe.
 - Timezone canon: pick the business's timezone once, apply it in every date computation.
   Server-local dates cause off-by-one bugs that look like logic errors.
+- **Pagination needs a unique tiebreaker or it silently repeats and skips rows.** `ORDER BY
+  <timestamp> DESC` with `LIMIT/OFFSET` is non-deterministic when the sort key ties — and a
+  bulk seed inside one transaction gives every row an identical `now()`, so ties are the
+  normal case, not the edge case. Always append the primary key: `ORDER BY updated_at DESC,
+  id DESC`. The symptom reaches the user as "I have seen this record already", which costs
+  trust disproportionately to the one-line fix.
 
 ## Data archaeology (from archive Doc B, banked Jul 24 2026)
 
@@ -71,6 +77,10 @@ A checklist that caught 6 real bugs in generated code:
 4. **Payload audit:** list views that SELECT * including long-text columns for thousands of rows.
 5. **Double-writes** when both a helper and its calling route log the same event.
 6. **Dead module-level queries** executing at import.
+7. **Grep every API route for an auth check before shipping a login wall.** A middleware
+   matcher and a set of unprotected route handlers look equally correct in isolation. The
+   test is not "does the login page work" but "does an unauthenticated request to the data
+   endpoint return 401".
 Also verify the golden rule survived: zero invented/hardcoded data; empty query renders an
 honest empty state.
 
@@ -82,3 +92,7 @@ honest empty state.
   the wrong window. Rotation after exposure is ten seconds of insurance.
 - **When the human declines a security recommendation:** log it once, state it's their call,
   stop nagging. Trust survives; the record exists.
+- **Silent fallback secrets.** `process.env.SECRET || 'dev-fallback'` means a missing env var
+  downgrades to a constant that is in the repo, and nothing fails visibly. If a sibling module
+  already throws on a missing `DATABASE_URL`, the inconsistency is the tell. Session secrets
+  throw like database URLs do. (universal-patterns #26, applied to credentials.)

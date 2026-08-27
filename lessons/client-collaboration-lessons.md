@@ -104,3 +104,20 @@ add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.
   JSON-forcing response modes beat fence-stripping.
 - **Free-tier full stack is real:** scaffolder + serverless Postgres + hobby deploy + budget
   LLM API ≈ $0 to a live, branded, data-seeded internal tool in a day.
+
+## Client discovery lessons (client build, Aug 2026)
+
+- **Interview users individually, never as a group.** Separate one-to-one conversations with
+  each member of a small team produced a different tool, a different workflow and a different
+  constraint from every person — including a whole system nobody had mentioned, and one staff
+  member with no access to the tool the engagement was scoped around. A group thread produces
+  consensus; individual threads produce the map.
+- **Map who can OPEN things, not just who uses them.** A compliance dataset sat unused not
+  through neglect but because only two people — both unresponsive — could open the documents;
+  everyone else received a read-only email copy. **The bottleneck was permission, not
+  capability.** "Why has nobody done this" is often answered by an access list, and that
+  reframes a criticism into a problem you can offer to solve.
+- **The tool inventory is itself a deliverable.** In small businesses nobody has written down
+  what is paid for, who uses it, who can administer it and where it hurts. Assembling that map
+  is genuinely valuable to an owner, costs only conversations, and is a legitimate reason to
+  ask for a meeting that is not "please look at my work."
