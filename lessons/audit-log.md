@@ -31,3 +31,25 @@ summaries. The skip is scoped to the TRIGGER now, never the step.)
 
 (Audit Jul 25 2026: the light branch used to stand bare, so a non-tiny personal project touching production credentials read as light. De-duplicated Aug 24 2026: the trigger restatement that lived here moved wholly into the contract's test.)
 
+
+## AL-5 — memory/chan-hard-rules.md · rule 1, owner's-actual-surface law
+
+(three batches of statuslines played to an empty terminal while Chan lived in the extension
+panel (Aug 2026). See workflow/switch-to-deepseek.md.)
+
+## AL-6 — memory/chan-judgment-mandate.md · the visual-complaint exception
+
+(Audit Jul 26 2026: both rules fired on the same event and neither yielded — the model would
+patch the named difference and then also "close the gap" on spacing, type and copy before his
+eyes ever confirmed the one fix.)
+
+## AL-7 — memory/chan-review-bottleneck.md · point 1, the fixed report shape
+
+(Audit Jul 26 2026: the most-repeated behavior in the system had no shape and was re-invented
+every session.)
+
+## AL-8 — memory/chan-review-bottleneck.md · point 6, parked-state behavior
+
+(Audit Jul 26 2026: this file documents the bottleneck and had no parked-state behavior. The
+proposed fix wrote the full rule here; rule 8 already IS that rule, so this is a pointer plus
+application detail, per the one-home pre-write gate.)

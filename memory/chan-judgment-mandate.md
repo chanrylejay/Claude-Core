@@ -16,9 +16,7 @@ metadata:
 - EXCEPT on a VISUAL COMPLAINT: there [[chan-visual-complaint-open-mock-first]] outranks this
   mandate for that pass — one change, hand the screen back to his eyes, and this mandate resumes
   the next round. Score the surface anyway, and put what else you would fix into the REPORT,
-  never into the same pass. (Audit Jul 26 2026: both rules fired on the same event and neither
-  yielded — the model would patch the named difference and then also "close the gap" on spacing,
-  type and copy before his eyes ever confirmed the one fix.)
+  never into the same pass. (why: ../lessons/audit-log.md AL-6)
 - A project's locked canon and the owner's recorded decisions still win over any redesign. Flag conflicts; the owner resolves them.
 - ALWAYS propose the big product calls (workflow, layout, what shows or hides) and wait for Chan to say yes before building them. There is no case where you decide one yourself.
 - Builder agents get the mandate in their spec; the orchestrator does its own pass on top.
