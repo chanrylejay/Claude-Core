@@ -12,12 +12,7 @@ branch, with no exception for a ritual start — and step 2 means opening the ma
 reading their index lines. If the ritual's list does not cover every marked file, read the
 remainder yourself. If no hub ritual or reading list is present (a subagent, or a failed
 import), the four steps are identical; you assemble the list yourself instead of being handed it.
-(Audit Jul 26 2026: this used to enumerate "steps 2, 3 and 4" for a ritual start while the
-no-ritual branch said "all four", telling a literal reader that a ritual start skips step 1 — and
-a post-compaction start IS a ritual start, so the skip landed exactly where a summary exists to
-be distrusted. An earlier audit CLEARED the same enumeration as unreachable on the grounds that a
-fresh start has no summary; that read missed that only ONE of step 1's four triggers is about
-summaries. The skip is scoped to the TRIGGER now, never the step.)):
+(all-four-steps law hardened twice; history: ../lessons/audit-log.md AL-1)):
 
 1. **Don't trust the summary.** Compaction summaries drop details — on Jul 14 one silently
    dropped a client's verbatim taxonomy list and it had to be recovered from the raw transcript.
@@ -36,8 +31,7 @@ summaries. The skip is scoped to the TRIGGER now, never the step.)):
      or shipped.
 
    If you cannot tell whether a trigger fired, it fired. The transcript read is BOUNDED
-   (audit Aug 2026: "line by line if necessary" told a literal reader to cat the whole file
-   and refill the context the compaction just emptied): grep the raw transcript for the
+   (why bounded: ../lessons/audit-log.md AL-2): grep the raw transcript for the
    disputed quote/list, or tail it with a stated line budget — through raw Bash, never a
    compressing reader. Widen the window only if the target is not found, and say the budget
    you used. If none fired, say so in one line in
@@ -73,9 +67,7 @@ summaries. The skip is scoped to the TRIGGER now, never the step.)):
   INCLUDES removing 🔴 from the previous one in the same edit — the removal is part of the write,
   not a follow-up task. A file waiting on Chan's ruling is not a resume point, it is a blocker
   list: mark it 🟡 BLOCKED, never 🔴. Two or more 🔴 lines is a bug in the index, not a choice to
-  make: take the newest-dated 🔴 and name the extras in your first reply. (Audit Jul 26 2026:
-  three 🔴 lines coexisted in one project index, each naming a different immediate next action,
-  and DRILL step 2 dutifully opened all three.)
+  make: take the newest-dated 🔴 and name the extras in your first reply. (history: ../lessons/audit-log.md AL-3)
 - **Session anchors:** for big multi-day pushes, keep one anchor file per effort with a
   top block that's always the current state — newest information at the top.
 
