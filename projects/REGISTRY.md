@@ -24,12 +24,15 @@ session can clone and orient itself, no canon needed unless the project goes ACT
   sonneto-journal.vercel.app · context: the repo IS the context (excellent README); v1.6.0,
   React+Vite PWA, local-first IndexedDB, MIT, built Aug 2026. Portfolio-grade: flagged to the
   career track, claims gated by the skills ledger as always.
-- **ano-ulam** · state: CONFIRM WITH CHAN (PARKED assumed while the trial runs) · repo per its
-  canon · canon: ano-ulam/project-canon.md — read before any ano-ulam work.
-- **Portfolio site + shift demo** · LIVE-DORMANT · my-portfolio-v1 repo (Chan's machine) ·
+- **ano-ulam** · PARKED (Chan confirmed Aug 28 2026: parked while the trial runs) · repo per
+  its canon · canon: ano-ulam/project-canon.md — read before any ano-ulam work.
+- **Portfolio site + shift demo** · LIVE-DORMANT (doubles as Chan's jobhunt workspace: resume
+  source + application drafts live in the repo; parked while the trial runs, job hunt
+  backgrounded, Chan Aug 28 2026) · my-portfolio-v1 repo (Chan's machine) ·
   chanryle-cagara.vercel.app · context + laws: ../memory/chan-career-portfolio-state.md
   (pushes auto-deploy: Chan's own GO, every time).
 - **Devoted Care** · ENDED Jul 24 2026 · client systems, fully hands-off forever · history:
   ../memory/chan-resigned-devoted-jul15.md, design canon in devoted-care/.
-- **Pre-Devoted live apps** · states: CONFIRM WITH CHAN before relying · inventory and rulings:
-  ../memory/chan-pre-devoted-assets.md (the prompt vault inside is DO NOT TOUCH).
+- **Pre-Devoted live apps** · mixed (Chan confirmed Aug 28 2026): n8n project calculator +
+  shiny-gmail + supervisor repos LIVE-DORMANT, GitHub profile README PARKED · inventory and
+  rulings: ../memory/chan-pre-devoted-assets.md (the prompt vault inside is DO NOT TOUCH).
