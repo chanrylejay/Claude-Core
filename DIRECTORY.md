@@ -24,7 +24,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `tool-playbook.md` — operational lessons: visual verification, the ask-measure-sweep rule for visual iteration, diagnose-before-crusading, EOL-aware editing, DB discipline.
 - `new-project-checklist.md` — the starting ritual for any real build: docs skeleton, live-data verification, write-safety day one, ship cadence.
 - `new-computer-migration.md` — moving Claude's brain to a new PC: what to copy, what to reinstall, the absolute-path gotcha.
-- `devoted-closure-checklist.md` — the closure-day runbook (closure was Jul 24 2026): status flips done, LinkedIn/resume sweeps, tooling-cost revisit, week-1 momentum kit.
+- `devoted-closure-checklist.md` — the closure-day runbook, COMPLETE (all boxes done, Chan Aug 28 2026); kept as the template for future engagement closures.
 - `switch-to-deepseek.md` — the DeepSeek switch runbook, RUN Jul 2026 and now permanent; kept as the re-install / model-change / rollback procedure. NO-vision caveat inside.
 - `two-model-relay.md` — the agent + claude.ai collaboration protocol: roles, authority split, the branch-first loop, the brief format, standing rules (REACHABILITY CHECK referenced, not duplicated).
 - `relay-boot-claudeai.md` — entry ramp for the claude.ai half of the relay: boot order, sandbox powers and limits, patch-delivery rules. Browser sessions read it first; the CLI never needs it.

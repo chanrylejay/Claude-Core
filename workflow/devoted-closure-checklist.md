@@ -1,5 +1,9 @@
 # Devoted closure checklist — the runbook for the engagement's end
 
+**STATUS: COMPLETE — all boxes done (Chan confirmed, Aug 28 2026).** This file is now a
+finished runbook kept as the template for any future engagement closure; nothing in it is an
+open task. It no longer rides JOB HUNT mode.
+
 Saved Jul 24 2026, which turned out to be closure day itself: Chan worked his last day and
 completed the handoff. Career moves beyond Devoted live in the day-1 list of
 `../memory/chan-career-playbook.md`; THIS file holds the Devoted-specific closures. Check items
