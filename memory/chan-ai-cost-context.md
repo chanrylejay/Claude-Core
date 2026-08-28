@@ -63,9 +63,7 @@ pricing, DeepSeek's own numbers live in ../lessons/platform-gotchas.md and the d
   wrong; compact is for genuinely finished context.
 - **Compact BEFORE a break, never after.** Summarizing is cheap while the old conversation is
   still cached and a cold reload after idle expiry is the expensive path — so the walk-away
-  order is: bank (rule 4), compact small, THEN leave. VERIFY (CLI task, one line back): DeepSeek's
-  actual cache-expiry window and whether /effort even binds on the DeepSeek endpoint — do not
-  assume Anthropic's windows.
+  order is: bank (rule 4), compact small, THEN leave. VERIFIED Aug 28 2026: DeepSeek's cache survives breaks (cache-expiry: hours-to-days, best-effort) — so on this endpoint compact-before-break is context hygiene, not urgency; and /effort is a no-op here (platform-gotchas, DeepSeek section).
 
 **Market note (Aug 28 2026):** the Aug 24 ruling stands — fix the workflow, keep the key. For
 the record when it is next revisited (trial end is the natural moment): the market moved this
