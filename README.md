@@ -1,5 +1,16 @@
 # Claude-Core — Chan's portable Claude continuity kit
 
+AI sessions forget. This kit is the fix.
+
+Every AI chat starts cold. It does not remember you, what you built, what you learned, or
+what standards you work under. Chan lived this and built the fix: this repo makes every
+session start with full context, your rules, and past lessons, loaded before any work
+begins. It is a real working system he uses every day, not a template.
+
+Two AI agents run it in relay: DeepSeek drives the CLI, Claude plans and reviews, Chan is
+the boss of both. Mechanics: `workflow/two-model-relay.md`. The full file map is
+`DIRECTORY.md` (one line per file).
+
 **What this is:** everything Claude needs to know you and work your way, extracted from the
 Devoted Care project (Jun–Jul 2026) and made project-agnostic. This folder is the permanent
 brain: memory, lessons, workflow, and templates that survive every session, project, and
@@ -67,6 +78,13 @@ session with no operating contract at all.
   taste and laws. The generic gauntlet roles they filled are documented in
   `workflow/qa-gauntlet-pattern.md`; write the persona agents fresh per project.
 - What survives from that project here is the *lessons*, not the client's data.
+
+## Why this is public
+
+This repo is public on purpose (Aug 11 2026). The two-agent relay needs a public clone that
+the claude.ai half can read, and it doubles as a portfolio piece for Chan. Everything inside
+is written public-safe by law: no keys, no client data, nothing Chan would not post himself.
+The full law follows in "The GitHub repo (PUBLIC by decision)".
 
 ## The GitHub repo (PUBLIC by decision)
 
