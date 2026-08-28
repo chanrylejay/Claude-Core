@@ -60,6 +60,28 @@
   normal case, not the edge case. Always append the primary key: `ORDER BY updated_at DESC,
   id DESC`. The symptom reaches the user as "I have seen this record already", which costs
   trust disproportionately to the one-line fix.
+- **Date-only comparisons need a date-only helper, in one place, in a named timezone.** A
+  task due "today" rendered as 1 day late because the due date (stored at midnight) was
+  compared against `now()` — a timestamp comparison, not a calendar one. Every view had
+  grown its own comparison, so the bug lived in several files at once. Fix: one shared
+  `getUrgency(date)` helper comparing calendar dates in the business's canonical timezone
+  (documented in a comment), used by every surface; delete all local logic. When fixing,
+  report the blast radius — the count of files that had private date math is the measure
+  of how overdue the centralization was.
+- **A sanity check that writes to a live database must clean up inside the same
+  instruction.** "Create a test row and verify it renders" without "then delete it" left a
+  TEMP row visible in the product a client was about to be shown — twice in one day, the
+  second time as a test-click that marked a real person's real task as completed, which
+  would have been the first entry in a brand-new completion feed under the owner's name.
+  Before any demo or push: sweep for test artifacts by title pattern AND by
+  state-changes-from-today you cannot attribute to a real action.
+- **Completion timestamps cannot be backfilled from imported status.** If historical
+  records arrive already marked "done," their completion date is unknown — stamping them
+  with import time makes a "completed this week" feature announce a hundred fake
+  completions on day one. Add `completed_at` set only by the app's own done action, leave
+  imports NULL forever, and let recency features count only what the system itself
+  witnessed. The number starts small and true and grows with real use — which is exactly
+  the story a stakeholder should watch.
 
 ## Data archaeology (from archive Doc B, banked Jul 24 2026)
 

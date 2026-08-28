@@ -118,6 +118,19 @@ do not fix silently).
   context budget — greps, file contents, line numbers, colour audits all become free. Reserve
   the agent's tokens for what only it can see: live database state, what a test returned, what
   is actually on disk. **Ask it for numbers and verdicts, never for file contents.**
+- **Freeze means a ledger, not a feeling.** "Final polish" recurred five times in one
+  evening because each round surfaced one more real item. That's fine — late finds are
+  cheaper than shipped defects — but each round must be a CONSOLIDATED prompt that
+  restates every still-open item and explicitly marks which earlier rulings it supersedes,
+  so the agent never has to reconcile contradictory instructions across messages. The
+  planner owns the merge; the agent should receive one authoritative list.
+- **The agent's pushback is a first-class output — rule on it explicitly.** In one session
+  the machine half: refused to apply a conditional fix whose condition wasn't met,
+  corrected the planner's wrong file location by checking a commit, derived an honest
+  smaller number than the brief expected and flagged it instead of complying, and caught a
+  spec value that would have worsened what it was meant to improve. Each time, the
+  planner's job was to rule (accept/override) in the next message, by name, so the
+  behavior is reinforced. A relay where the hands only obey is wasting half the model.
 
 ## When to bank
 

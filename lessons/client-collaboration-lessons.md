@@ -87,6 +87,21 @@ add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.
 - **Bank-before-clear:** the agent writes state to repo docs + project memory, the human
   clears context. A daily fresh-session ritual with a NEXT-SESSION-BRIEF file beats riding a
   conversation into auto-compaction.
+- **Loading fallbacks hide wedged states — give skeletons a timeout.** A shared loading
+  skeleton converted "blank area, obviously broken" into "spinner, looks like it's
+  thinking": a stale hot-reload connection showed an infinite skeleton over a perfectly
+  healthy server, and diagnosis burned an hour proving the code innocent (four independent
+  probes: DB timing, HTTP, headless browser, diff). After ~10s a fallback should say
+  something went wrong. Corollary for the diagnosis itself: prove the mechanism with a real
+  browser probe before changing any code — the honest outcome of a diagnosis can be
+  "nothing is broken; reload."
+- **Verbatim beats summary for attribution.** A single colloquial word was banked as the
+  user's verdict on a whole system; re-reading the raw transcript showed it referred to
+  something else entirely (their own finished work going stale waiting on an unresponsive
+  stakeholder), and strategy framing had been built on the misattribution for two days.
+  When a quote becomes load-bearing, store the surrounding exchange verbatim in the private
+  record, and re-verify against the source before building on it. Summaries drift toward
+  the story the summarizer already believes.
 
 ## Product/demo principles that landed (client build, Aug 2026)
 

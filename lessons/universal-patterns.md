@@ -33,7 +33,7 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 24. **Multi-session build management:** number the micro-sessions, one deliverable each, end each with a handoff paragraph, never load files the session will not touch.
 25. **Trimmed context documents per sub-project:** instructions = lean behavior layer; context doc = deep knowledge layer; never duplicate between the two; never hand a sub-instance the raw full archive.
 
-## CLI-era patterns (26-46)
+## CLI-era patterns (26-50)
 
 26. **Silent fallbacks poison production:** any helper that quietly degrades to mock data WILL feed a real surface. Fallbacks are for layout, never for facts; gate real-record consumers on an explicit live flag.
 27. **Racing builds corrupt artifacts:** two builds (or build plus dev server) over one artifact dir corrupt it confusingly. Kill all, wipe, rebuild once. Never use grep-filtered build output as a success signal.
@@ -89,6 +89,43 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
     forgotten." Same feature, and the framing decides whether real work goes into it.
     Related: **an empty row for a person with no data says "you belong here"; omitting them
     says "this is not for you."**
+47. **Container labels are not item states.** When importing from any tool that groups
+    records (board groups, folders, swimlanes, playlist names), never derive a record's
+    status from the container it sits in — read the item's own status field. On one import,
+    71% of rows (42/59) carried the wrong status because the importer took the group name
+    ("Working on it") while the items' own status column said Done — completed work then
+    rendered as weeks-overdue, and the resulting UI looked catastrophically red for DATA
+    reasons everyone tried to fix with design. Corollary: **when a screen looks wrong,
+    audit what it displays before redesigning how it displays.** A stop-gate that reports
+    the seed's distribution BEFORE any UI is built is what catches this class.
+48. **Automation verifies presence, not judgment.** A browser-automation review
+    (logged in, real DOM, all numbers checked, all links followed) passed a dashboard that
+    a human rejected on sight — because every fact was present and correct while the
+    composition was wrong: a backlog group had invaded the "personal" zone and an empty
+    widget dominated the page. Machines confirm that things exist; only human eyes confirm
+    that things are right. Keep the human as the explicit visual gate, and treat a passing
+    automated review as "renders and links work," never as "looks good."
+49. **Triage an external AI design review in three piles.** (a) Craft knowledge — adopt:
+    e.g. oldstyle vs lining numerals (serif display fonts default to oldstyle figures whose
+    3/4/7/9 descend below the baseline; `font-variant-numeric: lining-nums tabular-nums`
+    fixes KPI digits), surface-layer separation, scrollbar styling. (b) Convention that
+    contradicts researched decisions — reject with the reasoning: the reviewer prescribed
+    a stock alarm-red urgency palette that the project had explicitly removed after user
+    research; notably, where it reasoned from the design itself its proposed values
+    CONVERGED on the project's own tokens, and where it pattern-matched generic SaaS it
+    contradicted them. (c) **Its mockups — check for invented data.** The review's
+    "improved" screen contained fabricated counts and wrong task numbers: a polished mock
+    with made-up numbers is the same failure as fabricated seed data, in a prettier suit.
+    Score the pixels separately from the truth.
+50. **In a time-grid UI, the past belongs to a summary, the columns belong to the future.**
+    A week-grid that renders past days wastes most of its width on columns whose late work
+    is ALSO shown in an overdue summary — the grid pays twice for the past and has no room
+    left for what's next. Start the window at today, run forward, and compress everything
+    late into a per-row indicator (count pill) whose detail lives one click deeper.
+    Related: when nearly 100% of items are "urgent," urgency colour carries zero
+    information — move severity to a small element (a pill, not the whole chip), scale it
+    in a few steps within the brand's palette, and reserve exactly one colour for
+    completion so the system has reward as well as warning.
 
 ## How Chan stress-tests AI systems (the methodology)
 
