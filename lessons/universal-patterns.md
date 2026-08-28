@@ -5,6 +5,11 @@ These are project-agnostic engineering and AI-collaboration patterns proven acro
 
 **Reach for these first:** 1 evidence gate · 8 character over rules · 13 execution catches what review misses · 18 deterministic engine over AI data · 26 silent fallbacks poison production · 29 a plausible theory is not a root cause · 31 show-first · 32 fewer clicks · 36 two-round rule for bug hunts · 39 SELECT-only production credentials.
 
+**Fetching one pattern without loading the file:** every pattern is a single line starting
+with its number, so `grep -n "^38\." lessons/universal-patterns.md` returns pattern 38 whole
+in one line. Use that for by-number references; open the full file only when working the
+category.
+
 ## Prompt-system and AI-behavior patterns (1-25 era)
 
 1. **Evidence gate:** any factual claim about system state needs an explicit source in the conversation. Hedging ("probably") does not grant permission to assert. Models fill voids with plausible invention.
