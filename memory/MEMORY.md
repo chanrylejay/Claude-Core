@@ -1,3 +1,18 @@
+---
+name: memory-index
+description: The router for all memory reads. The state block below is the machine-readable mirror of the NOW line; the two update together in the same edit, always.
+state:
+  updated: 2026-08-28
+  active_track: client-trial        # 2-week trial, Australian clients, monday.com
+  trial_active: true
+  job_hunt: backgrounded
+  devoted_engagement: ended-2026-07-24
+  closure_checklist: complete
+  mode_default: TRIAL
+metadata:
+  type: reference
+---
+
 # Memory Index — Chan (portable)
 
 - Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com, Quezon City PH. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
