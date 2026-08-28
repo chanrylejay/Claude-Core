@@ -24,7 +24,6 @@ metadata:
 Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN chan-hard-rules + chan-judgment-mandate + both ⭐⭐ files — all index and READ-FIRST opens are RAW reads (Bash, never ctx_*; full law in the drill home, reachable from BOTH paths since Aug 2026). The DRILL home (../workflow/the-drill-and-memory.md) opens IN FULL after any COMPACTION and before any memory-file edit. The ⭐⭐ files ride every boot ON PURPOSE: they are judgment behaviors no hook can enforce, so repetition is their only mechanism.
 
 - [⭐ Chan's HARD rules](chan-hard-rules.md) — rule-0 THE DRILL · show-first · 🔒 ship in batches (no push/deploy without explicit GO) · DB safety · judgment mandate.
-- [Boss operating protocol](boss-operating-protocol.md) — RETIRED into pointers: the drill home and frozen core carry it; the orient-first line survives inside.
 - [⭐ Chan's judgment mandate](chan-judgment-mandate.md) — don't just execute edit lists; self-rate every surface 1-10 and close the gap.
 - [⭐ Career/portfolio state](chan-career-portfolio-state.md) — career track state (trial active Aug 2026, job hunt backgrounded); portfolio/resume/LinkedIn state + confidentiality canon. Loads with JOB HUNT mode.
 - [⭐⭐ Directives are NOT absolute](chan-critique-directives.md) — critique every directive (client's OR Chan's) + propose better; the owner decides.

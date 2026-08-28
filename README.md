@@ -18,7 +18,6 @@ Built Jul 15 2026, during the Devoted Care wind-down.
 | `archives/` | **Frozen originals** — Documents A, B, C verbatim with stale-lock warnings; never edited, never committed (see below). |
 | `templates/` | **Reusable infrastructure** — the five gauntlet agents (spec-reader, reviewer, net-runner, recon, challenger) and the guard hooks (push-guard, gauntlet-guard). The two client-persona roles (QA/UX) are written fresh per project. |
 | `portfolio/` | A confidentiality-safe summary of what you built at Devoted, ready for resume/interview use. |
-| `TOOLS.md` | Historical catalog of every tool used on the Devoted project; operational rules live in `workflow/tool-playbook.md`. |
 | `DIRECTORY.md` | One-line index of every file in this kit. New file → new line there, always. |
 | `CLAUDE.md` | The operating contract — auto-loads into every session via the @import in the global hub (`~/.claude/CLAUDE.md`). |
 
