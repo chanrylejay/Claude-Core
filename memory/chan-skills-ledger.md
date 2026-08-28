@@ -3,14 +3,15 @@ name: chan-skills-ledger
 description: THE canonical skills inventory + tools and technology ledger for Chan's resume, portfolio, proposals, and interview answers. Moved into Claude-Core Jul 23 2026 from Document A v10 section 3 (which lived only in the client's docs folder). Includes the origin story. Pull from here when drafting anything career-facing, and never claim past what is written here.
 metadata:
   type: user
+  chan_voice: true
 ---
 
 # Chan's skills ledger (canonical, as of July 2026)
 
 **This file is a CEILING, not a floor, and the ceiling is SYSTEM-WIDE.** Never claim a skill,
 tool, metric, employer, date, or number that is not written here, and never restate a number
-larger or a qualifier smaller than it is written. A figure in any OTHER file — a project
-summary, a case-study draft, a section headed as safe to cite — is SOURCE MATERIAL, not
+larger or a qualifier smaller than it is written. A figure in any OTHER file (a project
+summary, a case-study draft, a section headed as safe to cite) is SOURCE MATERIAL, not
 clearance: it is not usable outbound until it is written here. If something is missing, ask Chan
 before writing it; when he confirms it, add it here in the same session, then use it. Asking is
 the fast path, not the slow one. (Audit Jul 26 2026: the project summary held five figures this
@@ -24,7 +25,7 @@ agency" or ask Chan.
 state any of them in the present tense.
 
 **Positioning line:** "AI-native systems builder. Ships production platforms solo: full-stack web, API integrations, and AI automation, proven on a US home-care operations platform he shipped solo (in production Jun-Jul 2026)."
-**Metrics to cite:** solo-built 10-module production system, in production with daily users through Jul 2026 · sanctioned production CRM writes with audit trails and kill switches · SMS automation (10DLC) · AI triage pipeline in production · a 12.5k-line OpenAPI spec read end to end · multi-agent orchestration at scale (143-agent blind bug hunt with adversarial verification) · ~50-caregiver roster matched per shift · 15/19 client match-spec fields mapped and overlaid across engines · 36-test taxonomy regression net + 17-test push-guard net · 16-commit reviewed production batches (these five confirmed by Chan, Jul 26 2026 — promoted from the project summary per the two-canon precedence rule).
+**Metrics to cite:** solo-built 10-module production system, in production with daily users through Jul 2026 · sanctioned production CRM writes with audit trails and kill switches · SMS automation (10DLC) · AI triage pipeline in production · a 12.5k-line OpenAPI spec read end to end · multi-agent orchestration at scale (143-agent blind bug hunt with adversarial verification) · ~50-caregiver roster matched per shift · 15/19 client match-spec fields mapped and overlaid across engines · 36-test taxonomy regression net + 17-test push-guard net · 16-commit reviewed production batches (these five confirmed by Chan, Jul 26 2026, promoted from the project summary per the two-canon precedence rule).
 
 ## Skills inventory
 - **Full-stack production:** Next.js 14 + TypeScript + Tailwind · Supabase (Auth, RLS, migrations, PostgREST gotchas) · Neon · Vercel + Netlify (serverless, scheduled functions, deploy debugging via API) · build/CI discipline.
@@ -54,10 +55,10 @@ The arc IS the pitch: proof of learning velocity, discipline, and shipping.
 
 ## Employment history and education (canonical; from archive Doc A v10 §3, banked Jul 24 2026)
 
-- Accenture — Content Operations Specialist, May 2025 - Jun 2026 (Top Performer 6 consecutive months).
-- Teletech — customer support, Aug 2023 - Sep 2024 (95%+ CSAT).
-- Alorica — customer support / CRM, 2022-2023 (exact months not recorded: ask Chan, never infer one).
+- Accenture - Content Operations Specialist, May 2025 - Jun 2026 (Top Performer 6 consecutive months).
+- Teletech - customer support, Aug 2023 - Sep 2024 (95%+ CSAT).
+- Alorica - customer support / CRM, 2022-2023 (exact months not recorded: ask Chan, never infer one).
 - Sep 2024 - May 2025 is an unrecorded gap between Teletech and Accenture: ask Chan what to put there, never fill it in.
-- Accenture — Admin & Recruitment coordination, 2021 (handled 200+ candidates).
+- Accenture - Admin & Recruitment coordination, 2021 (handled 200+ candidates).
 - Education: BS Information Technology, QC University, June 2020. Based in Quezon City, PH.
 - Then: personal automation era Apr-Jun 2026 → the paid Devoted engagement Jun-Jul 2026 (solo developer, ended cleanly Jul 24 2026).

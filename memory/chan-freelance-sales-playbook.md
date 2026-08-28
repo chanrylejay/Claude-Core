@@ -3,6 +3,7 @@ name: chan-freelance-sales-playbook
 description: "⭐ Chan's freelance sales rules: Upwork proposal laws, the Zero-Call strategy, rate tiers, salary negotiation, honest-gaps list, interview answer frames, and employment history. Absorbed Jul 24 2026 from job-hunting-supplementary.txt (Jun 6 + Jul 6 layers)."
 metadata:
   type: user
+  chan_voice: true
 ---
 
 # Freelance sales playbook (absorbed Jul 24 2026; original txt frozen in Claude-Core/archives/job-hunting-supplementary.txt)
@@ -16,7 +17,7 @@ tier price, quote the tier price as one flat number and say what the posted budg
 systems as proof · offer a free 10-minute diagnostic as the entry (Zero-Call strategy).
 NEVER: imply Upwork client history he has not actually completed (fact as of Jul 2026: profile shows 0 completed jobs; recheck the live profile before writing anything about job history) · "first client discount"
 or review-fishing (reveals inexperience) · over-promise platforms he does not offer.
-SUPERSEDED Jul 6 2026: the old "never imply paid professional systems work" rule is DEAD —
+SUPERSEDED Jul 6 2026: the old "never imply paid professional systems work" rule is DEAD:
 the Devoted engagement (Jun-Jul 2026, ended cleanly) is real paid solo-developer contract work
 and now leads the positioning. Public case study naming the client still needs the client's
 OK. "Results + method are free to describe" applies ONLY when the client is not named and the
@@ -54,7 +55,7 @@ sites, repos), now converting it to paid work. And since Jul 2026: delivered a f
 platform end to end. "Are you a developer?" → ships real production systems with an
 AI-first workflow; not a traditional senior engineer, and says so. "Can you handle
 Make/Zapier/GHL?" → primary expertise is n8n; exposure only elsewhere. Resume gaps → "periods of personal
-development and self-directed learning", said plainly — but ONLY for a gap whose dates are
+development and self-directed learning", said plainly, but ONLY for a gap whose dates are
 already recorded in [[chan-skills-ledger]]. Any gap the ledger marks unrecorded (the Sep 2024 to
 May 2025 one, today) is asked about, never filled with this phrase or any other. The ledger is
 the ceiling on employment facts and it wins here. Always-mention

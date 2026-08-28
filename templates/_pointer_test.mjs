@@ -94,5 +94,55 @@ for (const src of ["CLAUDE.md", "memory/MEMORY.md"]) {
     t(`${src} names an existing path: ${m[1]}`, fs.existsSync(path.join(ROOT, m[1])));
   }
 }
+
+// 6-9 (grown Aug 28 2026, reviewer-2 defect 3: a green run coexisted with a dead wikilink and a
+// dangling ../TOOLS.md because nothing scanned wikilinks or prose-layer relative refs):
+//   6. every [[wikilink]] in the prose layers resolves to memory/<name>.md ([[name]] is the
+//      drill's literal syntax example and exempt)
+//   7. every relative .md ref in the prose layers resolves on disk, or its line declares
+//      clone-absence (same honesty idiom as pin 2's LOCAL-ONLY branch)
+//   8. chan_voice-flagged files (frontmatter or top-comment `chan_voice: true`) carry ZERO em
+//      dashes — the ledger/playbook/summary feed Chan-voice career text and the no-em-dash law
+//      had no mechanical check (reviewer-1 P5; counts were 7/2/1 when this pin landed)
+//   9. every 🛑-marked memory description carries a year, so hot-state files stay datable
+const proseFiles = [];
+for (const dir of ["memory", "workflow", "lessons", "projects", "portfolio"]) {
+  const walk = (d) => { for (const e of fs.readdirSync(path.join(ROOT, d), { withFileTypes: true })) {
+    if (e.isDirectory()) walk(path.join(d, e.name));
+    else if (e.name.endsWith(".md") && !e.name.startsWith("LOCAL-ONLY-")) proseFiles.push(path.join(d, e.name).replace(/\\/g, "/")); } };
+  walk(dir);
+}
+for (const f of proseFiles) {
+  const txt = rd(f);
+  for (const m of txt.matchAll(/\[\[([\w-]+)\]\]/g)) {
+    if (m[1] === "name") continue;
+    if (m[1].startsWith("LOCAL-ONLY-")) {
+      const line = txt.split(/\r?\n/).find((l) => l.includes("[[" + m[1] + "]]")) || "";
+      t(`LOCAL-ONLY wikilink declares its clone-absence: ${f} -> [[${m[1]}]]`, /gitignored|LOCAL[ -]?ONLY|not in (?:any )?clone|this machine only/i.test(line));
+      continue;
+    }
+    t(`wikilink resolves: ${f} -> [[${m[1]}]]`, fs.existsSync(path.join(ROOT, "memory", m[1] + ".md")));
+  }
+  const lines = txt.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    for (const m of lines[i].matchAll(/(?:\.\.\/)+[\w][\w./-]*\.md\b/g)) {
+      const target = path.normalize(path.join(ROOT, path.dirname(f), m[0]));
+      if (/(^|\/)archives\//.test(m[0])) { t(`archive-resident ref (gitignored by law): ${f}:${i + 1} ${m[0]}`, true); continue; }
+      if (fs.existsSync(target)) { t(`relative ref resolves: ${f}:${i + 1} ${m[0]}`, true); continue; }
+      const honest = /gitignored|LOCAL[ -]?ONLY|Devoted archive|not in (?:any )?clone|THIS MACHINE ONLY/i.test(lines[i]);
+      t(`relative ref ${honest ? "declares clone-absence" : "resolves"}: ${f}:${i + 1} ${m[0]}`, honest);
+    }
+  }
+  const head = lines.slice(0, 15).join("\n");
+  if (/chan_voice:\s*true/.test(head)) {
+    const n = (txt.match(/—/g) || []).length;
+    t(`chan_voice file carries zero em dashes: ${f} (found ${n})`, n === 0);
+  }
+  if (f.startsWith("memory/") && /\u{1F6D1}/u.test(txt.split(/\r?\n/).find((l) => l.startsWith("description:")) || "")) {
+    const desc = txt.split(/\r?\n/).find((l) => l.startsWith("description:"));
+    t(`\u{1F6D1} description carries a year: ${f}`, /20\d{2}/.test(desc));
+  }
+}
+
 console.log("\npointer integrity: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));
 process.exit(fail ? 1 : 0);

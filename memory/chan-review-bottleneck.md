@@ -23,4 +23,4 @@ On any project, Chan reviews everything the AI produces; on client work he also 
    (why a pointer, not a full rule: ../lessons/audit-log.md AL-8)
 
 Origin: the Devoted era. The client's "the AI decides too much" friction traced back to this bottleneck, not to the quality of the work.
-Related: [[boss-operating-protocol]] · [[chan-critique-directives]]
+Related: [[chan-hard-rules]] (rule 8, the away-law point 6 applies) · [[chan-critique-directives]]

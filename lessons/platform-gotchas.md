@@ -1,7 +1,7 @@
 # Platform gotchas — service-level behaviors that cost real debugging time
 
 Distilled Jul 23 2026 from Documents A v10 and B v9 (verbatim originals in `../archives/`).
-Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, integrations). THIS file = per-platform service behaviors for any future build. One home each, no duplication.
+Scope split: `../TOOLS.md` (Devoted archive, LOCAL ONLY — not in any clone) = the Devoted-era tool catalog (Claude Code, MCPs, integrations). THIS file = per-platform service behaviors for any future build. One home each, no duplication.
 
 **One exception to no-duplication, and it is deliberate: a rule that gates an IRREVERSIBLE action** — a live deploy, a public commit, a production write, a paid API call — **is restated in full at every site where that action appears.** Single-homing is right for reference facts: miss one and you write a bug and find it in testing. It is wrong for these: miss one and the consequence is already public. For this class the duplication IS the safety mechanism, and a cross-reference is not a substitute. (Audit Jul 26 2026: two sites here carried the dangerous instruction while its gate lived in another section or another file.)
 

@@ -1,3 +1,4 @@
+<!-- chan_voice: true. Feeds Chan-voice career text; the no-em-dash law applies to every line here (pin: _pointer_test) -->
 # Devoted Care: project summary (internal source material)
 
 **Voice:** source copy for Chan-voice output; when adapting to resume or interview text, use plain punctuation only, no em or en dashes.
@@ -51,7 +52,7 @@ Recorded here so they are not lost. Appearing in this file clears NOTHING for ou
 [[chan-skills-ledger]] is the ceiling on every number, and any figure below that is not in the
 ledger gets confirmed with Chan and written into the ledger FIRST, then used. (Audit Jul 26
 2026: this heading read "Numbers that are safe to cite" while none of the five figures were in
-the ledger — a file promoting its own contents to clearance.)
+the ledger, a file promoting its own contents to clearance.)
 ~50-caregiver roster matched per shift · 15/19 client match-spec fields mapped and overlaid
 across engines · 36-test taxonomy regression net + 17-test push-guard net · 16-commit reviewed
 production batches · same-day incident-to-recovery on the migration data loss.

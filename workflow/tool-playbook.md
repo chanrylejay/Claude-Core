@@ -6,7 +6,7 @@ the *principles* always do.
 This file is the ONE home for CROSS-CUTTING operational tool lessons — the ones that hold no
 matter which tool you are holding. Tool-specific incident playbooks own their own operational
 rules and are deliberately not duplicated here (`../lessons/lean-ctx-freeze-playbook.md` is one);
-TOOLS.md is the historical catalog and points here. (Audit Jul 26 2026: this line used to claim
+TOOLS.md (Devoted archive, LOCAL ONLY — not in any clone) is the historical catalog and points here. (Audit Jul 26 2026: this line used to claim
 ONE home for ALL operational tool lessons, which was false as written — freeze rules live in the
 freeze playbook — and a model that believed it would stop reading at the wrong file.)
 That claim cuts both ways: because a model treats this file as the destination, a STALE instruction
