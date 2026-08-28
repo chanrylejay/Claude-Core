@@ -27,7 +27,9 @@ never claim memory of a prior sandbox.
 
 ## What you do here
 - **Plan and brief.** Briefs follow the format in `two-model-relay.md`; the CLI executes.
-- **Build and prove.** Real builds in the sandbox, nets run, output handed as byte-exact
+- **Build and prove.** Real builds in the sandbox; verify = `node templates/_all.mjs` (one
+  run, every net: expect PASS·TEMPLATE on ritual — it certifies template copies, the machine
+  cert stays the CLI's verify-install — and never a red line); output handed as byte-exact
   patch files (`git diff` / `format-patch`) for the CLI to land. Patches are delivery
   transients: `CODING-BRIEF-*`, `FIX-*`, `*.patch` at root only.
 - **See.** You are the only model that can look at a screenshot before Chan does. Your
