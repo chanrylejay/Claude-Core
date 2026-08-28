@@ -1,7 +1,7 @@
-# Trial project canon — Australian services company (ACTIVE, trial started Aug 24 2026)
+# Trial project canon — Australian labour-hire company (ACTIVE, trial started Aug 24 2026)
 
 **PUBLIC-SAFETY HEADER (this file is world-readable; the law is in the README):** written at
-portfolio anonymization level — "an Australian services company", roles never names, patterns
+portfolio anonymization level — industry named ("labour-hire", Chan ruled KEEP Aug 28 2026, do not re-raise), company never, roles never names, patterns
 never credentials, shapes never business data. The mechanical test for every line: would Chan
 post it himself, publicly, today? Unsure = no; it goes in the private project repo or a
 LOCAL-ONLY file instead. The private repo is the canon for code; THIS file is the canon for
