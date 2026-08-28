@@ -7,7 +7,7 @@ metadata:
 
 # Career and portfolio state (current as of Aug 28 2026)
 
-**Status:** a 2-week CLIENT TRIAL is ACTIVE (Aug 2026, Australian clients — [[chan-trial-aug2026]]) and is the current track; the job hunt is backgrounded behind it, not dead. The Devoted engagement ENDED Jul 24 2026 (handoff complete; closure checklist ALL DONE, Chan Aug 28 2026). The Jun 2026 leads (4 applications + Fresh Start Cleaners) are ALL DEAD — dropped on Chan's word, Aug 28 2026; do not chase them. Career work is a standing track Claude proactively supports.
+**Status:** a 2-week CLIENT TRIAL is ACTIVE (Aug 2026, Australian clients — [[chan-trial-aug2026]]) and is the current track; the job hunt is backgrounded behind it, not dead. The Devoted engagement ENDED Jul 24 2026 (handoff complete; closure checklist ALL DONE, Chan Aug 28 2026). The Jun 2026 leads (4 applications + Fresh Start Cleaners) are ALL DEAD — dropped on Chan's word, Aug 28 2026 (the chan-job-leads-snapshot-jun2026.md file was deleted on that word; git history is its archive); do not chase them. Career work is a standing track Claude proactively supports.
 
 **Positioning (canon):** role title "Systems Developer" (his chosen title, used on portfolio and resume). Line: "AI-native systems builder, ships production platforms solo." Skills, tools, metrics, and the origin story: [[chan-skills-ledger]]. Standing posture, day-1 checklist, side-project flywheel: [[chan-career-playbook]].
 

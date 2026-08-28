@@ -46,7 +46,7 @@ import), the four steps are identical; you assemble the list yourself instead of
 
 ## The memory system
 
-**Orient first (relocated here from the retired boss-operating-protocol, Aug 28 2026):**
+**The orient-first rule (the one line relocated from the retired boss-operating-protocol.md, Aug 28 2026):**
 project MEMORY.md, repo CLAUDE.md, and [[chan-hard-rules]] before acting; those files are the
 fastest orientation, never proof of current state — disk wins, at a start AND mid-session.
 
