@@ -34,7 +34,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `audit-log.md` — dated audit findings extracted from the hot-path rules (drill, hard rules); rules carry `AL-n` pointers, the history lives here. Read only when asking WHY a rule is shaped as it is.
 - `engineering-lessons.md` — migration-cutover trap, regression nets, push=deploy discipline, ranking systems, display≠data.
 - `client-collaboration-lessons.md` — show-first→approve→deploy, verbatim ask capture, the review bottleneck, leaving clean.
-- `platform-gotchas.md` — per-platform behaviors (Vercel, Neon, Supabase, Netlify, Next/npm, DeepSeek, Bolt, n8n, scraping); read before building on any of them.
+- `platform-gotchas.md` — the platform INDEX since the Aug 28 2026 split: holds the two standing laws (irreversible-action duplication, the written-out GO law) plus one link per platform file in `platforms/` (Vercel, Neon, Supabase, Netlify, Next/npm, DeepSeek, Bolt, n8n, Google/Gemini, scraping, monday.com, Windows). Same exception rule as memory/: each `platforms/` child is indexed one line HERE, never in this file too — the pointer net pins it.
 - `grounded-agent-playbook.md` — LLM features on real data: claim cages, resolver gates, red-team corpus law. Read before ANY AI feature.
 - `lean-ctx-freeze-playbook.md` — the empty-workspace ctx_* freeze: root cause, the seed-file fix, recovery recipe, recurrence log.
 

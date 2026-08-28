@@ -30,12 +30,12 @@ modes:                 # machine-readable mirror of the MODES prose line below; 
   CLIENT_BUILD:
     - workflow/new-project-checklist.md
     - workflow/qa-gauntlet-pattern.md
-  TRIAL:               # = trial files + the CLIENT_BUILD set + platform-gotchas (monday.com section)
+  TRIAL:               # = trial files + the CLIENT_BUILD set + the monday.com platform file
     - memory/chan-trial-aug2026.md
     - projects/trial-aug2026/project-canon.md
     - workflow/new-project-checklist.md
     - workflow/qa-gauntlet-pattern.md
-    - lessons/platform-gotchas.md
+    - lessons/platforms/monday.md
 metadata:
   type: reference
 ---
@@ -46,7 +46,7 @@ metadata:
 - NOW (Aug 28 2026): 2-week CLIENT TRIAL ACTIVE (Australian clients, monday.com platform — see chan-trial-aug2026), the current track · job hunt backgrounded behind it · Devoted ENDED Jul 24 2026, closure checklist ALL DONE · portfolio demo v2 live. Update this block when the mode changes OR when any line in it stops being true. It is the live-state source. Staleness test, mechanical, BOTH conditions required: a dated entry elsewhere in this index is NEWER than this blocks date, AND that entry is about one of the three things this block asserts (engagement status, active track, portfolio/demo state). A newer date on any other subject says nothing about this block and does not make it stale. When both hold, the dated entry wins: say so and confirm the current state with Chan before this block decides anything (client-active, QA path, mode routing). (why two conditions: ../lessons/universal-patterns.md, "Gates that always fire").
 - RUNTIME (PERMANENT, Chan Aug 11 2026): Claude Code in VS Code runs the DeepSeek endpoint, NO vision, and Claude access there is NOT coming back — plan around this, never around its return. Who does what (planner, CLI, Chan's eyes) is in the frozen core; mechanics in ../workflow/two-model-relay.md.
 - Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
-- MODES (read the matching set BEFORE working; ADDITIVE — the cold-start set always loads too): the file lists live in this file's frontmatter `modes:` block (machine-readable; `templates/boot-claudeai.mjs` resolves them) — the prose here carries only the laws and caveats the lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. TRIAL (Aug 2026, client-active) = trial files + the CLIENT BUILD set + platform-gotchas (monday.com section). A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index. Prose and frontmatter are mirrors: any mode-set change edits BOTH in the same edit, and the boot net pins that every listed file exists.
+- MODES (read the matching set BEFORE working; ADDITIVE — the cold-start set always loads too): the file lists live in this file's frontmatter `modes:` block (machine-readable; `templates/boot-claudeai.mjs` resolves them) — the prose here carries only the laws and caveats the lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. TRIAL (Aug 2026, client-active) = trial files + the CLIENT BUILD set + lessons/platforms/monday.md (platform-gotchas is the index of the per-platform files since the Aug 28 split). A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index. Prose and frontmatter are mirrors: any mode-set change edits BOTH in the same edit, and the boot net pins that every listed file exists.
 
 Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN chan-hard-rules + chan-judgment-mandate + both ⭐⭐ files — all index and READ-FIRST opens are RAW reads (Bash, never ctx_*; full law in the drill home, reachable from BOTH paths since Aug 2026). The DRILL home (../workflow/the-drill-and-memory.md) opens IN FULL after any COMPACTION and before any memory-file edit. The ⭐⭐ files ride every boot ON PURPOSE: they are judgment behaviors no hook can enforce, so repetition is their only mechanism.
 

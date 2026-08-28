@@ -22,7 +22,7 @@ metadata:
 **Aug 24 2026 update — DeepSeek raised prices Aug 16 and the workflow adapts, the key stays.**
 Chan's ruling Aug 24: fix the workflow, do NOT switch APIs (balance was $9.21 that day; a switch
 runbook exists if that ever changes). Full price table, peak windows, and the verified dashboard
-reconstruction: ../lessons/platform-gotchas.md, DeepSeek API section — one home, read it before
+reconstruction: ../lessons/platforms/deepseek-api.md — one home, read it before
 any cost reasoning. What changed in one line: off-peak is ~2x the old flat rate, PEAK (09:00-12:00
 and 14:00-18:00 Manila) is ~4x, and cache hits are no longer ~free, so context size now bills on
 every request. The session habits, re-ranked Aug 2026 after external audit (their math at 100K contexts said "cents"; our telemetry at 360-410K said dollars — so the habits are WEIGHT-CONDITIONAL, and one is master):
@@ -53,7 +53,7 @@ The four session habits, in order of dollars saved:
    Batch the day's work into one sitting where life allows.
 **Cache mechanics, absorbed Aug 28 2026 (source: Anthropic's "Maximizing the value of your
 Claude Code sessions", Aug 14 2026 — MECHANICS only; every NUMBER in that post is Anthropic
-pricing, DeepSeek's own numbers live in ../lessons/platform-gotchas.md and the dashboard):**
+pricing, DeepSeek's own numbers live in ../lessons/platforms/deepseek-api.md and the dashboard):**
 - **Mid-session settings changes bust the prompt cache.** The cache matches from the request
   START forward; switching model, effort, or mode mid-conversation re-prefills the ENTIRE
   conversation at full price on the next turn. Set them at session start or right after a
@@ -65,7 +65,7 @@ pricing, DeepSeek's own numbers live in ../lessons/platform-gotchas.md and the d
   wrong; compact is for genuinely finished context.
 - **Compact BEFORE a break, never after.** Summarizing is cheap while the old conversation is
   still cached and a cold reload after idle expiry is the expensive path — so the walk-away
-  order is: bank (rule 4), compact small, THEN leave. VERIFIED Aug 28 2026: DeepSeek's cache survives breaks (cache-expiry: hours-to-days, best-effort) — so on this endpoint compact-before-break is context hygiene, not urgency; and /effort is a no-op here (platform-gotchas, DeepSeek section).
+  order is: bank (rule 4), compact small, THEN leave. VERIFIED Aug 28 2026: DeepSeek's cache survives breaks (cache-expiry: hours-to-days, best-effort) — so on this endpoint compact-before-break is context hygiene, not urgency; and /effort is a no-op here (../lessons/platforms/deepseek-api.md).
 
 **Market note (Aug 28 2026):** the Aug 24 ruling stands — fix the workflow, keep the key. For
 the record when it is next revisited (trial end is the natural moment): the market moved this

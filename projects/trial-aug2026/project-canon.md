@@ -11,7 +11,7 @@ context — what a fresh session needs to plan, review, and brief without seeing
 
 ## The engagement, in five lines
 - Role: AI Specialist, 2-week trial started Aug 24 2026. Clients are Australian (tz: +2/+3 vs Manila).
-- Working platform: monday.com (gotchas: ../../lessons/platform-gotchas.md, monday.com section).
+- Working platform: monday.com (gotchas: ../../lessons/platforms/monday.md).
 - Access state: monday.com credentials only; no admin rights yet — track what each grant unblocks.
 - Chan builds their internal system on the side in his own PRIVATE repo while access is pending.
 - Standing habit: Friday update to the boss — small slices, screenshots, plain language.

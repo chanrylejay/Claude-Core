@@ -32,7 +32,7 @@ category.
 18. **Deterministic engine over AI generation** for structured domain data (recipes, prices, formulas). The LLM explains AFTER deterministic data exists; it is never the data source.
 19. **Receipt layout over card grid for dense price lists:** long item names + high data density cramp card grids; a receipt-style list (name left, price right, one row per item) is more compact, scannable, and familiar.
 20. **Layered display mapping for noisy upstream names:** layer 1 explicit map for known names, layer 2 automatic suffix cleanup, layer 3 pattern-based hiding for known noise. Never hardcode every variant by hand.
-21. **Dual-method cron handlers:** GET delegates to POST (platform cron sends GET), POST stays available for manual curl tests, auth accepts both the platform Bearer header and a manual secret header. Vercel specifics: platform-gotchas.
+21. **Dual-method cron handlers:** GET delegates to POST (platform cron sends GET), POST stays available for manual curl tests, auth accepts both the platform Bearer header and a manual secret header. Vercel specifics: platforms/vercel.md.
 22. **Client-side data augmentation:** when the extra data is static, version-controlled, and already in the codebase, serve it from a local import matched by a shared key instead of touching the backend; zero DB, schema, or cron changes, instant deploy.
 23. **Name-first lookups when keys collide:** when items share a key but need different payloads, check the specific name BEFORE the shared key (TABLE[name] ?? TABLE[key]) and keep both as separate table keys.
 24. **Multi-session build management:** number the micro-sessions, one deliverable each, end each with a handoff paragraph, never load files the session will not touch.

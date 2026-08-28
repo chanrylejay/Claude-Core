@@ -85,6 +85,7 @@ for (const f of walk("")) {
     t(`untracked STRAY needs a decision (index, ignore, or remove): ${f}`, false);
     continue;
   }
+  if (f.startsWith("lessons/platforms/")) { continue; }  // indexed in the parent (pin 10), never in DIRECTORY too — same exception rule as memory/
   t(`DIRECTORY names ${f}`, dir.includes(base));
 }
 // 5
@@ -92,6 +93,17 @@ for (const src of ["CLAUDE.md", "memory/MEMORY.md"]) {
   const txt = rd(src);
   for (const m of txt.matchAll(/\b(?:\.\.\/)?((?:workflow|lessons|templates|memory|portfolio|projects)\/[\w\-./]+\.(?:md|mjs|js|json))\b/g)) {
     t(`${src} names an existing path: ${m[1]}`, fs.existsSync(path.join(ROOT, m[1])));
+  }
+}
+
+// 10. lessons/platforms/ children (split Aug 28 2026): same law as memory/ — each child is
+//     linked EXACTLY ONCE in the parent index lessons/platform-gotchas.md, and DIRECTORY names
+//     only the parent. A child with zero links is unreachable; two is a fork.
+{
+  const parent = rd("lessons/platform-gotchas.md");
+  for (const f of fs.readdirSync(path.join(ROOT, "lessons/platforms")).filter((x) => x.endsWith(".md"))) {
+    const n = (parent.match(new RegExp("\\(platforms/" + f.replace(".", "\\.") + "\\)", "g")) || []).length;
+    t(`platform child indexed exactly once in the parent: ${f} (found ${n})`, n === 1);
   }
 }
 

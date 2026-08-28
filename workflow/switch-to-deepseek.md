@@ -62,7 +62,7 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 - `deepseek-chat` and `deepseek-reasoner` RETIRED Jul 24 2026. Never use those names.
 - You will SEE `deepseek-v4-flash` in the VS Code status bar (that is the confirmation the switch worked). Flash is the default. NONE of the picker behaviour below has been live-tested: it is docs-confirmed only, and it cannot be tested until you are actually on DeepSeek. Report it that way, never as confirmed. On that basis: pro is added to the /model picker as a LOCAL custom entry (ANTHROPIC_CUSTOM_MODEL_OPTION) which does not depend on DeepSeek serving a model list, so it SHOULD be the more reliable of the two routes (gateway discovery is also on, but it can fail silently). Fallback if pro does not appear: flip all five model keys (ANTHROPIC_MODEL, the three ANTHROPIC_DEFAULT_*, CLAUDE_CODE_SUBAGENT_MODEL) to deepseek-v4-pro and restart, using the name you confirmed at step zero.
 - Pricing per 1M tokens (SUPERSEDED Aug 16 2026 — flat launch rates; the live peak/off-peak
-  table's one home is ../lessons/platform-gotchas.md, DeepSeek API): flash was $0.14 in /
+  table's one home is ../lessons/platforms/deepseek-api.md): flash was $0.14 in /
   $0.28 out; pro $0.435 in / $0.87 out (cache hits were near-free then; they are not now). Real spend lives on platform.deepseek.com usage; ccusage's dollar numbers will be
   WRONG for DeepSeek models (it prices Claude).
 
@@ -73,7 +73,7 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 - BREAKS: **vision**. The endpoint rejects image and document content. The verify-visually law
   survives with one change: the model still drives Playwright and takes the screenshot, but
   CHAN's eyes do the looking. Never let a blind model claim a screen "looks right".
-- The endpoint's full ignore/reject list (cache_control, image blocks, silent model-name fallback, the context-meter accounting) lives in `../lessons/platform-gotchas.md` under `## DeepSeek API`. This runbook holds the switch facts; that file holds the endpoint facts.
+- The endpoint's full ignore/reject list (cache_control, image blocks, silent model-name fallback, the context-meter accounting) lives in `../lessons/platforms/deepseek-api.md`. This runbook holds the switch facts; that file holds the endpoint facts.
 - Small-context discipline: one subagent at a time, never a parallel fleet and never a Workflow
   fan-out (that is what "heavy" means here, it is not a judgement call); small steps; trust the files over
   memory; the checklists ARE the intelligence now.
