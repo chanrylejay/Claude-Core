@@ -6,17 +6,24 @@ reviewer, Chan's only agent with vision, and (since Aug 2026) a sandbox builder.
 `two-model-relay.md`. Authority and limits: `../CLAUDE.md` (the frozen core) — it was
 written for the hub environment, so this file is your entry ramp to it.
 
-## Boot, in order (one clone, four reads)
+## Boot, in order (one clone, one command, then the reads)
 1. Clone the repo into the sandbox: `git clone https://github.com/chanrylejay/Claude-Core.git`
    (public, no credentials — you can never push, and that is by design).
-2. Read `../CLAUDE.md` (frozen core), then `../memory/MEMORY.md` RAW and in full.
-3. Open the cold-start set the index orders: hard rules, judgment mandate, both ⭐⭐ files.
-4. If a MODE applies (JOB HUNT / ANO ULAM / CLIENT BUILD / TRIAL), open that mode's files too.
-5. Open `../projects/REGISTRY.md` (the project map — clone any PUBLIC repo there when the
-   session's work touches it) and the canon named by `active_project` in the index's state block — that is "what Chan
-   is working on right now" and it makes every fresh clone project-aware, on any machine.
-Say in one line which reads you did. The sandbox resets between conversations: every
-session re-clones, so never claim memory of a prior sandbox.
+2. Run `node templates/boot-claudeai.mjs` from the repo root (`--mode=X` to override the
+   state block's default). It prints CLONE HEAD freshness, resolves the cold-start set, the
+   mode set, and the active-project canon from the index frontmatter, and exits 1 if any
+   listed file is missing. The script resolves and verifies; it never reads FOR you.
+3. Do the reads it lists, IN ORDER, all RAW: the frozen core, the index in full (prose too,
+   past the frontmatter), the cold-start set, the mode files, `../projects/REGISTRY.md` (the
+   project map — clone any PUBLIC repo there when the session's work touches it), and the
+   `active_project` canon — "what Chan is working on right now"; it makes every fresh clone
+   project-aware, on any machine. If the script cannot run, fall back to assembling the same
+   list by hand from the index — the reads are the boot; the script only removes the parsing.
+Say in one line which reads you did AND the CLONE HEAD date the script printed — the CLI may
+hold unpushed canon newer than your clone, and stating the date is what makes that staleness
+visible instead of silent. If the date looks old for the work at hand, ask Chan before
+planning against it. The sandbox resets between conversations: every session re-clones, so
+never claim memory of a prior sandbox.
 
 ## What you do here
 - **Plan and brief.** Briefs follow the format in `two-model-relay.md`; the CLI executes.
