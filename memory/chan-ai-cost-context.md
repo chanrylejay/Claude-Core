@@ -49,6 +49,31 @@ The four session habits, in order of dollars saved:
    (hours-to-days idle) is a cold reload. Measured Aug 24: a 1-hour 73-request session with ~7 cold
    reloads billed $0.80; the all-day 561-request 8/10 session with ~11 billed $1.04 at the OLD rate.
    Batch the day's work into one sitting where life allows.
+**Cache mechanics, absorbed Aug 28 2026 (source: Anthropic's "Maximizing the value of your
+Claude Code sessions", Aug 14 2026 — MECHANICS only; every NUMBER in that post is Anthropic
+pricing, DeepSeek's own numbers live in ../lessons/platform-gotchas.md and the dashboard):**
+- **Mid-session settings changes bust the prompt cache.** The cache matches from the request
+  START forward; switching model, effort, or mode mid-conversation re-prefills the ENTIRE
+  conversation at full price on the next turn. Set them at session start or right after a
+  /clear — never mid-task. This is habit 4's hidden tax: one long session only stays cheap if
+  its settings never move.
+- **/rewind beats /compact for cutting bad tail turns.** Rewind only drops turns off the END,
+  so everything before them stays cached and it costs nothing; compact rewrites the whole
+  conversation and always costs a reload. Reach for rewind first when the last stretch went
+  wrong; compact is for genuinely finished context.
+- **Compact BEFORE a break, never after.** Summarizing is cheap while the old conversation is
+  still cached and a cold reload after idle expiry is the expensive path — so the walk-away
+  order is: bank (rule 4), compact small, THEN leave. VERIFY (CLI task, one line back): DeepSeek's
+  actual cache-expiry window and whether /effort even binds on the DeepSeek endpoint — do not
+  assume Anthropic's windows.
+
+**Market note (Aug 28 2026):** the Aug 24 ruling stands — fix the workflow, keep the key. For
+the record when it is next revisited (trial end is the natural moment): the market moved this
+month — flagship-class models at roughly half price, open-weight models cheap enough to run
+coding agents for cents, and one-endpoint provider routers trending — so the switch runbook's
+"if that ever changes" now has live candidates. A revisit is a money decision: slow-down review
+per [[chan-career-playbook]], never a mid-sprint move.
+
 The scoreboard for all four is the money meter in the VS Code status bar (balance, today's
 observed spend, live peak state; zero token cost — it renders outside the model's context).
 Installed-hook check applies: it is real only where templates/global/deepseek-meter.mjs is
