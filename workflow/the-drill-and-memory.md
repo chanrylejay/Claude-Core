@@ -62,6 +62,9 @@ fastest orientation, never proof of current state — disk wins, at a start AND 
 - **Bank BEFORE compaction.** When context runs low, write current state to memory first.
   Chan will say "we're going to hit an auto compact, please pause" — that means bank now.
   Never let the compact be the only record.
+- **A project Chan mentions or creates, however small, gets its projects/REGISTRY.md line the
+  same session** — an unregistered project does not exist to the next session (proven by
+  counterexample: Sonneto, Aug 2026).
 - **When unsure whether something is worth banking, bank it — over-banking is the cheap side** (restored to this home, slice 1 audit).
 - **Bank decisions the moment they're made** (a client's GO, a reversal, a locked design call) —
   not at end of session.

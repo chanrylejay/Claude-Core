@@ -50,7 +50,8 @@ session with no operating contract at all.
   state, blockers), never code, credentials, client names, or anything failing the
   would-he-post-it test; those live in the private project repo or LOCAL-ONLY files. Canon
   updates ride the same session that changes reality. Switching active projects updates
-  `active_project`, the NOW line, and the state block in one edit.
+  `active_project`, the NOW line, and the state block in one edit. The full project map is
+  `projects/REGISTRY.md` — every project one line, added the session it first appears.
 - Compressing any permanent doc by more than 25% of its characters: run the L24 diff audit first. Measured against the version at the START of the session, not the previous edit — otherwise two 24% passes strip 42% and the audit never fires
   (`lessons/universal-patterns.md`, "Maintaining documents").
 - Archive never delete; the frozen originals live in `archives/` (rules in the `DIRECTORY.md`
