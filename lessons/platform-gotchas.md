@@ -221,3 +221,7 @@ Scope split: `../TOOLS.md` = the Devoted-era tool catalog (Claude Code, MCPs, in
   count-based query.
 - `boards(limit:100, page:N)` pages cleanly; `items_count` is cheap and is the fastest way to
   find which boards in a large workspace hold anything at all.
+
+## Windows
+
+- Git Bash `tar` is GNU tar: `tar -tf C:/path/x.zip` reads `C:` as a remote host ("Cannot connect to C") and GNU tar cannot read zip; cd in and use a relative name, or use `unzip`.
