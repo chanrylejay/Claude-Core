@@ -53,7 +53,13 @@ Reviewing after production is not reviewing. That is the point of the loop.
 ## The brief format
 
 Header carries FROM, TO, branch, and the words NOT A GO. Steps are numbered,
-each marked read-only, local-only, or waits-for-Chan. The brief lists the exact
+each marked read-only, local-only, or waits-for-Chan. The brief also carries a
+CLARIFY block: every assumption the writer made and every question still open, listed
+outright — the agent confirms or challenges each BEFORE building, and an empty block must say
+"no open assumptions" so the skip is visible (added Aug 28 2026; the industry converged on the
+same step — Spec Kit's clarify phase is "the one most developers skip and later regret" — and
+our own precedent is the needsManualPrice field below: 203 drafts for one unchallenged
+assumption). The brief lists the exact
 prove-it commands and says what to do if any fail (stop and paste the failure,
 do not fix silently).
 
