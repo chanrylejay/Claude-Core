@@ -25,6 +25,14 @@ it anywhere.
 satisfied neither, because nothing shipped under them. A model appends by copying the rows.) Columns: SEQ | DATE | TARGET | ASK | VERDICT | FIX / OUTCOME.
 The whole point: a prompt bug PED caught once must never ship twice, and every entry is a
 sentence of the eventual case study. Full context on PED itself: [[ped-prompt-auditor]].
+ROLL LAW (Chan GO Aug 28 2026 — a grow-forever log in memory/ rides every mode read): this
+file holds the NEWEST 20 rows only. When row 21 lands, move the oldest rows VERBATIM (never
+rewritten — banked-fact law) to `ped-log-archive.md` in this folder, oldest at the bottom
+there too, in the same edit; the archive file is created the first time the cap trips and
+gets its one index line in MEMORY.md that same session (pointer law). Archived rows remain
+part of THIS log for every receipt-layer purpose: sequence numbers never reset, regression
+memory spans both files, and a dispute check greps both. Read the archive only when chasing
+a row older than the hot 20.
 
 - #16 | 2026-07-28 | PED v7.0.2 TWO-MODEL (Fable 5 + Opus 5, blind A/B) F4, THE FINAL LAP: 6 kit files post-F3 | Fable 1 deep find (canary gated on process success, not files_indexed>=1; + recovery lists dropped the indexable-file step), Opus 3 (durable canary precondition, wiring pin path gap, containment delegation) | ALL VERIFIED, fixes enumerated in commit e06bdd1; Opus improve carried a FALSE hook all-clear; 1 invented quotation (Fable, substance true) - the saga's first | SAGA CLOSED per pre-declared stopping rule. Series F1-F4: Fable 10 / Opus 15 verified finds, ZERO fabricated facts both models, ~30 findings near-zero overlap. The instrument is the PAIR.
 - #15 | 2026-07-28 | PED v7.0.2 TWO-MODEL (Fable 5 + Opus 5) F3: 6 kit files post-F2 | Fable 0 finds (clean verdict = FOUR MISSES), Opus 4 (canary hang recipe = bare rebuild-retry vs its own recovery order; "both out-of-root" false in Claude-Core-as-workspace; containment loop 3-of-5; disconnect bullet unbounded) | all verified + class sweep found a 3rd bare-retry copy in the HUB neither model flagged; fixes in commit 7c30c5c
