@@ -94,10 +94,12 @@ if (rawMode === "nudge") {
       const lines = [];
       if (band > (rec.band || 0)) {
         const k = Math.round(ctx / 1000);
+        const filled = Math.min(10, Math.round(Math.min(ctx, 300000) / 300000 * 10));
+        const bar = "▓".repeat(filled) + "░".repeat(10 - filled);
         lines.push((band === 2
-          ? "[gauge] ctx entered the RED band: " + k + "K (threshold 280K) — compact or /clear at the next task boundary; if everything is banked, /clear is the free move."
-          : "[gauge] ctx entered the yellow band: " + k + "K (threshold 150K) — a compact here is still cheap; plan the boundary.")
-          + " RELAY THIS LINE VERBATIM as the first line of your reply — the panel renders no hook output; your voice is the display (Chan's eyes, Aug 25)." );
+          ? "🔴 **[gauge] ctx " + k + "K** `" + bar + "` **RED >280K — ⚠ COMPACT NOW** (new task next? **/clear**) "
+          : "🟡 **[gauge] ctx " + k + "K** `" + bar + "` yellow >150K — compact still cheap, **plan the boundary** ")
+          + "RELAY THIS LINE VERBATIM as the first line of your reply — the panel renders no hook output; your voice is the display (Chan's eyes, Aug 25)." );
         rec.band = band;
       }
       try { // cap trip, mid-session, once (mirrors the boot costNote's condition)
