@@ -43,6 +43,14 @@ session with no operating contract at all.
   lesson → extend the matching CATEGORY file in `lessons/`; never create a lookalike file.
 - Every new file gets a line in `DIRECTORY.md`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
 - One home per fact; anti-bloat and where-facts-go rules: global hub, section 6.
+- **Active-project canon law (Aug 28 2026, Chan's GO):** every project Chan is actively working
+  has a PUBLIC-SAFE canon in `projects/<name>/project-canon.md`, and the state block in
+  `memory/MEMORY.md` names the active one via `active_project` — so any fresh clone, any
+  machine, knows what he is working on now. The canon carries context (shape, decisions,
+  state, blockers), never code, credentials, client names, or anything failing the
+  would-he-post-it test; those live in the private project repo or LOCAL-ONLY files. Canon
+  updates ride the same session that changes reality. Switching active projects updates
+  `active_project`, the NOW line, and the state block in one edit.
 - Compressing any permanent doc by more than 25% of its characters: run the L24 diff audit first. Measured against the version at the START of the session, not the previous edit — otherwise two 24% passes strip 42% and the audit never fires
   (`lessons/universal-patterns.md`, "Maintaining documents").
 - Archive never delete; the frozen originals live in `archives/` (rules in the `DIRECTORY.md`

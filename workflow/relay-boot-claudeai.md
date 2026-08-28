@@ -11,7 +11,9 @@ written for the hub environment, so this file is your entry ramp to it.
    (public, no credentials — you can never push, and that is by design).
 2. Read `../CLAUDE.md` (frozen core), then `../memory/MEMORY.md` RAW and in full.
 3. Open the cold-start set the index orders: hard rules, judgment mandate, both ⭐⭐ files.
-4. If a MODE applies (JOB HUNT / ANO ULAM / CLIENT BUILD), open that mode's files too.
+4. If a MODE applies (JOB HUNT / ANO ULAM / CLIENT BUILD / TRIAL), open that mode's files too.
+5. Open the canon named by `active_project` in the index's state block — that is "what Chan
+   is working on right now" and it makes every fresh clone project-aware, on any machine.
 Say in one line which reads you did. The sandbox resets between conversations: every
 session re-clones, so never claim memory of a prior sandbox.
 

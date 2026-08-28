@@ -41,6 +41,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 ## projects/ — per-project canons (read only when working that project)
 
 - `devoted-care/design-lessons.md` — the Devoted Care design canon (client-era laws, type scale, patterns). Project-specific, NOT Chan's personal defaults.
+- `trial-aug2026/project-canon.md` — the ACTIVE project's public-safe canon (Australian services company trial): shape, decisions, build state, blockers; the `active_project` boot read. CLI fills it from the private repo; claude.ai safety-reviews before push.
 - `ano-ulam/project-canon.md` — Chan's own product (he continues it post-Devoted): full architecture, recipe-engine laws, closed decisions, bug list. Read before ANY ano-ulam work.
 
 ## templates/ — reusable infrastructure
