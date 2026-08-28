@@ -6,9 +6,7 @@ the *principles* always do.
 This file is the ONE home for CROSS-CUTTING operational tool lessons — the ones that hold no
 matter which tool you are holding. Tool-specific incident playbooks own their own operational
 rules and are deliberately not duplicated here (`../lessons/lean-ctx-freeze-playbook.md` is one);
-TOOLS.md (Devoted archive, LOCAL ONLY — not in any clone) is the historical catalog and points here. (Audit Jul 26 2026: this line used to claim
-ONE home for ALL operational tool lessons, which was false as written — freeze rules live in the
-freeze playbook — and a model that believed it would stop reading at the wrong file.)
+TOOLS.md (Devoted archive, LOCAL ONLY — not in any clone) is the historical catalog and points here. (why: ../lessons/audit-log.md AL-14)
 That claim cuts both ways: because a model treats this file as the destination, a STALE instruction
 here is more dangerous than the same staleness anywhere else. Two laws govern how anything is
 written into this file, and they live in `../lessons/universal-patterns.md` under "Maintaining
@@ -77,10 +75,7 @@ before adding a rule here that names a flag, a filename, or a count that some ot
   THERE — never from memory and never copied here (a list drifts; the live thing does not).
   Everything else that is denied — every guard hook, every deny a person or a permission prompt
   placed — falls under the ban above with no exception. **If you cannot tell which kind you are
-  looking at, it is the banned kind: stop and ask.** (Audit Jul 26 2026: this file classified
-  EVERY permission deny as a decision while the freeze playbook treats the lean-ctx deny as
-  permanent machinery and names the shell route past it. Both were right about their own case and
-  neither knew about the other.)
+  looking at, it is the banned kind: stop and ask.** (why: ../lessons/audit-log.md AL-15)
 - Ask the environment before prescribing fixes: Chan is on the **VS Code extension**, not a
   terminal — keystroke/settings advice differs.
 
@@ -110,11 +105,7 @@ morning. Carry the INVARIANT, because it does not drift: the write must never be
 real path. That is why a test that redirects USERPROFILE into a sandbox may use a weaker flag and
 still be safe, and why no flag named on this page is ever a current safety guarantee. A stale
 WARNING costs a re-read of the header; a stale INSTRUCTION costs the machine.
-(Audit Jul 26 2026: the previous tripwire said a named flag was "safe unconditionally" three
-sentences after the ban on naming flags here — the ban's own defect class, installed by the fix
-for it, with the header-wins corrective arriving only AFTER the guarantee. Audit Jul 25 2026: the
-version before that named `--no-env` as the safe flag while the header had been corrected the
-same morning.)
+(why: ../lessons/audit-log.md AL-16)
 
 ## Long-running work
 - **EXACT-VALUE CARVE-OUT (Aug 2026, three auditors): drill verification, L24 audits, and any edit to a memory file READ RAW — Bash-level reads, never ctx_*.** The lean-ctx routing rule stands for exploration and bulk reading; it never applies to work whose whole point is exact tokens. The old escape clause ("re-run tightly or read raw") was self-judged; this carve-out names the classes so nothing is left to judgment.

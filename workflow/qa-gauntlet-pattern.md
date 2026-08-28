@@ -7,8 +7,7 @@ classify by a feeling that something is a personal project: that phrase is a CON
 test, never an input to it, and a personal project that touches production credentials is HEAVY.
 If the class is unclear, ask Chan in one line before starting. If this file ever disagrees with the
 contract, the contract wins immediately and you report the disagreement instead of resolving it
-yourself. (Audit Jul 25 2026: this line used to say "personal projects keep QA light", which read
-as a sufficient classifier and would have shipped a credentials change with no reviewer at all.)
+yourself. (why: ../lessons/audit-log.md AL-17)
 
 INSTALL STATE on Chan's machine (measured Aug 11 2026, by the CLI):
 - Subagents: `~/.claude/agents/` does NOT exist. The 9 files in `templates/agents/` are installed
@@ -82,8 +81,7 @@ cited conclusions instead of file dumps. Use before building, any time.
   push-ready while it is open. While `.claude/BATCH` is open, say so in the turn report EVERY
   turn, with the files accumulated so far: it is a persistent suppression like GAUNTLET_OFF, not
   a one-shot like PUSH_GO, and an unreported open batch is a done-wall that has been off for an
-  unknown number of turns with nothing to notice. (Audit Jul 26 2026: GAUNTLET_OFF carried this
-  disclosure duty and BATCH, with the identical persistence property, did not.)
+  unknown number of turns with nothing to notice. (why: ../lessons/audit-log.md AL-18)
 - **Regression nets are deliverables.** A fix without a net that pins it isn't done — that's how
   the same module stops breaking twice.
 - **Agents are the owner's review proxy.** Surface their verdicts to the human in plain
@@ -133,9 +131,7 @@ the JSON is the bug. Two things the wiring gets wrong by default, both fail-open
    `mcp__lean-ctx__ctx_call` — lean-ctx's `ctx_execute` runs shell and is reachable only THROUGH
    `ctx_call`, so dropping that entry is not a weaker guard, it is no guard at all on that path.
    Diff the list against the shell tools THIS environment actually exposes before wiring; the
-   shipped list is correct for lean-ctx machines only. (Audit Jul 26 2026: this paragraph named
-   only the first two entries while the README carried all three — the fix for the missing third
-   landed in one file and skipped the one the README itself calls the rule's home.)
+   shipped list is correct for lean-ctx machines only. (why: ../lessons/audit-log.md AL-19)
 2. **Every BLOCKING hook keeps `|| exit 2` on its command** — push-guard (PreToolUse) and the
    done-wall (Stop). Without it a LOAD-time failure in the hook (syntax error, bad import) exits
    1, which Claude Code treats as non-blocking, and the gate fail-opens with nothing to notice.
