@@ -10,6 +10,32 @@ state:
   closure_checklist: complete
   mode_default: TRIAL
   active_project: projects/trial-aug2026/project-canon.md   # the boot read for "what is Chan working on right now"
+cold_start:            # opened RAW on every boot, on top of the auto-loaded contract + this index
+  - memory/chan-hard-rules.md
+  - memory/chan-judgment-mandate.md
+  - memory/chan-critique-directives.md
+  - memory/chan-review-bottleneck.md
+modes:                 # machine-readable mirror of the MODES prose line below; the two update together, always. ADDITIVE: cold_start always loads too.
+  JOB_HUNT:
+    - memory/chan-career-portfolio-state.md
+    - memory/chan-career-playbook.md
+    - memory/chan-skills-ledger.md
+    - memory/chan-job-application-email-prefs.md
+    - memory/chan-freelance-sales-playbook.md
+    - portfolio/devoted-project-summary.md
+  ANO_ULAM:
+    - projects/ano-ulam/project-canon.md
+    - lessons/platform-gotchas.md
+    - memory/chan-ai-cost-context.md
+  CLIENT_BUILD:
+    - workflow/new-project-checklist.md
+    - workflow/qa-gauntlet-pattern.md
+  TRIAL:               # = trial files + the CLIENT_BUILD set + platform-gotchas (monday.com section)
+    - memory/chan-trial-aug2026.md
+    - projects/trial-aug2026/project-canon.md
+    - workflow/new-project-checklist.md
+    - workflow/qa-gauntlet-pattern.md
+    - lessons/platform-gotchas.md
 metadata:
   type: reference
 ---
@@ -20,7 +46,7 @@ metadata:
 - NOW (Aug 28 2026): 2-week CLIENT TRIAL ACTIVE (Australian clients, monday.com platform — see chan-trial-aug2026), the current track · job hunt backgrounded behind it · Devoted ENDED Jul 24 2026, closure checklist ALL DONE · portfolio demo v2 live. Update this block when the mode changes OR when any line in it stops being true. It is the live-state source. Staleness test, mechanical, BOTH conditions required: a dated entry elsewhere in this index is NEWER than this blocks date, AND that entry is about one of the three things this block asserts (engagement status, active track, portfolio/demo state). A newer date on any other subject says nothing about this block and does not make it stale. When both hold, the dated entry wins: say so and confirm the current state with Chan before this block decides anything (client-active, QA path, mode routing). (why two conditions: ../lessons/universal-patterns.md, "Gates that always fire").
 - RUNTIME (PERMANENT, Chan Aug 11 2026): Claude Code in VS Code runs the DeepSeek endpoint, NO vision, and Claude access there is NOT coming back — plan around this, never around its return. Who does what (planner, CLI, Chan's eyes) is in the frozen core; mechanics in ../workflow/two-model-relay.md.
 - Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
-- MODES (read the matching set BEFORE working; ADDITIVE — the cold-start set always loads too): JOB HUNT → chan-career-portfolio-state + chan-career-playbook + chan-skills-ledger + chan-job-application-email-prefs + chan-freelance-sales-playbook + ../portfolio/devoted-project-summary.md (engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited). ANO ULAM → ../projects/ano-ulam/project-canon.md + ../lessons/platform-gotchas.md + chan-ai-cost-context. CLIENT BUILD → ../workflow/new-project-checklist.md + ../workflow/qa-gauntlet-pattern.md. TRIAL (Aug 2026, client-active) → chan-trial-aug2026 + ../projects/trial-aug2026/project-canon.md (the active-project canon) + the CLIENT BUILD set + ../lessons/platform-gotchas.md (monday.com section). A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index.
+- MODES (read the matching set BEFORE working; ADDITIVE — the cold-start set always loads too): the file lists live in this file's frontmatter `modes:` block (machine-readable; `templates/boot-claudeai.mjs` resolves them) — the prose here carries only the laws and caveats the lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. TRIAL (Aug 2026, client-active) = trial files + the CLIENT BUILD set + platform-gotchas (monday.com section). A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index. Prose and frontmatter are mirrors: any mode-set change edits BOTH in the same edit, and the boot net pins that every listed file exists.
 
 Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN chan-hard-rules + chan-judgment-mandate + both ⭐⭐ files — all index and READ-FIRST opens are RAW reads (Bash, never ctx_*; full law in the drill home, reachable from BOTH paths since Aug 2026). The DRILL home (../workflow/the-drill-and-memory.md) opens IN FULL after any COMPACTION and before any memory-file edit. The ⭐⭐ files ride every boot ON PURPOSE: they are judgment behaviors no hook can enforce, so repetition is their only mechanism.
 
