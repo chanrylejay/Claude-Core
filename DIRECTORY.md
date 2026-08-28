@@ -27,6 +27,7 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 - `devoted-closure-checklist.md` — the closure-day runbook (closure was Jul 24 2026): status flips done, LinkedIn/resume sweeps, tooling-cost revisit, week-1 momentum kit.
 - `switch-to-deepseek.md` — the DeepSeek switch runbook, RUN Jul 2026 and now permanent; kept as the re-install / model-change / rollback procedure. NO-vision caveat inside.
 - `two-model-relay.md` — the agent + claude.ai collaboration protocol: roles, authority split, the branch-first loop, the brief format, standing rules (REACHABILITY CHECK referenced, not duplicated).
+- `relay-boot-claudeai.md` — entry ramp for the claude.ai half of the relay: boot order, sandbox powers and limits, patch-delivery rules. Browser sessions read it first; the CLI never needs it.
 
 ## lessons/ — universal lessons (project-agnostic)
 
