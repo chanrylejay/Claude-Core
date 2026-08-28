@@ -106,7 +106,7 @@ if (fs.existsSync(met)) {
   const inl = JSON.stringify({ transcript_path: tj });
   const rit = path.join(HOOKS, "session-ritual.mjs");
   const n1 = spawnSync(process.execPath, [rit, "nudge"], { input: inl, encoding: "utf8", env: nEnv, timeout: 20000 });
-  t("LIVE: nudge speaks ONCE on a red transcript", n1.status === 0 && /RED band: 382K/.test(n1.stdout || ""));
+  t("LIVE: nudge speaks ONCE on a red transcript", n1.status === 0 && /🔴 \*\*\[gauge\] ctx 382K\*\*/.test(n1.stdout || "") && /RED >280K/.test(n1.stdout || ""));
   const n2 = spawnSync(process.execPath, [rit, "nudge"], { input: inl, encoding: "utf8", env: nEnv, timeout: 20000 });
   t("LIVE: the second prompt at the same band is SILENT", n2.status === 0 && !(n2.stdout || "").trim());
 }
