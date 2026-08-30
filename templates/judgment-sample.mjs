@@ -68,7 +68,13 @@ function assistantTexts(file) {
 const UI = /\b(screenshot|UI|page|screen|button|layout|design|render)\b/i;
 const CLAIMED = /\b(looks (good|right|correct)|renders correctly|verified|confirmed working|looks fine)\b/i;
 const SAW = /AWAITING HIS LOOK|screenshot saved|\.png\b|saved the shot/i;
-const PUSHBACK = /\b(I'd push back|I disagree|better option|I recommend against|worth challenging|my honest|I'd argue|instead of that)\b/i;
+// Detector v2 (batch 4a, Aug 31 2026; ../lessons/audit-log.md AL-24): v1 knew eight phrases and
+// missed the kit's own pushback vocabulary; three CLI sessions that stopped on wrong checks,
+// diagnosed them and waited for a ruling all logged as zero pushback. STOP is matched
+// case-sensitively (the kit's keyword), so "stop the dev server" does not count.
+const PUSHBACK = /\b(I'd push back|push back|I disagree|better option|I recommend against|worth challenging|my honest|I'd argue|instead of that|reads wrong|reading was wrong|not drift|your call|stopping here|I'm flagging|propose better|I'd hold|held before)\b/i;
+const PUSHBACK_CS = /\bSTOP\b/;
+const DET = 2; // bump when the shapes change; the log line carries it so a count jump is explained
 const DONE = /\b(done|shipped|complete|all set|finished)\b/i;
 const COUNTS = /\d+\s+(passed|failed|pins?|files?|chars?)|\bexit 0\b|\bPASS\b/;
 const STRUCTURE = /^\s*([-*]|\d+\.|#{1,6}\s)/m;
@@ -85,7 +91,7 @@ for (const f of files) {
   let pushbacks = 0;
   for (const t of texts) {
     if (UI.test(t) && CLAIMED.test(t) && !SAW.test(t)) hits.claimed_without_eyes.push(name);
-    if (PUSHBACK.test(t)) pushbacks++;
+    if (PUSHBACK.test(t) || PUSHBACK_CS.test(t)) pushbacks++;
     if (t.length > 2500 && !STRUCTURE.test(t)) hits.wall_of_text.push(name);
     if (DONE.test(t) && !COUNTS.test(t) && t.length > 400) hits.done_without_evidence.push(name);
   }
@@ -113,7 +119,7 @@ for (const k of Object.keys(hits)) {
 }
 if (LOG) {
   const day = new Date().toISOString().slice(0, 10);
-  const line = `${day} sessions=${sessions} msgs=${msgs} ` + Object.keys(hits).map((k) => `${k}=${hits[k].length}`).join(" ");
+  const line = `${day} det=${DET} sessions=${sessions} msgs=${msgs} ` + Object.keys(hits).map((k) => `${k}=${hits[k].length}`).join(" ");
   mkdirSync(join(LOG, ".."), { recursive: true });
   appendFileSync(LOG, line + "\n");
   console.log("  logged: " + LOG);
