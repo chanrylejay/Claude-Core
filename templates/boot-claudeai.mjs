@@ -2,7 +2,7 @@
 // machine was armed with nets while the claude.ai half booted from prose, unverified).
 // Run from the repo root right after the clone:
 //   node templates/boot-claudeai.mjs               # resolves mode_default from the state block
-//   node templates/boot-claudeai.mjs --mode=LEAN    # override; LEAN = core only, canon to LOOKUP
+//   node templates/boot-claudeai.mjs --mode=LEAN    # override; LEAN = contract + index + hard rules
 // What it does — resolve, verify, print; it never reads FOR you:
 //   1. prints clone freshness (HEAD hash + commit date) and the state block's age — the
 //      relay's staleness signals: the CLI may hold unpushed canon, so the boot report states
@@ -63,7 +63,7 @@ for (const l of lines) {
     const i = body.indexOf(":");
     (section === "state" ? state : boot)[body.slice(0, i).trim()] = body.slice(i + 1).trim();
   } else if (section === "cold_start" && body.startsWith("- ")) {
-    coldStart.push(body.slice(2).trim());
+    coldStart.push([body.slice(2).trim(), comment(l)]);
   } else if (section === "lookup" && body.startsWith("- ")) {
     lookup.push([body.slice(2).trim(), comment(l)]);
   } else if (section === "modes") {
@@ -93,7 +93,12 @@ const add = (list, p, why) => { if (p && !seen.has(p)) { seen.add(p); list.push(
 add(bootList, "CLAUDE.md", "frozen core — the contract");
 add(bootList, "workflow/relay-boot-claudeai.md", "the browser half's entry ramp"); // relay ramp rides the boot (batch 1, Aug 30 2026)
 add(bootList, idxPath, "RAW and IN FULL — the router (past the frontmatter, read the prose too)");
-for (const p of coldStart) add(bootList, p, "cold-start set");
+for (const [p, c] of coldStart) {
+  // lean:lookup (batch 4b, Aug 31 2026): under LEAN the three judgment files are LOOKUP; a trivial
+  // task writes no UI report and parks no decision. Every other mode carries them on purpose.
+  if (mode === "LEAN" && /lean:lookup/.test(c)) add(lookupList, p, "open when: the task touches UI, a client, or a decision for Chan (LEAN skips it)");
+  else add(bootList, p, "cold-start set");
+}
 for (const p of modes[mode]) add(bootList, p, "mode: " + mode);
 if (mode === "LEAN") add(lookupList, state.active_project, "open when: the task touches the active project (LEAN skips the canon)");
 else add(bootList, state.active_project, "active_project — what Chan is working on now");

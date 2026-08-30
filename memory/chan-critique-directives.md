@@ -5,7 +5,7 @@ metadata:
   type: feedback
 ---
 
-<!-- Drift on this file cannot be hook-enforced. It can be OBSERVED: `node templates/judgment-sample.mjs` counts the shapes that accompany violations of this rule and of the review-bottleneck lesson. A count rising over weeks is the erosion signal (audit Aug 2026). -->
+<!-- Drift on this file cannot be hook-enforced, only OBSERVED: `node templates/judgment-sample.mjs --log` counts the shapes that accompany violations of this rule and of the review-bottleneck lesson, and the session ritual prints the last count on every boot. A count rising over weeks is the erosion signal (audit Aug 2026). -->
 
 # Directives are not absolute. Critique them and suggest better.
 

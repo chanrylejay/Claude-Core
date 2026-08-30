@@ -221,3 +221,21 @@ v2 adds the kit's own STOP vocabulary, matches STOP case-sensitively so "stop th
 still counts as nothing, and stamps det=2 on every log line so the count jump at the changeover
 is explained by the line itself. Baseline under v1, Aug 30: 17 sessions, 23 screen claims
 without a shot, 17 zero-pushback, 40 done-claims without counts.)
+
+## AL-25 — the cold-start set, the index essay, LEAN · batch 4b
+
+(Audit Aug 31 2026, batch 4b, the prose pass. Audit 3 set a target of a cold-start set under
+12,000 chars from 13,460. Measured under L24 the four files gave up 192 chars, all of it
+restatement (rule 6 carried rule 7's GO gate three times, the review file restated rule 8, the
+hard-rules body repeated its own frontmatter), and nothing else: the files are dense, every
+sentence carries a rule, and the remaining words are the repetition the index says these files
+exist for. The target was a guess and the rules were not cut to meet it. The index essay lost
+its restated state values and gained the LEAN sentence, net flat. The lever that paid was
+LEAN: the three ⭐ judgment files uniquely hold the fixed report shape, the park mechanics,
+"never build the alternative yourself" and the visual-complaint exception, none of which a
+trivial task uses, so under LEAN they are LOOKUP with a trigger, tagged `lean:lookup` in the
+frontmatter, and every other mode carries them on purpose. TRIAL boot 38,259 to 38,181; LEAN
+29,953 to 22,383. The planned experiment, booting without the three files and asking seven
+scenario questions, was dropped as a foregone conclusion: the behaviors those files hold exist
+nowhere else, so a session without them cannot produce them; whether sessions with them do is
+the sampler's question, now asked on every boot line.)

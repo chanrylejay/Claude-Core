@@ -12,9 +12,9 @@ state:
   active_project: projects/trial-aug2026/project-canon.md   # the boot read for "what is Chan working on right now"
 cold_start:            # opened RAW on every boot, on top of the auto-loaded contract + this index
   - memory/chan-hard-rules.md
-  - memory/chan-judgment-mandate.md
-  - memory/chan-critique-directives.md
-  - memory/chan-review-bottleneck.md
+  - memory/chan-judgment-mandate.md   # lean:lookup
+  - memory/chan-critique-directives.md   # lean:lookup
+  - memory/chan-review-bottleneck.md   # lean:lookup
 modes:                 # machine-readable mirror of the MODES prose line below; the two update together, always. ADDITIVE: cold_start always loads too.
   JOB_HUNT:
     - memory/chan-career-portfolio-state.md
@@ -33,7 +33,7 @@ modes:                 # machine-readable mirror of the MODES prose line below; 
   TRIAL:               # = trial card + canon (batch 1, Aug 30 2026); the CLIENT_BUILD set + monday.md are LOOKUP below
     - memory/chan-trial-aug2026.md
     - projects/trial-aug2026/project-canon.md
-  LEAN:                # core only (the cold-start set + contract + index); the canon goes to LOOKUP. Trivial tasks
+  LEAN:                # trivial tasks: contract + index + hard rules; the canon and the three lean:lookup files go to LOOKUP
 lookup:                # verified present at every boot, NEVER read at boot; open at the trigger on the line (why: ../lessons/audit-log.md AL-20)
   - workflow/two-model-relay.md          # cutting a patch or a brief (the ramp points here)
   - workflow/the-drill-and-memory.md     # after a compaction; before any memory-file edit
@@ -50,12 +50,12 @@ metadata:
 # Memory Index — Chan (portable)
 
 - Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com, Quezon City PH. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
-- NOW (Aug 30 2026): 2-week CLIENT TRIAL ACTIVE (Australian clients, monday.com platform — see chan-trial-aug2026), the current track · job hunt backgrounded behind it · Devoted ENDED Jul 24 2026, closure checklist ALL DONE · portfolio demo v2 live. Update this block when the mode changes OR when any line in it stops being true. It is the live-state source. Staleness test, mechanical, BOTH conditions required: a dated entry elsewhere in this index is NEWER than this blocks date, AND that entry is about one of the three things this block asserts (engagement status, active track, portfolio/demo state). A newer date on any other subject says nothing about this block and does not make it stale. When both hold, the dated entry wins: say so and confirm the current state with Chan before this block decides anything (client-active, QA path, mode routing). (why two conditions: ../lessons/universal-patterns.md, "Gates that always fire").
+- NOW (Aug 30 2026), mirroring the frontmatter state block, the live-state source: 2-week CLIENT TRIAL ACTIVE (Australian clients, monday.com platform; see chan-trial-aug2026) is the track; job hunt backgrounded behind it; Devoted ENDED Jul 24 2026, closure checklist ALL DONE; portfolio demo v2 live. Edit the block and this line together when any of it stops being true. Staleness test, mechanical, BOTH conditions required: a dated entry elsewhere in this index is NEWER than the block's date AND is about engagement status, active track, or portfolio/demo state; a newer date on any other subject says nothing about this block. When both hold, the dated entry wins: say so and confirm the current state with Chan before this block decides anything (client-active, QA path, mode routing). (why two conditions: ../lessons/universal-patterns.md, "Gates that always fire").
 - RUNTIME (PERMANENT, Chan Aug 11 2026): Claude Code in VS Code runs the DeepSeek endpoint, NO vision, and Claude access there is NOT coming back — plan around this, never around its return. Who does what (planner, CLI, Chan's eyes) is in the frozen core; mechanics in ../workflow/two-model-relay.md.
 - Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
-- MODES (read the matching set BEFORE working; ADDITIVE — the cold-start set always loads too): the file lists live in this file's frontmatter `modes:` block (machine-readable; `templates/boot-claudeai.mjs` resolves them) — the prose here carries only the laws and caveats the lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. TRIAL (client-active) = trial card + canon since Aug 30 2026; the rest of the old set sits in the `lookup:` block, triggers on its lines, loaded when the work needs them (why: ../lessons/audit-log.md AL-20). LEAN = core only. A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index. Prose and frontmatter are mirrors: any mode-set change edits BOTH in the same edit, and the boot net pins that every listed file exists.
+- MODES, additive (the cold-start set always loads too), read before working: the file lists live in this file's frontmatter `modes:` block (`templates/boot-claudeai.mjs` resolves them); this prose carries only what lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. TRIAL (client-active) = trial card + canon since Aug 30 2026; the rest of the old set sits in the `lookup:` block, triggers on its lines, loaded when the work needs them (why: ../lessons/audit-log.md AL-20). LEAN (trivial tasks) = contract + index + hard rules; the three ⭐ judgment files tagged `lean:lookup` go to LOOKUP there, since a trivial task writes no UI report and parks no decision, and every other mode carries them on purpose (batch 4b, Aug 31 2026). A project mapped to a mode MUST name that mode's files AND the cold-start set in its own workspace CLAUDE.md READ-FIRST line — a session reading only that line never reaches this index. Prose and frontmatter are mirrors: any mode-set change edits BOTH in the same edit, and the boot net pins that every listed file exists.
 
-Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN chan-hard-rules + chan-judgment-mandate + both ⭐⭐ files — all index and READ-FIRST opens are RAW reads (Bash, never ctx_*; full law in the drill home, reachable from BOTH paths since Aug 2026). The DRILL home (../workflow/the-drill-and-memory.md) opens IN FULL after any COMPACTION and before any memory-file edit. The ⭐⭐ files ride every boot ON PURPOSE: they are judgment behaviors no hook can enforce, so repetition is their only mechanism.
+Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN the cold-start set (the frontmatter `cold_start:` list), all RAW (Bash, never ctx_*; the full law is the drill home). The DRILL home (../workflow/the-drill-and-memory.md) opens IN FULL after any COMPACTION and before any memory-file edit. The ⭐⭐ files ride every boot ON PURPOSE, LEAN excepted: they are judgment behaviors no hook can enforce, so repetition is their only mechanism.
 
 - [⭐ Chan's HARD rules](chan-hard-rules.md) — rule-0 THE DRILL · show-first · 🔒 ship in batches (no push/deploy without explicit GO) · DB safety · judgment mandate.
 - [⭐ Chan's judgment mandate](chan-judgment-mandate.md) — don't just execute edit lists; self-rate every surface 1-10 and close the gap.
