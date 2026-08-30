@@ -254,3 +254,27 @@ The relay's standing rule now points at rule 7 with a six-word gloss. The portfo
 one nuance that lived nowhere else, whose GO counts: only Chan's own, never another person's,
 an agent's, or a tool's output. That sentence moved into rule 7, its one home, and the
 portfolio line became a pointer. Sixteen files, two edits, one law made whole.)
+
+## AL-27 — the truth patch · the second table, the freeze, the backlog
+
+(Audit Aug 31 2026. Four outside audits at 5c248ad; two found the same live contradiction:
+MEMORY.md line 66 called the priority rule "dormant: no active client engagement since Jul 24"
+four lines under a state block saying trial_active: true since Aug 24. The rule built to keep a
+client sprint ahead of kit work read as switched off during a client sprint, no net can see a
+prose line contradicting the state above it (the staleness gate fires only when a dated entry
+is NEWER than the block), and the architect read past the line at every boot of a seven-batch
+program run on trial days 6 and 7. The program itself was lawful, Chan commissioned and GO'd
+every batch, but the rule was never surfaced to him by the model whose critique law says to
+surface it. Fixes here, words only: line 66 is now stateless, it points at the state block for
+whether a sprint is active, so that class of rot has nothing left to rot; the two headers that
+said 42 patterns now say 50, the true top (audit 3's find; its count of 49 was wrong, the
+duplicate 1-2-3 the regex caught are a sub-list, and no kit reference points above 42, so
+nothing resolved wrong). KNOWN LIMIT, named and deliberately not netted: no net checks that two
+facts in one file agree; a semantic-consistency net is the trap audit 2 named, a mechanism for
+a risk one stateless line just removed. FREEZE: the kit is frozen until the trial ends Sep 6
+2026, Chan's GO on this patch is the ruling; the trial canon and its workspace are exempt, the
+kit is not. BACKLOG, surfaced for Chan at sprint end, per the priority rule: verify by hand
+that the 50 pattern numbers are unique and the by-number references still land; the README
+stranger's ramp, ten lines, only if the job hunt comes forward; nothing else. The weekly
+practice stands: node templates/judgment-sample.mjs --sessions 18 --log, and the three pulse
+numbers.)

@@ -1,4 +1,4 @@
-# Universal Patterns — the 42 patterns + how Chan tests AI systems
+# Universal Patterns — the numbered patterns (1–50) + how Chan tests AI systems
 
 Distilled Jul 23 2026 from Document B v9 (verbatim original: `../archives/document-b-lessons-registry-v9.md`).
 These are project-agnostic engineering and AI-collaboration patterns proven across 7 prompt systems, 2 n8n platforms, 4 web apps, and the Devoted Care production era. Reference by number.
