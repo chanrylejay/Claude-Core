@@ -20,6 +20,7 @@
 //  15. mutation: state.updated set to 2026-01-01 → STALE printed
 //  16. LEAN resolves and its BOOT SET is smaller than the default mode's
 //  17. the active canon is in BOOT for the default mode and in LOOKUP for LEAN
+//  18. the three lean:lookup judgment files ride BOOT normally and LOOKUP under LEAN (batch 4b)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -79,6 +80,8 @@ const lean = run(TMP, ["--mode=LEAN"]);
 const LL = lists(lean.out);
 t("LEAN resolves and boots smaller than the default mode", lean.code === 0 && bootSet(lean.out) < bootSet(ok.out));
 t("active canon: in BOOT for the default mode, in LOOKUP for LEAN", L.boot.includes(canon) && LL.look.includes(canon) && !LL.boot.includes(canon));
+const STAR = [...fm.matchAll(/^\s+- (\S+)\s+# lean:lookup/gm)].map((m) => m[1]);
+t(`lean:lookup files (${STAR.length}) ride BOOT in the default mode and LOOKUP under LEAN`, STAR.length === 3 && STAR.every((p) => L.boot.includes(p) && LL.look.includes(p) && !LL.boot.includes(p)));
 
 // 5. unknown mode
 const bad = run(TMP, ["--mode=NO_SUCH_MODE"]);
