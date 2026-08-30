@@ -189,3 +189,21 @@ seed, bank-before-compaction, the copy list) lost their hub copies and gained a 
 pin is no new file and no new net: verify-install, which already certifies the machine LIVE,
 now reads the hub and pins its invariants, with six mutations in the bootstrap net. Hub after:
 under 45 non-blank lines from 74.)
+
+## AL-23 — templates/raw-read.mjs, judgment-sample.mjs --log, the ritual's [pulse] line · batch 3b
+
+(Audit Aug 31 2026, table of knowledges round 4. Audit 4 named two ceremony costs and one
+blind spot, and four CLI sessions in a row confirmed them. The ceremony: lean-ctx denies native
+Read, the rewrite hook turns cat/head/tail into ctx reads, and the shell allowlist blocks node
+-e, so every session wrote a temp .mjs to read a file raw and wrote it again when the temp dir
+was cleaned. raw-read.mjs is that script committed once; the hub's fallback read and the tool
+playbook now name it, and verify-install treats "temp .mjs" in the hub as a returned duplicate.
+The blind spot: the judgment sampler, the only measure of the behaviors the kit exists for
+(pushback, screenshots, evidenced done-claims), ran only when someone remembered. Now
+judgment-sample.mjs --log appends one dated line of counts to ~/.claude/judgment-log.txt, and
+the session ritual prints that last line on every boot with its age, plus the working tree's
+dirty count; a sample older than seven days says so and names the command. The sampler is never
+run from the hook: a hook must return fast, and a reminder that cannot be missed is the lean
+version of a scheduler. Baseline logged Aug 30 2026 by the CLI: 16 sessions, 26 screen claims
+without a saved shot, 15 zero-pushback sessions, 57 done-claims without counts. Those numbers
+moving is what the last point of the 10 is made of.)

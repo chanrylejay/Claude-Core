@@ -17,14 +17,19 @@
 // The ONLY hard failure here is reading nothing at all (exit 1), because a silent zero from
 // an unreadable transcript folder is precisely the false comfort this tool exists to kill.
 
-import { readdirSync, statSync, readFileSync } from "node:fs";
+import { readdirSync, statSync, readFileSync, appendFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 
 const args = process.argv.slice(2);
 const nFlag = args.indexOf("--sessions");
 const LIMIT = nFlag >= 0 ? Number(args[nFlag + 1]) || 20 : 20;
-const ROOT = args.find((a) => !a.startsWith("--") && a !== String(LIMIT)) || join(homedir(), ".claude", "projects");
+// --log [path]: append one dated line of counts (batch 3b, Aug 31 2026; ../lessons/audit-log.md
+// AL-23). The session ritual prints the LAST line of that log at every boot with its age, so a
+// stale sample reminds instead of being forgotten. Default path: ~/.claude/judgment-log.txt.
+const lFlag = args.indexOf("--log");
+const LOG = lFlag >= 0 ? ((args[lFlag + 1] && !args[lFlag + 1].startsWith("--")) ? args[lFlag + 1] : join(process.env.USERPROFILE || homedir(), ".claude", "judgment-log.txt")) : null;
+const ROOT = args.find((a) => !a.startsWith("--") && a !== String(LIMIT) && a !== LOG) || join(homedir(), ".claude", "projects");
 
 // --- collect the most recent session files, any depth, tolerant of layout ---
 function jsonlFiles(dir, out = []) {
@@ -105,6 +110,13 @@ for (const k of Object.keys(hits)) {
   const list = hits[k];
   const where = [...new Set(list)].slice(0, 3).join(", ");
   console.log(`  ${String(list.length).padStart(3)}  ${LABEL[k]}${list.length ? "  [" + where + (new Set(list).size > 3 ? ", …" : "") + "]" : ""}`);
+}
+if (LOG) {
+  const day = new Date().toISOString().slice(0, 10);
+  const line = `${day} sessions=${sessions} msgs=${msgs} ` + Object.keys(hits).map((k) => `${k}=${hits[k].length}`).join(" ");
+  mkdirSync(join(LOG, ".."), { recursive: true });
+  appendFileSync(LOG, line + "\n");
+  console.log("  logged: " + LOG);
 }
 console.log("  WEAK SIGNALS, not verdicts: these flag shapes that often accompany a violation.");
 console.log("  A count going UP over weeks is the erosion signal; a zero certifies nothing. Nothing here blocks.");

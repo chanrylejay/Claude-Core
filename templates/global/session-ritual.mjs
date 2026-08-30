@@ -386,17 +386,36 @@ try {
         ? "DEEPSEEK PEAK PRICING IS ACTIVE (2x, until " + fmtManila(next) + " Manila): keep this session cheap — plan, read, and batch; defer heavy generation, big file churn, and anything compactable to off-peak (before 09:00, 12:00-14:00, or after 18:00 Manila) unless Chan says run it now. Say the peak state in your first line so he can decide. "
         : "DeepSeek off-peak rate is active (peak = 09:00-12:00 and 14:00-18:00 Manila at 2x; next boundary " + fmtManila(next) + " Manila). ");
     } catch {}
+    // [pulse] batch 3b, Aug 31 2026 (why: Claude-Core/lessons/audit-log.md AL-23): the judgment
+    // layer's LAST logged sample and the working tree's dirt, on the boot line, so behavior is seen
+    // before work starts. Read-only and cheap: the sampler is never run from a hook; its AGE is
+    // what reminds. Fail-open: any error leaves the note empty.
+    let pulseNote = "";
+    try {
+      const homeP = process.env.USERPROFILE || "C:/Users/Chanryle";
+      const sampler = "node " + join(homeP, "Claude-Core", "templates", "judgment-sample.mjs").replace(/\\/g, "/") + " --log";
+      const logP = join(homeP, ".claude", "judgment-log.txt");
+      let sample = "no judgment sample logged yet (run " + sampler + ")";
+      if (existsSync(logP)) {
+        const last = readFileSync(logP, "utf8").trim().split(/\r?\n/).filter(Boolean).pop() || "";
+        const age = Math.floor((Date.now() - Date.parse(last.slice(0, 10))) / 86400000);
+        sample = "last judgment sample: " + last + (age > 7 ? " (" + age + " days old: re-run " + sampler + ")" : "");
+      }
+      let dirty = "n/a";
+      try { dirty = String(execFileSync("git", ["status", "--porcelain"], { cwd, timeout: 5000, windowsHide: true, stdio: ["ignore", "pipe", "ignore"] }).toString().split(/\r?\n/).filter(Boolean).length) + " path(s)"; } catch {}
+      pulseNote = "[pulse] " + sample + " - dirty tree: " + dirty + ". ";
+    } catch {}
     if (source === "compact") {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — opened by WHERE THEY SIT: Bash node -e when they are outside THIS workspace root, which is every root except Claude-Core itself; ctx_read when Claude-Core IS the root; and never from the index lines, which are summaries, and summaries are what you are not trusting; verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
-          seedNote + graphNote + contractNote + memNote + costNote,
+          seedNote + graphNote + contractNote + memNote + costNote + pulseNote,
       );
     } else {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Session-start ritual: " +
-          seedNote + graphNote + contractNote + memNote + costNote +
+          seedNote + graphNote + contractNote + memNote + costNote + pulseNote +
           "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks — the marked lines only say WHICH files to open — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );
     }

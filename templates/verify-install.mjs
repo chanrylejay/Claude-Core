@@ -145,7 +145,7 @@ const FALLBACK = [
   ["CONTRACT CHECK", null, null],
   ["<SPLIT>", null, null],
   ["canon wins when readable", null, null],
-  ["temp .mjs", null, null],
+  ["raw-read.mjs", null, null],
   ["PRE-BUILT", null, null],
   ["show first", "CLAUDE.md", "show-first"],
   ["small batches", "memory/chan-hard-rules.md", "batches"],
@@ -166,7 +166,7 @@ for (const [hp, cf, cp] of FALLBACK) {
   t(`hub carries fallback "${hp}"${cf ? ` and ${cf} still carries "${cp}"` : ""}`, inHub && (!cf || canonHas(cf, cp)));
 }
 // laws that moved OUT of the hub in batch 3a; each has one home in the kit now. Present = drift.
-const MOVED = ["English is not his first language", "more than 25%", "Two-strikes", "hand-write", "one-line-per-shot", "5 lines or less", "under 200 lines", "Subagents inherit", "existing category file", "LOSSLESS", "Smoke test after"];
+const MOVED = ["temp .mjs", "English is not his first language", "more than 25%", "Two-strikes", "hand-write", "one-line-per-shot", "5 lines or less", "under 200 lines", "Subagents inherit", "existing category file", "LOSSLESS", "Smoke test after"];
 for (const m of MOVED) t(`hub no longer carries "${m}" (moved out, one home in the kit)`, !hubTxt.includes(m));
 for (const m of hubTxt.matchAll(/Claude-Core[\\/]([\w.\\/-]+?\.md)\b/g)) { // slashes either way; Windows paths count too
   const rel = m[1].replace(/\\/g, "/");

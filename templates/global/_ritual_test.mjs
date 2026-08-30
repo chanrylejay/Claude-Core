@@ -648,6 +648,26 @@ t("a failed seed write still produces a message", /could NOT be written/.test(sr
 t("the containment check covered at least one workspace", SPAWNED_IN.size > 0);
 for (const ws of SPAWNED_IN) t("no LIVE graph exists for " + path.basename(ws), liveGraphsFor(ws).length === 0);
 t("the live lean-ctx graph dir did not grow during this run", liveGraphCount() === liveBefore);
+// 9. [pulse] line (batch 3b, Aug 31 2026): the last logged judgment sample and the dirty-tree
+//    count ride the boot message; the sampler is never run from the hook, its AGE reminds.
+const PULSE_HOME = path.join(os.tmpdir(), "ritual-pulse-home");
+const SB10 = path.join(os.tmpdir(), "ritual-hook-pulse-ws");
+fs.rmSync(PULSE_HOME, { recursive: true, force: true }); fs.rmSync(SB10, { recursive: true, force: true });
+fs.mkdirSync(path.join(PULSE_HOME, ".claude"), { recursive: true }); fs.mkdirSync(SB10, { recursive: true });
+try { spawnSync("git", ["init", "-q"], { cwd: SB10 }); fs.writeFileSync(path.join(SB10, "untracked.txt"), "x"); } catch {}
+const PULSE_ENV = { USERPROFILE: PULSE_HOME, HOME: PULSE_HOME, XDG_DATA_HOME: path.join(PULSE_HOME, ".local", "share") };
+const PLOG = path.join(PULSE_HOME, ".claude", "judgment-log.txt");
+let pz = runAt(SB10, PULSE_ENV);
+t("pulse: no log yet -> the boot line says so and names the sampler command", pz.status === 0 && /\[pulse\] no judgment sample logged yet \(run node .*judgment-sample\.mjs --log\)/.test(pz.stdout || ""));
+t("pulse: dirty-tree count is on the boot line", /dirty tree: (\d+ path\(s\)|n\/a)/.test(pz.stdout || ""));
+fs.writeFileSync(PLOG, new Date().toISOString().slice(0, 10) + " sessions=16 msgs=4761 claimed_without_eyes=26 execution_streak_no_pushback=15 wall_of_text=0 done_without_evidence=57\n");
+pz = runAt(SB10, PULSE_ENV);
+t("pulse: a fresh log -> its last line is on the boot line, no staleness note", /last judgment sample: \d{4}-\d{2}-\d{2} sessions=16 .*done_without_evidence=57/.test(pz.stdout || "") && !/days old/.test(pz.stdout || ""));
+fs.writeFileSync(PLOG, "2026-01-01 sessions=9 msgs=100 claimed_without_eyes=1 execution_streak_no_pushback=2 wall_of_text=0 done_without_evidence=3\n");
+pz = runAt(SB10, PULSE_ENV);
+t("pulse: a stale log (>7 days) -> the boot line says how old and names the re-run", /days old: re-run node .*judgment-sample\.mjs --log/.test(pz.stdout || ""));
+fs.rmSync(PULSE_HOME, { recursive: true, force: true }); fs.rmSync(SB10, { recursive: true, force: true });
+
 fs.rmSync(FAKE_HOME, { recursive: true, force: true }); // one teardown, takes every sandboxed graph with it
 fs.rmSync(SB, { recursive: true, force: true });
 

@@ -49,7 +49,7 @@ const hubFixture = () => [
   "DEGRADED MODE until the contract is readable: reversible local work only.",
   "The seven, runtime copy (canon wins when readable): show first, ship in small batches, never take a deploy-costing action without GO, own the QA gate, verify UI with a real screenshot, rate your own work 1 to 10, bank memory before compaction.",
   "The four: never answer straight from a compaction summary; never fabricate data; click through a UI before judging it; never blind-execute.",
-  "Reading: PRE-BUILT means ctx is safe; otherwise Bash node on a temp .mjs script.",
+  "Reading: PRE-BUILT means ctx is safe; otherwise Bash node Claude-Core/templates/raw-read.mjs <file>.",
   "Ritual: Claude-Core/workflow/the-drill-and-memory.md. Tools: Claude-Core/workflow/tool-playbook.md.",
 ].join("\n") + "\n";
 const run = () => spawnSync(process.execPath, [SCRIPT], {
