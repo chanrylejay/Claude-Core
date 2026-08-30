@@ -166,3 +166,26 @@ CRLF; the count is now characters after normalizing line endings, 38,259 on both
 boot net's pin 11 uses the same rule. L24 was also run retroactively on every prose file
 batch 1 rewrote: all tokens in place or relocated except the state date Chan bumped on his
 own word.)
+
+## AL-22 — the global hub · batch 3a
+
+(Audit Aug 30 2026, table of knowledges round 3. Audit 4 named duplication between the hub
+and the contract; the inventory the CLI pasted showed more: the hub, ~/.claude/CLAUDE.md, 74
+lines, is versioned nowhere, is auto-loaded into every CLI session, and was pointed at by the
+kit as a law home eight times, while carrying a stale copy of a superseded law (the L24 trigger
+"more than 25%", replaced by "any rewrite" in universal-patterns; the browser half's batch-1
+mistake traced to that copy). Chan ruled Aug 30: laws move out of the hub into the kit; the hub
+keeps the @import, the path lines, and the ritual wiring. Applied with one carve-out Chan
+accepted: the laws that exist FOR the case where the kit fails to load stay in the hub as a
+runtime copy, the same reason the agent files carry their own laws: the fallback read, the
+presence check, DEGRADED MODE, the seven, the four. Moved into kit homes, each sentence
+grep-verified there before its hub line went: orient-and-report and "Where new facts go"
+(lossless move, DIRECTORY before any new file, two-strikes, L24 pointer) into the drill; the
+subagent deny brief, the settings.json rule and the no-vision screenshot hand-off into the tool
+playbook; the 5-line CLAUDE.md and the project memory's opening line into the checklist; the
+smoke test and the hub's own travel note into the migration doc. Laws that already had homes
+(plain words, show-first, the deny and its coverage record, WEDGED recovery, the VAR= trap, the
+seed, bank-before-compaction, the copy list) lost their hub copies and gained a pointer. The
+pin is no new file and no new net: verify-install, which already certifies the machine LIVE,
+now reads the hub and pins its invariants, with six mutations in the bootstrap net. Hub after:
+under 45 non-blank lines from 74.)

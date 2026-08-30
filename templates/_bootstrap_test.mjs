@@ -38,7 +38,20 @@ const install = () => {
     (m) => hooksAbs + "/" + m.split("/").pop()));
   void guardAbs;
   fs.writeFileSync(path.join(FH, ".claude", "settings.json"), JSON.stringify(s, null, 2));
+  fs.writeFileSync(path.join(FH, ".claude", "CLAUDE.md"), hubFixture());
 };
+// Fixture hub (batch 3a): the MINIMUM a hub must carry — @import, the fallback layer, pointers.
+// It is not the real hub's text; verify-install pins invariants, and this is what they need.
+const hubFixture = () => [
+  "# Chan's Global Hub (net fixture)",
+  "@" + path.join(FH, "Claude-Core", "CLAUDE.md").replace(/\\/g, "/"),
+  "Presence check: the hook injects a CONTRACT CHECK line split by a <SPLIT> marker; join and find it.",
+  "DEGRADED MODE until the contract is readable: reversible local work only.",
+  "The seven, runtime copy (canon wins when readable): show first, ship in small batches, never take a deploy-costing action without GO, own the QA gate, verify UI with a real screenshot, rate your own work 1 to 10, bank memory before compaction.",
+  "The four: never answer straight from a compaction summary; never fabricate data; click through a UI before judging it; never blind-execute.",
+  "Reading: PRE-BUILT means ctx is safe; otherwise Bash node on a temp .mjs script.",
+  "Ritual: Claude-Core/workflow/the-drill-and-memory.md. Tools: Claude-Core/workflow/tool-playbook.md.",
+].join("\n") + "\n";
 const run = () => spawnSync(process.execPath, [SCRIPT], {
   cwd: ROOT, encoding: "utf8", timeout: 120000,
   env: { PATH: process.env.PATH, USERPROFILE: FH, HOME: FH, XDG_DATA_HOME: path.join(FH, ".local", "share"), TEMP: os.tmpdir(), TMP: os.tmpdir() },
@@ -109,6 +122,27 @@ r = run();
 t("a project-level shadow guard makes the machine NOT ARMED", r.status === 1 && /FAIL {2}no project-level shadow guard/.test(r.stdout));
 t("the shadow finding names the file and the law", /push gating is user-level by law/.test(r.stdout));
 if (hadShadow === null) fs.rmSync(shadowPath, { force: true }); else fs.writeFileSync(shadowPath, hadShadow);
+
+// hub invariants (batch 3a, Aug 30 2026): one mutation per pin class
+const HUBF = path.join(FH, ".claude", "CLAUDE.md");
+install(); fs.rmSync(HUBF);
+r = run();
+t("no hub file — named FAIL, exit 1", r.status === 1 && /FAIL {2}hub exists/.test(r.stdout));
+install(); fs.appendFileSync(HUBF, "Two-strikes rule, scoped: preference rules wait for the same mistake twice.\n");
+r = run();
+t("a moved-out law returning to the hub — named FAIL (drift)", r.status === 1 && /FAIL {2}hub no longer carries "Two-strikes"/.test(r.stdout));
+install(); fs.writeFileSync(HUBF, fs.readFileSync(HUBF, "utf8").replace("DEGRADED MODE", "degraded"));
+r = run();
+t("a missing fallback phrase — named FAIL", r.status === 1 && /FAIL {2}hub carries fallback "DEGRADED MODE"/.test(r.stdout));
+install(); fs.appendFileSync(HUBF, "See Claude-Core/workflow/does-not-exist.md\n");
+r = run();
+t("a hub pointer to a missing kit file — named FAIL", r.status === 1 && /FAIL {2}hub pointer resolves: workflow\/does-not-exist\.md/.test(r.stdout));
+install(); fs.appendFileSync(HUBF, Array.from({ length: 50 }, (_, i) => "filler line " + i).join("\n") + "\n");
+r = run();
+t("a hub over the line ceiling — named FAIL", r.status === 1 && /FAIL {2}hub within 45 non-blank lines/.test(r.stdout));
+install(); fs.writeFileSync(HUBF, fs.readFileSync(HUBF, "utf8").replace(/^@.*\n/m, ""));
+r = run();
+t("a hub without the @import line — named FAIL", r.status === 1 && /FAIL {2}hub @imports the contract/.test(r.stdout));
 
 fs.rmSync(FH, { recursive: true, force: true });
 console.log("\nbootstrap net: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));

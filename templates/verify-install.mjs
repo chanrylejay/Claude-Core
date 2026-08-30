@@ -125,6 +125,54 @@ for (const f of ["settings.json", "settings.local.json"]) {
   if (shadowed) console.log(`      ${p} wires its own push-guard; the guard live-fired above is the USER-level one. Delete the shadow copy: push gating is user-level by law.`);
 }
 
+// 5. the hub (~/.claude/CLAUDE.md), batch 3a Aug 30 2026 (why: ../lessons/audit-log.md AL-22).
+// The hub is not versioned anywhere, so this is its only net. It pins the hub's INVARIANTS,
+// never its full text: the @import to the contract; the fallback layer that must work when the
+// kit fails to load (present here AND still backed by its canon home in the kit, so the two
+// cannot drift apart); the absence of every law that moved OUT of the hub in batch 3a (a
+// returning duplicate is drift); a line ceiling; and every Claude-Core/... pointer resolving.
+const HUB = path.join(HOME, ".claude", "CLAUDE.md");
+const HUB_MAX_LINES = 45;
+const hubTxt = fs.existsSync(HUB) ? fs.readFileSync(HUB, "utf8").replace(/\r\n/g, "\n") : "";
+t("hub exists (~/.claude/CLAUDE.md)", hubTxt.length > 0);
+t("hub @imports the contract (a line starting with @ that ends in Claude-Core/CLAUDE.md)", /^@.*Claude-Core[\\/]CLAUDE\.md\s*$/m.test(hubTxt));
+const hubLines = hubTxt.split("\n").filter((l) => l.trim()).length;
+t(`hub within ${HUB_MAX_LINES} non-blank lines (${hubLines})`, hubLines > 0 && hubLines <= HUB_MAX_LINES);
+// fallback layer: [hub phrase, canon file, canon phrase]. The hub copy exists FOR the failure
+// case; the canon home is where the law lives. Both must hold.
+const FALLBACK = [
+  ["DEGRADED MODE", null, null],
+  ["CONTRACT CHECK", null, null],
+  ["<SPLIT>", null, null],
+  ["canon wins when readable", null, null],
+  ["temp .mjs", null, null],
+  ["PRE-BUILT", null, null],
+  ["show first", "CLAUDE.md", "show-first"],
+  ["small batches", "memory/chan-hard-rules.md", "batches"],
+  ["deploy-costing action without GO", "CLAUDE.md", "deploy-costing"],
+  ["own the QA gate", "CLAUDE.md", "QA gate"],
+  ["real screenshot", "CLAUDE.md", "screenshot"],
+  ["rate your own work", "CLAUDE.md", "self-rate"],
+  ["bank memory before compaction", "CLAUDE.md", "bank"],
+  ["compaction summary", "workflow/the-drill-and-memory.md", "compaction summar"],
+  ["never fabricate", "memory/chan-hard-rules.md", "fabricat"],
+  ["click through a UI", "memory/chan-hard-rules.md", "click through"],
+  ["never blind-execute", "memory/chan-critique-directives.md", "blind-execute"],
+];
+const canon = {};
+const canonHas = (f, phrase) => (canon[f] ??= fs.readFileSync(path.join(ROOT, f), "utf8").toLowerCase()).includes(phrase.toLowerCase());
+for (const [hp, cf, cp] of FALLBACK) {
+  const inHub = hubTxt.toLowerCase().includes(hp.toLowerCase());
+  t(`hub carries fallback "${hp}"${cf ? ` and ${cf} still carries "${cp}"` : ""}`, inHub && (!cf || canonHas(cf, cp)));
+}
+// laws that moved OUT of the hub in batch 3a; each has one home in the kit now. Present = drift.
+const MOVED = ["English is not his first language", "more than 25%", "Two-strikes", "hand-write", "one-line-per-shot", "5 lines or less", "under 200 lines", "Subagents inherit", "existing category file", "LOSSLESS", "Smoke test after"];
+for (const m of MOVED) t(`hub no longer carries "${m}" (moved out, one home in the kit)`, !hubTxt.includes(m));
+for (const m of hubTxt.matchAll(/Claude-Core[\\/]([\w.\\/-]+?\.md)\b/g)) { // slashes either way; Windows paths count too
+  const rel = m[1].replace(/\\/g, "/");
+  t(`hub pointer resolves: ${rel}`, fs.existsSync(path.join(ROOT, rel)));
+}
+
 console.log("\n  ⚠  trap 3 reminder: wired is not LOADED — if settings or hooks changed this session, reload the window and run this again.");
 console.log("  repo nets are separate: run every *_test.mjs script for kit behavior; this proves MACHINE arming only.");
 console.log(fail ? `\nmachine arming: ${fail} FAILED of ${ran}${warn ? ` (+${warn} warning)` : ""} — NOT armed` : `\nmachine arming: ${ran} passed, 0 failed${warn ? ` (+${warn} warning)` : ""} — ARMED`);

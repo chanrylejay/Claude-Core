@@ -44,6 +44,14 @@ import), the four steps are identical; you assemble the list yourself instead of
    instead of believing the summary's claims. Disk wins over summary, always.
 4. Only then reply.
 
+**Orient and report (moved here from the global hub, batch 3a Aug 30 2026; why: ../lessons/audit-log.md AL-22):**
+Orient ONLY from files that actually loaded in this session. If any read in the ritual failed, say
+which one failed in that same greeting and never fill the gap from recall or a compaction summary.
+Report the ritual in one short line naming what was read plus the git head, and name every read
+that FAILED in that same line, every session: a report that lists only what loaded is how a silent
+failure stays silent. Never make Chan repeat or re-explain himself; if context feels missing, read
+the kit before asking him.
+
 ## The memory system
 
 **The orient-first rule (the one line relocated from the retired boss-operating-protocol.md, Aug 28 2026):**
@@ -77,6 +85,25 @@ fastest orientation, never proof of current state — disk wins, at a start AND 
   make: take the newest-dated 🔴 and name the extras in your first reply. (history: ../lessons/audit-log.md AL-3)
 - **Session anchors:** for big multi-day pushes, keep one anchor file per effort with a
   top block that's always the current state — newest information at the top.
+
+### Where new facts go (one home each, never two)
+Moved here from the global hub, batch 3a Aug 30 2026 (why: ../lessons/audit-log.md AL-22).
+- About Chan, or how we work in any project: Claude-Core `memory/` or `lessons/`, plus one index
+  line in `memory/MEMORY.md` and one in `DIRECTORY.md`.
+- About one project only: that project's memory folder. Never into Claude-Core and never into the hub.
+- When a fact moves homes, verify the substance actually sits in the NEW home (grep it there), then
+  delete the old copy in the same edit: a LOSSLESS move is the one-home law at work, not a deletion.
+  If any substance would be lost, it IS a deletion and takes Chan's OK per the contract's memory rule.
+- Before creating ANY new Claude-Core file, check `DIRECTORY.md` for an existing category file and
+  extend it instead.
+- Rewriting any permanent doc, by any amount, runs the L24 fact-token diff audit first
+  (`node templates/_l24_audit.mjs <file>`); the law's home is ../lessons/universal-patterns.md,
+  "Maintaining documents". The hub used to say "more than 25%"; that trigger was superseded and its
+  stale copy is exactly why the law now has one home.
+- Two-strikes rule, scoped: preference and style rules wait for the same mistake twice. ONE strike
+  writes the rule when the mistake wedged a session, wrote machine state outside a sandbox, took or
+  risked a deploy-costing action, or printed a green verdict over work that did not run.
+- On long sessions, bank new durable facts to the right home above before compaction.
 
 ## Why it matters
 A model session is amnesiac; the folder isn't. Continuity lives in these files, not in the

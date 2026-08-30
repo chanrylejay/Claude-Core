@@ -16,10 +16,16 @@ before adding a rule here that names a flag, a filename, or a count that some ot
 ## Seeing is verifying
 - **A UI change is verified by LOOKING at it** — take a screenshot and actually view the image.
   Vision model (Claude): omit the `filename` param and the shot returns inline, viewable.
-  No-vision model (DeepSeek rejects images): PASS a `filename` so the shot SAVES to a file, then hand Chan the path; his eyes do the looking.
+  No-vision model (DeepSeek rejects images): PASS a `filename` so the shot SAVES to a file, then hand Chan the path with a one-line-per-shot checklist, and never state the verdict yourself; his eyes are the only visual gate.
 - Computed-style probing (`browser_evaluate`) proves a CSS rule *applied* — it does NOT prove
   the screen *looks right*. Spacing, crowding, and alignment are invisible to it. Never call a
   UI change verified on inference alone.
+
+## Machine hygiene (moved here from the global hub, batch 3a Aug 30 2026; why: ../lessons/audit-log.md AL-22)
+- Subagents inherit the lean-ctx deny. Brief them with the full map: ctx_* tools in-root, Bash
+  node on a temp .mjs script for anything out-of-root and for the seed check.
+- Never hand-write `~/.claude/settings.json`. After any settings change, validate the JSON.
+- The live record of what the deny covers, and the WEDGED recovery recipe: ../lessons/lean-ctx-freeze-playbook.md, Known Bugs #3.
 
 ## Diagnose before crusading
 - **Reproduce + isolate first.** The entire Jul-14 "Claude is blind" crisis was one stray

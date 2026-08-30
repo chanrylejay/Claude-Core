@@ -53,7 +53,7 @@ session with no operating contract at all.
 - New durable fact → ONE file in `memory/` + an index line in `memory/MEMORY.md`. New universal
   lesson → extend the matching CATEGORY file in `lessons/`; never create a lookalike file.
 - Every new file gets a line in `DIRECTORY.md`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
-- One home per fact; anti-bloat and where-facts-go rules: global hub, section 6.
+- One home per fact; anti-bloat and where-facts-go rules: workflow/the-drill-and-memory.md, "Where new facts go".
 - **Active-project canon law (Aug 28 2026, Chan's GO):** every project Chan is actively working
   has a PUBLIC-SAFE canon in `projects/<name>/project-canon.md`, and the state block in
   `memory/MEMORY.md` names the active one via `active_project` — so any fresh clone, any

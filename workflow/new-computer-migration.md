@@ -23,6 +23,10 @@ by .gitignore, exists in no repo anywhere, and must be hand-copied to an offline
 
 **But the repo backs up only the TRACKED, PUSHED part of Claude-Core, and nothing of ~/.claude.** Everything .gitignore excludes lives in no repo at all. Read the LIVE Claude-Core/.gitignore rather than trusting any list written here, because a list drifts and the file does not (as of Jul 25 2026 it excludes archives/, LOCAL-ONLY-*, memory/LOCAL-ONLY-*, .env*, *.pem, *.key, *credential*, *.zip). `git status --ignored --short` prints exactly what must be hand-copied to an offline drive; archives/ and memory/LOCAL-ONLY-security-rulings.md are both in there today, and a tracked file points at that security file as the sole home of six settled rulings. A live-disk migration copies the whole `.claude` folder (global settings.json, the session-ritual hook, ~/.claude.json) as the table above shows. A repo-only or dead-disk recovery gets Claude-Core but must RE-PLANT the global automation: re-create ~/.claude/hooks/session-ritual.mjs, ~/.claude/hooks/push-guard.mjs + its net _pushguard_test.mjs (from `templates/hooks/`; user-level since Aug 24 2026, qa-gauntlet trap 4), and ~/.claude/settings.json from the copies in `templates/global/` (settings.global.skeleton.json is placeholders only; re-add the DeepSeek key via templates/apply-deepseek-switch.mjs), then reinstall the tools below.
 
+The global hub (`~/.claude/CLAUDE.md`) travels inside `.claude`; no repo holds it. After the copy,
+`node templates/verify-install.mjs` pins its invariants: the @import to the contract, the fallback
+layer, every pointer resolving, and a 45-line ceiling (batch 3a, Aug 30 2026).
+
 ## What to reinstall (the tools — these do NOT copy)
 
 1. VS Code + the Claude Code extension (sign into the Claude account — any account works;
@@ -93,6 +97,10 @@ memories won't attach.
 Copy the folders, open the Claude extension on the new machine, and say:
 "I just migrated from my old computer — read Claude-Core/workflow/new-computer-migration.md
 and finish the setup." Claude does the path-fixing and verification itself.
+
+## Smoke test after any install, move, or path change
+Open a workspace and ask "what is rule zero and who am I working with". A thin answer means the
+hub's import of the contract is broken. (Moved here from the global hub, batch 3a Aug 30 2026.)
 
 "Finish the setup" is authority to EXECUTE, never authority to DECIDE. Every DECIDE point in this
 file stops and asks Chan, the DeepSeek keep-or-revert branch above most of all. A model that reads

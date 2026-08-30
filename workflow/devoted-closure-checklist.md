@@ -48,7 +48,7 @@ no "quick favors". The ONLY exception is a brand-new engagement that Chan himsel
 - [x] ANSWERED Jul 24 2026: yes, Claude access is expected to be revoked ~Jul 25. Chan's
   ruling: run Claude Code against his own DeepSeek API key (see the switch runbook in this
   folder). The kit is downgrade-ready by design: hooks enforce the laws, files stay short.
-- [ ] When the account situation changes, update the hub section 1 line about the signed-in
+- [ ] When the account situation changes, update the hub's intro block line about the signed-in
   account showing the old client address.
 - [ ] Effort setting under DeepSeek: re-decide deliberately once real usage is visible (money
   decisions get the slow-down review, per the career playbook guard-rail). After any future
