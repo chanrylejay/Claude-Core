@@ -278,3 +278,5 @@ that the 50 pattern numbers are unique and the by-number references still land; 
 stranger's ramp, ten lines, only if the job hunt comes forward; nothing else. The weekly
 practice stands: node templates/judgment-sample.mjs --sessions 18 --log, and the three pulse
 numbers.)
+
+BATCH 5 LIVE: merged to main at 51d5047, Aug 31 2026. KIT FROZEN until Sep 6 2026 per AL-27; the backlog lives there; the trial canon and workspace are exempt; the weekly practice is `node templates/judgment-sample.mjs --sessions 18 --log`.
