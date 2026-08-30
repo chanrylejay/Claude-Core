@@ -13,7 +13,7 @@
 //   8. no file appears twice across BOOT + LOOKUP (a lookup file in BOOT is a fail)
 //   9. the relay ramp is in BOOT and precedes the index (it says "read this first")
 //  10. LOOKUP is printed, non-empty, every lookup file exists (batch 1, Aug 30 2026; AL-20)
-//  11. BOOT SET carries the byte count and it equals the sum of the BOOT files' sizes
+//  11. BOOT SET carries the count and it equals the sum of the BOOT files' CRLF-normalized chars
 //  12. BOOT SET is within boot.budget_chars — THE red line for boot bloat
 //  13. mutation: budget set below the count → still exit 0, prints OVER BUDGET (boot survives)
 //  14. mutation: a LOOKUP file deleted → exit 1 + named MISSING (fail-closed)
@@ -69,8 +69,9 @@ t("no file listed twice across BOOT + LOOKUP (dedup)", new Set(all).size === all
 const RAMP = "workflow/relay-boot-claudeai.md";
 t("relay ramp is in BOOT and precedes the index", L.boot.includes(RAMP) && L.boot.indexOf(RAMP) < L.boot.indexOf("memory/MEMORY.md"));
 t("LOOKUP printed, non-empty, every file exists", L.look.length > 0 && L.look.every((p) => fs.existsSync(path.join(TMP, p))));
-const sum = L.boot.reduce((s, p) => s + fs.statSync(path.join(TMP, p)).size, 0);
-t(`BOOT SET count equals the sum of BOOT file sizes (${sum})`, bootSet(ok.out) === sum);
+const chars = (p) => fs.readFileSync(path.join(TMP, p), "utf8").replace(/\r\n/g, "\n").length; // same rule as the script
+const sum = L.boot.reduce((s, p) => s + chars(p), 0);
+t(`BOOT SET count equals the sum of BOOT file chars, CRLF-normalized (${sum})`, bootSet(ok.out) === sum);
 const budget = Number((fm.match(/budget_chars:\s*(\d+)/) || [])[1]);
 t(`BOOT SET within boot.budget_chars (${sum} <= ${budget})`, budget > 0 && sum <= budget);
 const canon = (fm.match(/active_project:\s*(\S+)/) || [])[1];

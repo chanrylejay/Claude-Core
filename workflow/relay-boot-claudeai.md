@@ -12,7 +12,7 @@ written for the hub environment, so this file is your entry ramp to it.
 2. Run `node templates/boot-claudeai.mjs` from the repo root (`--mode=X` to override the
    state block's default; `--mode=LEAN` for a trivial task). It prints CLONE HEAD freshness
    and the state block's age, resolves BOOT and LOOKUP from the index frontmatter, counts
-   the BOOT bytes against `boot.budget_chars`, and exits 1 if any listed file is missing.
+   the BOOT characters against `boot.budget_chars`, and exits 1 if any listed file is missing.
    The script resolves and verifies; it never reads FOR you.
 3. Do the BOOT reads it lists, IN ORDER, all RAW: the frozen core, this ramp, the index in
    full (prose too, past the frontmatter), the cold-start set, the mode files, and the

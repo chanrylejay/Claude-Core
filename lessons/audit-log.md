@@ -136,3 +136,33 @@ age prints STALE past 14 days, and the boot net pins all of it (17 pins). TRIAL 
 38,512 chars. Ladder, each step its own batch with the L24 audit: prose pass on the cold-start
 set and the index essay toward ~32K; the three ⭐ judgment files to LOOKUP only if the
 behavioral boot check shows the contract's own character paragraph carries them, toward ~25K.)
+
+## AL-21 — templates/_prose_test.mjs, templates/_safety_test.mjs, boot count · batch 2
+
+(Audit Aug 30 2026, the table of knowledges, round 2. Prose net: on Aug 24 2026 commit 7b37b96
+at 09:17 wrote trap 3 of qa-gauntlet-pattern.md correctly and commit 37e98b4 at 13:46 pasted
+the verify-install paragraph into the middle of its parenthetical; 627 assertions across 11
+nets stayed green for six days because every net pins structure and none reads a sentence.
+Batch 1 repaired the splice; this net keeps the class closed. The first outside design (audit
+1) was tested here and failed seven ways, two of them disqualifying: it walked the filesystem,
+so the gitignored LOCAL-ONLY-* files on Chan's machine (pasted chat, lawfully lowercase) turned
+it red where it was never run; and its splice pin was a proper-noun blacklist that fired on
+"for / Linux users" and "the / Anthropic side" and stayed silent on a real splice opening with
+"Next" because Next.js was on the list. The rebuild scans git ls-files only, uses a
+sentence-opener whitelist (the trade: it misses a splice whose second half opens with an
+unlisted word, and it never fires on a new name), keeps file line numbers by blanking stripped
+regions instead of deleting them, adds a quote-parity pin, and self-tests on fixtures every
+run. The self-test earned its place on the first run: the inherited abbreviation exemption had
+no word boundary, so "al" (et al.) exempted every word ending in -al, "St" exempted test, must,
+first, and "Ms" exempted items and forms; anchored, it unmasked one real fragment in
+universal-patterns.md line 261 ("or LOST. and modal/negation words"), repaired with L24 (326
+tokens, 0 lost). Safety scan: the repo is public by decision (Aug 11 2026) and the
+world-readable law was prose only; the scan is the seatbelt, with the allowlist holding the
+two contact details Chan ruled public (email; phone, commit 1c962ae). A client-name denylist
+was built, then removed before landing: Chan's practice is fake names everywhere, and a
+mechanism for a risk already covered by practice is bloat (Chan, Aug 30 2026). Boot count: batch 1 counted bytes, so the CLI's
+Windows checkout reported 38,935 and the LF sandbox 38,512 for the same tree, 423 bytes of
+CRLF; the count is now characters after normalizing line endings, 38,259 on both, and the
+boot net's pin 11 uses the same rule. L24 was also run retroactively on every prose file
+batch 1 rewrote: all tokens in place or relocated except the state date Chan bumped on his
+own word.)

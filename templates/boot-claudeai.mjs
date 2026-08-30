@@ -10,7 +10,8 @@
 //   2. parses state + cold_start + modes + lookup + boot from memory/MEMORY.md frontmatter
 //      and prints TWO lists (batch 1, Aug 30 2026; why: ../lessons/audit-log.md AL-20):
 //        BOOT   — read now, RAW, in order: contract → relay ramp → index (FULL) → cold_start
-//                 → mode set → active_project canon. Byte-counted against boot.budget_chars.
+//                 → mode set → active_project canon. Character-counted (CRLF-normalized)
+//                 against boot.budget_chars.
 //        LOOKUP — verified present, NEVER read at boot; each line names its trigger. The
 //                 contract and the canon name the same triggers where the work happens.
 //   3. verifies every listed file, both lists, exists on disk: a missing file is a broken
@@ -26,7 +27,9 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const arg = process.argv.find((a) => a.startsWith("--mode="));
 const die = (m) => { console.error("BOOT BROKEN: " + m); process.exit(1); };
-const size = (p) => { try { return fs.statSync(path.join(ROOT, p)).size; } catch { return 0; } };
+// characters, not bytes, CRLF normalized: both halves of the relay report ONE number (the
+// CLI's Windows checkout counted 423 bytes more than the LF sandbox in batch 1; AL-21).
+const size = (p) => { try { return fs.readFileSync(path.join(ROOT, p), "utf8").replace(/\r\n/g, "\n").length; } catch { return 0; } };
 
 // ---- 1. clone freshness -----------------------------------------------------------------
 let head = "git unavailable — state freshness UNKNOWN, say so in the boot report";
