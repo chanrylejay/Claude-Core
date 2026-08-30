@@ -10,6 +10,8 @@ contract, the contract wins immediately and you report the disagreement instead 
 yourself. (why: ../lessons/audit-log.md AL-17)
 
 INSTALL STATE on Chan's machine (measured Aug 11 2026, by the CLI):
+- SUPERSEDED IN PART, Aug 24 2026: push-guard has since moved to USER level (trap 4 below), so
+  the push-guard line here describes the pre-Aug-24 state.
 - Subagents: `~/.claude/agents/` does NOT exist. The 9 files in `templates/agents/` are installed
   nowhere. The 6-role chain below is a pattern, not a running system.
 - `gauntlet-guard.mjs`: wired in no workspace. Nothing mechanically blocks a "done" claim.
@@ -139,10 +141,11 @@ the JSON is the bug. Two things the wiring gets wrong by default, both fail-open
    mid-session is on disk, wired, and net-green, yet inactive until the window reloads, so the
    gate fail-opens with nothing to notice until then. Install order: copy, wire, RELOAD, then
    live-prove the block. (Found live Aug 24 2026 by the CLI while installing push-guard — the
-   After the reload, `node templates/verify-install.mjs` answers "is this machine armed?" in
-   one command (byte-equality of installed hooks, wiring incl. traps 1-2, live-fire of the
-   INSTALLED files, trap-4 shadow scan) — the fresh-machine bootstrap AND the post-install
-   proof; its net is `templates/_bootstrap_test.mjs`. reachability check, applied to hook loading itself.)
+   reachability check, applied to hook loading itself.) After the reload,
+   `node templates/verify-install.mjs` answers "is this machine armed?" in one command
+   (byte-equality of installed hooks, wiring incl. traps 1-2, live-fire of the INSTALLED files,
+   trap-4 shadow scan) — the fresh-machine bootstrap AND the post-install proof; its net is
+   `templates/_bootstrap_test.mjs`.
    INSTALL-BEFORE-NETS: when a batch touches an installed hook, the install happens BEFORE
    the net run — the ritual net compares template against the installed copy and correctly
    refuses a stale install (the CLI caught a brief ordering this backwards, Aug 25). And a

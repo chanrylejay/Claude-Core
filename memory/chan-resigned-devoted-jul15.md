@@ -32,7 +32,7 @@ badmouth the client. He left with integrity (proper handoff).
   and never a partner's production DB — ONLY on Chan's explicit, per-action GO, even during handoff.
 - **Left clean:** prod at its final shipped commit (gauntlet-passed); a client record's Skills & Strengths recovered + verified
   (0 blank / 46 have skills); matching explainer delivered + saved to Docs `working/`.
-- After Friday: fully HANDS-OFF. the client's msg #8 and the Jul-14 polish backlog are DROPPED unless they serve the handoff.
+- After Friday: fully HANDS-OFF. The client's msg #8 and the Jul-14 polish backlog are DROPPED unless they serve the handoff.
 - Strong **portfolio** material — [[chan-career-portfolio-state]] (job hunt already reactivated); confidentiality canon
   still applies to how it's presented.
 - Don't delete the Devoted memory bank — it's Chan's record of what he built. Await his direction on archiving/reuse.

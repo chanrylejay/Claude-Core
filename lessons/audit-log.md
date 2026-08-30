@@ -116,3 +116,23 @@ as a sufficient classifier and would have shipped a credentials change with no r
 (Audit Jul 26 2026: this paragraph named
    only the first two entries while the README carried all three — the fix for the missing third
    landed in one file and skipped the one the README itself calls the rule's home.)
+
+## AL-20 — templates/boot-claudeai.mjs · BOOT and LOOKUP
+
+(Audit Aug 30 2026, the table of knowledges: four outside audits plus the browser half's own
+read, judged against the disk. Three findings landed here. One: the browser entry ramp
+`workflow/relay-boot-claudeai.md` said "read this first" and was pointed at by DIRECTORY only,
+so a session that booted by the script did the twelve listed reads and never saw it, nor the
+patch-delivery rules in `two-model-relay.md`; by the reachability check the browser boot was
+not live. Two: the TRIAL boot was 63,225 chars, and 26,192 of those were files whose triggers
+already had homes — the contract names the gauntlet at HEAVY, the canon names monday.md at
+monday work, the checklist is a day-one ritual on a trial already on day 7. Every audit named
+this from a different side, and the kit's own patterns 8, 12 and 14 argue against carrying
+scars as boot. Three: nothing pinned the boot's size, so every new lesson could grow it
+silently. Fix: the script prints BOOT (read, byte-counted) and LOOKUP (verified present,
+opened at the trigger on its line, fail-closed if missing), the frontmatter carries the
+`lookup:` and `boot.budget_chars` blocks, LEAN mode boots the core alone, the state block's
+age prints STALE past 14 days, and the boot net pins all of it (17 pins). TRIAL boot after:
+38,512 chars. Ladder, each step its own batch with the L24 audit: prose pass on the cold-start
+set and the index essay toward ~32K; the three ⭐ judgment files to LOOKUP only if the
+behavioral boot check shows the contract's own character paragraph carries them, toward ~25K.)
