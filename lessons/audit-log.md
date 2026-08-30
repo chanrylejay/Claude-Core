@@ -207,3 +207,17 @@ run from the hook: a hook must return fast, and a reminder that cannot be missed
 version of a scheduler. Baseline logged Aug 30 2026 by the CLI: 16 sessions, 26 screen claims
 without a saved shot, 15 zero-pushback sessions, 57 done-claims without counts. Those numbers
 moving is what the last point of the 10 is made of.)
+
+## AL-24 — templates/judgment-sample.mjs · detector v2
+
+(Audit Aug 31 2026, batch 4a. The first sample logged under batch 3b read 17 of 17 sessions
+with zero recorded pushback, and the last five of those sessions had stopped twice on wrong
+checks in a brief, diagnosed both, refused to touch a file until Chan ruled, and written "my
+earlier reading was wrong" about their own topology read. All of that is pushback, and the v1
+detector saw none of it: it knew eight phrases ("I'd push back", "I disagree", "better
+option"...) and the CLI's vocabulary is "STOP", "reads wrong", "your call", "not drift". A
+meter that cannot see the behavior it measures tells the boot line the opposite of the truth.
+v2 adds the kit's own STOP vocabulary, matches STOP case-sensitively so "stop the dev server"
+still counts as nothing, and stamps det=2 on every log line so the count jump at the changeover
+is explained by the line itself. Baseline under v1, Aug 30: 17 sessions, 23 screen claims
+without a shot, 17 zero-pushback, 40 done-claims without counts.)

@@ -53,7 +53,22 @@ fs.rmSync(ROOT, { recursive: true, force: true });
 mk("streak", Array.from({ length: 9 }, (_, i) => Awrapped(`- did step ${i} exactly as asked\n- 2 passed`)));
 r = run(ROOT);
 t("detects a whole session with zero recorded pushback", count(r.stdout, "zero recorded pushback") === 1);
+
 t("the wrapped message shape parses too", /9 assistant message/.test(r.stdout));
+// detector v2 (batch 4a): the kit's own STOP vocabulary is pushback; a lowercase "stop" is not
+mk("stopvocab", Array.from({ length: 9 }, (_, i) => i === 4
+  ? A("Step 4 reads wrong. Stopping here per your instruction; your call.\n- 2 passed")
+  : A(`- did step ${i} exactly as asked\n- 2 passed`)));
+mk("stopword", Array.from({ length: 9 }, (_, i) => i === 4
+  ? A("- I will STOP at anything that reads wrong.\n- 2 passed")
+  : A(`- did step ${i} exactly as asked\n- 2 passed`)));
+mk("lowerstop", Array.from({ length: 9 }, (_, i) => i === 4
+  ? A("- stop the dev server, then restart it\n- 2 passed")
+  : A(`- did step ${i} exactly as asked\n- 2 passed`)));
+r = run(ROOT);
+t("v2: a session whose only pushback is 'reads wrong / stopping here / your call' is NOT a zero-pushback streak", !new RegExp("zero recorded pushback.*stopvocab").test(r.stdout));
+t("v2: a session that says STOP (the kit's keyword) is NOT a zero-pushback streak", !new RegExp("zero recorded pushback.*stopword").test(r.stdout));
+t("v2: a lowercase 'stop the dev server' alone still IS a zero-pushback streak", new RegExp("zero recorded pushback.*lowerstop").test(r.stdout));
 
 // detector 3: wall of text, unstructured
 fs.rmSync(ROOT, { recursive: true, force: true });
@@ -89,7 +104,7 @@ const LOGF = path.join(os.tmpdir(), "judgment-net-log", "judgment-log.txt");
 fs.rmSync(path.dirname(LOGF), { recursive: true, force: true });
 r = run(ROOT, ["--log", LOGF]);
 const logTxt = fs.existsSync(LOGF) ? fs.readFileSync(LOGF, "utf8") : "";
-t("--log <path> writes one dated line with every counter", r.status === 0 && /^\d{4}-\d{2}-\d{2} sessions=\d+ msgs=\d+ claimed_without_eyes=\d+ execution_streak_no_pushback=\d+ wall_of_text=\d+ done_without_evidence=\d+\n$/.test(logTxt));
+t("--log <path> writes one dated line with every counter", r.status === 0 && /^\d{4}-\d{2}-\d{2} det=\d+ sessions=\d+ msgs=\d+ claimed_without_eyes=\d+ execution_streak_no_pushback=\d+ wall_of_text=\d+ done_without_evidence=\d+\n$/.test(logTxt));
 t("--log says where it wrote", /logged: /.test(r.stdout));
 run(ROOT, ["--log", LOGF]);
 t("a second run APPENDS (two lines), never overwrites", fs.readFileSync(LOGF, "utf8").split("\n").filter(Boolean).length === 2);
