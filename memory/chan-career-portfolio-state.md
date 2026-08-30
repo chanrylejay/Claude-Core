@@ -15,6 +15,10 @@ metadata:
 
 **The living demo:** chanryle-cagara.vercel.app/devoted-shift-demo/ shipped Jul 23 2026: the sanitized interactive demo of the live system UI, with fully fictional data. It is a PUBLIC artifact of a consent-gated entry, so the confidentiality paragraph below governs every change to it, and sanitizing does not release it. Standing task: extend it alongside real milestones — each extension gated on that client's written OK being on file, exactly as that paragraph requires. No OK on file means do not extend and do not publish; ask Chan. (Audit Jul 25 2026: this said only "extend it alongside real milestones", an unconditional publish instruction sitting ten lines ABOVE the gate that governs it. Pattern 5: declare the constraint with the action, not downstream of it.) The sanitizer script with the real-to-fictional name map stays in the client Docs folder and NEVER goes public.
 
+**ecom-pl-demo (E-commerce P&L dashboard):** a sample demo for a client who ghosted,
+hosted at /ecom-pl-demo/ on the portfolio domain. Deliberately not linked from the home
+page and not to be promoted or relinked (Chan, Aug 28 2026).
+
 **Other public profiles:** facebook.com/chanrylejay (reads professional in PH context), instagram.com/chanrylejay, codepen.io/chanrylejay.
 
 **LinkedIn:** linkedin.com/in/chanrylejay, overhauled Jul 7 2026 (headline, About, Devoted Care entry: live profile STILL shows Freelance Jun 2026-Present but that is now STALE (engagement ended Jul 2026) and must be hand-flipped to past tense Jun 2026 - Jul 2026 per devoted-closure-checklist.md section 3; the portfolio site is already reframed to a completed freelance contract (Jun-Jul 2026). Dates aligned to the resume, skills added). Target 1-2 posts per week; Claude drafts, Chan approves and posts. Open item he still owes: the company-name mismatch between his LinkedIn Skills tags and his Experience entry (two spellings of the client entity; both visible on LinkedIn itself, fix it there).
