@@ -63,7 +63,7 @@ Read top-down. COLD START: the frozen core auto-loads via the hub, then OPEN the
 - [⭐⭐ Directives are NOT absolute](chan-critique-directives.md) — critique every directive (client's OR Chan's) + propose better; the owner decides.
 - [⭐⭐ The review-bottleneck lesson](chan-review-bottleneck.md) — Chan is often the single reviewer: plain language, screenshots, small slices.
 - [⭐ Visual complaint → open the reference first](chan-visual-complaint-open-mock-first.md) — compare anatomy vs the reference image before measuring.
-- [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active, it beats internal cleanup (dormant: no active client engagement since Jul 24 2026).
+- [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active, it beats internal cleanup: kit ideas go to the backlog (lessons/audit-log.md, newest AL entry), and Chan says when they start. Whether a sprint is active is the state block's `trial_active` line, never this line (why it went stateless: AL-27).
 - [Chan-voice writing + job email prefs](chan-job-application-email-prefs.md) — no em dashes in ANY Chan-voice text; cover letters: all 4 links + full legal name + honest fit first; job emails: AI-assisted dev + flexible hours; contact info inside.
 - [🛑 Client trial ACTIVE](chan-trial-aug2026.md) — 2-week trial, Australian clients, monday.com platform; the current track (banked Aug 28 2026). Check before routing modes or promising availability.
 - [🛑 Devoted Care — ENDED Jul 24 2026](chan-resigned-devoted-jul15.md) — resigned Jul 15, resumed Jul 16-22, wound down Jul 23, handoff complete Jul 24. Fully hands-off: no client-system actions, ever.
