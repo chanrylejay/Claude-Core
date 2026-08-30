@@ -80,9 +80,8 @@ do not fix silently).
   `data/relay.md`; Claude-Core itself uses `LOCAL-ONLY-relay.md`, which the
   existing `LOCAL-ONLY-*` gitignore rule keeps out of the public repo. Chan
   carries the file; uploads beat pastes for anything large. Chan saves claude.ai's messages into the relay file and the CLI READS them (ctx_read compresses ~79%); pasting into chat rides every turn verbatim and is the expensive path.
-- **GO law is unchanged.** Push to main = live deploy = Chan's explicit GO each
-  time. A previous GO never carries forward. Approval once is not approval
-  forever.
+- **GO law is unchanged:** hard rule 7 (../memory/chan-hard-rules.md) governs every push in
+  the relay, each time; GO once is never GO forever.
 - **Every delivery file gets a UNIQUE name; a corrected patch NEVER reuses one.** Browsers
   save a second copy as `name (1).patch` rather than overwriting, so a "refreshed" patch
   under the old name leaves the stale file sitting in Downloads under the name the brief

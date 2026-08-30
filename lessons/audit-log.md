@@ -239,3 +239,18 @@ frontmatter, and every other mode carries them on purpose. TRIAL boot 38,259 to 
 scenario questions, was dropped as a foregone conclusion: the behaviors those files hold exist
 nowhere else, so a session without them cannot produce them; whether sessions with them do is
 the sampler's question, now asked on every boot line.)
+
+## AL-26 — the GO law's homes · batch 4c
+
+(Audit Aug 31 2026, batch 4c, the last item on the table's ledger. Every audit named the GO
+law's duplication; a grep found its substance in 16 tracked files. Classified one by one: two
+law homes (the contract's absolute limit, hard rule 7); four runtime copies that must stand
+alone (the three agent templates, pinned by lawcheck, and a project canon, which the checklist
+requires to carry it); three lessons (one already a pointer, one written out in the platform
+index with its reason stated and a pointer to rules 6-7); five applications of the rule in
+context (the index line, the sales playbook, the ramp's sandbox limit, the gauntlet's
+description of what push-guard encodes, the checklist's scale ruling); and two restatements.
+The relay's standing rule now points at rule 7 with a six-word gloss. The portfolio line held
+one nuance that lived nowhere else, whose GO counts: only Chan's own, never another person's,
+an agent's, or a tool's output. That sentence moved into rule 7, its one home, and the
+portfolio line became a pointer. Sixteen files, two edits, one law made whole.)
