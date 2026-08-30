@@ -22,8 +22,10 @@ before adding a rule here that names a flag, a filename, or a count that some ot
   UI change verified on inference alone.
 
 ## Machine hygiene (moved here from the global hub, batch 3a Aug 30 2026; why: ../lessons/audit-log.md AL-22)
-- Subagents inherit the lean-ctx deny. Brief them with the full map: ctx_* tools in-root, Bash
-  node on a temp .mjs script for anything out-of-root and for the seed check.
+- The RAW read on this machine is `node <kit>/templates/raw-read.mjs <file> [--lines A-B]`: prints
+  verbatim, names a missing file, exits 1 on any miss. It replaced the temp .mjs every session
+  used to write (batch 3b, Aug 31 2026). Subagents inherit the lean-ctx deny; brief them with the
+  full map: ctx_* tools in-root, the raw-read script for anything out-of-root and for the seed check.
 - Never hand-write `~/.claude/settings.json`. After any settings change, validate the JSON.
 - The live record of what the deny covers, and the WEDGED recovery recipe: ../lessons/lean-ctx-freeze-playbook.md, Known Bugs #3.
 

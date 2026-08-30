@@ -84,6 +84,17 @@ t("reading NOTHING is the one hard failure (exit 1)", r.status === 1 && /read NO
 t("the failure names how to pass the right root", /node templates\/judgment-sample\.mjs <path/.test(r.stdout));
 t("every run prints the weak-signal caveat", /WEAK SIGNALS, not verdicts/.test(run(ROOT === null ? "." : path.join(os.tmpdir(), "judgment-net")).stdout || ""));
 
+// --log (batch 3b): one dated line of counts per run, appended; the ritual reads the last line
+const LOGF = path.join(os.tmpdir(), "judgment-net-log", "judgment-log.txt");
+fs.rmSync(path.dirname(LOGF), { recursive: true, force: true });
+r = run(ROOT, ["--log", LOGF]);
+const logTxt = fs.existsSync(LOGF) ? fs.readFileSync(LOGF, "utf8") : "";
+t("--log <path> writes one dated line with every counter", r.status === 0 && /^\d{4}-\d{2}-\d{2} sessions=\d+ msgs=\d+ claimed_without_eyes=\d+ execution_streak_no_pushback=\d+ wall_of_text=\d+ done_without_evidence=\d+\n$/.test(logTxt));
+t("--log says where it wrote", /logged: /.test(r.stdout));
+run(ROOT, ["--log", LOGF]);
+t("a second run APPENDS (two lines), never overwrites", fs.readFileSync(LOGF, "utf8").split("\n").filter(Boolean).length === 2);
+fs.rmSync(path.dirname(LOGF), { recursive: true, force: true });
+
 fs.rmSync(ROOT, { recursive: true, force: true });
 console.log("\njudgment sampler: " + (fail ? fail + " FAILED of " + ran : ran + " passed, 0 failed"));
 process.exit(fail ? 1 : 0);
