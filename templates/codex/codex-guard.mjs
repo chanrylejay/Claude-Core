@@ -5,10 +5,10 @@
 // separate OS-level backstop. Codex never creates, restores, or edits PUSH_GO.
 //
 // The runner continues after a hook spawn/load failure. Wiring therefore turns launcher failures
-// into a structured deny. Blocks use the runner's explicit JSON deny channel at exit 0; stderr is
-// retained as a diagnostic, never as the channel that makes a denial stick.
+// into a structured deny. The runner parses combined hook output strictly, so a deny or allow
+// path must emit its JSON response and NOTHING else (including stderr).
 
-import { existsSync, readFileSync, realpathSync, statSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isGitPush } from "../hooks/push-guard.mjs";
@@ -22,7 +22,6 @@ const fail = (message) => {
   process.stdout.write(JSON.stringify({ hookSpecificOutput: {
     hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: reason,
   } }) + "\n");
-  console.error(reason);
   process.exit(0);
 };
 const pass = () => { process.stdout.write("{}\n"); process.exit(0); };
@@ -35,17 +34,27 @@ function tokenFor(repo) {
     raw = readFileSync(TOKEN, "utf8");
     token = JSON.parse(raw);
     if (!token || typeof token !== "object" || Array.isArray(token) ||
-        Object.keys(token).sort().join(",") !== "issuedAt,repo" ||
+        !["issuedAt,repo", "claimedAt,issuedAt,repo"].includes(Object.keys(token).sort().join(",")) ||
         typeof token.repo !== "string" || typeof token.issuedAt !== "string" ||
-        !Number.isFinite(Date.parse(token.issuedAt))) throw new Error("not strict PUSH_GO JSON");
-    const age = Date.now() - statSync(TOKEN).mtimeMs;
+        !Number.isFinite(Date.parse(token.issuedAt)) ||
+        ("claimedAt" in token && (typeof token.claimedAt !== "string" || !Number.isFinite(Date.parse(token.claimedAt))))) throw new Error("not strict PUSH_GO JSON");
+    const age = Date.now() - Date.parse(token.issuedAt);
     const tokenRepo = canonical(token.repo);
-    unlinkSync(TOKEN); // consume before execution, including mismatches and stale tokens
-    if (age > MAX_AGE_MS || age < -60_000) fail("GO token is stale or clock-invalid; it was consumed. Ask Chan for a fresh GO.");
-    if (tokenRepo !== repo) fail("GO token names another repository; it was consumed. Ask Chan for a fresh GO.");
+    if (age > MAX_AGE_MS || age < -60_000) {
+      unlinkSync(TOKEN);
+      fail("GO token is stale or clock-invalid; it was consumed. Ask Chan for a fresh GO.");
+    }
+    if (tokenRepo !== repo) {
+      unlinkSync(TOKEN);
+      fail("GO token names another repository; it was consumed. Ask Chan for a fresh GO.");
+    }
+    if (token.claimedAt) fail("GO token was already claimed for its one push attempt. Ask Chan for a fresh GO.");
+    // Pre-push alone consumes it. The claim lets this one attempt cross both gates.
+    writeFileSync(TOKEN, JSON.stringify({ repo: token.repo, issuedAt: token.issuedAt, claimedAt: new Date().toISOString() }));
     return true;
   } catch (err) {
-    try { if (existsSync(TOKEN)) unlinkSync(TOKEN); } catch {}
+    // Preserve a valid claim for the pre-push hook; consume invalid states at first sight.
+    if (!token?.claimedAt) try { if (existsSync(TOKEN)) unlinkSync(TOKEN); } catch {}
     fail("invalid GO token was consumed (" + (err?.message ?? err) + "). Ask Chan for a fresh GO.");
   }
 }
@@ -109,7 +118,6 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     if (!protectedCommand) pass();
     const repo = repoFrom(payload, command);
     if (tokenFor(repo)) {
-      console.error("[codex-guard] GO token consumed — guarded command allowed once.");
       pass();
     }
     fail("this guarded command requires Chan's explicit, one-shot GO for this repository.");

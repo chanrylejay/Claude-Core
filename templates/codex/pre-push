@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 // Codex durable pre-push gate. Install byte-identically as <clone>/.git/hooks/pre-push.
 // Git hooks are per-clone and unversioned: the Codex arming check MUST confirm this file is installed.
-// Chan alone creates ~/.codex/PUSH_GO. Every attempt consumes a present token before Git can push.
-import { existsSync, readFileSync, realpathSync, statSync, unlinkSync } from "node:fs";
+// Chan alone creates ~/.codex/PUSH_GO. The launcher may claim it; this hook alone consumes it.
+import { existsSync, readFileSync, realpathSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
 const tokenPath = join(process.env.USERPROFILE || homedir(), ".codex", "PUSH_GO");
 const maxAgeMs = 30 * 60 * 1000;
+const maxClaimAgeMs = 5 * 60 * 1000;
 const fail = (message) => { console.error("[codex-pre-push] BLOCKED: " + message); process.exit(1); };
 const canonical = (p) => realpathSync.native ? realpathSync.native(p) : realpathSync(p);
 
@@ -18,14 +19,19 @@ try {
   try {
     token = JSON.parse(readFileSync(tokenPath, "utf8"));
     if (!token || typeof token !== "object" || Array.isArray(token) ||
-      Object.keys(token).sort().join(",") !== "issuedAt,repo" || typeof token.repo !== "string" ||
-      typeof token.issuedAt !== "string" || !Number.isFinite(Date.parse(token.issuedAt))) throw new Error("not strict PUSH_GO JSON");
-    const age = Date.now() - statSync(tokenPath).mtimeMs;
+      !["issuedAt,repo", "claimedAt,issuedAt,repo"].includes(Object.keys(token).sort().join(",")) ||
+      typeof token.repo !== "string" || typeof token.issuedAt !== "string" || !Number.isFinite(Date.parse(token.issuedAt)) ||
+      ("claimedAt" in token && (typeof token.claimedAt !== "string" || !Number.isFinite(Date.parse(token.claimedAt))))) throw new Error("not strict PUSH_GO JSON");
+    const age = Date.now() - Date.parse(token.issuedAt);
     const repo = canonical(execFileSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8" }).trim());
     const tokenRepo = canonical(token.repo);
     unlinkSync(tokenPath);
     if (age > maxAgeMs || age < -60_000) fail("GO token is stale or clock-invalid; it was consumed.");
     if (tokenRepo !== repo) fail("GO token names another repository; it was consumed.");
+    if (token.claimedAt) {
+      const claimAge = Date.now() - Date.parse(token.claimedAt);
+      if (claimAge > maxClaimAgeMs || claimAge < -60_000) fail("GO token claim is stale or clock-invalid; it was consumed.");
+    }
   } catch (error) {
     try { if (existsSync(tokenPath)) unlinkSync(tokenPath); } catch {}
     fail("invalid GO token was consumed (" + (error?.message ?? error) + ").");

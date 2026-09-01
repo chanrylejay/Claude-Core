@@ -1,12 +1,12 @@
 {
-  "description": "Required installed files: ~/.codex/hooks/codex-guard.mjs AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The launcher imports that parser; either missing file must deny through the PowerShell wrapper's structured JSON response.",
+  "description": "Required installed files: ~/.codex/hooks/codex-guard-runner.mjs, codex-guard.mjs, AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The Node runner preserves raw hook stdin and emits a structured deny if the launcher cannot start.",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -Command \"$deny = '{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"[codex-guard] BLOCKED: launcher failed to start or crashed; blocking\\\"}}'; & node 'C:/Users/Chanryle/.codex/hooks/codex-guard.mjs' --session-start; if ($LASTEXITCODE -ne 0) { [Console]::Out.WriteLine($deny); [Console]::Error.WriteLine('[codex-guard] launcher failed to start or crashed; blocking') }; exit 0\"",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-runner.mjs\" --session-start",
             "timeout": 10
           },
           {
@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -Command \"$deny = '{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"[codex-guard] BLOCKED: launcher failed to start or crashed; blocking\\\"}}'; & node 'C:/Users/Chanryle/.codex/hooks/codex-guard.mjs'; if ($LASTEXITCODE -ne 0) { [Console]::Out.WriteLine($deny); [Console]::Error.WriteLine('[codex-guard] launcher failed to start or crashed; blocking') }; exit 0\"",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-runner.mjs\"",
             "timeout": 10
           }
         ]

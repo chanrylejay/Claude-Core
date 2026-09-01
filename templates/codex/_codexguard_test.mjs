@@ -12,8 +12,9 @@ const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "codexguard-"));
 const HOOKS = path.join(HOME, ".codex", "hooks");
 fs.mkdirSync(HOOKS, { recursive: true });
 fs.copyFileSync(path.join(TPL, "codex-guard.mjs"), path.join(HOOKS, "codex-guard.mjs"));
+fs.copyFileSync(path.join(TPL, "codex-guard-runner.mjs"), path.join(HOOKS, "codex-guard-runner.mjs"));
 fs.copyFileSync(path.join(ROOT, "templates", "hooks", "push-guard.mjs"), path.join(HOOKS, "push-guard.mjs"));
-const GUARD = path.join(HOOKS, "codex-guard.mjs");
+const GUARD = path.join(HOOKS, "codex-guard-runner.mjs");
 const TOKEN = path.join(HOME, ".codex", "PUSH_GO");
 const REPO = path.join(HOME, "repo");
 const OTHER = path.join(HOME, "other");
@@ -24,13 +25,18 @@ const ok = (label, condition) => { if (condition) pass++; else { fail++; console
 const run = (command, cwd = REPO) => spawnSync(process.execPath, [GUARD], {
   input: JSON.stringify({ cwd, tool_name: "Bash", tool_input: { command } }), encoding: "utf8", timeout: 10000,
 });
+const captured = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash.json"), "utf8"));
 const go = (repo = REPO, extra = {}) => fs.writeFileSync(TOKEN, JSON.stringify({ repo, issuedAt: new Date().toISOString(), ...extra }));
 const absent = () => !fs.existsSync(TOKEN);
+const claimed = () => { try { return typeof JSON.parse(fs.readFileSync(TOKEN, "utf8")).claimedAt === "string"; } catch { return false; } };
 const denyJson = (r) => {
   try { return JSON.parse(r.stdout).hookSpecificOutput; } catch { return null; }
 };
-const denied = (r) => r.status === 0 && denyJson(r)?.permissionDecision === "deny" &&
-  /BLOCKED/i.test(denyJson(r)?.permissionDecisionReason || "") && /BLOCKED/i.test(r.stderr || "");
+const strictDeny = (reason) => JSON.stringify({ hookSpecificOutput: {
+  hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: reason,
+} }) + "\n";
+const denied = (r) => r.status === 0 && r.stdout === strictDeny(denyJson(r)?.permissionDecisionReason) &&
+  denyJson(r)?.permissionDecision === "deny" && /\S/.test(denyJson(r)?.permissionDecisionReason || "") && !(r.stderr || "").trim();
 
 for (const [name, command] of [
   ["plain", "git push --dry-run origin HEAD"],
@@ -40,22 +46,22 @@ for (const [name, command] of [
   ["remote set-url", "git remote set-url --push origin DISABLED"],
 ]) {
   const r = run(command);
-  ok("tokenless " + name + " denies through JSON and retains a stderr reason", denied(r));
+  ok("tokenless " + name + " emits only the exact structured JSON deny", denied(r));
 }
 
 go();
 let r = run("git push --dry-run origin HEAD");
-ok("matching token allows the first push", r.status === 0 && absent());
+ok("matching token lets the launcher claim, not consume", r.status === 0 && claimed());
 r = run("git push --dry-run origin HEAD");
-ok("the second push is denied through JSON", denied(r));
+ok("the second launcher call is denied while the token remains claimed", denied(r) && claimed());
+fs.unlinkSync(TOKEN);
 
 go(OTHER);
 r = run("git push --dry-run origin HEAD");
 ok("another repo's token denies and is consumed", denied(r) && absent());
 
 go();
-const old = new Date(Date.now() - 31 * 60 * 1000);
-fs.utimesSync(TOKEN, old, old);
+fs.writeFileSync(TOKEN, JSON.stringify({ repo: REPO, issuedAt: new Date(Date.now() - 31 * 60 * 1000).toISOString() }));
 r = run("git push --dry-run origin HEAD");
 ok("expired token denies and is consumed", denied(r) && absent());
 
@@ -69,12 +75,15 @@ ok("git status passes with valid JSON and no stderr", r.status === 0 && passJson
 r = run("npm run build");
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("npm run build passes with valid JSON and no stderr", r.status === 0 && passJson && !(r.stderr || "").trim());
+r = spawnSync(process.execPath, [GUARD], { input: JSON.stringify(captured), encoding: "utf8", timeout: 10000 });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
 
 for (const command of [
   "git config alias.ship push",
   "git -c alias.ship=push status",
   "git config remote.origin.pushurl https://example.invalid/x",
-  "git config url.x.pushInsteadOf git@github.com:",
+  "git config url.x.pushInsteadOf ssh://example.invalid/",
   "echo x > .git/config",
 ]) {
   r = run(command);
@@ -89,11 +98,7 @@ ok("SessionStart reports an existing token as stale in JSON", start.status === 0
 const wiring = JSON.parse(fs.readFileSync(path.join(TPL, "hooks.json"), "utf8"));
 const pre = wiring.hooks?.PreToolUse?.[0]?.hooks?.[0]?.command || "";
 ok("wiring names the required installed parser", /push-guard\.mjs/.test(wiring.description || ""));
-ok("PreToolUse wiring turns launcher failures into a structured JSON deny", /powershell -NoProfile/.test(pre) && /\$deny\s*=/.test(pre) && /permissionDecision/.test(pre) && /launcher failed to start or crashed/.test(pre) && /exit 0/.test(pre));
-const broken = path.join(HOOKS, "missing-launcher.mjs");
-const wrapped = `$deny = '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"[codex-guard] BLOCKED: launcher failed to start or crashed; blocking"}}'; & node '${broken}'; if ($LASTEXITCODE -ne 0) { [Console]::Out.WriteLine($deny); [Console]::Error.WriteLine('[codex-guard] launcher failed to start or crashed; blocking') }; exit 0`;
-const wrapper = spawnSync("powershell", ["-NoProfile", "-Command", wrapped], { encoding: "utf8", timeout: 10000 });
-ok("PowerShell wrapper turns a missing launcher into JSON deny plus stderr evidence", wrapper.status === 0 && denyJson(wrapper)?.permissionDecision === "deny" && /launcher failed to start or crashed/.test(denyJson(wrapper)?.permissionDecisionReason || "") && /launcher failed to start or crashed/.test(wrapper.stderr || ""));
+ok("PreToolUse wiring uses the stdin-preserving Node runner", /node/.test(pre) && /codex-guard-runner\.mjs/.test(pre) && !/powershell/i.test(pre));
 
 fs.rmSync(HOME, { recursive: true, force: true });
 console.log(`\ncodex-guard: ${pass} passed, ${fail} failed`);
