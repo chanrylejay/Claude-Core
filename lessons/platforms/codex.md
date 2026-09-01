@@ -106,6 +106,16 @@ Marker: codex-doorway-2026-09-01.)
   `codex-rs/core/src/tools/handlers/`). With unified exec on, `write_stdin` can reuse an existing
   session without a new PreToolUse event, so the per-clone git-level `pre-push` gate, not the
   launcher, must block that path. Never turn unified exec off to address the reuse bypass.
+- **One GO crosses both layers by claim, then consumption.** `PUSH_GO` begins as strict
+  `{repo, issuedAt}` JSON. The launcher validates and marks it with `claimedAt` without deleting
+  it; a second launcher call denies that claimed token. The per-clone pre-push gate accepts either
+  an unclaimed token (the unified-exec bypass) or a claim no older than five minutes, and it alone
+  deletes the token before deciding whether Git proceeds. Expiry always uses `issuedAt`, so a
+  claim cannot extend the 30-minute GO. Wrong-repo, stale, and malformed tokens are consumed by
+  the first layer that sees them. The cross-layer net pins launcherâ†’pre-push once, bypass once,
+  second-push denial, and stale-claim denial (Sep 1 2026, P5 repair).
+- **PreToolUse deny wire is byte-strict.** The only modern deny is exactly
+  `{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"<trimmed non-empty reason>"}}`; keys are camelCase and unknown keys fail the runner's strict parse. The legacy `{"decision":"block","reason":"..."}` also parses, but never mix shapes. The runner parses combined hook output, so modern JSON must be the entire output: no diagnostic stderr after it. Pin both the launcher deny and PowerShell failure wrapper as exact stdout bytes with empty stderr (Sep 1 2026, P2 repair).
 - **`templates/_all.mjs` under a command tool.** The LIVE run took about 51 s on the box, and the
   runner used to print nothing until every net had finished, so a command tool with a 30 s limit
   reported "no output" and a false FAIL. Since Sep 1 2026 the runner prints a header at once and
