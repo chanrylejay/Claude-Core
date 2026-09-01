@@ -1,0 +1,53 @@
+# chan-guard.rules — Chan's push gate for Codex (Sep 1 2026). Hard rules 6-7: a push is
+# a publish and a deploy, and needs Chan's explicit GO by his own hand, each time. Codex
+# never pushes. Prefix rules match exact leading tokens only: `git -C <path> push` and a
+# script that pushes are NOT caught here (proven Sep 1 2026: the -C dry-run ran). Codex runs
+# with Full access by Chan's decision, so this file is a speed bump in front of the real gate,
+# the push-guard hook; both are live-fired after every change or Codex update, never assumed.
+# Installed copy: ~/.codex/rules/chan-guard.rules, byte-equal to this template.
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "forbidden",
+    justification = "Hard rule 7: a push is a deploy and needs Chan's explicit GO. Codex never pushes. Report the ready branch and stop.",
+    match = ["git push", "git push origin main", "git push --force origin HEAD", "git push --dry-run origin codex-doorway"],
+    not_match = ["git status", "git fetch origin", "git ls-remote origin", "git commit -m x"]
+)
+
+prefix_rule(
+    pattern = ["git", "send-pack"],
+    decision = "forbidden",
+    justification = "The low-level push. Same law as git push."
+)
+
+prefix_rule(
+    pattern = ["git", "remote", ["set-url", "add", "remove", "rename"]],
+    decision = "forbidden",
+    justification = "Rewriting a remote can re-enable a disabled push URL. Chan edits remotes by his own hand.",
+    match = ["git remote set-url --push origin https://x", "git remote add origin https://x"],
+    not_match = ["git remote -v", "git remote show origin"]
+)
+
+prefix_rule(
+    pattern = ["gh"],
+    decision = "prompt",
+    justification = "gh can publish to GitHub. Chan decides at the prompt."
+)
+
+prefix_rule(
+    pattern = ["vercel"],
+    decision = "forbidden",
+    justification = "A deploy CLI. Hard rule 7: Chan's hand only."
+)
+
+prefix_rule(
+    pattern = ["netlify"],
+    decision = "forbidden",
+    justification = "A deploy CLI. Hard rule 7: Chan's hand only."
+)
+
+prefix_rule(
+    pattern = ["npx", ["vercel", "netlify"]],
+    decision = "forbidden",
+    justification = "A deploy CLI through npx. Hard rule 7: Chan's hand only."
+)

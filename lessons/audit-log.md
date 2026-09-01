@@ -280,3 +280,5 @@ practice stands: node templates/judgment-sample.mjs --sessions 18 --log, and the
 numbers.)
 
 BATCH 5 LIVE: merged to main at 51d5047, Aug 31 2026. KIT FROZEN until Sep 6 2026 per AL-27; the backlog lives there; the trial canon and workspace are exempt; the weekly practice is `node templates/judgment-sample.mjs --sessions 18 --log`.
+
+FREEZE EXEMPTION (Chan's word, Sep 1 2026, this session): the Codex doorway and the Codex port (the `codex-doorway` branch: `lessons/platforms/codex.md`, `templates/codex-*`, and the phase-2 slices that follow) are exempt from the Sep 6 freeze. Everything else in the kit stays frozen. The planner missed the freeze at boot and cut the doorway before naming it; the exemption was granted after the fact and is recorded here so the next reader does not have to infer it.

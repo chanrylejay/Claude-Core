@@ -39,6 +39,11 @@ const summaryOf = (stdout, stderr) => {
 };
 let anyFail = 0;
 const rows = [];
+// STREAM, never buffer (Sep 1 2026): a command tool with a ~30 s limit saw NOTHING from a 51 s
+// LIVE run and reported a false FAIL, because every row used to print only after the last net.
+// The pad is known before the first net runs, so each row prints the moment its net finishes.
+const pad = Math.max(...nets.map((n) => path.relative(ROOT, n).replace(/\\/g, "/").length));
+console.log(`runner: ${nets.length} nets, streaming one line per net as it finishes...`);
 
 for (const net of nets) {
   const rel = path.relative(ROOT, net).replace(/\\/g, "/");
@@ -83,9 +88,8 @@ for (const net of nets) {
     if (r.status !== 0) anyFail++;
   }
   rows.push([verdict, rel, sum]);
+  console.log(`${verdict.padEnd(13)} ${rel.padEnd(pad)}  ${sum}`);
 }
 
-const pad = Math.max(...rows.map((r) => r[1].length));
-for (const [v, rel, sum] of rows) console.log(`${v.padEnd(13)} ${rel.padEnd(pad)}  ${sum}`);
 console.log(`\nrunner: ${rows.length} nets, ${anyFail} failed.` + (anyFail ? " A red line is never expected — fix before shipping." : " TEMPLATE lines certify template copies only; the machine cert is the CLI's verify-install."));
 process.exit(anyFail ? 1 : 0);
