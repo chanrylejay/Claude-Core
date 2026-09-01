@@ -93,12 +93,42 @@ for (const command of [
 go();
 const start = spawnSync(process.execPath, [GUARD, "--session-start"], { input: "{}", encoding: "utf8", timeout: 10000 });
 let startJson = null; try { startJson = JSON.parse(start.stdout); } catch {}
-ok("SessionStart reports an existing token as stale in JSON", start.status === 0 && /stale PUSH_GO/.test(startJson?.hookSpecificOutput?.additionalContext || ""));
+ok("SessionStart reports an earlier-session token in JSON", start.status === 0 && /PUSH_GO from an earlier session/.test(startJson?.hookSpecificOutput?.additionalContext || ""));
 
 const wiring = JSON.parse(fs.readFileSync(path.join(TPL, "hooks.json"), "utf8"));
 const pre = wiring.hooks?.PreToolUse?.[0]?.hooks?.[0]?.command || "";
 ok("wiring names the required installed parser", /push-guard\.mjs/.test(wiring.description || ""));
 ok("PreToolUse wiring uses the stdin-preserving Node runner", /node/.test(pre) && /codex-guard-runner\.mjs/.test(pre) && !/powershell/i.test(pre));
+
+// Hostile-review pins (Sep 1 2026): a GO never authorizes a remote rewrite; --no-verify is never
+// Codex's; the cd family binds the repo like Set-Location; go.mjs writes exactly the strict token.
+if (fs.existsSync(TOKEN)) fs.unlinkSync(TOKEN);
+go();
+r = run("git remote set-url --push origin https://x");
+ok("remote rewrite is denied even with a valid token, and the token is untouched", denied(r) && fs.existsSync(TOKEN) && !claimed());
+r = run("git push --no-verify origin HEAD");
+ok("--no-verify is denied even with a valid token, and the token is untouched", denied(r) && fs.existsSync(TOKEN) && !claimed());
+fs.unlinkSync(TOKEN);
+go(OTHER);
+r = run(`cd ${OTHER}; git push --dry-run origin HEAD`);
+ok("cd binds the repo: OTHER's token is claimed for a push entered with cd", r.status === 0 && claimed());
+fs.unlinkSync(TOKEN);
+go(REPO);
+r = run(`pushd ${OTHER}; git push --dry-run origin HEAD`);
+ok("pushd binds the repo: REPO's token does not authorize a push entered into OTHER", denied(r) && absent());
+const GO = path.join(HOOKS, "go.mjs");
+fs.copyFileSync(path.join(TPL, "go.mjs"), GO);
+const goEnv = { ...process.env, USERPROFILE: HOME, HOME };
+let g = spawnSync(process.execPath, [GO, REPO], { encoding: "utf8", env: goEnv });
+let tok = null; try { tok = JSON.parse(fs.readFileSync(TOKEN, "utf8")); } catch {}
+ok("go.mjs writes the strict two-key token for the canonical repo", g.status === 0 && tok && Object.keys(tok).sort().join(",") === "issuedAt,repo" && !claimed());
+g = spawnSync(process.execPath, [GO, REPO], { encoding: "utf8", env: goEnv });
+ok("go.mjs refuses to overwrite an existing token", g.status === 2);
+r = run("git push --dry-run origin HEAD");
+ok("a go.mjs token is claimed by the launcher like any other", r.status === 0 && claimed());
+fs.unlinkSync(TOKEN);
+g = spawnSync(process.execPath, [GO, path.join(HOME, "nowhere")], { encoding: "utf8", env: goEnv });
+ok("go.mjs refuses a path that is not a repository", g.status === 2 && absent());
 
 fs.rmSync(HOME, { recursive: true, force: true });
 console.log(`\ncodex-guard: ${pass} passed, ${fail} failed`);

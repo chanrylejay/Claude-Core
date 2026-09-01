@@ -125,3 +125,15 @@ Marker: codex-doorway-2026-09-01.)
   `~/.codex/rules/chan-guard.rules` byte-for-byte; the static check is `codex execpolicy check
   --rules <file> -- git push origin main` (expect `forbidden`), and the runtime proof is the
   dry-run pair above, re-fired after every change or Codex update.
+- **The GO protocol is the DeepSeek CLI's, not stricter (Chan's ruling, Sep 1 2026, late).** The first
+  Codex gate had Chan typing the token by hand with a PowerShell line, a stricter rule than the kit
+  already runs on DeepSeek (where the hands create `PUSH_GO` on his chat GO). The planner accepted
+  that from the hands' CLARIFY without checking it against the kit's own protocol and without naming
+  the change to Chan; he found it at midnight, one PowerShell line per push. Reversed: Codex creates
+  the token with `go.mjs` on Chan's chat GO, same as DeepSeek. Two laws for the planner from it: the
+  hands get the protocol the kit already has, never a stricter one by default; and anything that
+  changes how Chan experiences a GO is named to him before it is built. Hostile-review findings
+  fixed in the same patch: a GO never authorizes a remote rewrite (it did); the cd family (`cd`,
+  `pushd`, `Push-Location`) binds the repo like `Set-Location` (it did not); `--no-verify` is
+  denied to Codex token or not, which makes it Chan's private escape from his own terminal, since
+  the per-clone git gate otherwise applies to any pusher in the clone, Chan included.

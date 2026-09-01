@@ -2,7 +2,13 @@
 // Scope: blocks guarded Bash-tool pushes live unless Chan's one-shot, repo-bound GO token is
 // valid. The arming check detects template/install drift; it is not an OS security boundary.
 // The trial clone's push URL remains DISABLED until Chan changes it by hand, which is the
-// separate OS-level backstop. Codex never creates, restores, or edits PUSH_GO.
+// separate OS-level backstop.
+// GO protocol (Chan's ruling, Sep 1 2026, parity with the DeepSeek CLI): Chan says GO in the chat;
+// Codex then creates the token with `node ~/.codex/hooks/go.mjs <repo>` and pushes. Never without
+// his GO in that same chat, never restored, never edited; one GO is one push attempt.
+// A push carrying --no-verify is ALWAYS denied, token or not: Codex never skips the git gate, so
+// `--no-verify` stays Chan's own escape from his own terminal. A remote rewrite is ALWAYS denied,
+// token or not: a GO to push never authorizes changing where pushes go.
 //
 // The runner continues after a hook spawn/load failure. Wiring therefore turns launcher failures
 // into a structured deny. The runner parses combined hook output strictly, so a deny or allow
@@ -65,6 +71,8 @@ function repoFrom(payload, command) {
   let base = cwd;
   const c = command.match(/(?:^|[;&|\n])\s*git\s+(?:-C\s+|--git-dir[=\s])([^\s;|&]+)/i) ||
     command.match(/(?:^|[;&|\n])\s*Set-Location\s+['\"]?([^'\";|&\n]+)/i);
+  const cd = command.match(/(?:^|[;&|\n])\s*(?:cd|chdir|sl|pushd|Set-Location|Push-Location)\s+(?:-Path\s+|-LiteralPath\s+)?['\"]?([^'\";|&\n]+)/i);
+  if (!c && cd) base = cd[1].trim();
   if (c) base = c[1].replace(/^['\"]|['\"]$/g, "");
   if (!isAbsolute(base)) base = resolve(cwd, base);
   if (/([\\/])\.git$/i.test(base)) base = dirname(base);
@@ -107,15 +115,16 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     const payload = await readPayload();
     if (process.argv.includes("--session-start")) {
       if (existsSync(TOKEN)) {
-        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: "[codex-guard] stale PUSH_GO exists at session start. Codex must never use, create, or restore it; Chan should remove it or issue a fresh GO only for the immediate approved push." } }) + "\n");
+        process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: "[codex-guard] a PUSH_GO from an earlier session exists at session start. Do not use it: report it to Chan in one line; he removes it or says GO again for the push he wants now, and only then is a fresh token created." } }) + "\n");
         process.exit(0);
       }
       pass();
     }
     const command = payload?.tool_input?.command;
     if (typeof command !== "string") fail("Bash payload has no string tool_input.command; refusing an unread command.");
-    const protectedCommand = isGitPush(command) || isRemoteRewrite(command);
-    if (!protectedCommand) pass();
+    if (isRemoteRewrite(command)) fail("a remote rewrite is never authorized, even with a GO token. Chan edits remotes by his own hand.");
+    if (!isGitPush(command)) pass();
+    if (/--no-verify\b/i.test(command)) fail("--no-verify skips the git gate; Codex never uses it, token or not. It is Chan's own escape from his own terminal.");
     const repo = repoFrom(payload, command);
     if (tokenFor(repo)) {
       pass();

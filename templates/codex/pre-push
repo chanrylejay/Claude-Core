@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Codex durable pre-push gate. Install byte-identically as <clone>/.git/hooks/pre-push.
 // Git hooks are per-clone and unversioned: the Codex arming check MUST confirm this file is installed.
-// Chan alone creates ~/.codex/PUSH_GO. The launcher may claim it; this hook alone consumes it.
+// ~/.codex/PUSH_GO is created on Chan's chat GO (go.mjs). The launcher may claim it; this hook
+// alone consumes it. This hook runs for ANY pusher in the clone, Chan included: his own terminal
+// escapes it with `git push --no-verify`, which the launcher denies to Codex, so the escape is his.
 import { existsSync, readFileSync, realpathSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { homedir } from "node:os";
