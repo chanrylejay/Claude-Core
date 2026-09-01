@@ -66,6 +66,9 @@ Marker: codex-doorway-2026-09-01.)
 
 ## Proven on Chan's machine, Sep 1 2026 (codex-cli 0.151.0-alpha.7.2, VS Code extension, Full access)
 
+- **Hooks config parser is strict at the top level.** Only `description` and `hooks` are
+  accepted. An unknown key (including `_comment`) rejects the entire config and every hook in it;
+  the thread shows no hook output, so confirm parser acceptance explicitly after every config edit.
 - **The doorway works.** A fresh session read the contract, the index, the cold-start set, the
   TRIAL files and the active canon from `~/.codex/AGENTS.md` alone, with no brief in front of
   it. "Restart" in the extension means a NEW thread; AGENTS.md, config.toml and the rules all load
@@ -88,6 +91,21 @@ Marker: codex-doorway-2026-09-01.)
   to `<k>`'s config, so `chan-guard.rules` also forbids `git remote set-url`, and the port adds a
   remote-guard hook that sees the `-C` spelling too. push-guard itself ALLOWS `remote set-url` by
   design (it inspects pushes only), so the remote guard is a separate, Codex-only hook.
+- **PreToolUse cannot be the durable push gate while unified exec is on.** A fresh unified-exec
+  command emits the Bash pre-hook, but `write_stdin` intentionally emits none when it continues an
+  existing exec session. Sep 1 proof: P1 (fresh command) consumed a matching GO token and reached
+  K's DISABLED remote; P2, sent through that existing session with no token, also reached DISABLED
+  and showed no hook error. `unified_exec = false` is a stable, default-on feature toggle, but it
+  changes shell-tool behavior and needs Chan's decision. The durable layer is K's unversioned
+  `.git/hooks/pre-push`, installed byte-identical from `templates/codex/pre-push`; its arming check
+  must confirm the per-clone file is present and equal. The launcher remains only the first layer.
+- **Unified exec stays ON; the session bypass belongs to the git gate.** Chan reversed the Sep 1
+  `unified_exec = false` ruling after the P2 fail-open: that switch moves shell work onto the
+  classic handler, which on this build emits no PreToolUse payload. Only `apply_patch`, MCP calls,
+  and unified-exec's `exec_command` reach the hook (handler evidence:
+  `codex-rs/core/src/tools/handlers/`). With unified exec on, `write_stdin` can reuse an existing
+  session without a new PreToolUse event, so the per-clone git-level `pre-push` gate, not the
+  launcher, must block that path. Never turn unified exec off to address the reuse bypass.
 - **`templates/_all.mjs` under a command tool.** The LIVE run took about 51 s on the box, and the
   runner used to print nothing until every net had finished, so a command tool with a 30 s limit
   reported "no output" and a false FAIL. Since Sep 1 2026 the runner prints a header at once and

@@ -1,0 +1,33 @@
+{
+  "description": "Required installed files: ~/.codex/hooks/codex-guard.mjs AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The launcher imports that parser; either missing file must deny through the PowerShell wrapper's structured JSON response.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"$deny = '{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"[codex-guard] BLOCKED: launcher failed to start or crashed; blocking\\\"}}'; & node 'C:/Users/Chanryle/.codex/hooks/codex-guard.mjs' --session-start; if ($LASTEXITCODE -ne 0) { [Console]::Out.WriteLine($deny); [Console]::Error.WriteLine('[codex-guard] launcher failed to start or crashed; blocking') }; exit 0\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/hello.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"$deny = '{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"[codex-guard] BLOCKED: launcher failed to start or crashed; blocking\\\"}}'; & node 'C:/Users/Chanryle/.codex/hooks/codex-guard.mjs'; if ($LASTEXITCODE -ne 0) { [Console]::Out.WriteLine($deny); [Console]::Error.WriteLine('[codex-guard] launcher failed to start or crashed; blocking') }; exit 0\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

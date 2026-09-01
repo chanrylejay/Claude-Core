@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+// Codex durable pre-push gate. Install byte-identically as <clone>/.git/hooks/pre-push.
+// Git hooks are per-clone and unversioned: the Codex arming check MUST confirm this file is installed.
+// Chan alone creates ~/.codex/PUSH_GO. Every attempt consumes a present token before Git can push.
+import { existsSync, readFileSync, realpathSync, statSync, unlinkSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { homedir } from "node:os";
+import { join } from "node:path";
+
+const tokenPath = join(process.env.USERPROFILE || homedir(), ".codex", "PUSH_GO");
+const maxAgeMs = 30 * 60 * 1000;
+const fail = (message) => { console.error("[codex-pre-push] BLOCKED: " + message); process.exit(1); };
+const canonical = (p) => realpathSync.native ? realpathSync.native(p) : realpathSync(p);
+
+try {
+  if (!existsSync(tokenPath)) fail("this push requires Chan's explicit, one-shot GO.");
+  let token;
+  try {
+    token = JSON.parse(readFileSync(tokenPath, "utf8"));
+    if (!token || typeof token !== "object" || Array.isArray(token) ||
+      Object.keys(token).sort().join(",") !== "issuedAt,repo" || typeof token.repo !== "string" ||
+      typeof token.issuedAt !== "string" || !Number.isFinite(Date.parse(token.issuedAt))) throw new Error("not strict PUSH_GO JSON");
+    const age = Date.now() - statSync(tokenPath).mtimeMs;
+    const repo = canonical(execFileSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8" }).trim());
+    const tokenRepo = canonical(token.repo);
+    unlinkSync(tokenPath);
+    if (age > maxAgeMs || age < -60_000) fail("GO token is stale or clock-invalid; it was consumed.");
+    if (tokenRepo !== repo) fail("GO token names another repository; it was consumed.");
+  } catch (error) {
+    try { if (existsSync(tokenPath)) unlinkSync(tokenPath); } catch {}
+    fail("invalid GO token was consumed (" + (error?.message ?? error) + ").");
+  }
+  console.error("[codex-pre-push] GO token consumed — push allowed once.");
+  process.exit(0);
+} catch (error) {
+  fail("internal error (" + (error?.message ?? error) + ") — failing closed.");
+}
