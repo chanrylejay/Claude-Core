@@ -25,7 +25,11 @@ const ok = (label, condition) => { if (condition) pass++; else { fail++; console
 const run = (command, cwd = REPO) => spawnSync(process.execPath, [GUARD], {
   input: JSON.stringify({ cwd, tool_name: "Bash", tool_input: { command } }), encoding: "utf8", timeout: 10000,
 });
+const runPayload = (payload) => spawnSync(process.execPath, [GUARD], {
+  input: JSON.stringify(payload), encoding: "utf8", timeout: 10000,
+});
 const captured = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash.json"), "utf8"));
+const mcpFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-file-upload.json"), "utf8"));
 const go = (repo = REPO, extra = {}) => fs.writeFileSync(TOKEN, JSON.stringify({ repo, issuedAt: new Date().toISOString(), ...extra }));
 const absent = () => !fs.existsSync(TOKEN);
 const claimed = () => { try { return typeof JSON.parse(fs.readFileSync(TOKEN, "utf8")).claimedAt === "string"; } catch { return false; } };
@@ -78,6 +82,17 @@ ok("npm run build passes with valid JSON and no stderr", r.status === 0 && passJ
 r = spawnSync(process.execPath, [GUARD], { input: JSON.stringify(captured), encoding: "utf8", timeout: 10000 });
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
+r = runPayload(mcpFixture);
+ok("Playwright upload fixture is denied with exact structured JSON", denied(r));
+r = runPayload({ tool_name: "mcp__playwright__browser_fill_form", tool_input: {} });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("Playwright form entry passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
+r = runPayload({ tool_name: "mcp__playwright__browser_type", tool_input: {} });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("Playwright typing passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
+r = runPayload({ tool_name: "mcp__playwright__browser_snapshot", tool_input: {} });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("unrecognized MCP tool shapes pass unchanged", r.status === 0 && passJson && !(r.stderr || "").trim());
 
 for (const command of [
   "git config alias.ship push",
@@ -126,6 +141,9 @@ g = spawnSync(process.execPath, [GO, REPO], { encoding: "utf8", env: goEnv });
 ok("go.mjs refuses to overwrite an existing token", g.status === 2);
 r = run("git push --dry-run origin HEAD");
 ok("a go.mjs token is claimed by the launcher like any other", r.status === 0 && claimed());
+g = spawnSync(process.execPath, [GO, REPO], { encoding: "utf8", env: goEnv });
+tok = null; try { tok = JSON.parse(fs.readFileSync(TOKEN, "utf8")); } catch {}
+ok("a fresh GO replaces a claimed attempt with a strict unclaimed token", g.status === 0 && tok && Object.keys(tok).sort().join(",") === "issuedAt,repo" && !claimed());
 fs.unlinkSync(TOKEN);
 g = spawnSync(process.execPath, [GO, path.join(HOME, "nowhere")], { encoding: "utf8", env: goEnv });
 ok("go.mjs refuses a path that is not a repository", g.status === 2 && absent());

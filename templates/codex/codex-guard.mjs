@@ -120,6 +120,12 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
       }
       pass();
     }
+    const toolName = payload?.tool_name;
+    if (typeof toolName !== "string") pass();
+    if (toolName === "mcp__playwright__browser_file_upload") {
+      fail("Playwright file uploads are disabled. External interaction needs Chan's explicit review.");
+    }
+    if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;
     if (typeof command !== "string") fail("Bash payload has no string tool_input.command; refusing an unread command.");
     if (isRemoteRewrite(command)) fail("a remote rewrite is never authorized, even with a GO token. Chan edits remotes by his own hand.");

@@ -53,6 +53,11 @@ Marker: codex-doorway-2026-09-01.)
   VERIFIED only when Chan's eyes saw the shot; Codex's look is evidence, like claude.ai's. What
   changes is only the hand-off: a Codex session can look before reporting, while the DeepSeek
   sessions keep the save-to-file, AWAITING HIS LOOK path.
+- **A blank login screenshot can be a stale local server, not a visual failure.** Sep 2's audit
+  found `127.0.0.1:3000` serving the login shell while its Next assets 404ed, so login could not
+  complete and captures appeared blank or half-rendered. The concurrently listening `:3001`
+  served the authenticated app correctly. Check the browser console and served asset URLs, then
+  use the healthy local port; do not “fix” the screen before isolating the server.
 - **Installing Codex is inbound code (hard rule 12).** `npm install -g @openai/codex
   --ignore-scripts` first, and say so if scripts turned out to be needed. The VS Code extension
   and the desktop app are separate installs, each its own GO.
