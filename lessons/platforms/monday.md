@@ -96,3 +96,16 @@ before acting on anything below. Bodies moved verbatim.)
   count-based query.
 - `boards(limit:100, page:N)` pages cleanly; `items_count` is cheap and is the fastest way to
   find which boards in a large workspace hold anything at all.
+## Day 8 addendum (2 Sep 2026, kit-day8-lessons)
+
+**Automation builder armor phrases — the headline.** For any status trigger append: `The previous status can be anything. Use the "status changes to" trigger, not the from-to trigger.`
+Without it the builder emits whenStatusChangesFromSomethingToSomething with the SAME label in both slots — a recipe that can never fire. For date-offset alerts write: `When a date arrives, with an offset. Offset: N days AFTER the date, fire ONCE (a single time, not every day). Time of day: HH:MM. Timezone: <tz>` (forces whenDateArrivesV2 with offset config). Loose "N days after" phrasing can come back as everyDayIfDateHasPassed with no hour — a daily nag. For BEFORE offsets, the word "before" alone routes to a pushDate action block and returns needs_clarification (no artifact); write `N days earlier than the date, fires N days ahead of <column>` and name the block (`Use the "When date arrives" trigger (whenDateArrivesV2), do NOT use the "Push date" block`). Verified JSON shows offset.count negative. Went 7 for 7 once armored.
+
+- Exclusions in words beat parenthetical ids: a column id in parentheses inside the trigger line polluted matching (bound a sibling status column). Write `the status column titled "X", NOT "Y" and NOT "Z"`.
+- Deleting or pausing automations: NO API path exists. CORRECTS the manage_automations bullet above (Automations section) that framed this as a permission ceiling. Public /v2 GraphQL has zero automation/recipe/workflow mutations (194-field Mutation type, introspected, default and 2026-07 API versions): `delete_recipe` and `manage_automations` return "Cannot query field" — a schema absence, not USER_UNAUTHORIZED. The monday MCP connector's manage_automations uses a different channel and returns USER_UNAUTHORIZED even for the creator. Net: every mis-parse is a UI click.
+- Conditional row coloring has NO API surface: view settings_str / view_specific_data_str / settings carry only column visibility and order; update_view accepts settings, filter, sort only. UI-only. Do not attempt a guessed payload on a live view.
+- View filters: a people column accepts the dynamic token `assigned_to_me`; date columns reject dynamic tokens (pinned dates only). Different columns, different rules.
+- Status label slots: the reserved/empty slot is label id 5, not index 5 (a label at index 5 with id 6 renders fine; blanks render blank).
+- Notify double-listing: the builder sometimes lists the same recipient twice in a notify slot; cosmetic, one notification is sent.
+- Connector timeout mid execute_code: the sandbox usually finishes. Verify board state before re-firing; write migration scripts idempotent.
+- The compaction lesson: a workaround that lives only in recipe descriptions is not banked. Bank the phrase, not just the outcome.

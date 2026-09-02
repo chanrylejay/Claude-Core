@@ -81,7 +81,7 @@ the Timeline. All data is real (client data), never sample.
 - Completion surfaces empty — correct by design.
 - Post-v2 (the trial's remaining days are persuasion, not code): record demo video + short
   message to the client, the ops lead's offered call, the boss's 15 minutes, data-quality
-  note for the sales team, day-14 ask. Nothing builds until Chan says so.
+  note for the sales team, day-10 ask. Nothing builds until Chan says so.
 - Banked future items: bar drag-to-move, group-events row, importer run-stamp, auto-inject
   sales follow-ups.
 
@@ -102,3 +102,8 @@ the Timeline. All data is real (client data), never sample.
 reality it describes — a decision, a milestone, an access grant, a direction change. Banking
 it later is how canons die. When the trial resolves, this file gets the outcome banner and
 either graduates to the client project's long-term canon or freezes as history.
+### Relay lessons (day 8, 2 Sep 2026 — banked from the v3 challenge)
+
+- A brief header "NOT A GO" plus a write step is a CONTRADICTORY brief; the hands were right to hold. Carry every GO inside the brief and say which steps it covers.
+- Exemplar behaviours to teach: hands stop on a one-row count mismatch and attach a diagnosis (the +1 was live drift; the diagnosis was exact). Hands refuse a blind write to a live client view when no evidence of the payload shape exists, and say so.
+- The brief-writer's own stale caution is a cost too: once new evidence lands (armor phrases), retest before assigning work to human hands.
