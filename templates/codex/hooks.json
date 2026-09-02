@@ -1,0 +1,33 @@
+{
+  "description": "Required installed files: ~/.codex/hooks/codex-guard-runner.mjs, codex-guard.mjs, AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The Node runner preserves raw hook stdin and emits a structured deny if the launcher cannot start.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-runner.mjs\" --session-start",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/hello.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-runner.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

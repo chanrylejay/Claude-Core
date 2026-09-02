@@ -21,3 +21,4 @@ Scope split: `../TOOLS.md` (Devoted archive, LOCAL ONLY — not in any clone) = 
 - [Data sources and scraping](platforms/scraping.md)
 - [monday.com (banked Aug 2026, client-trial sessions; all proven live)](platforms/monday.md) — **the TRIAL mode read**
 - [Windows](platforms/windows.md)
+- [Codex CLI (OpenAI; opened Sep 1 2026, free-month trial as a SECOND pair of hands)](platforms/codex.md)

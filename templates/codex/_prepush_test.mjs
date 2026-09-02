@@ -1,0 +1,43 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+const TPL = path.dirname(fileURLToPath(import.meta.url));
+const HOME = fs.mkdtempSync(path.join(os.tmpdir(), "codex-prepush-"));
+const REPO = path.join(HOME, "repo"), OTHER = path.join(HOME, "other");
+for (const repo of [REPO, OTHER]) spawnSync("git", ["init", "-q", repo], { encoding: "utf8" });
+const TOKEN = path.join(HOME, ".codex", "PUSH_GO"), HOOK = path.join(TPL, "pre-push");
+const env = { ...process.env, USERPROFILE: HOME, HOME };
+const HOOKS = path.join(HOME, ".codex", "hooks");
+fs.mkdirSync(HOOKS, { recursive: true });
+for (const f of ["codex-guard.mjs", "codex-guard-runner.mjs"])
+  fs.copyFileSync(path.join(TPL, f), path.join(HOOKS, f));
+fs.copyFileSync(path.join(TPL, "..", "hooks", "push-guard.mjs"), path.join(HOOKS, "push-guard.mjs"));
+const LAUNCHER = path.join(HOOKS, "codex-guard-runner.mjs");
+let pass = 0, fail = 0;
+const ok = (label, yes) => { if (yes) pass++; else { fail++; console.error("FAIL: " + label); } };
+const run = () => spawnSync(process.execPath, [HOOK], { cwd: REPO, env, encoding: "utf8" });
+const launch = () => spawnSync(process.execPath, [LAUNCHER], {
+  input: JSON.stringify({ cwd: REPO, tool_name: "Bash", tool_input: { command: "git push origin HEAD" } }), env, encoding: "utf8",
+});
+const go = (repo = REPO) => { fs.mkdirSync(path.dirname(TOKEN), { recursive: true }); fs.writeFileSync(TOKEN, JSON.stringify({ repo, issuedAt: new Date().toISOString() })); };
+const absent = () => !fs.existsSync(TOKEN);
+const claimed = () => { try { return typeof JSON.parse(fs.readFileSync(TOKEN, "utf8")).claimedAt === "string"; } catch { return false; } };
+let r = run(); ok("no token blocks", r.status !== 0 && /BLOCKED/.test(r.stderr));
+go(); r = run(); ok("matching token allows and consumes", r.status === 0 && absent());
+r = run(); ok("second attempt blocks", r.status !== 0 && /BLOCKED/.test(r.stderr));
+go(OTHER); r = run(); ok("wrong-repo token blocks and consumes", r.status !== 0 && absent());
+go(); fs.writeFileSync(TOKEN, JSON.stringify({ repo: REPO, issuedAt: new Date(Date.now() - 31 * 60 * 1000).toISOString() })); r = run(); ok("expired token blocks and consumes", r.status !== 0 && absent());
+go(); fs.writeFileSync(TOKEN, "not json"); r = run(); ok("invalid token blocks and consumes", r.status !== 0 && absent());
+go(); r = launch(); ok("launcher claims one token", r.status === 0 && claimed());
+r = run(); ok("launcher then pre-push allows exactly once and consumes", r.status === 0 && absent());
+r = launch(); const launcherDenied = /permissionDecision":"deny"/.test(r.stdout);
+r = run(); ok("after the handoff, a second push is denied by both layers", launcherDenied && r.status !== 0 && /BLOCKED/.test(r.stderr));
+go(); r = run(); ok("bypass pre-push accepts an unclaimed token once", r.status === 0 && absent());
+go(); r = launch();
+const abandoned = JSON.parse(fs.readFileSync(TOKEN, "utf8")); abandoned.claimedAt = new Date(Date.now() - 6 * 60 * 1000).toISOString(); fs.writeFileSync(TOKEN, JSON.stringify(abandoned));
+r = run(); ok("a claimed-but-abandoned token is denied and consumed", r.status !== 0 && /claim is stale/.test(r.stderr) && absent());
+ok("template documents per-clone arming", /per-clone and unversioned/.test(fs.readFileSync(HOOK, "utf8")));
+fs.rmSync(HOME, { recursive: true, force: true });
+console.log(`\ncodex pre-push: ${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);
