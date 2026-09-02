@@ -275,7 +275,8 @@ a risk one stateless line just removed. FREEZE: the kit is frozen until the tria
 2026, Chan's GO on this patch is the ruling; the trial canon and its workspace are exempt, the
 kit is not. BACKLOG, surfaced for Chan at sprint end, per the priority rule: verify by hand
 that the 50 pattern numbers are unique and the by-number references still land; the README
-stranger's ramp, ten lines, only if the job hunt comes forward; nothing else. The weekly
+stranger's ramp, ten lines, only if the job hunt comes forward; audit the Codex guarded-Bash
+launcher's `rg` false-positive on quoted read-only text; nothing else. The weekly
 practice stands: node templates/judgment-sample.mjs --sessions 18 --log, and the three pulse
 numbers.)
 

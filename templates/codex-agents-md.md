@@ -42,8 +42,9 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
 - Reads: read files directly. The lean-ctx routing rules (ctx_*, the denied Read/Grep/Glob) are
   the other CLI's cost tooling and do not apply to you.
 - Cost: the DeepSeek meter and peak windows are not your bill; the kit-lean law still is.
-- Memory writes: bank facts into the kit's memory/ and lessons/ the way the drill says, one
-  home per fact. Your own memories feature stays off.
+- Memory writes: bank shared facts into Claude-Core's one memory system, in `memory/` or
+  `lessons/`, by THE DRILL and one home per fact. Project canon belongs in the kit's `projects/`
+  home. Codex memories stay off; never write anything under `~/.claude`.
 - Your runtime's gotchas: C:/Users/Chanryle/Claude-Core/lessons/platforms/codex.md.
 ```
 
@@ -61,5 +62,11 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
   C:/Users/Chanryle/Claude-Core/CLAUDE.md and memory/MEMORY.md now, then follow the drill.
 - READ-FIRST: (the cold-start set plus this project's mode files, absolute paths: the SAME list
   this project's CLAUDE.md carries. Keep the two lists identical; edit both in one commit.)
-- Remote: this repo has a remote. You never push it (hard rule 7).
+- Banking: shared facts bank into Claude-Core's one memory system by THE DRILL; this project's
+  canon belongs in Claude-Core's `projects/` home. Codex memories stay off and Codex never writes
+  under `~/.claude`.
+- Remote: this repo has a remote. Only when Chan says GO push in this chat for this named repo
+  and branch, run `node C:/Users/Chanryle/.codex/hooks/go.mjs <repo-path>` and make that one push
+  attempt. Never make or restore a token, never use `--no-verify`, never rewrite a remote, and
+  never push main without a GO naming main.
 ```

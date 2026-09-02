@@ -70,6 +70,9 @@ RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES scr
 
 - WORKS: all local hooks (push gate, session ritual, drill injection), lean-ctx and every local
   MCP server, subagents, web search, the whole kit. The laws are model-independent by design.
+- FLAGGED HAZARD FOR A LATER DEEPSEEK BATCH (Sol, Sep 2 2026): the current MCP definitions use
+  unpinned `npx` package invocations. They are not changed in this batch; before enabling or
+  refreshing one, pin each package/version and review the resulting command.
 - BREAKS: **vision**. The endpoint rejects image and document content. The verify-visually law
   survives with one change: the model still drives Playwright and takes the screenshot, but
   CHAN's eyes do the looking. Never let a blind model claim a screen "looks right".
