@@ -107,3 +107,9 @@ either graduates to the client project's long-term canon or freezes as history.
 - A brief header "NOT A GO" plus a write step is a CONTRADICTORY brief; the hands were right to hold. Carry every GO inside the brief and say which steps it covers.
 - Exemplar behaviours to teach: hands stop on a one-row count mismatch and attach a diagnosis (the +1 was live drift; the diagnosis was exact). Hands refuse a blind write to a live client view when no evidence of the payload shape exists, and say so.
 - The brief-writer's own stale caution is a cost too: once new evidence lands (armor phrases), retest before assigning work to human hands.
+Day-8 afternoon relay-canon additions (banked 2 Sep 2026, kit-day8-lessons):
+- Every board scan starts with 30 days of activity by human user: who creates, which columns they touch, when, how they move rows. Recipes mirror the moves they already make by hand; never fight a group-as-state habit without asking.
+- Before touching any existing dashboard or view set, get a screenshot; the API is blind there.
+- Count AI credits before any bulk rename on a board with AI columns.
+- Delegate to the hands only what the API can do; API-impossible items are named as human clicks with exact steps, not briefs.
+- Ids over names in every relay to a human clicking in a UI.
