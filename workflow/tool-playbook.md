@@ -56,6 +56,14 @@ before adding a rule here that names a flag, a filename, or a count that some ot
 - **So measure, never introspect.** Tool-choice drift cannot be felt from inside a session. Count
   the actual calls in the transcripts before believing any claim about your habits, including your
   own. The count is the finding; the explanation comes second and has to fit the count.
+- **Lean routing is ON for ordinary in-root exploration (Chan, Sep 2 2026).** On the real
+  `ess-system` main clone, `components/sales-client.tsx` (the largest non-lock source file) read
+  raw at 40,684 characters versus Lean overview at 3,559 (-91.3%); reading it twice was 81,368
+  versus 7,118 (-91.3%; the second Lean reply was the same size, so its cache did not reduce the
+  context payload); repo search for `getTaskUrgency` was 1,410 versus 1,251 (-11.3%). Route
+  in-root source exploration, bulk reads, and repo searches through Lean. Raw remains mandatory
+  for boot/drill files, L24 audits, memory-file edits, exact-value verification, and out-of-root
+  paths. This supersedes the tiny-canary hold-off in PASTE-45.
 - **Count the right thing, or the number proves less than it looks.** A raw call count cannot
   separate drift from correct behaviour: a session working mostly OUT of the workspace root SHOULD
   be shell-heavy, and its zero cached-tool calls are right, not a defect. The narrow metric is

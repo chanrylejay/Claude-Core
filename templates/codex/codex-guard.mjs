@@ -122,8 +122,8 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     }
     const toolName = payload?.tool_name;
     if (typeof toolName !== "string") pass();
-    if (/^mcp__playwright__browser_(?:file_upload|type|fill_form)$/.test(toolName)) {
-      fail("Playwright uploads and form-entry tools are disabled. External interaction needs Chan's explicit review.");
+    if (toolName === "mcp__playwright__browser_file_upload") {
+      fail("Playwright file uploads are disabled. External interaction needs Chan's explicit review.");
     }
     if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;

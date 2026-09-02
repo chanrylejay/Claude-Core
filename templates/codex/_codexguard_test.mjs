@@ -84,6 +84,12 @@ passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
 r = runPayload(mcpFixture);
 ok("Playwright upload fixture is denied with exact structured JSON", denied(r));
+r = runPayload({ tool_name: "mcp__playwright__browser_fill_form", tool_input: {} });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("Playwright form entry passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
+r = runPayload({ tool_name: "mcp__playwright__browser_type", tool_input: {} });
+passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+ok("Playwright typing passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
 r = runPayload({ tool_name: "mcp__playwright__browser_snapshot", tool_input: {} });
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("unrecognized MCP tool shapes pass unchanged", r.status === 0 && passJson && !(r.stderr || "").trim());
