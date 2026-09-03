@@ -1,0 +1,8 @@
+{
+  "description": "PROJECT LAYER: copy artifact-gauntlet.mjs into .codex/hooks/ and artifact-gauntlet.example.json to .codex/artifact-gauntlet.json, then merge these three hooks into the trusted project's .codex/hooks.json. The wall tracks Codex's apply_patch tool name and accepts real, fresh artifacts only.",
+  "hooks": {
+    "PostToolUse": [{ "matcher": "apply_patch", "hooks": [{ "type": "command", "command": "node .codex/hooks/artifact-gauntlet.mjs ui-track", "timeout": 10 }] }],
+    "Stop": [{ "hooks": [{ "type": "command", "command": "node .codex/hooks/artifact-gauntlet.mjs done-wall", "timeout": 10 }] }],
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "node .codex/hooks/artifact-gauntlet.mjs spec-nudge", "timeout": 10 }] }]
+  }
+}

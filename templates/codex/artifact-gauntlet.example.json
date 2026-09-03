@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "taskClass": "code",
+  "artifacts": {
+    "code": [{ "path": ".codex/evidence/test.log", "kind": "test-log" }],
+    "ui": [{ "path": ".codex/evidence/test.log", "kind": "test-log" }, { "path": ".codex/evidence/ui.png", "kind": "png" }],
+    "docs": [{ "path": ".codex/evidence/review.md", "kind": "review" }]
+  }
+}

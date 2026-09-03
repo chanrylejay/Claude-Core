@@ -79,6 +79,24 @@ ok("git status passes with valid JSON and no stderr", r.status === 0 && passJson
 r = run("npm run build");
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("npm run build passes with valid JSON and no stderr", r.status === 0 && passJson && !(r.stderr || "").trim());
+for (const command of [
+  'rg "git push" README.md',
+  'Select-String -Pattern "git push" README.md',
+  'echo "git push"',
+]) {
+  r = run(command);
+  passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
+  ok("quoted read-only text passes: " + command, r.status === 0 && passJson && !(r.stderr || "").trim());
+}
+for (const command of [
+  'git push --dry-run origin HEAD',
+  'command git push --dry-run origin HEAD',
+  'sudo git push --dry-run origin HEAD',
+  'echo $(git push --dry-run origin HEAD)',
+]) {
+  r = run(command);
+  ok("real executable form remains blocked: " + command, denied(r));
+}
 r = spawnSync(process.execPath, [GUARD], { input: JSON.stringify(captured), encoding: "utf8", timeout: 10000 });
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
