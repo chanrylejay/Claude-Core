@@ -124,3 +124,10 @@ Without it the builder emits whenStatusChangesFromSomethingToSomething with the 
 - After any cut-off turn ("continue"), list before you create. Verify the connector's UI counter with a live list; the header count lags.
 - Template boards: all items created in the same second with stock text = template, not a convention; archive.
 - Board views can vanish; re-list views before building on them.
+## Day 9 addendum (3 Sep 2026, kit-day8-lessons)
+
+- View filters set via API may not render in the UI AT ALL on some accounts, regardless of column type (dropdown AND status): the tab opens showing every row with "Filter/1" attached. Day 8 found dropdowns unfilterable but status filtering OK; day 9 hit status failing the same way on one account. Build filtered tabs in the UI, or verify with a screenshot immediately after API creation.
+- Formula columns used for conditional coloring or sorting must return a number in every branch; an `""` (empty) branch makes monday treat the whole column as text and only text operators are offered. With zero rows monday cannot infer the type: add one row carrying a date, set the rule, delete the row.
+- A new status label is not done until its group mover exists. Users adopt new labels within hours; hand-labelled rows with no mover sit in the old group (e.g. a "Do Not Contact" label added a day earlier left rows in Active until the mover shipped).
+- Backfilled dates produce plausible-looking but false KPIs (a "time to fill" of ~3 days computed from board-load/creation dates). Label any metric derived from backfilled dates as unverified until its source dates are real going forward.
+- Board-relation columns can be re-pointed via update_column_settings {"boardIds":[...]}; mirror columns are created via API. Formula columns cannot be edited after creation (no update_column_settings surface) — delete and recreate; delete_group on the default "topics" group works.

@@ -113,3 +113,8 @@ Day-8 afternoon relay-canon additions (banked 2 Sep 2026, kit-day8-lessons):
 - Count AI credits before any bulk rename on a board with AI columns.
 - Delegate to the hands only what the API can do; API-impossible items are named as human clicks with exact steps, not briefs.
 - Ids over names in every relay to a human clicking in a UI.
+Day-9 relay-canon additions (banked 3 Sep 2026, kit-day8-lessons):
+- First client call after a text-only relationship: build a cheat sheet with CLICK/SAY columns, plan one live demo action (change a status, watch the row move), four canned answers, no yes/no close. The speaker's own fear-rating of the call is not data; the client's requests list is.
+- A proposal deck sells the ask: put the number on the slide, show now-vs-proposed with weekly and monthly totals, tie the bonus to a client outcome that costs the client nothing until they have won, make the arithmetic doable in the client's head. Never pitch automation as "replaces N VAs" to a client who employs VAs.
+- Two reference sets when designing a product screen: FEATURE references (what it does) and LOOK references (grammar: spacing, radius, type, one accent). Copy grammar, never brand; never paste competitor screenshots into a client deliverable. The design half renders an HTML mockup for approval; the hands implement from the registry.
+- "Read it as me" pass: re-derive the deck from everything the person has said, not from their draft lines; the strongest sentences are often facts mentioned elsewhere ("the owner barely gives me tasks" became "you do not have to manage me; you have already seen that").
