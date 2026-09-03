@@ -83,6 +83,9 @@ Marker: codex-doorway-2026-09-01.)
   at thread start, never mid-thread. `config.toml` as the extension writes it: the picker's model
   line, `model_reasoning_effort`, `[windows] sandbox = "elevated"`, and a
   `[projects.'<path>'] trust_level = "trusted"` table per trusted folder.
+- **Shared-gate lesson (Sep 3 2026):** the shared push guard's paranoia is load-bearing because
+  it also protects the DeepSeek side. Any Codex false-positive relief belongs in Codex's caller
+  layer after the untouched shared matcher, never in the shared gate itself.
 - **Prefix rules are a speed bump, not a gate.** With `chan-guard.rules` installed, `git push
   --dry-run` was REFUSED with the justification, and `git -C <path> push --dry-run` ran straight
   through (dry-run: nothing moved). Chan runs Codex with Full access on purpose, so no approval
