@@ -1,4 +1,1 @@
-{
-  "tool_name": "mcp__codex_apps__neon_run_sql",
-  "tool_input": { "project_id": "fixture-project", "sql": "CREATE TABLE blocked_fixture(id integer)" }
-}
+{"session_id":"01a0667e-e4f6-7b62-8b9e-89a92173e2dd","turn_id":"01a06688-a4e1-76b1-a2da-ae85e5830b7b","transcript_path":"C:\\Users\\Chanryle\\.codex\\sessions\\2026\\09\\03\\rollout-2026-09-03T16-59-47-01a0667e-e4f6-7b62-8b9e-89a92173e2dd.jsonl","cwd":"C:\\Users\\Chanryle\\Claude-Core","hook_event_name":"PreToolUse","model":"gpt-5.6-terra","permission_mode":"bypassPermissions","tool_name":"mcp__codex_apps__neon__create_branch","tool_input":{"project_id":"proof-nonexistent-project-000000","name":"proof-deny-do-not-create","no_compute":true},"tool_use_id":"exec-8cd2aadd-e659-4a2d-b990-e87c1d119d7f"}

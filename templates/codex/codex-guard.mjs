@@ -81,6 +81,17 @@ const MCP_WRITE_TOOLS = new Set([
   "mcp__codex_apps__github_update_review_comment",
 ]);
 
+// Connector hooks expose the live service and action as separate segments (for example
+// mcp__codex_apps__neon__create_branch). Match those service/action prefixes rather than one
+// brittle full name; read tools do not carry any of these action prefixes.
+const MCP_WRITE_PREFIXES = [
+  /^mcp__codex_apps__neon__(?:add|complete|create|delete|deploy|disable|finalize|prepare|provision|reset|restart|restore|run_sql|set|start|suspend|update)_/,
+  /^mcp__codex_apps__vercel__(?:add|change|deploy|edit|import|reply)_/,
+  /^mcp__codex_apps__github__(?:add|convert|create|delete|dismiss|enable|label|lock|mark|merge|remove|rerun|reply|request|resolve|unlock|unresolve|update)_/,
+];
+
+const isMcpWrite = (toolName) => MCP_WRITE_TOOLS.has(toolName) || MCP_WRITE_PREFIXES.some((prefix) => prefix.test(toolName));
+
 const fail = (message) => {
   const reason = "[codex-guard] BLOCKED: " + message;
   process.stdout.write(JSON.stringify({ hookSpecificOutput: {
@@ -200,7 +211,7 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     if (toolName === "mcp__playwright__browser_file_upload") {
       fail("Playwright file uploads are disabled. External interaction needs Chan's explicit review.");
     }
-    if (MCP_WRITE_TOOLS.has(toolName)) {
+    if (isMcpWrite(toolName)) {
       fail("This MCP write or publish tool is disabled: " + toolName + ". Chan's external-action gate applies.");
     }
     if (toolName !== "Bash") pass();
