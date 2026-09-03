@@ -66,8 +66,11 @@ Marker: codex-doorway-2026-09-01.)
   importer has proven it preserves that. When Codex earns a real port, the hooks move by hand as a
   HEAVY batch with their nets, never by a one-liner.
 - **Cost.** Codex is not on the DeepSeek key: the money meter and the peak windows are not its
-  bill, and the free month ends on its own. The kit-lean law still binds: the AGENTS chain is
-  context on every request, and `project_doc_max_bytes` is a cap, not a target.
+  bill, and the free month ends on its own. The AGENTS chain is context on every request, and
+  `project_doc_max_bytes` is a cap, not a target. Since Sep 3, Codex carries no Lean MCP or skill:
+  its reading discipline is skeleton/outline first, then `rg` and bounded line ranges; boot,
+  memory, L24, and exact wording stay raw. The removal isolates Codex after the ritual-net
+  collision investigation; it does not change the DeepSeek CLI's Lean setup.
 
 ## Proven on Chan's machine, Sep 1 2026 (codex-cli 0.151.0-alpha.7.2, VS Code extension, Full access)
 

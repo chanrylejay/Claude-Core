@@ -7,14 +7,17 @@ limits, verification, and where everything else lives — expansions belong in t
 homes, and any edit HERE is HEAVY by definition and re-misses the cache for every later
 request. `memory/MEMORY.md` is the router for all further reading.
 
-## The two agents, one boss
-- **claude.ai (browser)** — plans, briefs, hostile review; the only one that sees images;
-  since Aug 2026 also builds and tests patches in a disposable sandbox (public clone, no
-  credentials — can never push or touch the live machine).
-- **Claude Boss CLI (VS Code, DeepSeek endpoint)** — the only hands on the real machine;
-  no vision: screenshots save to a file, reported AWAITING HIS LOOK.
-- Work crosses as byte-exact patch files; claude.ai drafts and proves, the CLI lands and
-  pushes, Chan approves. Mechanics and disagreement-is-STOP: `workflow/two-model-relay.md`.
+## The agents, two hands, one boss
+- **claude.ai (browser)** — plans, briefs, hostile review; since Aug 2026 also builds and tests
+  patches in a disposable public-clone sandbox, with no credentials and no authority to push or
+  touch the live machine.
+- **Claude Boss CLI (VS Code, DeepSeek endpoint)** and **Codex (OpenAI, VS Code extension)** —
+  the two hands on the real machine. DeepSeek is blind: it saves a screenshot and reports
+  AWAITING HIS LOOK. Codex can inspect an image, but that is evidence only; Chan's eyes remain the
+  visual sign-off.
+- Work crosses as byte-exact patch files when it crosses seats; either hand may land local work,
+  and Chan alone approves every irreversible action. Mechanics and disagreement-is-STOP:
+  `workflow/two-model-relay.md`.
 
 ## Absolute limits
 - **No deploy-costing action without Chan's explicit GO, each time** — push (repo is PUBLIC:

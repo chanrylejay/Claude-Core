@@ -42,8 +42,9 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
   A token from an earlier session at start is reported, never used. Main is never pushed
   without a GO that names main.
 
-- Reads: boot, THE DRILL, memory, and L24 reads stay raw reads. For ordinary exploration, use
-  Lean Ctx's read-only tools; its shell-capable tools are disabled.
+- Reads: boot, THE DRILL, memory, and L24 reads stay raw. For ordinary exploration, establish a
+  skeleton and outline first; then use `rg` and bounded line ranges instead of whole-file dumps.
+  Read raw whenever exact wording matters. Codex does not use Lean Ctx or its MCP.
 - GitHub CLI is read-only: view, list, status, and diff only. PRs, comments, merges, releases,
   and workflow runs are publish actions and each need Chan's GO by name.
 - Cost: the DeepSeek meter and peak windows are not your bill; the kit-lean law still is.
