@@ -21,6 +21,12 @@ before adding a rule here that names a flag, a filename, or a count that some ot
   the screen *looks right*. Spacing, crowding, and alignment are invisible to it. Never call a
   UI change verified on inference alone.
 
+- **Codex Playwright: MCP proved, then retired (Chan, Sep 3 2026).** Codex now uses the guarded
+  `playwright-cli` workflow and its local `playwright-cli` skill: snapshots and screenshots stay
+  on disk, while the guard permits only `localhost`/`127.0.0.1` navigation and blocks file chooser
+  actions. The skill is the operational home; this is the state pointer. DeepSeek's Playwright MCP
+  is unchanged.
+
 ## Machine hygiene (moved here from the global hub, batch 3a Aug 30 2026; why: ../lessons/audit-log.md AL-22)
 - The RAW read on this machine is `node <kit>/templates/raw-read.mjs <file> [--lines A-B]`: prints
   verbatim, names a missing file, exits 1 on any miss. It replaced the temp .mjs every session
