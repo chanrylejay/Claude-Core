@@ -47,6 +47,9 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
   Read raw whenever exact wording matters. Codex does not use Lean Ctx or its MCP.
 - GitHub CLI is read-only: view, list, status, and diff only. PRs, comments, merges, releases,
   and workflow runs are publish actions and each need Chan's GO by name.
+- The locked seven (Chan, Sep 3 2026) are Context7, Neon, Vercel, shadcn, Playwright, GitHub,
+  and Impeccable. The Codex MCP wall denies the currently exposed Neon, Vercel, and GitHub
+  write/publish names; Context7 is docs-only and shadcn changes only local project files.
 - Cost: the DeepSeek meter and peak windows are not your bill; the kit-lean law still is.
 - Memory writes: bank shared facts into Claude-Core's one memory system, in `memory/` or
   `lessons/`, by THE DRILL and one home per fact. Project canon belongs in the kit's `projects/`

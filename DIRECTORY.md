@@ -4,6 +4,12 @@ Every file in this kit, one line each. Keep this current: **any new file added t
 line here** (same rule as a memory index). Exception: memory/ files are indexed one line each in
 `memory/MEMORY.md` only, never here too.
 
+Codex tooling state (Sep 3 2026): the doorway carries Chan's locked seven; the
+`templates/codex/fixtures/pretooluse-mcp-neon-run-sql.json`,
+`templates/codex/fixtures/pretooluse-mcp-vercel-deploy.json`, and
+`templates/codex/fixtures/pretooluse-mcp-github-create-pr.json` guard fixtures pin named Neon,
+Vercel, and GitHub write/publish denials.
+
 ## Root
 
 - `README.md` — what this kit is, how to use it, what was deliberately left out.

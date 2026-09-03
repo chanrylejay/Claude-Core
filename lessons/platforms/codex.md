@@ -148,3 +148,15 @@ Marker: codex-doorway-2026-09-01.)
   `pushd`, `Push-Location`) binds the repo like `Set-Location` (it did not); `--no-verify` is
   denied to Codex token or not, which makes it Chan's private escape from his own terminal, since
   the per-clone git gate otherwise applies to any pusher in the clone, Chan included.
+- **Plugin surface reality is layered, not inferred (Sep 2-3 2026).** Official docs fetched Sep 3
+  still said the IDE extension did not support plugins, and the Sep 2 machine probe agreed. On Sep
+  3 Chan hand-installed the official Context7, Neon, Vercel, and GitHub plugins in the extension;
+  all four were enabled and his screenshots are the record. The docs lag this build. Re-probe the
+  extension surface after every extension update; never treat either the docs or a prior probe as
+  timeless proof.
+- **The locked seven (Chan, Sep 3 2026):** Context7, Neon, Vercel, shadcn, Playwright, GitHub,
+  and Impeccable. Supabase and Slides are out by ruling. Shadcn is the one MCP outside the plugin
+  surface: its pinned local MCP may write ordinary local project files, not a third-party surface,
+  so it is allowed under the ordinary hands rules. Context7 is docs-only; the Codex MCP wall denies
+  the current Neon, Vercel, and GitHub write/publish tool names and must be re-audited whenever a
+  plugin updates its tool inventory.

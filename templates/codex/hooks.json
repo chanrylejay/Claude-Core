@@ -14,7 +14,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash|mcp__playwright__.*",
+        "matcher": "Bash|mcp__playwright__.*|mcp__codex_apps__(neon|vercel|github)__.*",
         "hooks": [
           {
             "type": "command",

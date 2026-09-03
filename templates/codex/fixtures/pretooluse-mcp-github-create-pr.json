@@ -1,0 +1,4 @@
+{
+  "tool_name": "mcp__codex_apps__github_create_pull_request",
+  "tool_input": { "repo_full_name": "owner/repository", "title": "blocked fixture", "head": "fixture", "base": "main" }
+}

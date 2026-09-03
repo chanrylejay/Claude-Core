@@ -1,0 +1,4 @@
+{
+  "tool_name": "mcp__codex_apps__neon_run_sql",
+  "tool_input": { "project_id": "fixture-project", "sql": "CREATE TABLE blocked_fixture(id integer)" }
+}

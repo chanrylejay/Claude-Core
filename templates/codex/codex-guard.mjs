@@ -25,6 +25,62 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const TOKEN = join(HERE, "..", "PUSH_GO");
 const MAX_AGE_MS = 30 * 60 * 1000;
 
+// Exact names only: this is a deny wall, not intent guessing. Context7 is documentation-only
+// and shadcn writes only the local project, so neither belongs here.
+const MCP_WRITE_TOOLS = new Set([
+  "mcp__codex_apps__neon_add_auth_oauth_provider", "mcp__codex_apps__neon_add_auth_trusted_domain",
+  "mcp__codex_apps__neon_complete_database_migration", "mcp__codex_apps__neon_complete_query_tuning",
+  "mcp__codex_apps__neon_create_auth_user", "mcp__codex_apps__neon_create_branch",
+  "mcp__codex_apps__neon_create_postgres_database", "mcp__codex_apps__neon_create_postgres_endpoint",
+  "mcp__codex_apps__neon_create_postgres_role", "mcp__codex_apps__neon_create_project",
+  "mcp__codex_apps__neon_create_snapshot", "mcp__codex_apps__neon_create_storage_bucket",
+  "mcp__codex_apps__neon_delete_auth_oauth_provider", "mcp__codex_apps__neon_delete_auth_trusted_domain",
+  "mcp__codex_apps__neon_delete_auth_user", "mcp__codex_apps__neon_delete_branch",
+  "mcp__codex_apps__neon_delete_data_api", "mcp__codex_apps__neon_delete_function",
+  "mcp__codex_apps__neon_delete_postgres_database", "mcp__codex_apps__neon_delete_postgres_endpoint",
+  "mcp__codex_apps__neon_delete_postgres_role", "mcp__codex_apps__neon_delete_project",
+  "mcp__codex_apps__neon_delete_snapshot", "mcp__codex_apps__neon_delete_storage_bucket",
+  "mcp__codex_apps__neon_delete_storage_object", "mcp__codex_apps__neon_delete_storage_objects_by_prefix",
+  "mcp__codex_apps__neon_deploy_function", "mcp__codex_apps__neon_disable_auth",
+  "mcp__codex_apps__neon_finalize_branch_restore", "mcp__codex_apps__neon_prepare_database_migration",
+  "mcp__codex_apps__neon_prepare_query_tuning", "mcp__codex_apps__neon_provision_neon_auth",
+  "mcp__codex_apps__neon_provision_neon_data_api", "mcp__codex_apps__neon_reset_from_parent",
+  "mcp__codex_apps__neon_reset_postgres_role_password", "mcp__codex_apps__neon_restart_postgres_endpoint",
+  "mcp__codex_apps__neon_restore_snapshot", "mcp__codex_apps__neon_run_sql",
+  "mcp__codex_apps__neon_run_sql_transaction", "mcp__codex_apps__neon_set_default_branch",
+  "mcp__codex_apps__neon_set_snapshot_schedule", "mcp__codex_apps__neon_start_postgres_endpoint",
+  "mcp__codex_apps__neon_suspend_postgres_endpoint", "mcp__codex_apps__neon_update_auth_config",
+  "mcp__codex_apps__neon_update_auth_oauth_provider", "mcp__codex_apps__neon_update_auth_user_role",
+  "mcp__codex_apps__neon_update_branch", "mcp__codex_apps__neon_update_data_api",
+  "mcp__codex_apps__neon_update_function", "mcp__codex_apps__neon_update_postgres_database",
+  "mcp__codex_apps__neon_update_postgres_endpoint", "mcp__codex_apps__neon_update_project",
+  "mcp__codex_apps__neon_update_snapshot",
+  "mcp__codex_apps__vercel_add_toolbar_reaction", "mcp__codex_apps__vercel_change_toolbar_thread_resolve_status",
+  "mcp__codex_apps__vercel_deploy_to_vercel", "mcp__codex_apps__vercel_edit_toolbar_message",
+  "mcp__codex_apps__vercel_import_claude_design_from_url", "mcp__codex_apps__vercel_reply_to_toolbar_thread",
+  "mcp__codex_apps__github_add_comment_to_issue", "mcp__codex_apps__github_add_issue_assignees",
+  "mcp__codex_apps__github_add_issue_labels", "mcp__codex_apps__github_add_reaction_to_issue_comment",
+  "mcp__codex_apps__github_add_reaction_to_pr", "mcp__codex_apps__github_add_reaction_to_pr_review_comment",
+  "mcp__codex_apps__github_add_review_to_pr", "mcp__codex_apps__github_convert_pull_request_to_draft",
+  "mcp__codex_apps__github_create_blob", "mcp__codex_apps__github_create_branch",
+  "mcp__codex_apps__github_create_commit", "mcp__codex_apps__github_create_file",
+  "mcp__codex_apps__github_create_issue", "mcp__codex_apps__github_create_pull_request",
+  "mcp__codex_apps__github_create_tree", "mcp__codex_apps__github_delete_file",
+  "mcp__codex_apps__github_dismiss_pull_request_review", "mcp__codex_apps__github_enable_auto_merge",
+  "mcp__codex_apps__github_label_pr", "mcp__codex_apps__github_lock_issue_conversation",
+  "mcp__codex_apps__github_mark_pull_request_ready_for_review", "mcp__codex_apps__github_merge_pull_request",
+  "mcp__codex_apps__github_remove_issue_assignees", "mcp__codex_apps__github_remove_issue_label",
+  "mcp__codex_apps__github_remove_pull_request_reviewers", "mcp__codex_apps__github_remove_reaction_from_issue_comment",
+  "mcp__codex_apps__github_remove_reaction_from_pr", "mcp__codex_apps__github_remove_reaction_from_pr_review_comment",
+  "mcp__codex_apps__github_reply_to_review_comment", "mcp__codex_apps__github_request_pull_request_reviewers",
+  "mcp__codex_apps__github_rerun_failed_workflow_run_jobs", "mcp__codex_apps__github_rerun_workflow_job",
+  "mcp__codex_apps__github_resolve_review_thread", "mcp__codex_apps__github_unlock_issue_conversation",
+  "mcp__codex_apps__github_unresolve_review_thread", "mcp__codex_apps__github_update_file",
+  "mcp__codex_apps__github_update_issue", "mcp__codex_apps__github_update_issue_comment",
+  "mcp__codex_apps__github_update_pull_request", "mcp__codex_apps__github_update_ref",
+  "mcp__codex_apps__github_update_review_comment",
+]);
+
 const fail = (message) => {
   const reason = "[codex-guard] BLOCKED: " + message;
   process.stdout.write(JSON.stringify({ hookSpecificOutput: {
@@ -143,6 +199,9 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     if (typeof toolName !== "string") pass();
     if (toolName === "mcp__playwright__browser_file_upload") {
       fail("Playwright file uploads are disabled. External interaction needs Chan's explicit review.");
+    }
+    if (MCP_WRITE_TOOLS.has(toolName)) {
+      fail("This MCP write or publish tool is disabled: " + toolName + ". Chan's external-action gate applies.");
     }
     if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;
