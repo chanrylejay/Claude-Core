@@ -90,8 +90,12 @@ for (const command of [
 }
 for (const command of [
   'git push --dry-run origin HEAD',
+  '"C:/Program Files/Git/bin/git.exe" push origin main',
+  'FOO=bar git push origin main',
   'command git push --dry-run origin HEAD',
   'sudo git push --dry-run origin HEAD',
+  'time git push --dry-run origin HEAD',
+  'time sudo command git push --dry-run origin HEAD',
   'echo $(git push --dry-run origin HEAD)',
 ]) {
   r = run(command);

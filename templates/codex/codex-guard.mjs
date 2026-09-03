@@ -13,6 +13,8 @@
 // The runner continues after a hook spawn/load failure. Wiring therefore turns launcher failures
 // into a structured deny. The runner parses combined hook output strictly, so a deny or allow
 // path must emit its JSON response and NOTHING else (including stderr).
+// A non-string `tool_name` passes through unchanged: Codex only asks this launcher to inspect
+// its Bash shape, and unknown host metadata must not be reinterpreted as a shell command.
 
 import { existsSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
@@ -32,6 +34,23 @@ const fail = (message) => {
 };
 const pass = () => { process.stdout.write("{}\n"); process.exit(0); };
 const canonical = (p) => realpathSync.native ? realpathSync.native(p) : realpathSync(p);
+
+// The shared matcher is deliberately paranoid because it protects the DeepSeek side too. Codex
+// calls it first, then releases only reader-text false positives by requiring an executable git
+// position here. The boundary also covers command substitution, shell wrappers, quoted git paths,
+// leading parentheses, assignments, and command/time/sudo wrappers.
+function codexExecutableGitPush(command) {
+  const executable = /(?:^|[;&|\n(`])\s*(?:[('"]\s*)*(?:(?:[A-Za-z_]\w*=\S+|command|sudo|time|env(?:\s+[A-Za-z_]\w*=\S+)*)\s+)*(?:"[^"]*git(?:\.exe)?"|'[^']*git(?:\.exe)?'|(?:[\w.\/\\:-]*[\\/])?git(?:\.exe)?)\s+(?:(?:-C\s+\S+|--git-dir(?:=|\s+)\S+)\s+)*["']?push["']?(?=$|[^\w-])/i;
+  if (executable.test(command)) return true;
+  // The shared matcher recurses into these executing forms before stripping their quoted payload.
+  const runners = /(?:^|[;&|\n(\x60])\s*(?:[\w.\/\\:-]*[\\/])?(?:bash|sh|zsh|dash|ksh|pwsh|powershell|cmd)(?:\.exe)?\s+(?:-c|-Command|-command|\/c|\/C)\s+(['"])([\s\S]*?)\1/gi;
+  const evals = /(?:^|[;&|\n(\x60])\s*(?:eval|exec|source)\s+(['"])([\s\S]*?)\1/gi;
+  const substitutions = [/\$\(([\s\S]*?)\)/g, /`([^`]*)`/g];
+  for (const re of [runners, evals, ...substitutions]) for (const hit of command.matchAll(re)) {
+    if (codexExecutableGitPush(hit[2] ?? hit[1])) return true;
+  }
+  return false;
+}
 
 function tokenFor(repo) {
   if (!existsSync(TOKEN)) return false;
@@ -129,7 +148,13 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     const command = payload?.tool_input?.command;
     if (typeof command !== "string") fail("Bash payload has no string tool_input.command; refusing an unread command.");
     if (isRemoteRewrite(command)) fail("a remote rewrite is never authorized, even with a GO token. Chan edits remotes by his own hand.");
-    if (!isGitPush(command)) pass();
+    // Retain the shared gate as the first detector. Its deliberately fail-closed false positives
+    // are released only when this caller cannot find an executable git position; the position
+    // detector also catches quoted executable paths that the legacy matcher cannot tokenize.
+    const sharedPush = isGitPush(command);
+    const executablePush = codexExecutableGitPush(command);
+    if (!sharedPush && !executablePush) pass();
+    if (sharedPush && !executablePush) pass();
     if (/--no-verify\b/i.test(command)) fail("--no-verify skips the git gate; Codex never uses it, token or not. It is Chan's own escape from his own terminal.");
     const repo = repoFrom(payload, command);
     if (tokenFor(repo)) {
@@ -141,4 +166,4 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
   }
 }
 
-export { isRemoteRewrite };
+export { isRemoteRewrite, codexExecutableGitPush };

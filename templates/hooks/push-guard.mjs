@@ -115,28 +115,15 @@ function isGitPush(command, depth = 0) {
   if (/<<-?\s*['"]?[A-Za-z_]\w*/.test(bare)) return true;
 
   return bare.split(/(?:&&|\|\||[;|\n])/).some((seg) => {
-    // `git` must be the executable, not a word passed to a reader such as
-    // `rg "git push"`, Select-String, or echo. The old anywhere-in-segment
-    // matcher treated those arguments as a command invocation. Shell wrappers
-    // that really execute git remain accepted before the executable position.
-    const executable = seg.replace(
-      /^\s*[({]*\s*(?:(?:command|sudo|time)\s+|env(?:\s+[A-Za-z_]\w*=\S+)*\s+)*/i,
-      "",
-    );
     return (
-      /^(?:[\w.\/\\:-]*[\\\/])?git(?:\.exe)?["']?\s/i.test(executable) &&
-      /(?:^|[\s"'(`$])push(?:$|[^\w-])/i.test(" " + executable + " ")
+      /(?:^|[\s"'(`])(?:[\w.\/\\:-]*[\\\/])?git(?:\.exe)?["']?\s/i.test(" " + seg) &&
+      /(?:^|[\s"'(`$])push(?:$|[^\w-])/i.test(" " + seg + " ")
     );
   });
 }
 
 export { isGitPush };
 
-// `tool_name` is deliberately NOT read or type-checked here. This hook is called only through a
-// shell-capable matcher; a future host may send a non-string or omit the field, but the command
-// still lives in tool_input and must be inspected. Treating that metadata shape as a pass-through
-// keeps the guard forward-compatible without weakening command inspection.
-//
 // Run the hook only when this file IS the entry point. Comparing resolved paths, not the filename:
 // a copy saved under any other name used to skip this block entirely and exit 0 — a silent allow
 // of every push (audit, Jul 25 2026).
