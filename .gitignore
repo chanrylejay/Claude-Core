@@ -14,3 +14,5 @@ settings.local.json
 *.bak*
 # VS Code multi-root workspace files are Chan's local tools, never repo content (ruling Aug 24 2026).
 *.code-workspace
+# Playwright CLI's local, disk-first snapshots are proof artifacts, never kit source.
+.playwright-cli/

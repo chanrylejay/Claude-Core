@@ -6,9 +6,11 @@ line here** (same rule as a memory index). Exception: memory/ files are indexed 
 
 Codex tooling state (Sep 3 2026): the doorway carries Chan's locked seven; the
 `templates/codex/fixtures/pretooluse-mcp-neon-run-sql.json`,
-`templates/codex/fixtures/pretooluse-mcp-vercel-deploy.json`, and
-`templates/codex/fixtures/pretooluse-mcp-github-create-pr.json` guard fixtures pin named Neon,
-Vercel, and GitHub write/publish denials.
+`templates/codex/fixtures/pretooluse-mcp-vercel-deploy.json`,
+`templates/codex/fixtures/pretooluse-mcp-github-create-pr.json`,
+`templates/codex/fixtures/pretooluse-bash-playwright-external-open.json`, and
+`templates/codex/fixtures/pretooluse-bash-playwright-upload.json` guard fixtures pin named Neon,
+Vercel, GitHub, and Playwright CLI refusals.
 
 ## Root
 

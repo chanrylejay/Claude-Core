@@ -71,7 +71,7 @@ catch { console.log("  ⚠ git unavailable — treating every file as tracked (d
 const TRANSIENT = /^(CODING-BRIEF-.*\.md|FIX-.*\.md|.*\.patch)$/;
 for (const f of walk("")) {
   if (f.startsWith("memory/")) continue;               // indexed in MEMORY.md by law
-  if (/LOCAL-ONLY|\.code-workspace$/.test(f)) continue; // gitignored classes
+  if (/LOCAL-ONLY|\.code-workspace$/.test(f) || f.startsWith(".playwright-cli/")) continue; // gitignored classes
   const base = path.basename(f);
   if (tracked && !tracked.has(f)) {
     if (TRANSIENT.test(base) && !f.includes("/")) {    // delivery files live in the ROOT only
