@@ -92,6 +92,54 @@ const MCP_WRITE_PREFIXES = [
 
 const isMcpWrite = (toolName) => MCP_WRITE_TOOLS.has(toolName) || MCP_WRITE_PREFIXES.some((prefix) => prefix.test(toolName));
 
+const PLAYWRIGHT_CLI_ACTIONS = new Set(["open", "goto", "tab-new", "upload", "drop"]);
+const PLAYWRIGHT_CLI_FILE_ACTIONS = new Set(["upload", "drop"]);
+
+function shellWords(value) {
+  return value.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g)?.map((word) => word.replace(/^(?:"|')|(?:"|')$/g, "")) ?? [];
+}
+
+function isPlaywrightCliExecutable(word) {
+  return /(?:^|[\\/])playwright-cli(?:\.(?:cmd|exe))?$/i.test(word) || /^playwright-cli(?:\.(?:cmd|exe))?$/i.test(word);
+}
+
+function isNpxPlaywrightCli(words, index) {
+  if (!/^(?:npx|npx\.cmd)$/i.test(words[index] ?? "")) return false;
+  let next = index + 1;
+  while (/^--(?:no-install|yes|quiet)$/.test(words[next] ?? "")) next++;
+  return /^(?:@playwright\/cli|playwright-cli)$/.test(words[next] ?? "");
+}
+
+// The CLI is deliberately contained to the local app. It is not a general browser for Codex:
+// navigation accepts only localhost / 127.0.0.1, and its two file-chooser actions are never run.
+// Parse every shell segment so a later CLI invocation cannot hide behind an earlier command.
+function playwrightCliViolation(command) {
+  for (const segment of command.split(/[;&|\n]/)) {
+    const words = shellWords(segment);
+    for (let i = 0; i < words.length; i++) {
+      let firstArg;
+      if (isPlaywrightCliExecutable(words[i])) firstArg = i + 1;
+      else if (isNpxPlaywrightCli(words, i)) {
+        firstArg = i + 1;
+        while (/^--(?:no-install|yes|quiet)$/.test(words[firstArg] ?? "")) firstArg++;
+        firstArg++;
+      } else continue;
+      const actionIndex = words.findIndex((word, index) => index >= firstArg && PLAYWRIGHT_CLI_ACTIONS.has(word.toLowerCase()));
+      if (actionIndex < 0) continue;
+      const action = words[actionIndex].toLowerCase();
+      if (PLAYWRIGHT_CLI_FILE_ACTIONS.has(action)) return "Playwright CLI " + action + " is disabled; file-chooser actions are never authorized.";
+      const target = words.slice(actionIndex + 1).find((word) => /^https?:\/\//i.test(word));
+      if (!target) continue;
+      try {
+        const url = new URL(target);
+        if (url.hostname.toLowerCase() === "localhost" || url.hostname === "127.0.0.1") continue;
+      } catch {}
+      return "Playwright CLI navigation is localhost-only; refusing " + target + ".";
+    }
+  }
+  return null;
+}
+
 const fail = (message) => {
   const reason = "[codex-guard] BLOCKED: " + message;
   process.stdout.write(JSON.stringify({ hookSpecificOutput: {
@@ -217,6 +265,8 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;
     if (typeof command !== "string") fail("Bash payload has no string tool_input.command; refusing an unread command.");
+    const playwrightBlock = playwrightCliViolation(command);
+    if (playwrightBlock) fail(playwrightBlock);
     if (isRemoteRewrite(command)) fail("a remote rewrite is never authorized, even with a GO token. Chan edits remotes by his own hand.");
     // Retain the shared gate as the first detector. Its deliberately fail-closed false positives
     // are released only when this caller cannot find an executable git position; the position

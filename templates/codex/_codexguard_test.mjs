@@ -33,6 +33,8 @@ const mcpFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretoo
 const neonWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-neon-run-sql.json"), "utf8"));
 const vercelWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-vercel-deploy.json"), "utf8"));
 const githubWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-github-create-pr.json"), "utf8"));
+const playwrightExternalFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash-playwright-external-open.json"), "utf8"));
+const playwrightUploadFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash-playwright-upload.json"), "utf8"));
 const go = (repo = REPO, extra = {}) => fs.writeFileSync(TOKEN, JSON.stringify({ repo, issuedAt: new Date().toISOString(), ...extra }));
 const absent = () => !fs.existsSync(TOKEN);
 const claimed = () => { try { return typeof JSON.parse(fs.readFileSync(TOKEN, "utf8")).claimedAt === "string"; } catch { return false; } };
@@ -109,6 +111,13 @@ passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
 r = runPayload(mcpFixture);
 ok("Playwright upload fixture is denied with exact structured JSON", denied(r));
+r = runPayload(playwrightExternalFixture);
+ok("Playwright CLI external open fixture is denied with exact structured JSON", denied(r));
+r = runPayload(playwrightUploadFixture);
+ok("Playwright CLI upload fixture is denied with exact structured JSON", denied(r));
+const playwrightLocal = run("playwright-cli -s=guard-proof open http://127.0.0.1:4173");
+passJson = null; try { passJson = JSON.parse(playwrightLocal.stdout); } catch {}
+ok("Playwright CLI localhost open passes the containment", playwrightLocal.status === 0 && passJson && !(playwrightLocal.stderr || "").trim());
 for (const [service, fixture] of [["Neon", neonWriteFixture], ["Vercel", vercelWriteFixture], ["GitHub", githubWriteFixture]]) {
   r = runPayload(fixture);
   ok(service + " captured write fixture is denied with exact structured JSON", denied(r));
