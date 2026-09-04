@@ -1,0 +1,1 @@
+{"session_id":"captured-playwright-cli-guard-proof-deepseek","turn_id":"captured-playwright-cli-guard-proof-deepseek","cwd":"C:\\Users\\Chanryle\\Claude-Core","hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"playwright-cli -s=guard-proof upload C:\\Users\\Chanryle\\Downloads\\fixture.txt"},"tool_use_id":"captured-playwright-cli-upload-deepseek"}
