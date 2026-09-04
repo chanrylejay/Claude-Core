@@ -293,3 +293,5 @@ FREEZE EXEMPTION (Chan's word, Sep 1 2026, this session): the Codex doorway and 
 ## AL-28 — reference ZIP exports
 
 (Audit Sep 4 2026: a hand-picked Compress-Archive export omitted the tracked documentation and session banks that give a browser-seat reference its project history, while Windows path handling produced backslash entries. Reference ZIPs come from `git archive` on `HEAD`, include tracked documentation by default, and require an entry listing before sharing.)
+
+Corollary: the assistant's own gates (shell choice, scan regexes) get the same read-before-recall law as platform knowledge; claude.ai reached for PowerShell when the kit said Bash, and shipped a regex that fired on task-shared. Read the kit, then write the gate.
