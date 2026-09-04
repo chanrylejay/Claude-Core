@@ -93,6 +93,37 @@ do not fix silently).
   literal verifiable by grep; a rendered or computed string can never serve (found live
   Aug 2026: a brief named the gauge's rendered "ctx NNK", which no grep of source can ever
   match).
+- **A marker string must discriminate.** It must exist in the NEW version and not the old
+  one; a grep-able source literal alone is insufficient if both files share it. Ship a
+  runnable test with an expected count (for example, `grep -c "<literal>"`), plus a hash
+  and line count as backup. Never say a file "starts with" a literal unless it is really
+  line 1: a stale and current file can share the same first line while the intended marker
+  sits later.
+- **A brief states only what its writer verified.** Never assert a person's action to make
+  instructions read cleanly. Quote the person, or write it as a check: confirm X; if not,
+  stop and report it. This is especially strict for claims that a duplicate was deleted or
+  an artefact was downloaded.
+- **Freeze artefacts before writing the brief that names them.** Do not edit and re-issue a
+  listed file after the brief has named it: the copy in Downloads is stale the instant the
+  brief is sent. This is the inverse of the `name (1)` failure; unique names protect a
+  correction after delivery, while freezing protects the delivery named by the brief.
+- **A receiving hand refusing to proceed is the system working.** Missing files, a
+  stale-looking artefact, a duplicate, or an invented correction are stops that prevent a
+  wrong commit, not friction to route around. The planner rules on that pushback by name in
+  the next message.
+- **Reversible work gets latitude; only the irreversible gets a stop-gate.** Exact step
+  lists ending in "stop if it fails" turn planner errors into owner round trips, even for
+  diagnosis. Reading, diagnosing, testing, and other undoable work belong to the hand to
+  iterate on and report. Stop-gates are for pushes, deletes, merges, third-party systems, and
+  failures that cannot be undone. This is the Sep 4 collaborator ruling applied to failure
+  paths.
+- **Never put contradictory instructions in one brief.** "Report only, no edits" cannot
+  coexist with a request for a temporary log line and a live push attempt. Re-read the brief
+  for internal contradiction before sending; the hand cannot resolve one and should not try.
+- **The hand correcting the planner's diagnosis is its highest-value output.** Reading the
+  source can kill a planner theory: a supposedly stale installed guard, a path-spelling bug,
+  or a Day 9 line that does not exist on the branch. The planner accepts that correction by
+  name in its next move; a hand that only obeys would ship the wrong fix.
 - **Every patch carries its SHA-256 in the brief; the agent verifies BEFORE applying.**
   `sha256sum <file>` (or `certutil -hashfile <file> SHA256`) must match the brief's line, or
   the run STOPS. The marker-string rule above proves the right version AFTER applying; the

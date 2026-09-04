@@ -131,3 +131,37 @@ Without it the builder emits whenStatusChangesFromSomethingToSomething with the 
 - A new status label is not done until its group mover exists. Users adopt new labels within hours; hand-labelled rows with no mover sit in the old group (e.g. a "Do Not Contact" label added a day earlier left rows in Active until the mover shipped).
 - Backfilled dates produce plausible-looking but false KPIs (a "time to fill" of ~3 days computed from board-load/creation dates). Label any metric derived from backfilled dates as unverified until its source dates are real going forward.
 - Board-relation columns can be re-pointed via update_column_settings {"boardIds":[...]}. Formula columns cannot be edited after creation (no update_column_settings surface) — delete and recreate; delete_group on the default "topics" group works.
+
+## Day 10 addendum (4 Sep 2026, kit-day8-lessons)
+
+### AI columns are API-configurable from version 2026-10 (supersedes the day-9 conclusion)
+
+The automation builder remains UI-only, but columns are API-configurable. API version `2026-10` ships `configure_*_ai_column` mutations (categorize, summarize, extract, translate, improve_text, open_block, write_me, person_assignment, plus `remove_ai_from_column`), scope `boards:write`. Check the account version with `{ version { value } }` before assuming.
+
+- `source_type`: `item_name` | `thread` | `column` | `emails_and_activities`; `source_column_id` is required when it is `column`.
+- `configure_open_block_ai_column` and `configure_write_me_ai_column` take no `source_type`: they parse `{pulse.column_id}` references from prompt text.
+- `extra_settings: { run_backfill: true }` is the default and processes up to 200 existing items; larger boards need a second mechanism and the cap is silent.
+- Target column type is enforced: categorize needs status/dropdown, summarize needs text/long_text. Errors carry an `extensions.code` such as `INVALID_COLUMN_TYPE` or `MISSING_SOURCE_COLUMN_ID`.
+- A platform capability recorded as impossible is a dated observation, not a fact. Re-check live documentation before repeating it to a client, especially when it changes what gets promised.
+
+### AI credit arithmetic, measured not quoted
+
+AI blocks cost 8 credits per item per 24 hours, however many AI columns fire on that item. A ~230-row, two-board pass used 1,248 credits (~5.4 per row); re-running a prompt on the same day cost about zero extra. Configure all AI columns on a board in one sitting and iterate prompts that day. Items and subitems are charged separately.
+
+### Writing prompts for a categorize column
+
+The failure mode is filling a label when the cell should stay empty. State the domain in the first sentence, then give an explicit negative clause: choose label X only when the text literally says the condition; in every other case, including named noise phrases, choose nothing and leave the column empty.
+
+### The automation-builder tool has three reproducible defects. Prompt around them.
+
+1. **Status triggers silently become from-to.** Ask for `monday::whenStatusChangesToSomething`, not the from-to trigger; verify `blockUniqueKey` in the response.
+2. **Empty conditions invert.** State `is empty` and `shouldCheckIfColumnIsNotEmpty = false`; check that variable in the response.
+3. **Dynamic column tokens bind to the wrong column and instruction text leaks into messages.** When titles collide, `{{Column Name}}` can bind to a deprecated sibling. Keep notifications to `{{item name}}` plus static text and let the recipient open the row.
+
+Every defect activates successfully and looks fine in the list. Read returned `workflowBlocks` and `workflowVariables`, not the status field. Mis-built recipes can only be removed by a board owner; an admin can receive `USER_UNAUTHORIZED`.
+
+### More Day 10 API and workflow limits
+
+- There is no cross-board "change a field on connected items" recipe. Connected-board templates create a new item; marketplace apps only read and aggregate. Use a mirror column for reading plus a notification for action; do not promise state sync.
+- `update_board(board_id:, board_attribute: description, new_value: $v)` takes `new_value: String!`, not JSON, and returns a JSON scalar with no sub-selection.
+- Board descriptions are the cheapest durable documentation: conventions placed where the team works beat messages that scroll away and documents that are not opened.

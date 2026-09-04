@@ -132,6 +132,16 @@ category.
     in a few steps within the brand's palette, and reserve exactly one colour for
     completion so the system has reward as well as warning.
 
+## Day 10 field lessons (4 Sep 2026, kit-day8-lessons)
+
+- **Read the activity log before removing anything a human might be using.** An empty field is not evidence: the log distinguishes abandonment from active resistance. When an owner questions a recommendation, get the data; do not restate the recommendation.
+- **Revealed preference beats stated process.** What people create or undo without being asked is the strongest product signal. A self-made grouping should be supported, a repeatedly hand-added value should be automated, and an invented status should be given a proper place. When the owner says to decide by actions rather than ask again, this pattern becomes the decision rule.
+- **A data discrepancy may be a vocabulary mismatch.** Before changing records that look wrong, check whether the column label carries an old or misleading meaning. Rename the label when the data is right and the vocabulary is wrong.
+- **Preserve before deleting, and say where it went.** Copy human-written prose into the surviving free-text field with a dated provenance tag before retiring a column. Before a merge, move the losing record's unique values to the survivor's notes with the source id; archive, never delete.
+- **Verify view and layout writes by reading them back.** API writes can persist without rendering reliably. Read the view after writing, compare the column order, then hand the screen to the owner's eyes.
+- **Duplicate detection needs normalisation and more than one key.** Match name, email, and phone after stripping punctuation and case. Time spacing separates same-day duplicates from genuine repeat business; never bulk-archive on a name match alone.
+- **Blank is worse than wrong.** A record with no routing status is invisible to automations, filters, and dashboard counts. Hunt blank statuses as their own defect class.
+
 ## How Chan stress-tests AI systems (the methodology)
 
 - Cold-start every test in a fresh instance; single-thread only; target the mechanism just fixed (the new edge lives next to the old fix); vary phrasing to separate reliable from lucky; combine attack vectors to test layered defenses under load.
