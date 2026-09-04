@@ -24,8 +24,15 @@ before adding a rule here that names a flag, a filename, or a count that some ot
 - **Codex Playwright: MCP proved, then retired (Chan, Sep 3 2026).** Codex now uses the guarded
   `playwright-cli` workflow and its local `playwright-cli` skill: snapshots and screenshots stay
   on disk, while the guard permits only `localhost`/`127.0.0.1` navigation and blocks file chooser
-  actions. The skill is the operational home; this is the state pointer. DeepSeek's Playwright MCP
-  is unchanged.
+  actions. The skill is the operational home; this is the state pointer.
+- **DeepSeek Playwright MCP: retired (Chan, Sep 4 2026, cli-playwright-1).** DeepSeek now runs the
+  same guarded `playwright-cli` workflow: the kit's `playwright-cli` skill (one home
+  `templates/cli/playwright-cli/SKILL.md`, installed to `~/.claude/skills/playwright-cli/`) plus the
+  `playwright-guard` PreToolUse hook (`templates/hooks/playwright-guard.mjs`, wired in
+  ~/.claude/settings.json beside push-guard) permit only `localhost`/`127.0.0.1` navigation and
+  block file-chooser actions. The unpinned `npx -y @playwright/mcp@latest` MCP is gone (block kept
+  under `_retiredMcpServers` in ~/.claude.json for rollback). Snapshots and screenshots stay on
+  disk; every screenshot is reported **AWAITING HIS LOOK** — never claimed as visual verification.
 
 ## Machine hygiene (moved here from the global hub, batch 3a Aug 30 2026; why: ../lessons/audit-log.md AL-22)
 - The RAW read on this machine is `node <kit>/templates/raw-read.mjs <file> [--lines A-B]`: prints
