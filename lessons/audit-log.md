@@ -289,3 +289,7 @@ exports carry an owned manifest. The trial canon gained the same-session mirror 
 same patch. Recorded here so the freeze ledger stays true.
 
 FREEZE EXEMPTION (Chan's word, Sep 1 2026, this session): the Codex doorway and the Codex port (the `codex-doorway` branch: `lessons/platforms/codex.md`, `templates/codex-*`, and the phase-2 slices that follow) are exempt from the Sep 6 freeze. Everything else in the kit stays frozen. The planner missed the freeze at boot and cut the doorway before naming it; the exemption was granted after the fact and is recorded here so the next reader does not have to infer it.
+
+## AL-28 — reference ZIP exports
+
+(Audit Sep 4 2026: a hand-picked Compress-Archive export omitted the tracked documentation and session banks that give a browser-seat reference its project history, while Windows path handling produced backslash entries. Reference ZIPs come from `git archive` on `HEAD`, include tracked documentation by default, and require an entry listing before sharing.)
