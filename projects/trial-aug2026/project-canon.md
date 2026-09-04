@@ -44,6 +44,12 @@ the Timeline. All data is real (client data), never sample.
 
 ## Decisions made (dated)    <!-- CLI: one line each — what was decided, why, newest first. -->
 
+- Sep 3 (day 9): v2 proposal deck banked (private repo); Sales redesign direction LOCKED —
+  white/light-gray surfaces and a gold accent. No app code on main.
+- Sep 2 (day 8): Applications importer maps by STABLE Monday column id, never title (titles
+  are client-editable). On branch `importer-day8` — not merged, not yet run against the DB.
+- Sep 1 (day 7): monday cleanup + workflow rebuild on client boards; app untouched.
+- Aug 31 (day 6): Vercel Analytics added; app otherwise paused — persuasion phase per day 5.
 - Aug 28 (day 5): v2 shipped; Timeline is the flagship. Fortnight is the ONLY team view (no
   week/month toggle); the past lives only in the per-person late pill; team + company lanes
   removed (inductions belong to Workforce).
@@ -73,6 +79,10 @@ the Timeline. All data is real (client data), never sample.
 
 ## Current build state       <!-- CLI: what works, what is half-built, what is next. Newest first. -->
 
+- Day 6-9 records live in the PRIVATE repo's docs/; this canon mirrors them public-safe.
+  Mirroring is a same-session step from now on (gap found Sep 4).
+- PENDING: `importer-day8` branch needs merge + a DB run to count as live; GO gates both.
+- Sales redesign: direction locked day 9, build not started. Analytics live since day 6.
 - v2 IS LIVE (Aug 28): dashboard, timeline (team + per-person), sales pipeline,
   recruitment, jobs, team, workforce, settings; auth enforced. HEAD 6a9700c, then the
   day-5 ship record (bcaf7ea). Vercel region sin1.

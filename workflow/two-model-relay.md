@@ -22,7 +22,9 @@ NOTE: this protocol is live and in use as of Aug 11 2026. `DEEPSEEK-RELAY.md`, t
   tests, commits, pushes. Can execute and measure; cannot see images and has a
   small context window.
 
-Neither is "better". One holds context, the other touches the machine.
+Neither is "better". One holds context, the other touches the machine. Since Sep 1 2026
+the machine seat is TWO hands — Claude Code (DeepSeek) and Codex; the frozen core holds
+who does what. The brief-shape ruling below governs briefs to either hand.
 
 ## Authority
 
@@ -62,6 +64,29 @@ our own precedent is the needsManualPrice field below: 203 drafts for one unchal
 assumption). The brief lists the exact
 prove-it commands and says what to do if any fail (stop and paste the failure,
 do not fix silently).
+
+## Brief shape — both hands are collaborators (Chan's ruling, Sep 4 2026)
+
+- Both hands are COLLABORATORS, never tools. A brief carries the GOAL, the CONSTRAINTS, and
+  WHAT DONE LOOKS LIKE; the hand picks its own mechanics and tools on its own machine.
+  Prescribing methods to a capable seat is a defect source: two consecutive Sep 4 briefs
+  died on shell commands written from the sandbox before this ruling landed.
+- Command lists are allowed only as SUGGESTIONS the hand may replace. They earn their place
+  mainly for the blind seat (DeepSeek cannot see screens and benefits from precision), and
+  even there a hand that knows a better path takes it and says so.
+- This gives the wrong-brief rule below its teeth: a hand handed a wrong path, wrong hash,
+  or a method that does not fit its shell CHALLENGES the brief instead of running it.
+- Reference exports between seats (zips, digests) carry an OWNED MANIFEST: contents listed
+  deliberately, and when private docs are excluded for safety, a sanitized digest ships in
+  their place — never silence. (Origin: the Sep 4 ESS zip hand-excluded docs/ and hid the
+  day 6-9 session records the browser seat needed.)
+- Reference zips FOR the browser seat (Chan's rule, Sep 4 2026): lightweight but COMPLETE.
+  Everything tracked goes IN, up to the latest date — docs and session banks included.
+  OUT is only junk (node_modules, lockfiles, build output) and secrets (.env, keys — always
+  out, no exceptions). The manifest line names the ref, the date, every exclusion, and any
+  unmerged branch carrying work-in-progress, so the browser seat knows what the zip cannot
+  show. "Important" is never the zipper's judgment call; the default is IN, an exclusion is
+  NAMED.
 
 ## Standing rules
 

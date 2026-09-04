@@ -282,4 +282,10 @@ numbers.)
 
 BATCH 5 LIVE: merged to main at 51d5047, Aug 31 2026. KIT FROZEN until Sep 6 2026 per AL-27; the backlog lives there; the trial canon and workspace are exempt; the weekly practice is `node templates/judgment-sample.mjs --sessions 18 --log`. RETIRED Sep 2 by Chan's Codex batch: the guarded-Bash launcher's `rg` false-positive on quoted read-only text, now pinned with `rg`, `Select-String`, and echo cases; and the missing evidence-based Codex done wall, now project-scoped with its own net. The manual 50-pattern/reference check and conditional README stranger ramp remain backlog.
 
+SEP 4 2026 (trial day 10): the day-6-9 banking-gap audit produced two kit fixes; Chan's word
+this session exempts them from the freeze and they LANDED in two-model-relay.md ("Brief
+shape — both hands are collaborators"): brief shape scales to the seat, and reference
+exports carry an owned manifest. The trial canon gained the same-session mirror law in the
+same patch. Recorded here so the freeze ledger stays true.
+
 FREEZE EXEMPTION (Chan's word, Sep 1 2026, this session): the Codex doorway and the Codex port (the `codex-doorway` branch: `lessons/platforms/codex.md`, `templates/codex-*`, and the phase-2 slices that follow) are exempt from the Sep 6 freeze. Everything else in the kit stays frozen. The planner missed the freeze at boot and cut the doorway before naming it; the exemption was granted after the fact and is recorded here so the next reader does not have to infer it.
