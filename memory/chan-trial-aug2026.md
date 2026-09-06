@@ -7,9 +7,11 @@ metadata:
 
 # Client trial — ACTIVE (banked Aug 28 2026)
 
-**Dates:** Aug 24 to Sep 6 2026. Day count is WEEKDAYS ONLY (Chan, Sep 4): day 1 = Mon
-Aug 24, 10 working days, day 10 = Fri Sep 4, the last working day; Sep 6 is only the
-calendar expiry. The private session records use this numbering.
+**Dates:** runs Mon Aug 24 to Fri Sep 4 2026 — 10 WEEKDAYS, not 14 days.
+Day count is WEEKDAYS ONLY (Chan, Sep 4): day 1 = Mon Aug 24, 10 working days,
+day 10 = Fri Sep 4, the last working day; weekends excluded. Sep 6 2026 is only
+the calendar expiry. Corrected day 8 from the 14-day frame. The private session
+records use this numbering.
 
 **Status:** Chan is accepted into a **2-week trial** with a company whose clients are
 **Australian**. This is what he is doing right now — the current active track. The job hunt
