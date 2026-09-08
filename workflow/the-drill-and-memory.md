@@ -89,14 +89,17 @@ fastest orientation, never proof of current state — disk wins, at a start AND 
 ### Where new facts go (one home each, never two)
 Moved here from the global hub, batch 3a Aug 30 2026 (why: ../lessons/audit-log.md AL-22).
 - About Chan, or how we work in any project: Claude-Core `memory/` or `lessons/`, plus one index
-  line in `memory/MEMORY.md` and one in `DIRECTORY.md`.
+  line in `memory/MEMORY.md` (a memory/ file gets NO `DIRECTORY.md` line: that index exempts
+  memory/, one home for their listing) and, for a lessons/ file, one line in `DIRECTORY.md`.
 - About one project only: that project's memory folder. Never into Claude-Core and never into the hub.
 - When a fact moves homes, verify the substance actually sits in the NEW home (grep it there), then
   delete the old copy in the same edit: a LOSSLESS move is the one-home law at work, not a deletion.
   If any substance would be lost, it IS a deletion and takes Chan's OK per the contract's memory rule.
 - Before creating ANY new Claude-Core file, check `DIRECTORY.md` for an existing category file and
   extend it instead.
-- Rewriting any permanent doc, by any amount, runs the L24 fact-token diff audit first
+- Rewriting any permanent doc, by any amount, runs the L24 fact-token diff audit first, and
+  policy text also runs the clause-level policy diff (`templates/_policy_diff.mjs`: modal,
+  negation, and scope words per sentence, which L24 cannot see) before a peer reads it
   (`node templates/_l24_audit.mjs <file>`); the law's home is ../lessons/universal-patterns.md,
   "Maintaining documents". The hub used to say "more than 25%"; that trigger was superseded and its
   stale copy is exactly why the law now has one home.

@@ -11,10 +11,10 @@ request. `memory/MEMORY.md` is the router for all further reading.
 - **claude.ai (browser)** — plans, briefs, hostile review; since Aug 2026 also builds and tests
   patches in a disposable public-clone sandbox, with no credentials and no authority to push or
   touch the live machine.
-- **Claude Boss CLI (VS Code, DeepSeek endpoint)** and **Codex (OpenAI, VS Code extension)** —
-  the two hands on the real machine. DeepSeek is blind: it saves a screenshot and reports
-  AWAITING HIS LOOK. Codex can inspect an image, but that is evidence only; Chan's eyes remain the
-  visual sign-off.
+- **Codex (OpenAI, VS Code extension)**, the primary hand since Sep 6 2026 (Chan's word), and
+  **Claude Boss CLI (VS Code, DeepSeek endpoint)**, the secondary — the two hands on the real
+  machine. Codex can inspect an image, but that is evidence only; Chan's eyes remain the visual
+  sign-off. DeepSeek is blind: it saves a screenshot and reports AWAITING HIS LOOK.
 - Work crosses as byte-exact patch files when it crosses seats; either hand may land local work,
   and Chan alone approves every irreversible action. Mechanics and disagreement-is-STOP:
   `workflow/two-model-relay.md`.
@@ -52,5 +52,6 @@ Show-first (build the REAL thing, never mock-only unless he asks; then talk, pla
 push. Critique every directive — his included — then he decides. A UI change is VERIFIED
 only when Chan's eyes saw the shot (full law: hard rule 1). Design work: establish LOCKED
 CANON first, self-rate only uncovered surfaces (hard rule 11, [[chan-judgment-mandate]]).
-Cost habits are LAW before CLI work: `memory/chan-ai-cost-context.md`. Away-autonomy:
+Cost habits are LAW before DeepSeek CLI work: `memory/chan-ai-cost-context.md` (its meter and peak
+windows are that seat's bill; the kit-lean law inside it binds every seat). Away-autonomy:
 hard rule 8. Full rules canon, always opened: `memory/chan-hard-rules.md`.

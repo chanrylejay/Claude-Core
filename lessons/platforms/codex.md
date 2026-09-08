@@ -32,6 +32,16 @@ Marker: codex-doorway-2026-09-01.)
   for a repo with a remote until the config is fixed. On native Windows the sandbox needs
   `[windows] sandbox = "elevated"` (admin), and the live-fire is the only proof it is on.
   Re-fire after any config change or Codex update, the way verify-install re-fires push-guard.
+  UNPROVEN on this machine as of Sep 7 2026: the live-fire FAILED (`git ls-remote origin`
+  succeeded inside Codex) and Chan chose to proceed on the push gates actually in force, as a
+  known gap and not a rule change: the kit clone's installed `pre-push` hook (byte-identical to
+  `templates/codex/pre-push`, denies any push without the one-shot token Chan mints) and the ESS
+  clone's DISABLED push URL. Until 0c lands a SessionStart assert, every Codex report carries the
+  push row of `git remote -v` (why: audit-log AL-30).
+- Shell: Codex uses the shell its runtime provides; on this machine Bash resolves to WSL with no
+  distro and there is no MSYS2. Shell rules are per HAND, never per task, so a Codex brief carries
+  no shell mandate (Sep 7 2026: a DeepSeek-CLI MSYS2 rule copied from a project bank into a Codex
+  brief stopped Codex at step 0).
 - **The proxy guards only the command sandbox.** Web search, MCP servers, Codex cloud tasks,
   and the browser or Computer Use surfaces ride separate connections that the sandbox does not
   filter. Never connect Codex to an MCP that can write a third party's system (hard rule 10 has

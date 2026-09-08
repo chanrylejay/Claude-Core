@@ -10,13 +10,16 @@ metadata:
 **The arc:** while the company paid for Claude, effort stayed MAX by Chan's ruling (his words, Jul 24: he kept max effort because he did not pay for the subscription). The engagement ENDED Jul 24 2026 and his Claude access in VS Code is gone for good (confirmed Aug 11 2026), so that premise is gone. He now runs his own DeepSeek key in the CLI and uses claude.ai as the planning agent.
 
 **Current posture (last updated Jul 29 2026, the switch is now DONE):**
-- **Codex posture (Sep 1-2 2026):** Codex is a second pair of hands beside the DeepSeek CLI,
-  never a replacement. Chan has a free ChatGPT Plus month; the normal daily setting is
-  gpt-5.6-terra at medium effort. Its usage is not charged to the DeepSeek key, so the DeepSeek
+- **Codex posture (Sep 1-2 2026; PRIMARY hand since Sep 6 2026, Chan's word):** Codex is the primary hand and the DeepSeek CLI is the secondary,
+  never a replacement, until Chan says otherwise (Chan, Sep 9 2026). Chan is on a free ChatGPT Plus
+  month as of Sep 9 2026. Claude-Core upgrade work runs gpt-6-astra (since Sep 8 2026; a peer to the
+  browser seat); normal project work such as ESS stays on gpt-5.6-terra at medium effort, the
+  recommended setting. Effort is a session-open setting, not a per-turn one. Its usage is not charged to the DeepSeek key, so the DeepSeek
   meter and peak windows do not decide its work; the kit-lean law still does. It runs only under
-  Chan's own account: any client account, client-funded account, or cutover changes authority and
-  needs Chan's explicit ruling before use. The free month ends on its own, so revisit the posture
-  then instead of silently treating it as permanent.
+  Chan's own account: any client-account, client-funded account, or cutover changes authority and
+  needs Chan's explicit ruling before use. The free month ends on its own; Chan says when it ends and when
+  the primacy changes, nobody infers either, so revisit the posture on his word instead of
+  silently treating it as permanent.
 - Chan confirmed in-session Jul 29 2026: his Claude access is gone and he switched to DeepSeek. The model is now deepseek-v4-flash, and this session IS the first proof the kit works on a different, smaller-context model. The contract check fired, the drill ran, the rules loaded, the push gate held - all of it worked on first contact with DeepSeek, before any adjustments.
 - The first practical note (Jul 29, SUPERSEDED Aug 24 2026): the window is not smaller — v4-flash carries a 1M-token context — but a big window is a cost trap under the Aug 16 pricing, so the compact-early habit below replaces the old worry. The cost of that first session was about $2 (374k tokens), Chan paying his own key for the first time. /compact and /info still work the same way.
 - DeepSeek cannot see images. The screenshot save-to-file handoff is now the only path, not a fallback. The contract already covers this (section 3 bullet one).

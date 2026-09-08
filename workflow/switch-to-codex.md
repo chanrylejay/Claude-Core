@@ -24,7 +24,9 @@ client-funded account unless Chan expressly rules on that cutover first.
    `git push --dry-run` and confirm the Git hook blocks it.
 4. For HEAVY project work, copy `artifact-gauntlet.mjs`, `project-hooks.json`, and the example
    policy into the project's `.codex/` layer. Reload/re-trust, then prove a fake done blocks and
-   fresh class-appropriate evidence passes.
+   fresh class-appropriate evidence passes. Know what that proves: the gate is a seatbelt that
+   checks a PNG signature and a pass/exit regex, so an 8-byte header and a typed pass line
+   satisfy it until batch 4 rebuilds it; Chan's eyes stay the visual gate.
 
 ## Rollback to DeepSeek
 

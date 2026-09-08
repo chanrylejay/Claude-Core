@@ -63,7 +63,7 @@ session with no operating contract at all.
   updates ride the same session that changes reality. Switching active projects updates
   `active_project`, the NOW line, and the state block in one edit. The full project map is
   `projects/REGISTRY.md` — every project one line, added the session it first appears.
-- Compressing any permanent doc by more than 25% of its characters: run the L24 diff audit first. Measured against the version at the START of the session, not the previous edit — otherwise two 24% passes strip 42% and the audit never fires
+- Rewriting any permanent doc, by any amount: run the L24 diff audit first, and for policy text the clause-level policy diff (`templates/_policy_diff.mjs`). Measured against the version at the START of the session, not the previous edit — otherwise two small passes strip more than one large one and the audit never fires (the old "more than 25%" trigger was superseded Aug 2026; the drill is the rule's home)
   (`lessons/universal-patterns.md`, "Maintaining documents").
 - Archive never delete; the frozen originals live in `archives/` (rules in the `DIRECTORY.md`
   header). Memory mechanics and the banking law: `workflow/the-drill-and-memory.md`.

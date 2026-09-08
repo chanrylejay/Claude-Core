@@ -1,4 +1,4 @@
-# Two-model relay — Claude Code (DeepSeek) + claude.ai (Opus 5)
+# Two-model relay — claude.ai (Opus 5) + the hands (Codex primary, Claude Code/DeepSeek secondary)
 
 Chan runs two agents on one project. This file holds the MECHANICS. The
 generalisable lesson behind it — the REACHABILITY CHECK — lives in
@@ -18,13 +18,15 @@ NOTE: this protocol is live and in use as of Aug 11 2026. `DEEPSEEK-RELAY.md`, t
   the full kit: global hub, Claude-Core, the project canon, memory. (Superseded
   Aug 24 2026: "cannot run code, write to disk" was falsified by two shipped,
   net-proven batches; step 6 below is now literal, not aspirational.)
-- **The agent** (Claude Code, DeepSeek) — reads the repo, writes code, runs
-  tests, commits, pushes. Can execute and measure; cannot see images and has a
-  small context window.
+- **The hands** — Codex (OpenAI, VS Code extension; the primary hand since Sep 6 2026; can
+  inspect an image as evidence and read its own session records) and Claude Code on the
+  DeepSeek endpoint (secondary; cannot see images, small context window). Both read the
+  repo, write code, run tests, commit, and push on Chan's GO with the token he mints. Both
+  execute and measure.
 
 Neither is "better". One holds context, the other touches the machine. Since Sep 1 2026
-the machine seat is TWO hands — Claude Code (DeepSeek) and Codex; the frozen core holds
-who does what. The brief-shape ruling below governs briefs to either hand.
+the machine seat is TWO hands — Codex (primary since Sep 6 2026) and Claude Code (DeepSeek);
+the frozen core holds who does what. The brief-shape ruling below governs briefs to either hand.
 
 ## Authority
 
@@ -54,7 +56,11 @@ Reviewing after production is not reviewing. That is the point of the loop.
 
 ## The brief format
 
-Header carries FROM, TO, branch, and the words NOT A GO. Steps are numbered,
+Header carries FROM, TO, branch, and the words NOT A GO. The cover message that carries a
+brief between seats is pointer + hash + NOT A GO and nothing else; every rule lives in the
+brief, and a changed rule re-issues the brief, never patches it from the cover (Sep 7 2026:
+three covers each invented a gate the brief lacked). A brief names its REVIEW SCOPE and never a
+shell; shell rules are per hand (see Working rhythm). Steps are numbered,
 each marked read-only, local-only, or waits-for-Chan. The brief also carries a
 CLARIFY block: every assumption the writer made and every question still open, listed
 outright — the agent confirms or challenges each BEFORE building, and an empty block must say
@@ -192,6 +198,44 @@ do not fix silently).
   spec value that would have worsened what it was meant to improve. Each time, the
   planner's job was to rule (accept/override) in the next message, by name, so the
   behavior is reinforced. A relay where the hands only obey is wasting half the model.
+
+## Working rhythm (Sep 8 2026, ruled on measured numbers; one home for it)
+
+Measured by Codex on batch 0a-2 v3 from its own session records: 2,443,886 tokens, of which
+the reviewer, challenger, and their dispatch were 51%; the reused reviewer carried 191-203K of
+input per response; a compaction plus the drill's mandatory rereads cost 531,795; an
+integration attempt against a moved main cost 1,734,731 with no agents at all; reasoning
+output at max effort was a few hundred tokens per response. Input context is the bill, not
+thinking. The rules that follow are the architect's and Codex's, agreed the same day
+(why: ../lessons/audit-log.md AL-30).
+
+- Review sizing. Pure relocation with meaning and discovery preserved (nets green, L24 zero
+  lost, relocation proof): mechanical checks plus the receiving peer's inspection, no review
+  agents. Summaries, scope, or routing changes (a Locked block, a lookup trigger, a status
+  pointer): one focused semantic review. Frozen core, guards, resolver: independent hostile
+  review, a challenger only where the failure modes justify one. End of each batch group: one
+  review in a FRESH context on interactions and accumulated change; accepted unchanged content
+  keeps its verdict. Every brief names its review scope; silence means the frozen contract's
+  HEAVY default, the expensive one.
+- Work split. Codex authors the installed guards, matchers, SessionStart assertions, ledger
+  readers, and its own runtime settings; the architect reviews behavior and authority
+  boundaries. The architect authors content, routing, and resolver changes; Codex reviews
+  meaning and verifies Windows and runtime integration. Each side self-certifies with the
+  nets; the other reads for meaning.
+- Receipts: patch hash; base to resulting commit; one suite line and one boot line; L24 plus a
+  relocation proof when banked material moves or is rewritten, and the policy diff for policy
+  text; the push row. No heading line numbers as acceptance criteria: check text and behavior.
+  One consolidated check, one short report, detail in an artifact. Local checks are cheap;
+  repeated model responses to request, interpret, and restate them are the expensive part.
+- Sessions (Codex): one fresh session per bounded batch. Effort is set at session open (it cannot
+  change inside a turn): medium to apply, high for semantic review, max for hard policy or guard
+  reasoning. Revisions inspect the changed material and the affected rules only. The DeepSeek
+  seat keeps the cost file's longer-session habit: its meter bills cold reloads, Codex's bills
+  context per response, so the two rules are not one rule.
+- Shell: rules are per HAND, never per task. Codex uses the shell its runtime provides; the
+  DeepSeek CLI has its own; a brief carries no shell mandate.
+- Ledger: retries, reviews, and failed integrations are charged to the batch that caused them,
+  or "tokens per completed task" hides the most expensive work.
 
 ## When to bank
 
