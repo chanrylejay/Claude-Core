@@ -11,7 +11,7 @@ file is their one home.
 
 ### Relay lessons (day 8, 2 Sep 2026 — banked from the v3 challenge)
 
-- A brief header "NOT A GO" plus a write step is a CONTRADICTORY brief; the hands were right to hold. Carry every GO inside the brief and say which steps it covers.
+- A brief header "NOT A GO" plus a step directing a live-system or deploy-costing write without Chan's explicit GO is a CONTRADICTORY brief; the hands were right to hold. "NOT A GO" does not bar authorized reversible local file edits. Carry every GO inside the brief and say which steps it covers; only Chan's own GO counts.
 - Exemplar behaviours to teach: hands stop on a one-row count mismatch and attach a diagnosis (the +1 was live drift; the diagnosis was exact). Hands refuse a blind write to a live client view when no evidence of the payload shape exists, and say so.
 - The brief-writer's own stale caution is a cost too: once new evidence lands (armor phrases), retest before assigning work to human hands.
 Day-8 afternoon relay-canon additions (banked 2 Sep 2026, kit-day8-lessons):

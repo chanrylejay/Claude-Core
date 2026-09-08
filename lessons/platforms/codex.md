@@ -35,7 +35,7 @@ Marker: codex-doorway-2026-09-01.)
   UNPROVEN on this machine as of Sep 7 2026: the live-fire FAILED (`git ls-remote origin`
   succeeded inside Codex) and Chan chose to proceed on the push gates actually in force, as a
   known gap and not a rule change: the kit clone's installed `pre-push` hook (byte-identical to
-  `templates/codex/pre-push`, denies any push without the one-shot token Chan mints) and the ESS
+  `templates/codex/pre-push`, denies any push without the one-shot token the hand creates on Chan's chat GO) and the ESS
   clone's DISABLED push URL. Until 0c lands a SessionStart assert, every Codex report carries the
   push row of `git remote -v` (why: audit-log AL-30).
 - Shell: Codex uses the shell its runtime provides; on this machine Bash resolves to WSL with no

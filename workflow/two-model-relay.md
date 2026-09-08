@@ -21,7 +21,8 @@ NOTE: this protocol is live and in use as of Aug 11 2026. `DEEPSEEK-RELAY.md`, t
 - **The hands** — Codex (OpenAI, VS Code extension; the primary hand since Sep 6 2026; can
   inspect an image as evidence and read its own session records) and Claude Code on the
   DeepSeek endpoint (secondary; cannot see images, small context window). Both read the
-  repo, write code, run tests, commit, and push on Chan's GO with the token he mints. Both
+  repo, write code, run tests, commit, and push on Chan's GO with the token the hand creates on
+  Chan's chat GO. Both
   execute and measure.
 
 Neither is "better". One holds context, the other touches the machine. Since Sep 1 2026
@@ -68,8 +69,9 @@ outright — the agent confirms or challenges each BEFORE building, and an empty
 same step — Spec Kit's clarify phase is "the one most developers skip and later regret" — and
 our own precedent is the needsManualPrice field below: 203 drafts for one unchallenged
 assumption). The brief lists the exact
-prove-it commands and says what to do if any fail (stop and paste the failure,
-do not fix silently).
+prove-it commands and failure handling: report failures with evidence, never fix silently;
+the standing rules below govern which reversible work may continue and which failures stop
+dependent work.
 
 ## Brief shape — both hands are collaborators (Chan's ruling, Sep 4 2026)
 

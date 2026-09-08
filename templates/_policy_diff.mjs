@@ -19,7 +19,7 @@ const MODALS = /\b(never|not|no|none|nothing|nobody|only|always|must|mustn't|sha
 const norm = (s) => s.replace(/\r\n/g, "\n");
 const sentences = (text) =>
   norm(text)
-    .replace(/```[\s\S]*?```/g, " ")            // code blocks are not policy prose
+    .replace(/^\s*```[^\n]*$/gm, "")          // keep fenced policy (doorway templates); strip delimiters only
     .split(/\n\s*\n|(?<=[.!?])\s+(?=[A-Z`"(\-*])|\n(?=\s*[-*] )/) // paragraphs, sentence ends, list items
     .map((s) => s.replace(/\s+/g, " ").trim())
     .filter((s) => s.length > 12);

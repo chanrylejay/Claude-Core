@@ -27,5 +27,13 @@ t("added policy sentence reported", r.added.length === 1 && /until Chan/.test(r.
 r = policyDiff("Every /api path returns 401 without a session.", "Every /api route returns 401 without a session.");
 t("modal-preserving rewording is silent", r.changed.length === 0);
 
+// 7. doorway templates carry live instructions inside Markdown fences; never omit those clauses
+const fencedOld = "```markdown\nCodex must never push without GO. Screenshots are evidence only.\n```";
+const fencedNew = "```markdown\nCodex must push without GO. Screenshots are evidence only.\n```";
+r = policyDiff(fencedOld, fencedNew);
+t("fenced policy negation flip flagged", r.changed.length === 1 && r.changed[0].lost.includes("never"));
+r = policyDiff(fencedOld, fencedOld);
+t("unchanged fenced policy is silent", r.changed.length === 0 && r.dropped.length === 0 && r.added.length === 0);
+
 console.log(`policy-diff net: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
