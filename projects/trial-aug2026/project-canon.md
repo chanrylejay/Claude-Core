@@ -79,10 +79,22 @@ the Timeline. All data is real (client data), never sample.
 
 ## Current build state       <!-- CLI: what works, what is half-built, what is next. Newest first. -->
 
+- Sep 8 local v10 build: Pipeline v10 is locally complete with option (b) KPI chips. Next is the lead panel and forms so the sales seat can leave the spreadsheet, then views and cutover, then sourcing. This remains unshipped and client/staff/company details stay in the private project materials.
+
+- Sep 8 resume anchor: the locked Sales Pipeline redesign is in local, unshipped work on
+  branch `sales-redesign-v10` (K clone). The design source is the byte-verified Pipeline mock;
+  no push, merge, deploy, package install, or environment change is authorised. The full
+  private hand-offs are `LOCAL-ONLY-ess-day11-12-session-bank.md` and
+  `LOCAL-ONLY-ess-codex-sales-redesign-resume.md`; read both before resuming this build. The
+  next UI pass is a visual comparison of the live Pipeline against the mock, then finishing the
+  selected-range Pipeline KPI review. The range controls the large tile counts (current stage
+  plus activity in that period), not a comparison chip. The data clean-up is complete for now;
+  archived leads remain excluded from the app and no further database write is authorised.
 - Day 6-9 records live in the PRIVATE repo's docs/; this canon mirrors them public-safe.
   Mirroring is a same-session step from now on (gap found Sep 4).
 - PENDING: `importer-day8` branch needs merge + a DB run to count as live; GO gates both.
-- Sales redesign: direction locked day 9, build not started. Analytics live since day 6.
+- Sales redesign: direction locked day 9; local implementation began Sep 7 and remains
+  unshipped. Analytics live since day 6.
 - v2 IS LIVE (Aug 28): dashboard, timeline (team + per-person), sales pipeline,
   recruitment, jobs, team, workforce, settings; auth enforced. HEAD 6a9700c, then the
   day-5 ship record (bcaf7ea). Vercel region sin1.
