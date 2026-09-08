@@ -41,6 +41,9 @@ lookup:                # verified present at every boot, NEVER read at boot; ope
   - workflow/new-project-checklist.md    # a new build starts (CLIENT_BUILD mode still loads it)
   - lessons/platforms/monday.md          # any monday.com work (the trial card and canon point here)
   - projects/REGISTRY.md                 # the work touches a project other than active_project
+  - projects/trial-aug2026/decision-log.md          # reconstructing WHY a trial decision was made
+  - projects/trial-aug2026/relay-lessons-day8-9.md  # BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design
+  - projects/trial-aug2026/sales-redesign-resume.md # before resuming the Sales redesign build
 boot:
   budget_chars: 40000  # ceiling on the BOOT list's bytes; the boot net goes red above it. Ladder in AL-20
 metadata:

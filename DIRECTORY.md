@@ -52,6 +52,9 @@ Vercel, GitHub, and Playwright CLI refusals.
 - `REGISTRY.md` — the project index: every project one line (state, repo, URL, context home). Read at boot with the active canon; a new project gets its line the same session it appears.
 - `devoted-care/design-lessons.md` — the Devoted Care design canon (client-era laws, type scale, patterns). Project-specific, NOT Chan's personal defaults.
 - `trial-aug2026/project-canon.md` — the ACTIVE project's public-safe canon (Australian services company trial): shape, decisions, build state, blockers; the `active_project` boot read. CLI fills it from the private repo; claude.ai safety-reviews before push.
+- `trial-aug2026/decision-log.md` — LOOKUP, never at boot: the trial's dated decision log, newest first; open when reconstructing why a decision was made (split from the canon Sep 7 2026, batch 0a; the canon keeps a one-line-each Locked block with each rule's scope).
+- `trial-aug2026/relay-lessons-day8-9.md` — LOOKUP, BINDING: the day 8-9 relay lessons (board scans and changes with the AI-credit checks, client-call and deck preparation, reference-led design) banked during the AL-27 freeze; open before scanning or changing a board, a client call or deck, or reference-led design. Their one home until batch 2 re-homes them into lessons/.
+- `trial-aug2026/sales-redesign-resume.md` — LOOKUP, never at boot: the Sales redesign build's resume anchor (branch, the two LOCAL-ONLY hand-offs to read first, next UI pass, what is not authorised); open before resuming that build. Moved from the canon Sep 8 2026 (batch 0a).
 - `ano-ulam/project-canon.md` — Chan's own product (he continues it post-Devoted): full architecture, recipe-engine laws, closed decisions, bug list. Read before ANY ano-ulam work.
 
 ## templates/ — reusable infrastructure

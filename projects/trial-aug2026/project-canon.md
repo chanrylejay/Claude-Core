@@ -16,7 +16,7 @@ context — what a fresh session needs to plan, review, and brief without seeing
 - Chan builds their internal system on the side in his own PRIVATE repo while access is pending.
 - Standing habit: Friday update to the boss — small slices, screenshots, plain language.
 
-## The system's shape        <!-- CLI: modules, what talks to what, data flow. Diagrams in words. -->
+## The system's shape
 An internal operating system for an Australian labour-hire agency, built during the trial
 (the "OS"). Whole-business scaffold with the Sales module deepest; the flagship surface is
 the Timeline. All data is real (client data), never sample.
@@ -30,7 +30,7 @@ the Timeline. All data is real (client data), never sample.
   drafts copy through one API route; auth is cookie-session based (HttpOnly, signed);
   middleware guards pages and /api returns 401 JSON without a session.
 
-## Stack and conventions     <!-- CLI: languages, frameworks, hosting, repo layout, run commands. -->
+## Stack and conventions
 
 - Next.js 13.5 App Router + TypeScript + Tailwind + shadcn/ui (Radix) + Recharts.
 - Neon Postgres (@neondatabase/serverless), DeepSeek AI (draft route), Vercel.
@@ -42,59 +42,37 @@ the Timeline. All data is real (client data), never sample.
 - Timezone canon: Australia/Sydney for all date logic, ONE shared lib/dates.ts helper
   (getTaskUrgency) used by every surface.
 
-## Decisions made (dated)    <!-- CLI: one line each — what was decided, why, newest first. -->
+## Locked (binding on any work now)  <!-- one line each, WITH its scope; the dated WHY is in decision-log.md -->
 
-- Sep 3 (day 9): v2 proposal deck banked (private repo); Sales redesign direction LOCKED —
-  white/light-gray surfaces and a gold accent. No app code on main.
-- Sep 2 (day 8): Applications importer maps by STABLE Monday column id, never title (titles
-  are client-editable). On branch `importer-day8` — not merged, not yet run against the DB.
-- Sep 1 (day 7): monday cleanup + workflow rebuild on client boards; app untouched.
-- Aug 31 (day 6): Vercel Analytics added; app otherwise paused — persuasion phase per day 5.
-- Aug 28 (day 5): v2 shipped; Timeline is the flagship. Fortnight is the ONLY team view (no
-  week/month toggle); the past lives only in the per-person late pill; team + company lanes
-  removed (inductions belong to Workforce).
-- Aug 28: group ≠ status — the importer reads each item's Status column, never the Monday
-  GROUP name (a majority of rows imported wrong); fixed at the source, re-imported to 0
-  mismatches.
-- Aug 28: completion surfaces — tasks.completed_at set on Mark-done, imported Done rows
-  never backfilled; surfaces start empty and grow only as real completions happen ("small
-  and true beats big and fake").
-- Aug 28: one reward colour only: sage green for completion. No alarm red anywhere;
-  severity uses gold/clay/rust.
-- Aug 28: date bug root-caused — due-at-midnight vs now() timestamp comparison; fixed with
-  ONE shared date helper used everywhere.
-- Aug 27 (day 4): v2 scope LOCKED: data integrity first (drop fabricated worker rows,
-  filter agent-created rows at import, re-audit mixed boards), then the Timeline.
-- Aug 27: auth hardened — middleware exempts only login/logout; every /api path returns
-  401 without a session.
-- Aug 26 (day 3, the pivot): build a web app, NOT a generic PM app — one killer thing
-  shippable by day 14. monday.com becomes seed data / backend engine, never discarded.
-- Aug 26: build = lead-management + AI outreach (lead-gen rejected: paywalled, ToS risk,
-  paid ads).
-- Aug 26: the Timeline is the client's own revealed preference — their one real board is a
-  project timeline wearing a Monday board; v2 finishes it. Framing: "you already built this,
-  I finished it", never "here's a timeline I designed".
-- Aug 26: positioning — the system is always an "internal system", additive, never a Monday
-  replacement (the client hasn't decided on Monday).
+- group ≠ status: the importer reads each item's Status column, never the Monday GROUP name.
+- The Applications importer maps by STABLE Monday column id, never by title (titles are
+  client-editable).
+- Fortnight is the ONLY team view (no week/month toggle); the past lives only in the
+  per-person late pill; team + company lanes stay removed (inductions belong to Workforce).
+- One reward colour only: sage green for completion. No alarm red anywhere; severity uses
+  gold/clay/rust.
+- Completion surfaces start empty and grow only as real completions happen; imported Done
+  rows are never backfilled ("small and true beats big and fake").
+- v2 scope order: data integrity first, then the Timeline. Auth: middleware exempts only
+  login/logout; every /api path returns 401 without a session.
+- Sales redesign LOCKED: the byte-verified Pipeline mock is the design source, not prose
+  (the day 9 direction and its words: `decision-log.md`).
+- Framing: "you already built this, I finished it", never "here's a timeline I designed";
+  the system is always an "internal system", additive, never a Monday replacement.
+- Dated decisions, newest first: `decision-log.md` (LOOKUP). The day 8-9 relay lessons still
+  BIND work: `relay-lessons-day8-9.md` (LOOKUP; open before scanning or changing a Monday
+  board, client calls or decks, and reference-led design).
 
-## Current build state       <!-- CLI: what works, what is half-built, what is next. Newest first. -->
+## Current build state
 
 - Sep 8 local v10 build: Pipeline v10 is locally complete with option (b) KPI chips. Next is the lead panel and forms so the sales seat can leave the spreadsheet, then views and cutover, then sourcing. This remains unshipped and client/staff/company details stay in the private project materials.
 
-- Sep 8 resume anchor: the locked Sales Pipeline redesign is in local, unshipped work on
-  branch `sales-redesign-v10` (K clone). The design source is the byte-verified Pipeline mock;
-  no push, merge, deploy, package install, or environment change is authorised. The full
-  private hand-offs are `LOCAL-ONLY-ess-day11-12-session-bank.md` and
-  `LOCAL-ONLY-ess-codex-sales-redesign-resume.md`; read both before resuming this build. The
-  next UI pass is a visual comparison of the live Pipeline against the mock, then finishing the
-  selected-range Pipeline KPI review. The range controls the large tile counts (current stage
-  plus activity in that period), not a comparison chip. The data clean-up is complete for now;
-  archived leads remain excluded from the app and no further database write is authorised.
 - Day 6-9 records live in the PRIVATE repo's docs/; this canon mirrors them public-safe.
   Mirroring is a same-session step from now on (gap found Sep 4).
 - PENDING: `importer-day8` branch needs merge + a DB run to count as live; GO gates both.
-- Sales redesign: direction locked day 9; local implementation began Sep 7 and remains
-  unshipped. Analytics live since day 6.
+- Sales redesign: direction locked day 9; local implementation began Sep 7 on branch
+  `sales-redesign-v10` (K clone) and remains unshipped; before resuming it open
+  `sales-redesign-resume.md` (LOOKUP). Analytics live since day 6.
 - v2 IS LIVE (Aug 28): dashboard, timeline (team + per-person), sales pipeline,
   recruitment, jobs, team, workforce, settings; auth enforced. HEAD 6a9700c, then the
   day-5 ship record (bcaf7ea). Vercel region sin1.
@@ -107,7 +85,7 @@ the Timeline. All data is real (client data), never sample.
 - Banked future items: bar drag-to-move, group-events row, importer run-stamp, auto-inject
   sales follow-ups.
 
-## Blocked on access         <!-- CLI: each missing permission and the concrete thing it unblocks. -->
+## Blocked on access
 
 - monday.com credentials only; no admin rights yet — admin would unlock full-board
   reads/writes beyond the current grant (and the AI-created board audit).
@@ -122,21 +100,6 @@ the Timeline. All data is real (client data), never sample.
 
 **Upkeep law (same as every canon):** update this file in the SAME session that changes the
 reality it describes — a decision, a milestone, an access grant, a direction change. Banking
-it later is how canons die. When the trial resolves, this file gets the outcome banner and
+it later is how canons die. Status stays here, one line per surface; detailed resume
+instructions for one task go to that task's LOOKUP file, never into this boot-read canon. When the trial resolves, this file gets the outcome banner and
 either graduates to the client project's long-term canon or freezes as history.
-### Relay lessons (day 8, 2 Sep 2026 — banked from the v3 challenge)
-
-- A brief header "NOT A GO" plus a write step is a CONTRADICTORY brief; the hands were right to hold. Carry every GO inside the brief and say which steps it covers.
-- Exemplar behaviours to teach: hands stop on a one-row count mismatch and attach a diagnosis (the +1 was live drift; the diagnosis was exact). Hands refuse a blind write to a live client view when no evidence of the payload shape exists, and say so.
-- The brief-writer's own stale caution is a cost too: once new evidence lands (armor phrases), retest before assigning work to human hands.
-Day-8 afternoon relay-canon additions (banked 2 Sep 2026, kit-day8-lessons):
-- Every board scan starts with 30 days of activity by human user: who creates, which columns they touch, when, how they move rows. Recipes mirror the moves they already make by hand; never fight a group-as-state habit without asking.
-- Before touching any existing dashboard or view set, get a screenshot; the API is blind there.
-- Count AI credits before any bulk rename on a board with AI columns.
-- Delegate to the hands only what the API can do; API-impossible items are named as human clicks with exact steps, not briefs.
-- Ids over names in every relay to a human clicking in a UI.
-Day-9 relay-canon additions (banked 3 Sep 2026, kit-day8-lessons):
-- First client call after a text-only relationship: build a cheat sheet with CLICK/SAY columns, plan one live demo action (change a status, watch the row move), four canned answers, no yes/no close. The speaker's own fear-rating of the call is not data; the client's requests list is.
-- A proposal deck sells the ask: put the number on the slide, show now-vs-proposed with weekly and monthly totals, tie the bonus to a client outcome that costs the client nothing until they have won, make the arithmetic doable in the client's head. Never pitch automation as "replaces N VAs" to a client who employs VAs.
-- Two reference sets when designing a product screen: FEATURE references (what it does) and LOOK references (grammar: spacing, radius, type, one accent). Copy grammar, never brand; never paste competitor screenshots into a client deliverable. The design half renders an HTML mockup for approval; the hands implement from the registry.
-- "Read it as me" pass: re-derive the deck from everything the person has said, not from their draft lines; the strongest sentences are often facts mentioned elsewhere ("the owner barely gives me tasks" became "you do not have to manage me; you have already seen that").
