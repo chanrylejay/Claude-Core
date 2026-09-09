@@ -165,3 +165,9 @@ Every defect activates successfully and looks fine in the list. Read returned `w
 - There is no cross-board "change a field on connected items" recipe. Connected-board templates create a new item; marketplace apps only read and aggregate. Use a mirror column for reading plus a notification for action; do not promise state sync.
 - `update_board(board_id:, board_attribute: description, new_value: $v)` takes `new_value: String!`, not JSON, and returns a JSON scalar with no sub-selection.
 - Board descriptions are the cheapest durable documentation: conventions placed where the team works beat messages that scroll away and documents that are not opened.
+
+## Day 13 addendum (9 Sep 2026)
+
+- **The automation builder silently reassigns values from fields that do not exist, and reports success.** Asked for an email action with a CC, the builder returned success with the CC address moved into To and the real recipient discarded. Verify returned `inboundFieldsSourceConfig` names every supplied field.
+- **The Gmail send action block exposes exactly three fields: to, subject, body.** There is no CC or BCC at schema level. Read the block schema, not the documentation: native monday cannot CC.
+- **The Webhooks integration has no button trigger.** A button must flip a status column, then the status change fires the webhook. That status also gives the operator Sent/Failed feedback.

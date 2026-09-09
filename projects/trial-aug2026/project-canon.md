@@ -57,6 +57,7 @@ the Timeline. All data is real (client data), never sample.
   login/logout; every /api path returns 401 without a session.
 - Sales redesign LOCKED: the byte-verified Pipeline mock is the design source, not prose
   (the day 9 direction and its words: `decision-log.md`).
+- Operator email sends use a per-person Apps Script under that operator's account, never a shared script or the platform native email action. Native email cannot CC and attachment capacity is insufficient.
 - Framing: "you already built this, I finished it", never "here's a timeline I designed";
   the system is always an "internal system", additive, never a Monday replacement.
 - Dated decisions, newest first: `decision-log.md` (LOOKUP). The day 8-9 relay lessons still
@@ -64,6 +65,8 @@ the Timeline. All data is real (client data), never sample.
   board, client calls or decks, and reference-led design).
 
 ## Current build state
+
+- Day 13: sprint paused for live operator requests. One-click send buttons on two boards now fire a per-person Google Apps Script under the operator's own account, sending from that mailbox with signature, CC, attachment, and Sent/Failed write-back. Chan verified both end to end. Click-to-dial was set up for the recruitment seat. Lead panel v4 was untouched.
 
 - Sep 8 local v10 build: Pipeline v10 is locally complete with option (b) KPI chips. Next is the lead panel and forms so the sales seat can leave the spreadsheet, then views and cutover, then sourcing. This remains unshipped and client/staff/company details stay in the private project materials.
 

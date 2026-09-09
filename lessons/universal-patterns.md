@@ -313,3 +313,8 @@ flaw there is the one bug that reproduces perfectly across all of them.
 **How to apply:** before launching, verify every field name, every enum and
 every convention in the prompt against the actual code. Then ask what will
 transform the output after they hand it over, and say so in the prompt.
+
+## Email and webhook delivery
+
+- **Gmail appends an account signature for some senders and not others.** A platform Gmail integration may use the signature in Gmail settings; `GmailApp.sendEmail` sends exactly the message constructed. When changing send paths, embed the signature as an inline cid image and keep a plain-text fallback.
+- **A webhook that watches a column the handler also writes is an infinite loop.** Guard by re-reading the record and proceeding only when its state is still the trigger state. The record is authoritative across payload-shape changes; the webhook payload is not.
