@@ -1,5 +1,5 @@
 {
-  "description": "Required installed files: ~/.codex/hooks/session-ritual.mjs, codex-guard-runner.mjs, codex-guard.mjs, AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The ritual is the sole SessionStart reporter; the Node runner preserves raw PreToolUse stdin and emits a structured deny if the launcher cannot start.",
+  "description": "Required installed files: ~/.codex/hooks/session-ritual.mjs, push-state.mjs, codex-guard-launcher.mjs, codex-guard-runner.mjs, codex-guard.mjs, connector-reads.json, AND the byte-identical parser copy ~/.codex/hooks/push-guard.mjs. The MCP route denies runner and guard failures; Bash retains its previous failure directions. The ritual is the sole SessionStart reporter.",
   "hooks": {
     "SessionStart": [
       {
@@ -14,11 +14,21 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash|mcp__playwright__.*|mcp__codex_apps__(neon|vercel|github)__.*",
+        "matcher": "^Bash$",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-runner.mjs\"",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-launcher.mjs\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "^[\\s\\S]*__[\\s\\S]*$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/Chanryle/.codex/hooks/codex-guard-launcher.mjs\" --connector",
             "timeout": 10
           }
         ]

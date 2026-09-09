@@ -1,0 +1,12 @@
+{
+  "session_id": "<redacted:session_id>",
+  "turn_id": "<redacted:turn_id>",
+  "transcript_path": "<redacted:transcript_path>",
+  "cwd": "<redacted:cwd>",
+  "hook_event_name": "PreToolUse",
+  "model": "gpt-6-astra",
+  "permission_mode": "bypassPermissions",
+  "tool_name": "mcp__codex_apps__vercel__list_teams",
+  "tool_input": {},
+  "tool_use_id": "<redacted:tool_use_id>"
+}

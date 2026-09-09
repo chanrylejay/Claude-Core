@@ -1,0 +1,370 @@
+{
+  "sourceKind": "Synthetic offline edge cases. No connector is invoked; these do not certify live routing.",
+  "cases": [
+    {
+      "id": "neon-zap_thing",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__zap_thing",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "neon-get_and_delete_everything",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__get_and_delete_everything",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "neon-list_users_then_publish",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_users_then_publish",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "neon-read_backdoor",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__read_backdoor",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "vercel-zap_thing",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__vercel__zap_thing",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "vercel-get_and_delete_everything",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__vercel__get_and_delete_everything",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "vercel-list_users_then_publish",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__vercel__list_users_then_publish",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "vercel-read_backdoor",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__vercel__read_backdoor",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "github-zap_thing",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__github__zap_thing",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "github-get_and_delete_everything",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__github__get_and_delete_everything",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "github-list_users_then_publish",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__github__list_users_then_publish",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "github-read_backdoor",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__github__read_backdoor",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "neon__run_sql",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "neon__run_sql",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__neon__run_sql",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__neon__run_sql",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon_run_sql",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon_run_sql",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__run_sql_transaction",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__run_sql_transaction",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__run_sql_extra",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__run_sql_extra",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__future__list_safe",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__future__list_safe",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__future__get_safe",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__future__get_safe",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "future__create_thing",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "future__create_thing",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__list_docs_resources_extra",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources_extra",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__LIST_DOCS_RESOURCES",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__LIST_DOCS_RESOURCES",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__list_docs_resources\n",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources\n",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__neon__",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__github_create_pull_request",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__github_create_pull_request",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "mcp__codex_apps__vercel_deploy_to_vercel",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__vercel_deploy_to_vercel",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "missing input",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "array input",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": []
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "wrong event",
+      "event": {
+        "hook_event_name": "SessionStart",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "transport JSON corruption",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "expected": "deny",
+      "wireRaw": "{"
+    },
+    {
+      "id": "existing scoped exception mcp__context7__query-docs",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__context7__query-docs",
+        "tool_input": {}
+      },
+      "expected": "pass"
+    },
+    {
+      "id": "uncaptured Context7 connector wrapper",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__context7__query_docs",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "uncaptured shadcn connector wrapper",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__shadcn__add_items",
+        "tool_input": {}
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "existing scoped exception mcp__shadcn__add_items",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__shadcn__add_items",
+        "tool_input": {}
+      },
+      "expected": "pass"
+    },
+    {
+      "id": "existing scoped exception mcp__playwright__browser_snapshot",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__playwright__browser_snapshot",
+        "tool_input": {}
+      },
+      "expected": "pass"
+    },
+    {
+      "id": "damaged MCP envelope {}",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "wireRaw": "{}",
+      "expected": "deny"
+    },
+    {
+      "id": "damaged MCP envelope null",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "wireRaw": "null",
+      "expected": "deny"
+    },
+    {
+      "id": "damaged MCP envelope []",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "wireRaw": "[]",
+      "expected": "deny"
+    },
+    {
+      "id": "damaged MCP envelope {\"tool_name\":null}",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "wireRaw": "{\"tool_name\":null}",
+      "expected": "deny"
+    },
+    {
+      "id": "damaged MCP envelope {\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git status\"}}",
+      "event": {
+        "hook_event_name": "PreToolUse",
+        "tool_name": "mcp__codex_apps__neon__list_docs_resources",
+        "tool_input": {}
+      },
+      "wireRaw": "{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git status\"}}",
+      "expected": "deny"
+    }
+  ]
+}

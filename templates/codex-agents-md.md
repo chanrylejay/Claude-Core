@@ -48,9 +48,10 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
 - GitHub CLI is read-only: view, list, status, and diff only. PRs, comments, merges, releases,
   and workflow runs are publish actions and each need Chan's GO by name.
 - The locked seven (Chan, Sep 3 2026) are Context7, Neon, Vercel, shadcn, Playwright, GitHub,
-  and Impeccable. The Codex MCP guard denies the named Neon, Vercel, and GitHub write/publish
-  prefixes; it is a seatbelt, not a wall: as of Sep 7 2026 a bare `neon__run_sql` passes it
-  (batch 0c fixes this), so hard rule 10 stands on you, not on the hook. Context7 is docs-only
+  and Impeccable. Batch 0c's Codex MCP guard denies unknown connector operations and permits
+  only the captured reads in templates/codex/connector-reads.json. The Sep 7 2026 hole where
+  bare `neon__run_sql` passed is fixed in that batch. It remains a seatbelt, not a wall:
+  hard rule 10 stands on you, not on the hook. Context7 is docs-only
   and shadcn changes only local project files.
 - Cost: the DeepSeek meter and peak windows are not your bill; the kit-lean law still is.
 - Shell: use the shell your runtime provides; no brief may mandate one (shell rules are per hand).

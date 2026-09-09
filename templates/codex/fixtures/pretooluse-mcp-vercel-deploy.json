@@ -1,4 +1,7 @@
 {
-  "tool_name": "mcp__codex_apps__vercel_deploy_to_vercel",
-  "tool_input": { "projectId": "fixture-project" }
+  "tool_name": "mcp__codex_apps__vercel__deploy_to_vercel",
+  "tool_input": {
+    "projectId": "fixture-project"
+  },
+  "hook_event_name": "PreToolUse"
 }

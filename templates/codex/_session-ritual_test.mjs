@@ -22,8 +22,8 @@ spawnSync("git", ["init", "-q"], { cwd: REPO, encoding: "utf8" });
 
 let pass = 0, fail = 0;
 const ok = (label, condition) => { if (condition) pass++; else { fail++; console.error(`FAIL: ${label}`); } };
-const run = (source) => spawnSync(process.execPath, [path.join(TPL, "session-ritual.mjs")], {
-  input: JSON.stringify({ source, hook_event_name: "SessionStart", cwd: REPO }), encoding: "utf8", timeout: 10000,
+const run = (source, cwd = REPO) => spawnSync(process.execPath, [path.join(TPL, "session-ritual.mjs")], {
+  input: JSON.stringify({ source, hook_event_name: "SessionStart", cwd }), encoding: "utf8", timeout: 10000,
   env: { ...process.env, USERPROFILE: HOME, HOME, CLAUDE_CORE: KIT },
 });
 const parse = (r) => { try { return JSON.parse(r.stdout); } catch { return null; } };
@@ -41,6 +41,50 @@ fs.mkdirSync(path.join(HOME, ".codex"), { recursive: true });
 fs.writeFileSync(path.join(HOME, ".codex", "PUSH_GO"), "{}\n");
 r = run("startup");
 ok("stale token report is folded into the ritual", /Stale PUSH_GO exists/.test(context(r)));
+const git = (repo, ...args) => {
+  const result = spawnSync("git", args, { cwd: repo, encoding: "utf8", windowsHide: true });
+  if (result.status !== 0) throw new Error("fixture git failed: " + result.stderr);
+};
+ok("an unprotected other clone warns", /neither DISABLED push URLs nor an installed pre-push hook/.test(context(r)));
+git(REPO, "remote", "add", "origin", "https://example.invalid/repo.git");
+git(REPO, "config", "remote.origin.pushurl", "DISABLED");
+r = run("startup");
+ok("other clone prints its DISABLED push row", /origin DISABLED \(push\)/.test(context(r)) && !/neither DISABLED/.test(context(r)));
+git(REPO, "config", "--add", "remote.origin.pushurl", "https://example.invalid/second.git");
+r = run("startup");
+ok("a second live push URL defeats the DISABLED assertion", /second.git \(push\)/.test(context(r)) && /neither DISABLED/.test(context(r)));
+const custom = path.join(REPO, "custom-hooks");
+fs.mkdirSync(custom);
+fs.writeFileSync(path.join(custom, "pre-push"), "#!/bin/sh\nexit 1\n", { mode: 0o755 });
+git(REPO, "config", "core.hooksPath", "custom-hooks");
+r = run("startup");
+ok("other clone resolves a relative hooksPath without assuming the kit gate", /custom-hooks/.test(context(r)) && /installed; content not certified/.test(context(r)) && !/neither DISABLED/.test(context(r)));
+fs.writeFileSync(path.join(custom, "pre-push"), "");
+r = run("startup");
+ok("empty hook never counts as installed protection", /neither DISABLED/.test(context(r)));
+git(KIT, "init", "-q");
+git(KIT, "remote", "add", "origin", "https://example.invalid/kit.git");
+fs.mkdirSync(path.join(KIT, "templates/codex"), { recursive: true });
+const expected = fs.readFileSync(path.join(TPL, "pre-push"));
+fs.writeFileSync(path.join(KIT, "templates/codex/pre-push"), expected);
+const kitHook = path.join(KIT, ".git/hooks/pre-push");
+r = run("startup", KIT);
+ok("kit without gate warns with canon path", /kit gate is not/.test(context(r)) && /lessons\/platforms\/codex.md/.test(context(r)));
+fs.writeFileSync(kitHook, expected, { mode: 0o755 });
+r = run("startup", KIT);
+ok("kit prints push row and exact template verdict", /origin https:\/\/example.invalid\/kit.git \(push\)/.test(context(r)) && /\[identical\]/.test(context(r)) && !/WARNING:/.test(context(r)));
+const nested = path.join(KIT, "nested"); fs.mkdirSync(nested);
+r = run("startup", nested);
+ok("kit subdirectory still checks the kit gate", /kit template check/.test(context(r)) && /\[identical\]/.test(context(r)));
+fs.writeFileSync(kitHook, expected.toString("utf8").replace(/\n/g, "\r\n"));
+r = run("startup", KIT);
+ok("kit distinguishes line-ending drift", /WARNING: kit pre-push differs, line endings only/.test(context(r)));
+fs.writeFileSync(kitHook, "#!/bin/sh\nexit 0\n");
+r = run("startup", KIT);
+ok("kit distinguishes content drift", /WARNING: kit pre-push differs, content/.test(context(r)));
+git(KIT, "config", "core.hooksPath", "missing-hooks");
+r = run("startup", KIT);
+ok("kit does not trust a bypassed default hook", /missing-hooks/.test(context(r)) && /kit gate is not/.test(context(r)));
 const wiring = JSON.parse(fs.readFileSync(path.join(TPL, "hooks.json"), "utf8"));
 const start = wiring.hooks?.SessionStart?.[0]?.hooks || [];
 ok("wiring has one ritual reporter and no legacy hello probe", start.length === 1 && /session-ritual\.mjs/.test(start[0].command) && !/hello\.mjs|--session-start/.test(JSON.stringify(start)));

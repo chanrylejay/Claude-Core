@@ -36,8 +36,10 @@ Marker: codex-doorway-2026-09-01.)
   succeeded inside Codex) and Chan chose to proceed on the push gates actually in force, as a
   known gap and not a rule change: the kit clone's installed `pre-push` hook (byte-identical to
   `templates/codex/pre-push`, denies any push without the one-shot token the hand creates on Chan's chat GO) and the ESS
-  clone's DISABLED push URL. Until 0c lands a SessionStart assert, every Codex report carries the
-  push row of `git remote -v` (why: audit-log AL-30).
+  clone's DISABLED push URL. The interim rule was: until 0c lands a SessionStart assert, every
+  Codex report carries the push row of `git remote -v` (why: audit-log AL-30). Batch 0c's
+  workspace assertion below now reports that row at SessionStart; the failed sandbox proof
+  remains unproven, and no warning authorizes changing a remote or creating a GO token.
 - Shell: Codex uses the shell its runtime provides; on this machine Bash resolves to WSL with no
   distro and there is no MSYS2. Shell rules are per HAND, never per task, so a Codex brief carries
   no shell mandate (Sep 7 2026: a DeepSeek-CLI MSYS2 rule copied from a project bank into a Codex
@@ -167,6 +169,54 @@ Marker: codex-doorway-2026-09-01.)
 - **The locked seven (Chan, Sep 3 2026):** Context7, Neon, Vercel, shadcn, Playwright, GitHub,
   and Impeccable. Supabase and Slides are out by ruling. Shadcn is the one MCP outside the plugin
   surface: its pinned local MCP may write ordinary local project files, not a third-party surface,
-  so it is allowed under the ordinary hands rules. Context7 is docs-only; the Codex MCP wall denies
-  the current Neon, Vercel, and GitHub write/publish tool names and must be re-audited whenever a
-  plugin updates its tool inventory.
+  so it is allowed under the ordinary hands rules. Context7 is docs-only; the Sep 3 Codex MCP wall
+  denied the named Neon, Vercel, and GitHub write/publish tools. Batch 0c replaces that policy as
+  described below, and it must be re-audited whenever a plugin updates its tool inventory.
+
+## Batch 0c: connector routing and installed-copy proof (Sep 9 2026)
+
+- **One read allowlist, with evidence.** `../../templates/codex/connector-reads.json` holds each
+  exact captured tool name, capture date, Codex version, read semantics, raw hash, sanitized
+  fixture hash, and redaction list. The initial rows come from the Sep 7 ingress captures on
+  codex-cli 0.153.0. A new read requires a reviewed row and capture receipt. Unknown operations
+  and connector namespaces deny with the operation name and this file's path; a `get` or `list`
+  prefix grants nothing. Bare `neon__run_sql` and the canonical
+  `mcp__codex_apps__neon__run_sql` deny. The obsolete single-underscore denylist is deleted;
+  those spellings survive only as synthetic edge cases. Context7 docs, local shadcn work, and
+  the existing Playwright containment retain their standing scoped exceptions.
+- **Routing is part of the net.** `../../templates/codex/fixtures/manifest.json` labels every
+  fixture. Captured fixtures certify ingress names and retain hashes; synthetic cases prove
+  edges and never claim capture. `../../templates/codex/_connector_test.mjs` routes each event
+  through hooks.json's matcher, configured launcher, runner, guard, and exact decision. It never
+  calls a connector. A separate connector flag selected by the matcher survives damaged stdin
+  metadata. Hook semantics: https://learn.chatgpt.com/docs/hooks.
+- **Failure direction is explicit.** On the MCP route, `codex-guard-launcher.mjs` catches runner load failures,
+  crashes, timeouts, empty replies, malformed decisions, and unexpected stderr; the runner
+  applies the same checks to the guard. MCP failures emit only a structured DENY with the
+  failure named. The existing Bash guard-crash denial remains; Bash runner failures keep their
+  prior non-blocking direction, now with a diagnostic. SessionStart remains a report.
+  LIMIT: Node and the outer launcher must start, and the host must load the wiring. Failure
+  before that entry point can still fail open in Codex. These hooks are a seatbelt, never an
+  OS security boundary or permission to write a third-party database.
+- **SessionStart inspects the workspace.** `push-state.mjs` prints every effective push URL and
+  resolves the effective pre-push path, including core.hooksPath and kit subdirectories. In the
+  kit clone the installed bytes must match `../../templates/codex/pre-push`; elsewhere it reports
+  DISABLED push URLs or a nonempty installed hook, warning when neither exists. A custom hook's
+  presence is labelled content not certified. One live URL among several defeats DISABLED.
+  A warning never repairs a remote or a hook automatically. Push remains Chan's explicit GO
+  for the named repository and branch, each time; main requires a GO that names main.
+- **Copy verification is raw.** `../../templates/codex/verify-copies.mjs` checks global copies,
+  doorway block A, the kit gate, and present project copies in trusted or explicitly supplied
+  clones. Use repeatable `--repo` or `--scan-root` for other clone locations; the receipt lists
+  the inspected clone set. Block B checks the source block; a customized project doorway needs
+  its own reviewed source before it can earn byte identity. `differs, line endings only` and
+  `differs, content` both fail, as do missing or unreadable copies. The initial hooks.json drift
+  parsed identically as JSON. The rules-file variants produced identical decisions in six
+  execpolicy probes on 0.153.0; that is a measured parser result, not permission to ignore drift.
+  `.gitattributes` pins all Codex copy sources to LF. Install by copying raw source bytes,
+  extracting doorway blocks without text re-encoding; never repair through a PowerShell text
+  pipeline. `_copies_test.mjs` proves this under core.autocrlf=true and mutates every copy.
+- **Install state is separate from host activation.** A command file loads afresh per invocation;
+  hooks.json wiring needs a new thread. Offline replay certifies the configured path, not that
+  the current thread loaded a changed matcher. The HEAVY patch's behavior and authority review
+  belongs to the architect. CI and every publish action remain separate Chan GOs.

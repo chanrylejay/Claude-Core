@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "note": "Only captured-* files have certified ingress provenance, in ../connector-reads.json. Legacy fixtures are replayed as synthetic cases; their names are not proof of capture. Every event is routed through hooks.json before the real launcher, runner and guard.",
+  "fixtures": [
+    {
+      "file": "captured-github-read.json",
+      "sourceKind": "captured",
+      "expected": "pass"
+    },
+    {
+      "file": "captured-neon-read.json",
+      "sourceKind": "captured",
+      "expected": "pass"
+    },
+    {
+      "file": "captured-vercel-read.json",
+      "sourceKind": "captured",
+      "expected": "pass"
+    },
+    {
+      "file": "pretooluse-bash-playwright-external-open.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    },
+    {
+      "file": "pretooluse-bash-playwright-upload.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    },
+    {
+      "file": "pretooluse-bash.json",
+      "sourceKind": "synthetic",
+      "expected": "pass"
+    },
+    {
+      "file": "pretooluse-mcp-file-upload.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    },
+    {
+      "file": "pretooluse-mcp-github-create-pr.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    },
+    {
+      "file": "pretooluse-mcp-neon-run-sql.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    },
+    {
+      "file": "pretooluse-mcp-vercel-deploy.json",
+      "sourceKind": "synthetic",
+      "expected": "deny"
+    }
+  ],
+  "syntheticCases": "synthetic-connector-cases.json"
+}

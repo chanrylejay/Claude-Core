@@ -59,11 +59,19 @@ const names = [...new Set(planned)].map((file) => path.relative(KIT, file).repla
 const ritual = source === "compact"
   ? "THE DRILL now: do not trust the compaction summary; reopen the listed files in full before substantive work."
   : `Session ritual for ${source}: open the listed files in full before substantive work.`;
+let pushReport;
+try {
+  const { inspectPushState } = await import("./push-state.mjs");
+  pushReport = inspectPushState(path.resolve(input.cwd || process.cwd()), KIT).summary;
+} catch (error) {
+  pushReport = "WARNING: workspace push assertion failed (" + (error.code || error.message) + "); inspect the push rows and effective pre-push hook.";
+}
 const report = [
   ritual,
   `Router at runtime: mode ${mode}; active project ${active || "unresolved"}.`,
   `Read plan: ${names || "router unavailable"}.`,
   gitState(path.resolve(input.cwd || process.cwd())),
+  pushReport,
   stale ? "Stale PUSH_GO exists: report it to Chan and never use it." : "No stale PUSH_GO token.",
   failed.length ? `Failed reads: ${failed.join("; ")}.` : "Failed reads: none.",
 ].join(" ");

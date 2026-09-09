@@ -4,13 +4,15 @@ Every file in this kit, one line each. Keep this current: **any new file added t
 line here** (same rule as a memory index). Exception: memory/ files are indexed one line each in
 `memory/MEMORY.md` only, never here too.
 
-Codex tooling state (Sep 3 2026): the doorway carries Chan's locked seven; the
+Codex tooling history (Sep 3 2026): the doorway carries Chan's locked seven; the
 `templates/codex/fixtures/pretooluse-mcp-neon-run-sql.json`,
 `templates/codex/fixtures/pretooluse-mcp-vercel-deploy.json`,
 `templates/codex/fixtures/pretooluse-mcp-github-create-pr.json`,
 `templates/codex/fixtures/pretooluse-bash-playwright-external-open.json`, and
 `templates/codex/fixtures/pretooluse-bash-playwright-upload.json` guard fixtures pin named Neon,
 Vercel, GitHub, and Playwright CLI refusals.
+Batch 0c (Sep 9 2026) classifies those legacy cases as synthetic; captured read fixtures with
+provenance now certify routing through the configured matcher, launcher, runner, and guard.
 
 ## Root
 
@@ -19,6 +21,7 @@ Vercel, GitHub, and Playwright CLI refusals.
 - `DIRECTORY.md` — this file.
 - `.gitignore` — repo exclusions (the repo is PUBLIC by decision, README, so these are the publish line): archives/, LOCAL-ONLY-* files, secret patterns (.env*, keys, credentials, zips), settings files, and *.code-workspace never get committed.
 - `.gitattributes` — pins `*.mjs` and `*.js` to LF: hooks and nets are compared byte-for-byte against their installed copies (templates/global/_ritual_test.mjs fails closed on drift), and core.autocrlf would rewrite the working tree to CRLF while the committed blob stays LF, false-failing that check on every fresh checkout (found Aug 11 2026).
+  Batch 0c also pins Codex JSON and fixtures, pre-push, the doorway template, and the rules file to LF.
 
 ## memory/ — who Chan is
 
@@ -73,8 +76,19 @@ Vercel, GitHub, and Playwright CLI refusals.
 - `project-claude-md.md` — starter CLAUDE.md for any new repo: what it is, the stack, the run command.
 - `codex-chan-guard.rules` — Codex's push speed bump (Sep 1 2026): prefix rules forbidding git push, send-pack, remote rewrites and the deploy CLIs; installed byte-equal at `~/.codex/rules/chan-guard.rules`. A speed bump, not a gate (the -C spelling walks past it, proven); the gate is the push-guard hook port. Live-fire and clone law: lessons/platforms/codex.md.
 - `codex-agents-md.md` — the two Codex doorway blocks (Sep 1 2026): block A is copied to `~/.codex/AGENTS.md` (global), block B to a project root next to its CLAUDE.md. Codex reads AGENTS.md, never CLAUDE.md, so these are its pointers INTO the one kit folder; the kit is never duplicated. Gotchas and the sandbox live-fire: lessons/platforms/codex.md.
-- `codex/` — Codex guard layers (Sep 1-2 2026): `session-ritual.mjs` is the sole SessionStart reporter, resolves the kit router and active project at runtime, injects THE DRILL after compaction, reports every failed read plus git state and any stale `PUSH_GO`, and emits one JSON object only; `_session-ritual_test.mjs` stages it without touching the live home. `codex-guard-runner.mjs` preserves raw PreToolUse stdin while launching `codex-guard.mjs`, which imports the existing push parser, consumes only Chan's strict repo-bound `~/.codex/PUSH_GO`, and blocks remote rewrites; `fixtures/pretooluse-bash.json` and `fixtures/pretooluse-mcp-file-upload.json` pin the observed Bash payload and the uploads-only Playwright deny. `hooks.json` is the user-level wiring skeleton with structured JSON denies; `_codexguard_test.mjs` stages the launcher without touching the live home. `artifact-gauntlet.mjs`, `artifact-gauntlet.example.json`, `project-hooks.json`, and `_artifact_gauntlet_test.mjs` are the project `.codex/` completion SEATBELT (limited evidence, not a wall: it checks a PNG signature and a pass/exit regex, so an 8-byte header and a typed pass line satisfy it until batch 4 rebuilds it; Chan's eyes stay the visual gate): PostToolUse tracks `apply_patch`, Stop requires fresh evidence, and UserPromptSubmit nudges the HEAVY policy. `go.mjs` writes the token on Chan's chat GO (the DeepSeek protocol; one repo, one push) and refuses to overwrite one. `pre-push` is the byte-identical, per-clone Git gate and `_prepush_test.mjs` proves its strict, one-shot token behavior; the arming check must confirm `<clone>/.git/hooks/pre-push` is installed and equal. Live-fire stays mandatory.
+- `codex/` — Codex guard layers (Sep 1-2 2026): `session-ritual.mjs` is the sole SessionStart reporter, resolves the kit router and active project at runtime, injects THE DRILL after compaction, reports every failed read plus git state and any stale `PUSH_GO`, and emits one JSON object only; `_session-ritual_test.mjs` stages it without touching the live home. `codex-guard-runner.mjs` preserves raw PreToolUse stdin while launching `codex-guard.mjs`, which imports the existing push parser, claims a valid repo-bound `~/.codex/PUSH_GO` for the per-clone gate to consume, consumes invalid tokens, and blocks remote rewrites; `fixtures/pretooluse-bash.json` and `fixtures/pretooluse-mcp-file-upload.json` pin the observed Bash payload and the uploads-only Playwright deny. `hooks.json` is the user-level wiring skeleton with structured JSON denies; `_codexguard_test.mjs` stages the launcher without touching the live home. `artifact-gauntlet.mjs`, `artifact-gauntlet.example.json`, `project-hooks.json`, and `_artifact_gauntlet_test.mjs` are the project `.codex/` completion SEATBELT (limited evidence, not a wall: it checks a PNG signature and a pass/exit regex, so an 8-byte header and a typed pass line satisfy it until batch 4 rebuilds it; Chan's eyes stay the visual gate): PostToolUse tracks `apply_patch`, Stop requires fresh evidence, and UserPromptSubmit nudges the HEAVY policy. `go.mjs` writes the token on Chan's chat GO (the DeepSeek protocol; one repo, one push) and refuses to overwrite one. `pre-push` is the byte-identical, per-clone Git gate and `_prepush_test.mjs` proves its strict, one-shot token behavior; the arming check must confirm `<clone>/.git/hooks/pre-push` is installed and equal. Live-fire stays mandatory.
 - `apply-deepseek-switch.mjs` — the one-shot switch script (backs up settings, merges the env block, validates; --dry-run to rehearse). Never holds the key.
+- `codex/codex-guard-launcher.mjs` — outer PreToolUse boundary: MCP runner failures and invalid decisions deny; Bash runner failures retain their non-blocking direction. Command-start failure remains a host limitation, described in lessons/platforms/codex.md.
+- `codex/connector-reads.json` — one reviewed allowlist with exact captured names, dates, Codex versions, read semantics, raw and fixture hashes, and redactions; unknown connector denials point here. The old single-underscore denylist is retired.
+- `codex/push-state.mjs` — read-only workspace assertion: prints push rows, compares the kit's effective hook against its template, checks other clones for DISABLED URLs or installed hooks, and distinguishes content drift from line-ending drift.
+- `codex/verify-copies.mjs` — one source-to-install inventory and raw byte/hash verifier for global Codex files, extracted doorway blocks, and present project copies; missing or differing copies fail. Clone discovery and its inspected scope are printed in the receipt.
+- `codex/_connector_test.mjs` — event-to-decision fixture net using the configured matcher and real launcher, runner, and guard; synthetic failure injections run in a temporary home and never call a connector.
+- `codex/_copies_test.mjs` — per-copy drift, garbled Unicode, missing-file, and autocrlf checkout regressions; LIVE comparison when Codex is installed, explicit TEMPLATE MODE otherwise or with --template-only.
+- `codex/fixtures/manifest.json` — every fixture's captured/synthetic class and expected decision; captured provenance lives only in connector-reads.json.
+- `codex/fixtures/captured-neon-read.json` — sanitized Sep 7 Neon ingress event; exact name and empty input preserved, raw provenance in the allowlist.
+- `codex/fixtures/captured-vercel-read.json` — sanitized Sep 7 Vercel ingress event; exact name and empty input preserved, raw provenance in the allowlist.
+- `codex/fixtures/captured-github-read.json` — sanitized Sep 7 GitHub ingress event; exact name and empty input preserved, raw provenance in the allowlist.
+- `codex/fixtures/synthetic-connector-cases.json` — explicitly synthetic SQL, unknown-operation, alternate-name, malformed-event, and scoped-exception cases; never a live routing claim.
 - `agents/` — the QA gauntlet team (5 shipped project-agnostic agents + 2 client-persona skeletons; the review chain is 6 roles):
   - `agents/README.md` — the adaptation checklist and settings.local.json wiring.
   - `agents/_lawcheck_test.mjs` — regression net pinning each load-bearing runtime law to the agent file that must carry it; the pinned list's ONE home. MANDATORY re-run after any agent-file edit.

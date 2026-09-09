@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "reviewRule": "An addition requires a read-semantics review and a real ingress capture with date, Codex version, raw hash and sanitized fixture. Tool names are exact; no read-prefix inference.",
+  "operations": [
+    {
+      "toolName": "mcp__codex_apps__neon__list_docs_resources",
+      "capturedAtUtc": "2026-09-07T10:33:01.470Z",
+      "codexVersion": "codex-cli 0.153.0",
+      "sourceKind": "live PreToolUse ingress from a read-only connector call",
+      "capturePoint": "installed codex-guard-runner, immediately after stdin collection and before guard spawn",
+      "fixture": "fixtures/captured-neon-read.json",
+      "fixtureSha256": "1f79db85c35ada39bb3c6abf32652debeef0113af6322c5772f6bbb1790f57e7",
+      "rawSha256": "d97304aa63412c85ef76d2f6fee00afdb1956b5614146421b693f3b20d13638c",
+      "rawBytes": 509,
+      "redactedFields": [
+        "session_id",
+        "turn_id",
+        "transcript_path",
+        "cwd",
+        "tool_use_id"
+      ],
+      "readSemantics": "Lists documentation resources; no SQL or database operation."
+    },
+    {
+      "toolName": "mcp__codex_apps__vercel__list_teams",
+      "capturedAtUtc": "2026-09-07T10:33:01.494Z",
+      "codexVersion": "codex-cli 0.153.0",
+      "sourceKind": "live PreToolUse ingress from a read-only connector call",
+      "capturePoint": "installed codex-guard-runner, immediately after stdin collection and before guard spawn",
+      "fixture": "fixtures/captured-vercel-read.json",
+      "fixtureSha256": "665e4ea0ee8d7d424119fbc66c1a3b4ebd9548861607041a6f98c2ddcc89f526",
+      "rawSha256": "fc5c449119e9e0810b02b643dcf62d704f676d207c0cf7f6ba41ec0262215a3d",
+      "rawBytes": 502,
+      "redactedFields": [
+        "session_id",
+        "turn_id",
+        "transcript_path",
+        "cwd",
+        "tool_use_id"
+      ],
+      "readSemantics": "Lists teams visible to the signed-in user."
+    },
+    {
+      "toolName": "mcp__codex_apps__github__get_user_login",
+      "capturedAtUtc": "2026-09-07T10:33:01.460Z",
+      "codexVersion": "codex-cli 0.153.0",
+      "sourceKind": "live PreToolUse ingress from a read-only connector call",
+      "capturePoint": "installed codex-guard-runner, immediately after stdin collection and before guard spawn",
+      "fixture": "fixtures/captured-github-read.json",
+      "fixtureSha256": "ee1e713261be6c2d705f75fbe2b2c636a1bf5ce24edabdee3b82f1df975fe505",
+      "rawSha256": "03d92919f3106330f211e77b198126a4b11f43d5f08a0ec3f7a3980efb363b36",
+      "rawBytes": 506,
+      "redactedFields": [
+        "session_id",
+        "turn_id",
+        "transcript_path",
+        "cwd",
+        "tool_use_id"
+      ],
+      "readSemantics": "Reads the signed-in user login."
+    }
+  ]
+}

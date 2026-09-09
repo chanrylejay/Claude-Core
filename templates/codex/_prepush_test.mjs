@@ -39,5 +39,22 @@ go(); r = launch();
 const abandoned = JSON.parse(fs.readFileSync(TOKEN, "utf8")); abandoned.claimedAt = new Date(Date.now() - 6 * 60 * 1000).toISOString(); fs.writeFileSync(TOKEN, JSON.stringify(abandoned));
 r = run(); ok("a claimed-but-abandoned token is denied and consumed", r.status !== 0 && /claim is stale/.test(r.stderr) && absent());
 ok("template documents per-clone arming", /per-clone and unversioned/.test(fs.readFileSync(HOOK, "utf8")));
+// Exercise Git's hook discovery and the LF shebang against a local throwaway bare repository.
+// This is an isolated fixture push, with no network, credentials, or live GO token.
+const bare = path.join(HOME, "fixture-remote.git");
+const git = (cwd, ...args) => spawnSync("git", args, { cwd, env, encoding: "utf8", windowsHide: true });
+git(HOME, "init", "--bare", "-q", bare);
+fs.writeFileSync(path.join(REPO, "fixture.txt"), "offline hook test\n");
+git(REPO, "add", "fixture.txt");
+const commit = git(REPO, "-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "-c", "commit.gpgsign=false", "commit", "-qm", "fixture");
+if (commit.status !== 0) throw new Error("fixture commit failed: " + commit.stderr);
+fs.copyFileSync(HOOK, path.join(REPO, ".git/hooks/pre-push"));
+fs.chmodSync(path.join(REPO, ".git/hooks/pre-push"), 0o755);
+r = git(REPO, "push", bare, "HEAD:refs/heads/fixture");
+ok("Git invokes the installed hook and blocks without a token", r.status !== 0 && /codex-pre-push.*BLOCKED/.test(r.stderr));
+go();
+r = git(REPO, "push", bare, "HEAD:refs/heads/fixture");
+ok("Git accepts the installed LF hook and consumes a fixture token once", r.status === 0 && absent() && /GO token consumed/.test(r.stderr));
+if (path.dirname(path.resolve(HOME)) !== path.resolve(os.tmpdir()) || !path.basename(HOME).startsWith("codex-prepush-")) throw new Error("unsafe cleanup target");
 fs.rmSync(HOME, { recursive: true, force: true });
 console.log(`\ncodex pre-push: ${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

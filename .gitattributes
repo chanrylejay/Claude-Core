@@ -4,3 +4,10 @@
 # which false-fails that check on every fresh checkout. Pin them to LF.
 *.mjs text eol=lf
 *.js  text eol=lf
+
+# Codex install sources and capture hashes must survive autocrlf checkouts byte-for-byte.
+templates/codex/*.json text eol=lf
+templates/codex/fixtures/*.json text eol=lf
+templates/codex/pre-push text eol=lf
+templates/codex-agents-md.md text eol=lf
+templates/codex-chan-guard.rules text eol=lf

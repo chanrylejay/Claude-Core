@@ -28,13 +28,6 @@ const run = (command, cwd = REPO) => spawnSync(process.execPath, [GUARD], {
 const runPayload = (payload) => spawnSync(process.execPath, [GUARD], {
   input: JSON.stringify(payload), encoding: "utf8", timeout: 10000,
 });
-const captured = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash.json"), "utf8"));
-const mcpFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-file-upload.json"), "utf8"));
-const neonWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-neon-run-sql.json"), "utf8"));
-const vercelWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-vercel-deploy.json"), "utf8"));
-const githubWriteFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-mcp-github-create-pr.json"), "utf8"));
-const playwrightExternalFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash-playwright-external-open.json"), "utf8"));
-const playwrightUploadFixture = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", "pretooluse-bash-playwright-upload.json"), "utf8"));
 const go = (repo = REPO, extra = {}) => fs.writeFileSync(TOKEN, JSON.stringify({ repo, issuedAt: new Date().toISOString(), ...extra }));
 const absent = () => !fs.existsSync(TOKEN);
 const claimed = () => { try { return typeof JSON.parse(fs.readFileSync(TOKEN, "utf8")).claimedAt === "string"; } catch { return false; } };
@@ -106,22 +99,10 @@ for (const command of [
   r = run(command);
   ok("real executable form remains blocked: " + command, denied(r));
 }
-r = spawnSync(process.execPath, [GUARD], { input: JSON.stringify(captured), encoding: "utf8", timeout: 10000 });
-passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
-ok("captured Codex Bash payload reaches the launcher unchanged enough to pass", r.status === 0 && passJson && !(r.stderr || "").trim());
-r = runPayload(mcpFixture);
-ok("Playwright upload fixture is denied with exact structured JSON", denied(r));
-r = runPayload(playwrightExternalFixture);
-ok("Playwright CLI external open fixture is denied with exact structured JSON", denied(r));
-r = runPayload(playwrightUploadFixture);
-ok("Playwright CLI upload fixture is denied with exact structured JSON", denied(r));
+// Fixture provenance and full routing are certified by _connector_test.mjs.
 const playwrightLocal = run("playwright-cli -s=guard-proof open http://127.0.0.1:4173");
 passJson = null; try { passJson = JSON.parse(playwrightLocal.stdout); } catch {}
 ok("Playwright CLI localhost open passes the containment", playwrightLocal.status === 0 && passJson && !(playwrightLocal.stderr || "").trim());
-for (const [service, fixture] of [["Neon", neonWriteFixture], ["Vercel", vercelWriteFixture], ["GitHub", githubWriteFixture]]) {
-  r = runPayload(fixture);
-  ok(service + " captured write fixture is denied with exact structured JSON", denied(r));
-}
 r = runPayload({ tool_name: "mcp__playwright__browser_fill_form", tool_input: {} });
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("Playwright form entry passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
@@ -130,7 +111,7 @@ passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
 ok("Playwright typing passes under the localhost-only containment", r.status === 0 && passJson && !(r.stderr || "").trim());
 r = runPayload({ tool_name: "mcp__playwright__browser_snapshot", tool_input: {} });
 passJson = null; try { passJson = JSON.parse(r.stdout); } catch {}
-ok("unrecognized MCP tool shapes pass unchanged", r.status === 0 && passJson && !(r.stderr || "").trim());
+ok("Playwright snapshot retains its existing scoped exception", r.status === 0 && passJson && !(r.stderr || "").trim());
 
 for (const command of [
   "git config alias.ship push",
@@ -151,7 +132,7 @@ ok("SessionStart reports an earlier-session token in JSON", start.status === 0 &
 const wiring = JSON.parse(fs.readFileSync(path.join(TPL, "hooks.json"), "utf8"));
 const pre = wiring.hooks?.PreToolUse?.[0]?.hooks?.[0]?.command || "";
 ok("wiring names the required installed parser", /push-guard\.mjs/.test(wiring.description || ""));
-ok("PreToolUse wiring uses the stdin-preserving Node runner", /node/.test(pre) && /codex-guard-runner\.mjs/.test(pre) && !/powershell/i.test(pre));
+ok("PreToolUse wiring uses the stdin-preserving Node launcher", /node/.test(pre) && /codex-guard-launcher\.mjs/.test(pre) && !/powershell/i.test(pre));
 
 // Hostile-review pins (Sep 1 2026): a GO never authorizes a remote rewrite; --no-verify is never
 // Codex's; the cd family binds the repo like Set-Location; go.mjs writes exactly the strict token.

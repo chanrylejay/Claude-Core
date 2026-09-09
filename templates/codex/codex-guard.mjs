@@ -10,11 +10,9 @@
 // `--no-verify` stays Chan's own escape from his own terminal. A remote rewrite is ALWAYS denied,
 // token or not: a GO to push never authorizes changing where pushes go.
 //
-// The runner continues after a hook spawn/load failure. Wiring therefore turns launcher failures
-// into a structured deny. The runner parses combined hook output strictly, so a deny or allow
-// path must emit its JSON response and NOTHING else (including stderr).
-// A non-string `tool_name` passes through unchanged: Codex only asks this launcher to inspect
-// its Bash shape, and unknown host metadata must not be reinterpreted as a shell command.
+// The MCP wiring selects --connector independently of stdin. Runner and guard failures deny
+// on that route; Bash retains its existing failure directions. Responses contain only JSON.
+// Non-string tool_name metadata passes through on the Bash route; the connector route denies it.
 
 import { existsSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
@@ -25,72 +23,29 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const TOKEN = join(HERE, "..", "PUSH_GO");
 const MAX_AGE_MS = 30 * 60 * 1000;
 
-// Exact names only: this is a deny wall, not intent guessing. Context7 is documentation-only
-// and shadcn writes only the local project, so neither belongs here.
-const MCP_WRITE_TOOLS = new Set([
-  "mcp__codex_apps__neon_add_auth_oauth_provider", "mcp__codex_apps__neon_add_auth_trusted_domain",
-  "mcp__codex_apps__neon_complete_database_migration", "mcp__codex_apps__neon_complete_query_tuning",
-  "mcp__codex_apps__neon_create_auth_user", "mcp__codex_apps__neon_create_branch",
-  "mcp__codex_apps__neon_create_postgres_database", "mcp__codex_apps__neon_create_postgres_endpoint",
-  "mcp__codex_apps__neon_create_postgres_role", "mcp__codex_apps__neon_create_project",
-  "mcp__codex_apps__neon_create_snapshot", "mcp__codex_apps__neon_create_storage_bucket",
-  "mcp__codex_apps__neon_delete_auth_oauth_provider", "mcp__codex_apps__neon_delete_auth_trusted_domain",
-  "mcp__codex_apps__neon_delete_auth_user", "mcp__codex_apps__neon_delete_branch",
-  "mcp__codex_apps__neon_delete_data_api", "mcp__codex_apps__neon_delete_function",
-  "mcp__codex_apps__neon_delete_postgres_database", "mcp__codex_apps__neon_delete_postgres_endpoint",
-  "mcp__codex_apps__neon_delete_postgres_role", "mcp__codex_apps__neon_delete_project",
-  "mcp__codex_apps__neon_delete_snapshot", "mcp__codex_apps__neon_delete_storage_bucket",
-  "mcp__codex_apps__neon_delete_storage_object", "mcp__codex_apps__neon_delete_storage_objects_by_prefix",
-  "mcp__codex_apps__neon_deploy_function", "mcp__codex_apps__neon_disable_auth",
-  "mcp__codex_apps__neon_finalize_branch_restore", "mcp__codex_apps__neon_prepare_database_migration",
-  "mcp__codex_apps__neon_prepare_query_tuning", "mcp__codex_apps__neon_provision_neon_auth",
-  "mcp__codex_apps__neon_provision_neon_data_api", "mcp__codex_apps__neon_reset_from_parent",
-  "mcp__codex_apps__neon_reset_postgres_role_password", "mcp__codex_apps__neon_restart_postgres_endpoint",
-  "mcp__codex_apps__neon_restore_snapshot", "mcp__codex_apps__neon_run_sql",
-  "mcp__codex_apps__neon_run_sql_transaction", "mcp__codex_apps__neon_set_default_branch",
-  "mcp__codex_apps__neon_set_snapshot_schedule", "mcp__codex_apps__neon_start_postgres_endpoint",
-  "mcp__codex_apps__neon_suspend_postgres_endpoint", "mcp__codex_apps__neon_update_auth_config",
-  "mcp__codex_apps__neon_update_auth_oauth_provider", "mcp__codex_apps__neon_update_auth_user_role",
-  "mcp__codex_apps__neon_update_branch", "mcp__codex_apps__neon_update_data_api",
-  "mcp__codex_apps__neon_update_function", "mcp__codex_apps__neon_update_postgres_database",
-  "mcp__codex_apps__neon_update_postgres_endpoint", "mcp__codex_apps__neon_update_project",
-  "mcp__codex_apps__neon_update_snapshot",
-  "mcp__codex_apps__vercel_add_toolbar_reaction", "mcp__codex_apps__vercel_change_toolbar_thread_resolve_status",
-  "mcp__codex_apps__vercel_deploy_to_vercel", "mcp__codex_apps__vercel_edit_toolbar_message",
-  "mcp__codex_apps__vercel_import_claude_design_from_url", "mcp__codex_apps__vercel_reply_to_toolbar_thread",
-  "mcp__codex_apps__github_add_comment_to_issue", "mcp__codex_apps__github_add_issue_assignees",
-  "mcp__codex_apps__github_add_issue_labels", "mcp__codex_apps__github_add_reaction_to_issue_comment",
-  "mcp__codex_apps__github_add_reaction_to_pr", "mcp__codex_apps__github_add_reaction_to_pr_review_comment",
-  "mcp__codex_apps__github_add_review_to_pr", "mcp__codex_apps__github_convert_pull_request_to_draft",
-  "mcp__codex_apps__github_create_blob", "mcp__codex_apps__github_create_branch",
-  "mcp__codex_apps__github_create_commit", "mcp__codex_apps__github_create_file",
-  "mcp__codex_apps__github_create_issue", "mcp__codex_apps__github_create_pull_request",
-  "mcp__codex_apps__github_create_tree", "mcp__codex_apps__github_delete_file",
-  "mcp__codex_apps__github_dismiss_pull_request_review", "mcp__codex_apps__github_enable_auto_merge",
-  "mcp__codex_apps__github_label_pr", "mcp__codex_apps__github_lock_issue_conversation",
-  "mcp__codex_apps__github_mark_pull_request_ready_for_review", "mcp__codex_apps__github_merge_pull_request",
-  "mcp__codex_apps__github_remove_issue_assignees", "mcp__codex_apps__github_remove_issue_label",
-  "mcp__codex_apps__github_remove_pull_request_reviewers", "mcp__codex_apps__github_remove_reaction_from_issue_comment",
-  "mcp__codex_apps__github_remove_reaction_from_pr", "mcp__codex_apps__github_remove_reaction_from_pr_review_comment",
-  "mcp__codex_apps__github_reply_to_review_comment", "mcp__codex_apps__github_request_pull_request_reviewers",
-  "mcp__codex_apps__github_rerun_failed_workflow_run_jobs", "mcp__codex_apps__github_rerun_workflow_job",
-  "mcp__codex_apps__github_resolve_review_thread", "mcp__codex_apps__github_unlock_issue_conversation",
-  "mcp__codex_apps__github_unresolve_review_thread", "mcp__codex_apps__github_update_file",
-  "mcp__codex_apps__github_update_issue", "mcp__codex_apps__github_update_issue_comment",
-  "mcp__codex_apps__github_update_pull_request", "mcp__codex_apps__github_update_ref",
-  "mcp__codex_apps__github_update_review_comment",
-]);
-
-// Connector hooks expose the live service and action as separate segments (for example
-// mcp__codex_apps__neon__create_branch). Match those service/action prefixes rather than one
-// brittle full name; read tools do not carry any of these action prefixes.
-const MCP_WRITE_PREFIXES = [
-  /^mcp__codex_apps__neon__(?:add|complete|create|delete|deploy|disable|finalize|prepare|provision|reset|restart|restore|run_sql|set|start|suspend|update)_/,
-  /^mcp__codex_apps__vercel__(?:add|change|deploy|edit|import|reply)_/,
-  /^mcp__codex_apps__github__(?:add|convert|create|delete|dismiss|enable|label|lock|mark|merge|remove|rerun|reply|request|resolve|unlock|unresolve|update)_/,
-];
-
-const isMcpWrite = (toolName) => MCP_WRITE_TOOLS.has(toolName) || MCP_WRITE_PREFIXES.some((prefix) => prefix.test(toolName));
+// batch-0c-captured-connectors: the legacy single-underscore denylist is retired.
+// Context7 docs, local shadcn changes, and the existing Playwright containment remain scoped exceptions.
+// These are separate tool servers. Every codex_apps connector goes through the read policy.
+const connectorException = (name) => /^mcp__(?:playwright|shadcn|context7)__/.test(name);
+const READ_POLICY = new URL("./connector-reads.json", import.meta.url);
+function connectorAllowed(name) {
+  const policy = JSON.parse(readFileSync(READ_POLICY, "utf8"));
+  if (policy.schemaVersion !== 1 || !Array.isArray(policy.operations) || !policy.operations.length)
+    throw new Error("connector-reads.json has an invalid schema");
+  const names = new Set();
+  for (const row of policy.operations) {
+    if (typeof row.toolName !== "string" || !/^mcp__codex_apps__[a-z0-9]+__[a-z0-9_]+$/.test(row.toolName) ||
+        /__run_sql(?:_|$)/.test(row.toolName) || names.has(row.toolName) ||
+        typeof row.capturedAtUtc !== "string" || !Number.isFinite(Date.parse(row.capturedAtUtc)) ||
+        typeof row.codexVersion !== "string" || !row.codexVersion.trim() ||
+        typeof row.fixture !== "string" || !row.fixture.startsWith("fixtures/") ||
+        !/^[a-f0-9]{64}$/.test(row.fixtureSha256) || !/^[a-f0-9]{64}$/.test(row.rawSha256) ||
+        typeof row.readSemantics !== "string" || !row.readSemantics.trim())
+      throw new Error("connector-reads.json has an invalid or duplicate provenance row");
+    names.add(row.toolName);
+  }
+  return names.has(name);
+}
 
 const PLAYWRIGHT_CLI_ACTIONS = new Set(["open", "goto", "tab-new", "upload", "drop"]);
 const PLAYWRIGHT_CLI_FILE_ACTIONS = new Set(["upload", "drop"]);
@@ -255,12 +210,28 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
       pass();
     }
     const toolName = payload?.tool_name;
+    // The MCP route supplies this flag independently of stdin, so damaged metadata cannot
+    // turn an already-routed connector event into the legacy non-string Bash passthrough.
+    if (process.argv.includes("--connector") && (typeof toolName !== "string" || !toolName.includes("__") ||
+        payload.hook_event_name !== "PreToolUse" || !payload.tool_input ||
+        typeof payload.tool_input !== "object" || Array.isArray(payload.tool_input)))
+      fail("Malformed connector event for " + String(toolName) + "; denied. Review templates/codex/connector-reads.json.");
     if (typeof toolName !== "string") pass();
     if (toolName === "mcp__playwright__browser_file_upload") {
       fail("Playwright file uploads are disabled. External interaction needs Chan's explicit review.");
     }
-    if (isMcpWrite(toolName)) {
-      fail("This MCP write or publish tool is disabled: " + toolName + ". Chan's external-action gate applies.");
+    if (toolName.includes("__") && !connectorException(toolName)) {
+      const fixPath = "templates/codex/connector-reads.json";
+      if (payload.hook_event_name !== "PreToolUse" || !payload.tool_input ||
+          typeof payload.tool_input !== "object" || Array.isArray(payload.tool_input))
+        fail("Malformed connector event for " + toolName + "; denied. Review " + fixPath + ".");
+      try {
+        if (!connectorAllowed(toolName))
+          fail("Connector operation " + toolName + " is not an approved read; denied. Review " + fixPath + " and add capture provenance before enabling a new read.");
+      } catch (error) {
+        fail("Connector policy failed for " + toolName + ": " + error.message + "; denied. Review " + fixPath + ".");
+      }
+      pass();
     }
     if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;
