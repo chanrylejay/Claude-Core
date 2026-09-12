@@ -175,6 +175,39 @@ t("compact emits THE DRILL", /Run THE DRILL/.test(b.stdout || ""));
 t("compact says OPEN the files, not the index lines", /OPEN the READ-FIRST files themselves/.test(b.stdout || ""));
 t("compact demands the failed-read report", /what FAILED to read/.test(b.stdout || ""));
 
+// 2b. READ PLAN (batch 1b, Sep 12 2026; why: Claude-Core/lessons/audit-log.md AL-33). This
+//     sandbox home has NO resolver under Claude-Core/templates, so both branches must NAME the
+//     unavailable plan and the by-hand rule, exit 0, and never order DIRECTORY.md as a boot read.
+t("startup names an unavailable READ PLAN (resolver import failed, ERR_MODULE_NOT_FOUND) and the by-hand rule", /READ PLAN unavailable \(the kit's resolver could not be imported from .*boot-resolver\.mjs: ERR_MODULE_NOT_FOUND\): open .*CLAUDE\.md and Claude-Core\/memory\/MEMORY\.md RAW, then assemble the plan by hand/.test(a.stdout || ""));
+t("compact carries the same READ PLAN note (the drill's step 2 points at the resolver)", /READ PLAN unavailable/.test(b.stdout || "") && a.status === 0 && b.status === 0);
+t("neither branch orders Claude-Core/DIRECTORY.md as a boot read any more (it is a lookup, before creating a kit file)", !/still OPEN Claude-Core\/DIRECTORY\.md/.test(a.stdout || "") && !/AND Claude-Core\/DIRECTORY\.md/.test(b.stdout || "") && /DIRECTORY\.md is a lookup/.test(a.stdout || "") && /DIRECTORY\.md is a lookup/.test(b.stdout || ""));
+t("neither branch orders \"every marked file\" any more: the plan is the resolver's list plus this project's own 🔴 lines", /every file on the READ PLAN above and any 🔴 READ-FIRST files this project's MEMORY\.md marks/.test(a.stdout || "") && /every file on the READ PLAN below \(the kit's one resolver\) and the 🔴 READ-FIRST files this project's own MEMORY\.md marks/.test(b.stdout || ""));
+// a planted resolver + a frontmatter'd router + a workspace boot_mode line: the plan prints, the
+// workspace decides, the canon parks when the mode is not its own
+const PLAN_HOME = path.join(os.tmpdir(), "ritual-plan-home"); fs.rmSync(PLAN_HOME, { recursive: true, force: true });
+fs.mkdirSync(path.join(PLAN_HOME, "Claude-Core", "templates"), { recursive: true }); fs.mkdirSync(path.join(PLAN_HOME, "Claude-Core", "memory"), { recursive: true }); fs.mkdirSync(path.join(PLAN_HOME, ".claude"), { recursive: true });
+fs.copyFileSync(path.join(path.dirname(TEMPLATE), "..", "boot-resolver.mjs"), path.join(PLAN_HOME, "Claude-Core", "templates", "boot-resolver.mjs"));
+fs.writeFileSync(path.join(PLAN_HOME, "Claude-Core", "CLAUDE.md"), "# plan-home contract\n");
+fs.writeFileSync(path.join(PLAN_HOME, "Claude-Core", "memory", "MEMORY.md"), "---\nstate:\n  mode_default: A\n  active_project: projects/p/project-canon.md\ncold_start:\n  - memory/c.md\nmodes:\n  A:\n    - memory/a.md\n  B:\n    - memory/b.md\nlookup:\n  - DIRECTORY.md   # before creating a kit file\n---\n# idx\n");
+fs.writeFileSync(path.join(PLAN_HOME, ".claude", "CLAUDE.md"), "# hub\n@" + path.join(PLAN_HOME, "Claude-Core", "CLAUDE.md").replace(/\\/g, "/") + "\n");
+const PLAN_WS = path.join(os.tmpdir(), "ritual-plan-ws"); fs.rmSync(PLAN_WS, { recursive: true, force: true }); fs.mkdirSync(PLAN_WS);
+const PLAN_ENV = { USERPROFILE: PLAN_HOME, HOME: PLAN_HOME, XDG_DATA_HOME: path.join(PLAN_HOME, ".local", "share") };
+const planAt = () => spawnHook(["start"], { input: JSON.stringify({ source: "startup", cwd: PLAN_WS }), cwd: PLAN_WS, env: PLAN_ENV });
+let pr = planAt();
+t("planted resolver, no workspace line: READ PLAN from mode_default, the default mode's set and its canon, paths under the kit", pr.status === 0 && /READ PLAN \(mode A from mode_default in the index \(no boot_mode line in this workspace\), the kit's one resolver; paths under .*Claude-Core\): CLAUDE\.md, memory\/MEMORY\.md, memory\/c\.md, memory\/a\.md, projects\/p\/project-canon\.md — open every one RAW and in full/.test(pr.stdout || ""));
+t("C1 (1b v1 review): the plan names the contract-mandated cost read beside it, with its size, on this seat only — never counted as gone, never folded into the plan's budget", /never now\. Contract-mandated on this seat, outside the plan's budget: memory\/chan-ai-cost-context\.md \((?:size unknown, the file is missing from this kit|\d+ chars)\) is LAW before DeepSeek CLI work, so open it before that work; the kit-lean law inside binds every seat\./.test(pr.stdout || ""));
+fs.writeFileSync(path.join(PLAN_WS, "CLAUDE.md"), "# ws\n- boot_mode: B\n");
+pr = planAt();
+t("planted resolver + workspace `boot_mode: B`: the workspace decides, B's set is planned, the canon is parked (B is not its mode)", pr.status === 0 && /READ PLAN \(mode B from workspace CLAUDE\.md, .*\): CLAUDE\.md, memory\/MEMORY\.md, memory\/c\.md, memory\/b\.md — open every one RAW/.test(pr.stdout || "") && !/memory\/b\.md, projects\/p\/project-canon\.md/.test(pr.stdout || "") && !/Resolver problems/.test(pr.stdout || ""));
+fs.writeFileSync(path.join(PLAN_WS, "AGENTS.md"), "- boot_mode: A\n");
+pr = planAt();
+t("planted resolver, CLAUDE.md and AGENTS.md disagreeing: named as a resolver problem, mode_default decides, exit 0", pr.status === 0 && /Resolver problems: the workspace's boot_mode lines disagree \(CLAUDE\.md: B, AGENTS\.md: A\)/.test(pr.stdout || "") && /READ PLAN \(mode A from mode_default/.test(pr.stdout || ""));
+fs.writeFileSync(path.join(PLAN_HOME, "Claude-Core", "templates", "boot-resolver.mjs"), "export function parseIndex() { throw new Error('boom'); }\nexport function resolveBoot() {}\n");
+pr = planAt();
+t("planted resolver that THROWS: READ PLAN unavailable names the throw and the by-hand rule, the ritual still emits, exit 0", pr.status === 0 && /READ PLAN unavailable \(the resolver threw: boom\): open .*CLAUDE\.md and Claude-Core\/memory\/MEMORY\.md RAW/.test(pr.stdout || "") && /Session-start ritual/.test(pr.stdout || ""));
+SPAWNED_IN.add(PLAN_WS);
+fs.rmSync(PLAN_HOME, { recursive: true, force: true });
+
 // 3. THE BUG this net exists for (audit Jul 25 2026): the seed write used to share the outer
 //    try with emit() and run BEFORE it, so a throw on the write exited 0 having emitted NOTHING
 //    — a compacted session then got no DRILL and trusted the summary, which is the exact failure

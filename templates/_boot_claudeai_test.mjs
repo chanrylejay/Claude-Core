@@ -25,6 +25,12 @@
 //      BOOT BROKEN, and no mode file (batch 1a v2: a broken index leaves the session its list)
 //  20. an inherited object name as --mode (constructor) is an unknown mode, exit 1, never a crash
 //      (R1, Codex review Sep 12 2026)
+//  21. batch 1b (Sep 12 2026; AL-33): EVERY mode in the modes block boots exit 0, prints its
+//      budget with the source (boot.budget_by_mode.<MODE> or boot.budget_chars), and sits under
+//      it — the per-mode red line, on the browser seat (the widest)
+//  22. batch 1b: the active canon is in BOOT for the default mode only; every other known mode
+//      parks it as the FIRST LOOKUP line (a mode whose set lists it boots it there)
+//  23. mutation: a budget_by_mode line set below its mode's count → exit 0, OVER BUDGET names it
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -86,6 +92,23 @@ t("LEAN resolves and boots smaller than the default mode", lean.code === 0 && bo
 t("active canon: in BOOT for the default mode, in LOOKUP for LEAN", L.boot.includes(canon) && LL.look.includes(canon) && !LL.boot.includes(canon));
 const STAR = [...fm.matchAll(/^\s+- (\S+)\s+# lean:lookup/gm)].map((m) => m[1]);
 t(`lean:lookup files (${STAR.length}) ride BOOT in the default mode and LOOKUP under LEAN`, STAR.length === 3 && STAR.every((p) => L.boot.includes(p) && LL.look.includes(p) && !LL.boot.includes(p)));
+
+// 21-22. batch 1b: every mode, its own budget, the canon rule
+const allModes = [...fm.matchAll(/^  ([A-Z_]+):/gm)].map((m) => m[1]).filter((m) => !/^(state|boot|cold_start|modes|lookup|metadata|budget_by_mode)$/.test(m));
+const byMode = Object.fromEntries([...fm.matchAll(/^    ([A-Z_]+): (\d+)/gm)].map((m) => [m[1], Number(m[2])]));
+const perMode = allModes.map((m) => { const r = run(TMP, ["--mode=" + m]); const line = r.out.match(/^BOOT SET: (\d+) chars .* budget (\d+) \((boot\.budget_by_mode\.\w+|boot\.budget_chars)\)/m) || []; return { m, code: r.code, set: Number(line[1]), budget: Number(line[2]), source: line[3], out: r.out }; });
+t(`every mode boots exit 0 and prints its budget with the source (${perMode.map((p) => p.m + " " + p.set + "/" + p.budget).join(", ")})`, allModes.length >= 5 && perMode.every((p) => p.code === 0 && p.set > 0 && p.budget > 0 && (byMode[p.m] ? p.source === "boot.budget_by_mode." + p.m && p.budget === byMode[p.m] : p.source === "boot.budget_chars" && p.budget === budget)));
+t("every mode sits under its budget line, no OVER BUDGET anywhere (the per-mode red line)", perMode.every((p) => p.set <= p.budget && !/OVER BUDGET/.test(p.out)));
+t("the active canon is in BOOT for the default mode only; every other known mode parks it as the FIRST LOOKUP line (LEAN: after its lean:lookup files, batch 4b)", perMode.every((p) => { const l = lists(p.out); const modeLists = [...fm.matchAll(/^  ([A-Z_]+):[^\n]*\n((?:    - .*\n)*)/gm)].find((mm) => mm[1] === p.m); const inSet = (modeLists?.[2] || "").includes(canon); return p.m === wantDefault || inSet ? l.boot.includes(canon) && !l.look.includes(canon) : !l.boot.includes(canon) && (p.m === "LEAN" ? l.look.includes(canon) : l.look[0] === canon); }));
+
+// 23. a budget_by_mode line below its count → exit 0, OVER BUDGET names the mode's line
+const tightMode = Object.keys(byMode)[0];
+if (tightMode) {
+  fs.writeFileSync(IDX, fm.replace(new RegExp("^    " + tightMode + ": \\d+", "m"), "    " + tightMode + ": 1000"));
+  const tm = run(TMP, ["--mode=" + tightMode]);
+  t(`budget_by_mode.${tightMode} below the count: exit 0, OVER BUDGET printed against that line`, tm.code === 0 && /OVER BUDGET/.test(tm.out) && new RegExp("budget 1000 \\(boot\\.budget_by_mode\\." + tightMode + "\\)").test(tm.out));
+  restore();
+}
 
 // 5. unknown mode
 const bad = run(TMP, ["--mode=NO_SUCH_MODE"]);

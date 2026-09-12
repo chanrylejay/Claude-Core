@@ -12,8 +12,12 @@
 //      one read-plan rule for every seat; this file only prints) and prints TWO lists
 //      (batch 1, Aug 30 2026; why: ../lessons/audit-log.md AL-20):
 //        BOOT   — read now, RAW, in order: contract → relay ramp → index (FULL) → cold_start
-//                 → mode set → active_project canon. Character-counted (CRLF-normalized)
-//                 against boot.budget_chars.
+//                 → mode set → active_project canon (in its own mode; batch 1b parks it in
+//                 LOOKUP for every other mode). Character-counted (CRLF-normalized) against
+//                 the mode's budget: boot.budget_by_mode.<MODE> when the index names one, else
+//                 boot.budget_chars (batch 1b; the resolver net pins every seat and mode).
+//      The sandbox has no workspace, so the mode is --mode=X or the state block's default; the
+//      hands take theirs from the workspace's `boot_mode:` line (resolver header).
 //        LOOKUP — verified present, NEVER read at boot; each line names its trigger. The
 //                 contract and the canon name the same triggers where the work happens.
 //   3. verifies every listed file, both lists, exists on disk: a missing file is a broken
@@ -75,9 +79,9 @@ const show = ([p, why]) => {
 console.log("BOOT — read RAW, in this order (the script never reads them for you):");
 bootList.forEach(show);
 const bytes = bootList.reduce((s, [p]) => s + size(p), 0);
-const budget = Number(boot.budget_chars || 0);
-console.log(`BOOT SET: ${bytes} chars ≈ ${Math.round(bytes / 4)} tokens` + (budget ? ` · budget ${budget}` : " · no boot.budget_chars in the frontmatter"));
-if (budget && bytes > budget) console.log(`  OVER BUDGET by ${bytes - budget} chars — the boot net is red; trim the BOOT list or raise boot.budget_chars with Chan's GO. Booting anyway so you can fix it.`);
+const budget = plan.budget.chars; // the mode's own ceiling, or the default (batch 1b)
+console.log(`BOOT SET: ${bytes} chars ≈ ${Math.round(bytes / 4)} tokens · budget ${budget} (${plan.budget.source})`);
+if (bytes > budget) console.log(`  OVER BUDGET by ${bytes - budget} chars — the resolver net is red; trim the BOOT list or raise the mode's budget line with Chan's GO. Booting anyway so you can fix it.`);
 console.log("");
 console.log("LOOKUP — verified present, NOT read at boot; open at the trigger (fail-closed if missing):");
 lookupList.forEach(show);

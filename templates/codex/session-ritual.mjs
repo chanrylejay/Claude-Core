@@ -6,6 +6,10 @@
 // If the resolver cannot be imported, or throws (R1, Codex review Sep 12 2026: a resolver bug
 // once killed this report outright, exit 1 and no JSON), the plan degrades to contract + router
 // and the failure is named in the report, never hidden. This hook never wedges a session.
+// Batch 1b (Sep 12 2026; AL-33): the mode comes from THIS workspace's `boot_mode:` line
+// (AGENTS.md or CLAUDE.md beside the session's cwd, read through the resolver's one parser);
+// mode_default in the router is the fallback, and the report says which one decided. A resolver
+// copy older than 1b has no readWorkspaceMode: the hook boots mode_default and says so.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -44,9 +48,16 @@ let resolver = null;
 try { resolver = await import(pathToFileURL(resolverPath).href); }
 catch (error) { failed.push(`${resolverPath} (${error.code === "ERR_MODULE_NOT_FOUND" ? "missing" : "unreadable: " + (error.code || error.message)})`); }
 let index = { state: {} }, plan = { mode: "", boot: [], problems: [] }, resolverRan = false;
+let modeSource = "mode_default in the router (no boot_mode line in this workspace)";
 if (resolver) {
-  try { index = resolver.parseIndex(router); plan = resolver.resolveBoot(index, { seat: "codex" }); resolverRan = true; }
-  catch (error) { // R1: a throw inside the resolver is a named failure, never a dead hook
+  try {
+    index = resolver.parseIndex(router);
+    const ws = typeof resolver.readWorkspaceMode === "function" ? resolver.readWorkspaceMode(path.resolve(input.cwd || process.cwd())) : { mode: "", source: "", problems: ["resolver copy predates batch 1b (no readWorkspaceMode): booting mode_default"] };
+    if (ws.source) modeSource = ws.source;
+    plan = resolver.resolveBoot(index, { seat: "codex", mode: ws.mode, modeSource: ws.source });
+    plan.problems = [...ws.problems, ...plan.problems];
+    resolverRan = true;
+  } catch (error) { // R1: a throw inside the resolver is a named failure, never a dead hook
     index = { state: {} }; plan = { mode: "", boot: [], problems: [] };
     failed.push(`${resolverPath} (threw: ${error.message})`);
   }
@@ -74,7 +85,7 @@ try {
 }
 const report = [
   ritual,
-  `Router at runtime: mode ${mode}; active project ${active || "unresolved"}.`,
+  `Router at runtime: mode ${mode}; active project ${active || "unresolved"}. Mode source: ${modeSource}.`,
   `Read plan: ${names || "router unavailable"}.`,
   ...(plan.problems.length ? [`Resolver problems: ${plan.problems.join("; ")}.`] : []),
   gitState(path.resolve(input.cwd || process.cwd())),

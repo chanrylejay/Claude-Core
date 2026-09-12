@@ -1,6 +1,6 @@
 ---
 name: chan-career-playbook
-description: Chan's Career Resilience Playbook, moved into Claude-Core Jul 23 2026 from Document A v10 section 4. The standing career posture, the day-1 checklist if an engagement ends, and the side-project flywheel. ACTIVE NOW: the Devoted engagement ended Jul 24 2026 — run the day-1 checklist together with workflow/devoted-closure-checklist.md. Claude proactively helps with all of it.
+description: Chan's Career Resilience Playbook, moved into Claude-Core Jul 23 2026 from Document A v10 section 4. The standing career posture, the day-1 checklist if an engagement ends, and the side-project flywheel. The Devoted engagement ended Jul 24 2026; the day-1 checklist fired and ran with workflow/devoted-closure-checklist.md, and the closure is COMPLETE (Chan, Aug 28 2026). Claude proactively helps with all of it.
 metadata:
   type: user
 ---
@@ -15,6 +15,7 @@ metadata:
 - **Financial guard-rail:** CHAN decides every spend, always — there is no threshold below which the AI decides one, and no state in which it decides one for him. Any spend question raised in a build session gets surfaced, not answered inline: state the options and the cost, then stop. If he wants the slow think, he routes it to Sentinel himself (the old system did this automatically; the habit is the point, never decide money matters casually in a build session).
 
 ## If the engagement ends (day-1 checklist, run as one session)
+Status: fired for Devoted (ended Jul 24 2026); the closure ran Jul-Aug 2026 and is COMPLETE (Chan, Aug 28 2026), so this list is history until the next engagement ends.
 1. Assess calmly: final invoice, runway, immediate moves.
 2. **Close out professionally:** handover doc, final report, leave the system documented and stable. The reference and the case-study rights are worth more than a hot exit.
 3. Secure YOUR assets, never the client's: method docs, memory files, the public case-study draft, resume bullets. Client code and data stay theirs.

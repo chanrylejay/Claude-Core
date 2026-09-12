@@ -62,6 +62,35 @@ r = run("startup");
 ok("missing resolver is a named failed read; plan degrades to contract + router, exit 0, one JSON object", r.status === 0 && !!parse(r) && !(r.stderr || "").trim() && /Failed reads: .*boot-resolver\.mjs \(missing\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md\./.test(context(r)) && !/memory\/cold\.md/.test(context(r)));
 fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), resolverCopy);
 ok("restored resolver resolves the full plan again", /memory\/cold\.md/.test(context(run("startup"))));
+// batch 1b: the workspace's boot_mode line decides; mode_default is the fallback and the report says which
+ok("no boot_mode line in the workspace: mode_default decides and the report says so", /Router at runtime: mode TRIAL;.*Mode source: mode_default in the router \(no boot_mode line in this workspace\)\./.test(context(run("startup"))));
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText.replace("modes:\n  TRIAL:\n    - memory/mode.md\n", "modes:\n  TRIAL:\n    - memory/mode.md\n  OTHER:\n    - memory/other.md\n"));
+fs.writeFileSync(path.join(KIT, "memory", "other.md"), "other\n");
+fs.writeFileSync(path.join(REPO, "AGENTS.md"), "# demo\n- boot_mode: OTHER\n");
+r = run("startup");
+ok("boot_mode: OTHER in the workspace AGENTS.md: mode OTHER from workspace AGENTS.md, its set planned, the canon parked (not its mode), no resolver problems", r.status === 0 && /Router at runtime: mode OTHER;.*Mode source: workspace AGENTS\.md\./.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, memory\/other\.md\. Git /.test(context(r)) && !/Resolver problems/.test(context(r)));
+fs.writeFileSync(path.join(REPO, "CLAUDE.md"), "# demo\n- boot_mode: TRIAL\n");
+r = run("startup");
+ok("CLAUDE.md and AGENTS.md disagreeing: named as a resolver problem, mode_default decides, exit 0, one JSON object", r.status === 0 && !!parse(r) && /Resolver problems: the workspace's boot_mode lines disagree \(CLAUDE\.md: TRIAL, AGENTS\.md: OTHER\)/.test(context(r)) && /Router at runtime: mode TRIAL;.*Mode source: mode_default in the router/.test(context(r)));
+// R1 (Codex review of 1b v1, Sep 13 2026): Codex's exact repro — an empty declaration followed by prose
+fs.rmSync(path.join(REPO, "CLAUDE.md")); fs.writeFileSync(path.join(REPO, "AGENTS.md"), "boot_mode:\n\nLEAN guidance belongs to later prose.\n");
+r = run("startup");
+ok("R1: an empty `boot_mode:` followed by prose never selects LEAN: mode_default decides, the empty line is a named resolver problem that says so, the full plan prints, exit 0", r.status === 0 && /Router at runtime: mode TRIAL;.*Mode source: mode_default in the router/.test(context(r)) && /Resolver problems: AGENTS\.md has a boot_mode line with no value \(the mode name goes on that same line; a value on a later line is never read\); booting mode_default\./.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, memory\/mode\.md, projects\/demo\/project-canon\.md\./.test(context(r)) && !/mode LEAN/.test(context(r)));
+// R4 (Codex review of 1b v2): an empty CLAUDE.md beside a valid AGENTS.md must not announce a fallback that does not happen
+fs.writeFileSync(path.join(REPO, "CLAUDE.md"), "boot_mode:\n"); fs.writeFileSync(path.join(REPO, "AGENTS.md"), "boot_mode: OTHER\n"); // the OTHER router is still staged here
+r = run("startup");
+ok("R4: empty CLAUDE.md beside a valid AGENTS.md: mode OTHER from workspace AGENTS.md, CLAUDE.md's empty line named, and NO \"booting mode_default\" anywhere in the report", r.status === 0 && /Router at runtime: mode OTHER;.*Mode source: workspace AGENTS\.md\./.test(context(r)) && /Resolver problems: CLAUDE\.md has a boot_mode line with no value \(the mode name goes on that same line; a value on a later line is never read\)\./.test(context(r)) && !/booting mode_default/.test(context(r)));
+fs.rmSync(path.join(REPO, "CLAUDE.md")); // the OTHER router stays in place for the unknown-mode pin below, restored after it
+fs.writeFileSync(path.join(REPO, "AGENTS.md"), "- boot_mode: NOT_A_MODE\n");
+r = run("startup");
+ok("an unknown workspace mode degrades like an unknown mode_default: named, plan keeps contract + router + cold start + canon, exit 0", r.status === 0 && /Resolver problems: mode "NOT_A_MODE" not in the modes block \(have: TRIAL, OTHER\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, projects\/demo\/project-canon\.md\./.test(context(r)));
+fs.rmSync(path.join(REPO, "AGENTS.md"));
+fs.writeFileSync(resolverCopy, 'export function parseIndex() { return { state: { mode_default: "TRIAL", active_project: "projects/demo/project-canon.md" }, coldStart: [{ path: "memory/cold.md", comment: "" }], modes: { TRIAL: ["memory/mode.md"] }, lookup: [], problems: [] }; }\nexport function resolveBoot(index, { mode = "" } = {}) { return { mode: mode || index.state.mode_default, modeSource: "state block", boot: [{ path: "CLAUDE.md" }, { path: "memory/MEMORY.md" }, { path: "memory/cold.md" }], lookup: [], problems: [] }; }\n');
+r = run("startup");
+ok("a resolver copy that predates 1b (no readWorkspaceMode) still boots mode_default and names why, exit 0", r.status === 0 && !!parse(r) && /Resolver problems: resolver copy predates batch 1b \(no readWorkspaceMode\): booting mode_default/.test(context(r)) && /Router at runtime: mode TRIAL;/.test(context(r)));
+fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), resolverCopy);
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText);
+ok("restored router and resolver: the 1a plan again, mode_default", /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, memory\/mode\.md, projects\/demo\/project-canon\.md\. Git /.test(context(run("startup"))));
 fs.mkdirSync(path.join(HOME, ".codex"), { recursive: true });
 fs.writeFileSync(path.join(HOME, ".codex", "PUSH_GO"), "{}\n");
 r = run("startup");

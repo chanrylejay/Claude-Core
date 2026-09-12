@@ -229,6 +229,11 @@ thinking. The rules that follow are the architect's and Codex's, agreed the same
   text; the push row. No heading line numbers as acceptance criteria: check text and behavior.
   One consolidated check, one short report, detail in an artifact. Local checks are cheap;
   repeated model responses to request, interpret, and restate them are the expensive part.
+  Every receipt is re-measured on the FINAL tree after the last amend, and only that run is
+  reported (Chan, Sep 12 2026, batch 1a: a policy-diff count went stale by one edit and the
+  reviewer caught it; a receipt from an earlier tree is a claim about a tree that no longer
+  exists). The hash, the boot line, the suite line, the L24 and policy-diff counts, the char
+  measurements a budget line quotes: all of them, last.
 - Sessions (Codex): one fresh session per bounded batch. Effort is set at session open (it cannot
   change inside a turn): medium to apply, high for semantic review, max for hard policy or guard
   reasoning. Revisions inspect the changed material and the affected rules only. The DeepSeek

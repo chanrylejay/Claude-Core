@@ -17,11 +17,23 @@ folder, Claude-Core; this file is only the doorway to it. Never copy the kit; re
 
 I talk with Chan like a workmate: plain, warm, and direct. “Boss” and a little humor are welcome when they fit; when Chan uses another language, I can meet him there. Gate work, proofs, and other irreversible actions stay crisp and procedural so the decision and evidence are unmistakable.
 
-At session start, before any other action, read these in this order, in full:
+At session start, before any other action, read every file on the READ PLAN the SessionStart
+ritual printed, in that order, in full: the kit's one resolver builds it
+(Claude-Core/templates/boot-resolver.mjs) from the router's frontmatter and THIS workspace's
+`boot_mode:` line (AGENTS.md or CLAUDE.md beside the repo root; `mode_default` in the router when
+there is none). The contract comes first, the router next (read past the frontmatter), then the
+rest. A failed read the ritual reports is a file to fetch or fix, never a reason to rebuild the
+plan; only when the ritual did not run, its Read plan line is missing, or it names the resolver
+itself as a failed read, assemble the same plan by hand under the resolver's own rules (its header
+states them):
 1. C:/Users/Chanryle/Claude-Core/CLAUDE.md (the operating contract, mandatory)
 2. C:/Users/Chanryle/Claude-Core/memory/MEMORY.md (the router; read past the frontmatter)
-3. Every file its `cold_start:` list names, then the files listed for `mode_default`, then the
-   `active_project` canon.
+3. Every file its `cold_start:` list names, except under LEAN the files tagged `lean:lookup`,
+   which are lookups there; then the files listed for this workspace's mode (an unknown mode adds
+   none, and you say so); then the `active_project` canon: a boot read in its own mode
+   (`mode_default`, or a mode whose set lists it) and under an UNKNOWN mode (an anchor while the
+   router is broken), a lookup in every other known mode and under LEAN.
+The router's `lookup:` files open at the trigger on their line, never at boot.
 Then follow C:/Users/Chanryle/Claude-Core/workflow/the-drill-and-memory.md.
 Say in one line which of these you read.
 
@@ -58,10 +70,11 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
 - Memory writes: bank shared facts into Claude-Core's one memory system, in `memory/` or
   `lessons/`, by THE DRILL and one home per fact. Project canon belongs in the kit's `projects/`
   home. Codex memories stay off; never write anything under `~/.claude`.
-- Your runtime's gotchas: C:/Users/Chanryle/Claude-Core/lessons/platforms/codex.md.
+- Your runtime's gotchas, opened when a Codex runtime, push-gate, sandbox, or shell question comes
+  up, never at boot: C:/Users/Chanryle/Claude-Core/lessons/platforms/codex.md.
 ```
 
-## Block B — `<project>/AGENTS.md` (project root, the twin of `project-claude-md.md`)
+## Block B — `<project>/AGENTS.md` (project root, the twin of `project-claude-md.md`; both carry the same `boot_mode:` line since batch 1b)
 
 ```markdown
 # (Project Name)
@@ -73,8 +86,10 @@ Where the kit assumes the OTHER CLI, this is how it applies to you:
 - Global context about Chan and the working contract comes from ~/.codex/AGENTS.md, which
   points at Claude-Core. If that file is missing on this machine, read
   C:/Users/Chanryle/Claude-Core/CLAUDE.md and memory/MEMORY.md now, then follow the drill.
-- READ-FIRST: (the cold-start set plus this project's mode files, absolute paths: the SAME list
-  this project's CLAUDE.md carries. Keep the two lists identical; edit both in one commit.)
+- boot_mode: (this project's MODE, a name from Claude-Core memory/MEMORY.md `modes:`; the SAME
+  line this project's CLAUDE.md carries, edited in one commit. The SessionStart ritual expands it
+  through the kit's one resolver; never copy the kit's file lists here. Omit the line for a
+  project with no mode: `mode_default` applies.)
 - Banking: shared facts bank into Claude-Core's one memory system by THE DRILL; this project's
   canon belongs in Claude-Core's `projects/` home. Codex memories stay off and Codex never writes
   under `~/.claude`.

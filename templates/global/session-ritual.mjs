@@ -9,10 +9,14 @@
 // NEVER blocks: every path exits 0. A bug here must not wedge a session.
 // Installed Jul 24 2026 (Bundle 1 of the 13-agent improvement plan). Playbook:
 // Claude-Core/lessons/lean-ctx-freeze-playbook.md and workflow/the-drill-and-memory.md.
+// Since batch 1b (Sep 12 2026) the ritual prints the READ PLAN from the kit's one resolver
+// (templates/boot-resolver.mjs, imported at run time) for the `cli` seat and this workspace's
+// `boot_mode:` line; see the READ PLAN block below and audit-log AL-33.
 
 import { existsSync, writeFileSync, readFileSync, readdirSync, statSync, openSync, readSync, closeSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const SEED = `// leanctx-seed.js: gives lean-ctx one real parse target so its code graph
 // build never deadlocks in an empty workspace. Do not delete this file.
@@ -322,6 +326,51 @@ try {
     } catch (e) {
       contractNote = "WARNING: the working contract could NOT be read from disk (" + (e?.message ?? e) + "). Assume the @import also failed: enter DEGRADED MODE per hub section 2 and say so in your first line. ";
     }
+    // READ PLAN (batch 1b, Sep 12 2026; why: Claude-Core/lessons/audit-log.md AL-30, AL-33): this
+    // hook is the `cli` seat's consumer of the kit's ONE resolver, templates/boot-resolver.mjs,
+    // imported from the kit at run time (no installed copy, so it cannot drift from the browser
+    // boot or the Codex ritual). Before 1b this message ordered "the READ-FIRST files the index
+    // marks" plus DIRECTORY.md at every start: 11 marked files, ~47K chars, against a frontmatter
+    // naming four, and DIRECTORY (27K) on the seat billed per cold reload. Now: the workspace's
+    // `boot_mode:` line (CLAUDE.md or AGENTS.md beside the session's cwd) picks the mode,
+    // mode_default is the fallback, and the plan is printed here, relative to the kit root.
+    // Every failure is NAMED and the session still gets its two anchors: an absent or throwing
+    // resolver (the ritual net's fake home has none) prints READ PLAN unavailable and the
+    // by-hand rule; nothing here may stop the message (fail open, like every note in this file).
+    let planNote = "";
+    try {
+      const kitRoot = join(process.env.USERPROFILE || "C:/Users/Chanryle", "Claude-Core");
+      const resolverPath = join(kitRoot, "templates", "boot-resolver.mjs").replace(/\\/g, "/");
+      const byHand = "open " + kitRoot.replace(/\\/g, "/") + "/CLAUDE.md and Claude-Core/memory/MEMORY.md RAW, then assemble the plan by hand from the index frontmatter under the resolver's rules (cold_start, except under LEAN the lean:lookup-tagged files, which are lookups there; the workspace's mode set, none for an unknown mode; the active_project canon in its own mode and under an unknown mode, a lookup in every other known mode; lookup files at their trigger). ";
+      let R = null;
+      try { R = await import(pathToFileURL(resolverPath).href); }
+      catch (e) { planNote = "READ PLAN unavailable (the kit's resolver could not be imported from " + resolverPath + ": " + (e?.code || e?.message || e) + "): " + byHand; }
+      if (R) {
+        try {
+          const idx = R.parseIndex(readFileSync(join(kitRoot, "memory", "MEMORY.md"), "utf8"));
+          const ws = typeof R.readWorkspaceMode === "function" ? R.readWorkspaceMode(cwd) : { mode: "", source: "", problems: ["resolver copy predates batch 1b: no readWorkspaceMode, booting mode_default"] };
+          const plan = R.resolveBoot(idx, { seat: "cli", mode: ws.mode, modeSource: ws.source });
+          const problems = [...ws.problems, ...plan.problems];
+          const from = ws.source ? ws.source : "mode_default in the index (no boot_mode line in this workspace)";
+          // C1 (Codex review of 1b v1, Sep 13 2026): the cost file is a LOOKUP in every plan, but the frozen
+          // core makes its habits "LAW before DeepSeek CLI work", and this hook IS the DeepSeek seat, so that
+          // trigger fires at every start here. The plan is reported as measured; the mandated read is named
+          // beside it with its size, never hidden and never counted as gone. Exempting it is Chan's call,
+          // a contract edit (HEAVY), not a routing change. Source sentence: Claude-Core/CLAUDE.md, "Cost
+          // habits are LAW before DeepSeek CLI work".
+          const COST_FILE = "memory/chan-ai-cost-context.md";
+          const costChars = typeof R.charsOf === "function" ? R.charsOf(kitRoot, COST_FILE) : 0;
+          const mandated = plan.boot.some((e) => e.path === COST_FILE) ? "" : " Contract-mandated on this seat, outside the plan's budget: " + COST_FILE + " (" + (costChars ? costChars + " chars" : "size unknown, the file is missing from this kit") + ") is LAW before DeepSeek CLI work, so open it before that work; the kit-lean law inside binds every seat.";
+          planNote = "READ PLAN (mode " + (plan.mode || "unresolved") + " from " + from + ", the kit's one resolver; paths under " + kitRoot.replace(/\\/g, "/") + "): " + plan.boot.map((e) => e.path).join(", ")
+            + " — open every one RAW and in full, in this order, before substantive work; the resolver's LOOKUP files open at their trigger, never now"
+            + (problems.length ? ". Resolver problems: " + problems.join("; ") : "") + "." + mandated + " ";
+        } catch (e) {
+          planNote = "READ PLAN unavailable (the resolver threw: " + (e?.message ?? e) + "): " + byHand;
+        }
+      }
+    } catch (e) {
+      planNote = "READ PLAN unavailable (" + (e?.message ?? e) + "): open Claude-Core/CLAUDE.md and Claude-Core/memory/MEMORY.md RAW and assemble the plan by hand from the index frontmatter under the resolver's rules (LEAN parks the lean:lookup files and the canon; an unknown mode adds no set but keeps the canon; the canon boots in its own mode only, a lookup in every other known mode). ";
+    }
     // INDEX CAP TRIPWIRE (same GO): the auto-loader reads only the FIRST 200 lines / 25KB of a
     // MEMORY.md index. Anything past that exists on disk and silently never loads - the exact
     // silent-miss class this kit exists to kill. Warn BEFORE it bites, for both indexes.
@@ -408,15 +457,15 @@ try {
     if (source === "compact") {
       emit(
         "SessionStart",
-        "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves in this project's MEMORY.md, plus Claude-Core/memory/MEMORY.md AND Claude-Core/DIRECTORY.md — opened RAW wherever they sit: Bash node -e when they are outside THIS workspace root, and a raw read (node -e or cat, never ctx_*) when Claude-Core IS the root, because drill reads are never a compressing layer; and never from the index lines, which are summaries, and summaries are what you are not trusting; verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
-          seedNote + graphNote + contractNote + memNote + costNote + pulseNote,
+        "[ritual hook] " + modeNote + "Compaction just ran. Run THE DRILL before your first substantive reply: do NOT trust the summary; OPEN the READ-FIRST files themselves: every file on the READ PLAN below (the kit's one resolver) and the 🔴 READ-FIRST files this project's own MEMORY.md marks — opened RAW wherever they sit: Bash node -e when they are outside THIS workspace root, and a raw read (node -e or cat, never ctx_*) when Claude-Core IS the root, because drill reads are never a compressing layer; and never from the index lines, which are summaries, and summaries are what you are not trusting (Claude-Core/DIRECTORY.md is a lookup, opened before creating a kit file, never a boot read); verify git and disk state; disk wins over the summary. Then report in one line what you read and what FAILED to read, plus the git head — same as a normal start, and more important here, because this is the path where a silent miss is invisible. " +
+          seedNote + graphNote + contractNote + planNote + memNote + costNote + pulseNote,
       );
     } else {
       emit(
         "SessionStart",
         "[ritual hook] " + modeNote + "Session-start ritual: " +
-          seedNote + graphNote + contractNote + memNote + costNote + pulseNote +
-          "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN Claude-Core/DIRECTORY.md and any READ-FIRST files the MEMORY.md index marks — the marked lines only say WHICH files to open — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
+          seedNote + graphNote + contractNote + planNote + memNote + costNote + pulseNote +
+          "Repo CLAUDE.md and the project MEMORY.md index auto-load; still OPEN every file on the READ PLAN above and any 🔴 READ-FIRST files this project's MEMORY.md marks — the marked lines only say WHICH files to open; Claude-Core/DIRECTORY.md is a lookup (before creating a kit file), never a boot read — and verify git state before stating current status. Report the ritual in one line naming what you read AND what FAILED to read, plus the git head. A report that lists only what loaded is how a silent failure stays silent.",
       );
     }
   }

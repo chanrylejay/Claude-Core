@@ -3,7 +3,7 @@
   "index": "boot-index.frozen.md",
   "frozenFrom": "bb9979c",
   "frozenOn": "2026-09-12",
-  "note": "Per-seat compatibility fixtures for templates/boot-resolver.mjs (batch 1a). sourceKind captured = taken from the seat's own pre-extraction script on the frozen index at bb9979c, before boot-resolver.mjs existed; derived = the resolver's own output for a mode that seat could not reach before 1a, reviewed, not captured. The net pins the resolver against every entry and the live seats against the resolver.",
+  "note": "Per-seat compatibility fixtures for templates/boot-resolver.mjs (batch 1a). sourceKind captured = taken from the seat's own pre-extraction script on the frozen index at bb9979c, before boot-resolver.mjs existed; derived = the resolver's own output for a mode that seat could not reach before 1a, reviewed, not captured. The net pins the resolver against every entry and the live seats against the resolver. routed = batch 1b (AL-33): the 1a entry with the active_project canon parked as the first LOOKUP line for a mode that is not its own; routedFrom keeps the 1a provenance and every other path and why is byte-identical to it.",
   "seats": {
     "browser": {
       "capturedBy": "node templates/boot-claudeai.mjs --mode=<MODE> at bb9979c; the BOOT and LOOKUP lines (path and why)",
@@ -187,7 +187,9 @@
           ]
         },
         "JOB_HUNT": {
-          "sourceKind": "captured",
+          "sourceKind": "routed",
+          "routedFrom": "captured",
+          "note": "batch 1b, the canon rule (AL-33): the captured 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (JOB_HUNT is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             {
               "path": "CLAUDE.md",
@@ -240,13 +242,13 @@
             {
               "path": "portfolio/devoted-project-summary.md",
               "why": "mode: JOB_HUNT"
-            },
-            {
-              "path": "projects/trial-aug2026/project-canon.md",
-              "why": "active_project — what Chan is working on now"
             }
           ],
           "lookup": [
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "open when: the work touches the active project (mode JOB_HUNT is not its mode)"
+            },
             {
               "path": "workflow/two-model-relay.md",
               "why": "open when: cutting a patch or a brief (the ramp points here)"
@@ -298,7 +300,9 @@
           ]
         },
         "ANO_ULAM": {
-          "sourceKind": "captured",
+          "sourceKind": "routed",
+          "routedFrom": "captured",
+          "note": "batch 1b, the canon rule (AL-33): the captured 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (ANO_ULAM is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             {
               "path": "CLAUDE.md",
@@ -339,13 +343,13 @@
             {
               "path": "memory/chan-ai-cost-context.md",
               "why": "mode: ANO_ULAM"
-            },
-            {
-              "path": "projects/trial-aug2026/project-canon.md",
-              "why": "active_project — what Chan is working on now"
             }
           ],
           "lookup": [
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "open when: the work touches the active project (mode ANO_ULAM is not its mode)"
+            },
             {
               "path": "workflow/two-model-relay.md",
               "why": "open when: cutting a patch or a brief (the ramp points here)"
@@ -397,7 +401,9 @@
           ]
         },
         "CLIENT_BUILD": {
-          "sourceKind": "captured",
+          "sourceKind": "routed",
+          "routedFrom": "captured",
+          "note": "batch 1b, the canon rule (AL-33): the captured 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (CLIENT_BUILD is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             {
               "path": "CLAUDE.md",
@@ -434,13 +440,13 @@
             {
               "path": "workflow/qa-gauntlet-pattern.md",
               "why": "mode: CLIENT_BUILD"
-            },
-            {
-              "path": "projects/trial-aug2026/project-canon.md",
-              "why": "active_project — what Chan is working on now"
             }
           ],
           "lookup": [
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "open when: the work touches the active project (mode CLIENT_BUILD is not its mode)"
+            },
             {
               "path": "workflow/two-model-relay.md",
               "why": "open when: cutting a patch or a brief (the ramp points here)"
@@ -511,7 +517,9 @@
           "note": "Resolver-derived. The pre-1a hook had no LEAN carve-out: under a LEAN mode_default it would have planned all four cold-start files and the canon, 14,238 more chars than the browser at bb9979c. That is the ~15K difference AL-30 names; one resolver closes it by construction."
         },
         "JOB_HUNT": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (JOB_HUNT is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -524,12 +532,13 @@
             "memory/chan-skills-ledger.md",
             "memory/chan-job-application-email-prefs.md",
             "memory/chan-freelance-sales-playbook.md",
-            "portfolio/devoted-project-summary.md",
-            "projects/trial-aug2026/project-canon.md"
+            "portfolio/devoted-project-summary.md"
           ]
         },
         "ANO_ULAM": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (ANO_ULAM is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -539,12 +548,13 @@
             "memory/chan-review-bottleneck.md",
             "projects/ano-ulam/project-canon.md",
             "lessons/platform-gotchas.md",
-            "memory/chan-ai-cost-context.md",
-            "projects/trial-aug2026/project-canon.md"
+            "memory/chan-ai-cost-context.md"
           ]
         },
         "CLIENT_BUILD": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (CLIENT_BUILD is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -553,14 +563,13 @@
             "memory/chan-critique-directives.md",
             "memory/chan-review-bottleneck.md",
             "workflow/new-project-checklist.md",
-            "workflow/qa-gauntlet-pattern.md",
-            "projects/trial-aug2026/project-canon.md"
+            "workflow/qa-gauntlet-pattern.md"
           ]
         }
       }
     },
     "cli": {
-      "consumer": "none until batch 1b points the drill's step 2 here; nothing runs this seat yet",
+      "consumer": "templates/global/session-ritual.mjs since batch 1b (the drill's step 2 points at the resolver; the hook prints the READ PLAN)",
       "modes": {
         "TRIAL": {
           "sourceKind": "derived",
@@ -584,7 +593,9 @@
           ]
         },
         "JOB_HUNT": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (JOB_HUNT is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -597,12 +608,13 @@
             "memory/chan-skills-ledger.md",
             "memory/chan-job-application-email-prefs.md",
             "memory/chan-freelance-sales-playbook.md",
-            "portfolio/devoted-project-summary.md",
-            "projects/trial-aug2026/project-canon.md"
+            "portfolio/devoted-project-summary.md"
           ]
         },
         "ANO_ULAM": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (ANO_ULAM is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -612,12 +624,13 @@
             "memory/chan-review-bottleneck.md",
             "projects/ano-ulam/project-canon.md",
             "lessons/platform-gotchas.md",
-            "memory/chan-ai-cost-context.md",
-            "projects/trial-aug2026/project-canon.md"
+            "memory/chan-ai-cost-context.md"
           ]
         },
         "CLIENT_BUILD": {
-          "sourceKind": "derived",
+          "sourceKind": "routed",
+          "routedFrom": "derived",
+          "note": "batch 1b, the canon rule (AL-33): the derived 1a entry with the active_project canon moved from the BOOT tail to the first LOOKUP line (CLIENT_BUILD is not its mode); every other path and why byte-identical to the 1a entry",
           "boot": [
             "CLAUDE.md",
             "memory/MEMORY.md",
@@ -626,8 +639,7 @@
             "memory/chan-critique-directives.md",
             "memory/chan-review-bottleneck.md",
             "workflow/new-project-checklist.md",
-            "workflow/qa-gauntlet-pattern.md",
-            "projects/trial-aug2026/project-canon.md"
+            "workflow/qa-gauntlet-pattern.md"
           ]
         }
       }
