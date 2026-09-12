@@ -46,7 +46,7 @@ function dispatch(event, raw = JSON.stringify(event), config = JSON.parse(config
 try {
   const policy = JSON.parse(fs.readFileSync(path.join(TPL, "connector-reads.json")));
   const manifest = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures/manifest.json")));
-  const listed = [...manifest.fixtures.map((f) => f.file), manifest.syntheticCases, "manifest.json"].sort();
+  const listed = [...manifest.fixtures.map((f) => f.file), manifest.syntheticCases, manifest.syntheticBashCases, "manifest.json"].sort();
   ok("every fixture JSON is registered", JSON.stringify(listed) === JSON.stringify(fs.readdirSync(path.join(TPL, "fixtures")).filter((f) => f.endsWith(".json")).sort()));
   for (const fixture of manifest.fixtures) {
     const raw = fs.readFileSync(path.join(TPL, "fixtures", fixture.file));
@@ -116,6 +116,30 @@ try {
   narrow.hooks.PreToolUse = [{ ...narrow.hooks.PreToolUse[1], matcher: "Bash|mcp__codex_apps__(neon|vercel|github)__.*" }];
   ok("old matcher is exposed by the bare-name routing fixture", !dispatch({ ...event, tool_name: "neon__run_sql" }, undefined, narrow).routed);
   ok("connector fixtures leave the sandbox GO token byte-identical", fs.readFileSync(token).equals(sentinel));
+  // Bash decisions use the same event/matcher/launcher/runner/guard path. Commands are data:
+  // never execute git, mutate real configuration, or create a real GO during these checks.
+  const repo = path.join(pad, "repo"), other = path.join(pad, "x"), spaced = path.join(pad, "space repo");
+  for (const dir of [repo, other, spaced]) fs.mkdirSync(path.join(dir, ".git"), { recursive: true });
+  const bashCases = JSON.parse(fs.readFileSync(path.join(TPL, "fixtures", manifest.syntheticBashCases)));
+  ok("Bash cases explicitly synthetic", bashCases.sourceKind === "synthetic");
+  for (const fixture of bashCases.cases) {
+    fs.rmSync(token, { force: true });
+    const repos = { repo, other, spaced };
+    if (fixture.token === "valid") fs.writeFileSync(token, JSON.stringify({ repo: repos[fixture.tokenRepo ?? "repo"], issuedAt: new Date().toISOString() }));
+    const before = fs.existsSync(token) ? fs.readFileSync(token) : null;
+    const event = structuredClone(fixture.event);
+    event.cwd = repo;
+    event.tool_input.command = event.tool_input.command.replace(/@(repo|other|spaced)@/g, (_, key) => repos[key].replace(/\\/g, "/"));
+    const r = dispatch(event);
+    ok("synthetic Bash routes: " + fixture.id, r.routed);
+    const decisionOk = fixture.expected === "deny" ? deny(r) && r.stdout.includes(fixture.reasonIncludes) : r.status === 0 && r.stderr === "" && r.stdout === "{}\n";
+    ok("synthetic Bash decision and reason: " + fixture.id, r.routed && decisionOk);
+    if (fixture.expectedToken === "claimed") {
+      let claimed = false;
+      try { claimed = typeof JSON.parse(fs.readFileSync(token)).claimedAt === "string"; } catch {}
+      ok("synthetic Bash claims one sandbox token: " + fixture.id, claimed);
+    } else ok("synthetic Bash token unchanged: " + fixture.id, before ? fs.existsSync(token) && fs.readFileSync(token).equals(before) : !fs.existsSync(token));
+  }
 } finally {
   // Only this net's fixed mkdtemp root is removed; no live machine state is touched.
   if (path.dirname(path.resolve(pad)) !== path.resolve(os.tmpdir()) || !path.basename(pad).startsWith("codex-connector-")) throw new Error("unsafe cleanup target");

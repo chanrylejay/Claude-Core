@@ -53,5 +53,6 @@
       "expected": "deny"
     }
   ],
-  "syntheticCases": "synthetic-connector-cases.json"
+  "syntheticCases": "synthetic-connector-cases.json",
+  "syntheticBashCases": "synthetic-bash-cases.json"
 }

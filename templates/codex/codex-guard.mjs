@@ -1,14 +1,20 @@
 // codex-guard — Codex PreToolUse gate for guarded Bash-tool commands (Sep 1 2026).
-// Scope: blocks guarded Bash-tool pushes live unless Chan's one-shot, repo-bound GO token is
-// valid. The arming check detects template/install drift; it is not an OS security boundary.
+// Scope: blocks recognised executable Bash-tool pushes unless Chan's one-shot, repo-bound GO
+// token is valid. The arming check detects template/install drift; this is not a complete shell
+// interpreter or an OS security boundary. A script file we cannot read, xargs git, or a push
+// from a fresh clone with no pre-push hook can still reach git. Those paths need a DISABLED push
+// URL or credential-level lock as their backstop; both remain Chan's decisions.
 // The trial clone's push URL remains DISABLED until Chan changes it by hand, which is the
-// separate OS-level backstop.
+// separate configuration backstop, not an OS lock.
 // GO protocol (Chan's ruling, Sep 1 2026, parity with the DeepSeek CLI): Chan says GO in the chat;
 // Codex then creates the token with `node ~/.codex/hooks/go.mjs <repo>` and pushes. Never without
 // his GO in that same chat, never restored, never edited; one GO is one push attempt.
-// A push carrying --no-verify is ALWAYS denied, token or not: Codex never skips the git gate, so
+// Literal --no-verify anywhere in a Bash command is ALWAYS denied before push detection:
+// Codex never skips the git gate, for commit or push, token or not, so
 // `--no-verify` stays Chan's own escape from his own terminal. A remote rewrite is ALWAYS denied,
-// token or not: a GO to push never authorizes changing where pushes go.
+// token or not: a GO to push never authorizes changing where pushes go. The same applies to
+// core.hooksPath overrides. -n stays subcommand-specific: push dry-run, commit hook bypass;
+// it is not blanket-matched here. Passing the hook is never permission to bypass a gate.
 //
 // The MCP wiring selects --connector independently of stdin. Runner and guard failures deny
 // on that route; Bash retains its existing failure directions. Responses contain only JSON.
@@ -106,20 +112,82 @@ const pass = () => { process.stdout.write("{}\n"); process.exit(0); };
 const canonical = (p) => realpathSync.native ? realpathSync.native(p) : realpathSync(p);
 
 // The shared matcher is deliberately paranoid because it protects the DeepSeek side too. Codex
-// calls it first, then releases only reader-text false positives by requiring an executable git
-// position here. The boundary also covers command substitution, shell wrappers, quoted git paths,
-// leading parentheses, assignments, and command/time/sudo wrappers.
-function codexExecutableGitPush(command) {
-  const executable = /(?:^|[;&|\n(`])\s*(?:[('"]\s*)*(?:(?:[A-Za-z_]\w*=\S+|command|sudo|time|env(?:\s+[A-Za-z_]\w*=\S+)*)\s+)*(?:"[^"]*git(?:\.exe)?"|'[^']*git(?:\.exe)?'|(?:[\w.\/\\:-]*[\\/])?git(?:\.exe)?)\s+(?:(?:-C\s+\S+|--git-dir(?:=|\s+)\S+)\s+)*["']?push["']?(?=$|[^\w-])/i;
-  if (executable.test(command)) return true;
-  // The shared matcher recurses into these executing forms before stripping their quoted payload.
-  const runners = /(?:^|[;&|\n(\x60])\s*(?:[\w.\/\\:-]*[\\/])?(?:bash|sh|zsh|dash|ksh|pwsh|powershell|cmd)(?:\.exe)?\s+(?:-c|-Command|-command|\/c|\/C)\s+(['"])([\s\S]*?)\1/gi;
-  const evals = /(?:^|[;&|\n(\x60])\s*(?:eval|exec|source)\s+(['"])([\s\S]*?)\1/gi;
-  const substitutions = [/\$\(([\s\S]*?)\)/g, /`([^`]*)`/g];
-  for (const re of [runners, evals, ...substitutions]) for (const hit of command.matchAll(re)) {
-    if (codexExecutableGitPush(hit[2] ?? hit[1])) return true;
+// uses it for push detection, with this caller identifying executable positions. Quote contents
+// stay intact: stripping inner quotes or expanding variables would erase the ambiguity we deny.
+// batch-0c-fix1-subcommand-token
+const unquote = (word) => /^(?:"[\s\S]*"|'[\s\S]*')$/.test(word) ? word.slice(1, -1) : word;
+function shellSegments(command) {
+  const segments = [], words = [];
+  let word = "", quote = "";
+  const flushWord = () => { if (word) words.push(word); word = ""; };
+  const flushSegment = () => { flushWord(); if (words.length) segments.push(words.splice(0)); };
+  for (let i = 0; i < command.length; i++) {
+    const c = command[i];
+    if (c === "\\" && quote !== "'" && i + 1 < command.length) { word += c + command[++i]; continue; }
+    if (quote) { word += c; if (c === quote) quote = ""; continue; }
+    if (c === '"' || c === "'") { quote = c; word += c; }
+    else if (/[;&|\n()`]/.test(c)) flushSegment();
+    else if (/\s/.test(c)) flushWord();
+    else word += c;
   }
-  return false;
+  flushSegment();
+  return segments;
+}
+function executableGitCalls(command, depth = 0) {
+  if (depth > 8) throw new Error("shell recursion limit; unread git command");
+  const calls = [];
+  for (const words of shellSegments(command)) {
+    let i = 0;
+    while (/^(?:[A-Za-z_]\w*=|(?:command|sudo|time|env|exec)$)/.test(unquote(words[i] ?? ""))) i++;
+    const exe = unquote(words[i++] ?? "");
+    if (/(?:^|[\\/])git(?:\.exe)?$/i.test(exe)) {
+      const options = [];
+      while (i < words.length && unquote(words[i]).startsWith("-")) {
+        const option = unquote(words[i++]);
+        if (option === "--") break;
+        if (["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env"].includes(option)) {
+          if (i === words.length) throw new Error("missing git option value for " + option);
+          options.push([option, unquote(words[i++])]);
+        } else if (/^(?:-C|-c).+/.test(option)) options.push([option.slice(0, 2), unquote(option.slice(2))]);
+        else if (option.includes("=")) {
+          const [key, value] = option.split(/=(.*)/s);
+          options.push([key, unquote(value)]);
+        }
+        else options.push([option, null]);
+      }
+      if (i < words.length) calls.push({ subcommand: unquote(words[i]), options, args: words.slice(i + 1).map(unquote) });
+    } else {
+      let payload;
+      if (/(?:^|[\\/])(?:bash|sh|zsh|dash|ksh|pwsh|powershell|cmd)(?:\.exe)?$/i.test(exe) &&
+          /^(?:-c|-command|\/c)$/i.test(unquote(words[i] ?? ""))) payload = words[i + 1];
+      else if (/^(?:eval|source)$/.test(exe)) payload = words[i];
+      // exec with a quoted payload was supported by the previous detector too.
+      else if (i === 2 && unquote(words[0]) === "exec") payload = words[1];
+      if (payload && /^(?:"[\s\S]*"|'[\s\S]*')$/.test(payload)) {
+        let body = unquote(payload);
+        if (payload[0] === '"') body = body.replace(/\\(["\\$`])/g, "$1");
+        calls.push(...executableGitCalls(body, depth + 1));
+      }
+    }
+  }
+  // Retain the existing conservative substitution treatment, even inside quoted reader text.
+  for (const re of [/\$\(([\s\S]*?)\)/g, /`([^`]*)`/g])
+    for (const hit of command.matchAll(re)) calls.push(...executableGitCalls(hit[1], depth + 1));
+  return calls;
+}
+function gitCommandViolation(calls) {
+  for (const call of calls) {
+    if (!/^[a-z][a-z-]*$/.test(call.subcommand))
+      return "unreadable git subcommand " + JSON.stringify(call.subcommand) + "; use a plain word with optional wrapping quotes.";
+    const protectedKey = (value) => /^core\.hookspath(?:=|$)/i.test(value ?? "");
+    if (call.options.some(([option, value]) => ["-c", "--config-env"].includes(option) && protectedKey(value)) ||
+        (call.subcommand === "config" && call.args.some(protectedKey)))
+      return "core.hooksPath is protected, even with a GO token; Chan changes the git gate by his own hand.";
+  }
+  return null;
+}
+function codexExecutableGitPush(command) {
+  return executableGitCalls(command).some((call) => call.subcommand === "push");
 }
 
 function tokenFor(repo) {
@@ -154,16 +222,20 @@ function tokenFor(repo) {
   }
 }
 
-function repoFrom(payload, command) {
+function repoFrom(payload, command, calls) {
   const cwd = payload?.cwd || payload?.tool_input?.cwd;
   if (typeof cwd !== "string" || !cwd) fail("Bash payload has no cwd; cannot bind a GO to a repository.");
   let base = cwd;
-  const c = command.match(/(?:^|[;&|\n])\s*git\s+(?:-C\s+|--git-dir[=\s])([^\s;|&]+)/i) ||
-    command.match(/(?:^|[;&|\n])\s*Set-Location\s+['\"]?([^'\";|&\n]+)/i);
   const cd = command.match(/(?:^|[;&|\n])\s*(?:cd|chdir|sl|pushd|Set-Location|Push-Location)\s+(?:-Path\s+|-LiteralPath\s+)?['\"]?([^'\";|&\n]+)/i);
-  if (!c && cd) base = cd[1].trim();
-  if (c) base = c[1].replace(/^['\"]|['\"]$/g, "");
+  if (cd) base = cd[1].trim();
   if (!isAbsolute(base)) base = resolve(cwd, base);
+  // Git's -C and -c are different options. Only -C changes cwd, sequentially; -c is config.
+  let gitDir;
+  for (const [option, value] of calls.find((call) => call.subcommand === "push").options) {
+    if (option === "-C") base = resolve(base, value);
+    if (option === "--git-dir") gitDir = value;
+  }
+  if (gitDir !== undefined) base = resolve(base, gitDir);
   if (/([\\/])\.git$/i.test(base)) base = dirname(base);
   try { return canonical(base); }
   catch { fail("cannot canonicalize the repository for this guarded command."); }
@@ -236,6 +308,10 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     if (toolName !== "Bash") pass();
     const command = payload?.tool_input?.command;
     if (typeof command !== "string") fail("Bash payload has no string tool_input.command; refusing an unread command.");
+    if (/--no-verify/i.test(command)) fail("--no-verify skips a git gate; Codex never uses it, for commit or push, token or not. It is Chan's own escape from his own terminal.");
+    const gitCalls = executableGitCalls(command);
+    const gitBlock = gitCommandViolation(gitCalls);
+    if (gitBlock) fail(gitBlock);
     const playwrightBlock = playwrightCliViolation(command);
     if (playwrightBlock) fail(playwrightBlock);
     if (isRemoteRewrite(command)) fail("a remote rewrite is never authorized, even with a GO token. Chan edits remotes by his own hand.");
@@ -243,11 +319,10 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     // are released only when this caller cannot find an executable git position; the position
     // detector also catches quoted executable paths that the legacy matcher cannot tokenize.
     const sharedPush = isGitPush(command);
-    const executablePush = codexExecutableGitPush(command);
+    const executablePush = gitCalls.some((call) => call.subcommand === "push");
     if (!sharedPush && !executablePush) pass();
     if (sharedPush && !executablePush) pass();
-    if (/--no-verify\b/i.test(command)) fail("--no-verify skips the git gate; Codex never uses it, token or not. It is Chan's own escape from his own terminal.");
-    const repo = repoFrom(payload, command);
+    const repo = repoFrom(payload, command, gitCalls);
     if (tokenFor(repo)) {
       pass();
     }

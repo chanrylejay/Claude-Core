@@ -220,3 +220,33 @@ Marker: codex-doorway-2026-09-01.)
   hooks.json wiring needs a new thread. Offline replay certifies the configured path, not that
   the current thread loaded a changed matcher. The HEAVY patch's behavior and authority review
   belongs to the architect. CI and every publish action remain separate Chan GOs.
+
+## Batch 0c-fix1: Bash command boundaries (Sep 12 2026)
+
+- **Literal bypass flag first.** The Bash guard denies `--no-verify` anywhere in the command,
+  before push detection, even in quoted reader text and even with a valid token. Codex never
+  uses it for commit or push. The short `-n` is left alone because its meaning belongs to the
+  subcommand: push uses it for dry-run, commit uses it to skip commit hooks. A passing hook is
+  not authorization to skip a gate.
+- **Protect the git gate's location.** `core.hooksPath` is denied as a case-insensitive key in
+  git `-c` / `--config-env` options and `git config` arguments, including global, local, system,
+  and file scopes, token or not. This conservative check can also deny a read of that key.
+  Existing remote-rewrite and `.git/config` write refusals remain. Chan owns any gate change.
+- **Readable subcommands only.** After git's leading options and their values, the subcommand
+  must be a lowercase plain word (`^[a-z][a-z-]*$`) after removing wrapping quotes only.
+  Variables, backslashes, ANSI quoting, and inner quotes deny with an unreadable-subcommand
+  reason. Option values are not subject to that rule; `git -C "$HOME/x" status` passes it.
+  The same inspection follows the existing shell-runner, eval, and substitution forms.
+  Repository binding treats `-C` case-sensitively and skips `-c` settings as settings.
+- **Residual, not completeness.** The Bash hook is not a full shell interpreter: pushes inside
+  script files it cannot read and `xargs git` can reach git. The installed pre-push hook still
+  protects a clone where it is present, but a fresh clone without that hook has no such
+  backstop. A DISABLED push URL or credential-level lock is the backstop for those ungated
+  paths; choosing either belongs to Chan. The host/outer-launcher failure limit above also
+  remains. No hook pass authorizes an irreversible action.
+  Backtick substitution in the subcommand position and git's long-option abbreviations (`--no-veri`) are uninspected.
+- **Chan, Sep 12 2026 (`group-0-closeout-rulings`):** fix1 v2 is cancelled; no further push-guard hardening unless Chan asks. Codex keeps the GitHub credential; the script-file path is accepted risk; do not re-raise.
+- **Evidence and scope.** `../../templates/codex/fixtures/synthetic-bash-cases.json` is synthetic
+  command data, never executed by the net. `_connector_test.mjs` routes its Bash events through
+  hooks.json, launcher, runner, guard, and decision with tokens only in temporary homes. The
+  MCP policy/wiring and Bash runner/guard failure directions are unchanged.
