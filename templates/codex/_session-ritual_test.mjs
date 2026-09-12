@@ -18,6 +18,9 @@ fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), `---\nstate:\n  mode_def
 fs.writeFileSync(path.join(KIT, "memory", "cold.md"), "cold\n");
 fs.writeFileSync(path.join(KIT, "memory", "mode.md"), "mode\n");
 fs.writeFileSync(path.join(KIT, "projects", "demo", "project-canon.md"), "canon\n");
+// batch 1a: the ritual imports the kit's ONE resolver at run time; stage it the way an install does
+fs.mkdirSync(path.join(KIT, "templates"), { recursive: true });
+fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), path.join(KIT, "templates", "boot-resolver.mjs"));
 spawnSync("git", ["init", "-q"], { cwd: REPO, encoding: "utf8" });
 
 let pass = 0, fail = 0;
@@ -37,6 +40,28 @@ r = run("compact");
 ok("compact injects THE DRILL", /THE DRILL now: do not trust the compaction summary/.test(context(r)));
 r = run("unrecognised");
 ok("unknown source fails safe to compact ritual", /THE DRILL now/.test(context(r)));
+// batch 1a: the shared resolver is the plan; its absence and its problems are named, never silent
+ok("clean run prints no resolver problems segment", !/Resolver problems/.test(context(run("startup"))));
+const routerText = fs.readFileSync(path.join(KIT, "memory", "MEMORY.md"), "utf8");
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText.replace("mode_default: TRIAL", "mode_default: NO_SUCH_MODE"));
+r = run("startup");
+ok("unknown mode_default: problem named, plan keeps contract + router + cold start + canon and drops only the mode set, exit 0", r.status === 0 && !!parse(r) && /Resolver problems: mode "NO_SUCH_MODE" not in the modes block \(have: TRIAL\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, projects\/demo\/project-canon\.md\./.test(context(r)) && !/memory\/mode\.md/.test(context(r)));
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText);
+// R1 (Codex review, Sep 12 2026): mode_default: constructor once crashed this hook (exit 1, no JSON)
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText.replace("mode_default: TRIAL", "mode_default: constructor"));
+r = run("startup");
+ok("R1 end-to-end: mode_default constructor → exit 0, one JSON object, empty stderr, named unknown-mode problem, plan keeps contract + router + cold start + canon", r.status === 0 && !!parse(r) && !(r.stderr || "").trim() && /Resolver problems: mode "constructor" not in the modes block \(have: TRIAL\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md, memory\/cold\.md, projects\/demo\/project-canon\.md\./.test(context(r)) && /Router at runtime: mode constructor;/.test(context(r)));
+fs.writeFileSync(path.join(KIT, "memory", "MEMORY.md"), routerText);
+const resolverCopy = path.join(KIT, "templates", "boot-resolver.mjs");
+fs.writeFileSync(resolverCopy, 'export function parseIndex() { return { state: {} }; }\nexport function resolveBoot() { throw new Error("boom"); }\n');
+r = run("startup");
+ok("R1: a resolver that throws is a named failed read (threw: boom); plan degrades to contract + router, exit 0, one JSON object, empty stderr", r.status === 0 && !!parse(r) && !(r.stderr || "").trim() && /Failed reads: .*boot-resolver\.mjs \(threw: boom\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md\./.test(context(r)) && !/active_project missing/.test(context(r)));
+fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), resolverCopy);
+fs.rmSync(resolverCopy);
+r = run("startup");
+ok("missing resolver is a named failed read; plan degrades to contract + router, exit 0, one JSON object", r.status === 0 && !!parse(r) && !(r.stderr || "").trim() && /Failed reads: .*boot-resolver\.mjs \(missing\)/.test(context(r)) && /Read plan: CLAUDE\.md, memory\/MEMORY\.md\./.test(context(r)) && !/memory\/cold\.md/.test(context(r)));
+fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), resolverCopy);
+ok("restored resolver resolves the full plan again", /memory\/cold\.md/.test(context(run("startup"))));
 fs.mkdirSync(path.join(HOME, ".codex"), { recursive: true });
 fs.writeFileSync(path.join(HOME, ".codex", "PUSH_GO"), "{}\n");
 r = run("startup");

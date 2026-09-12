@@ -21,6 +21,10 @@
 //  16. LEAN resolves and its BOOT SET is smaller than the default mode's
 //  17. the active canon is in BOOT for the default mode and in LOOKUP for LEAN
 //  18. the three lean:lookup judgment files ride BOOT normally and LOOKUP under LEAN (batch 4b)
+//  19. unknown mode STILL prints the anchors (contract, ramp, index, cold start, canon) before
+//      BOOT BROKEN, and no mode file (batch 1a v2: a broken index leaves the session its list)
+//  20. an inherited object name as --mode (constructor) is an unknown mode, exit 1, never a crash
+//      (R1, Codex review Sep 12 2026)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -86,6 +90,10 @@ t(`lean:lookup files (${STAR.length}) ride BOOT in the default mode and LOOKUP u
 // 5. unknown mode
 const bad = run(TMP, ["--mode=NO_SUCH_MODE"]);
 t("unknown mode exits 1 and says so", bad.code === 1 && /not in the modes block/.test(bad.out));
+const BL = lists(bad.out);
+t("unknown mode still prints the anchors first: contract, ramp, index, cold start, canon; no mode file (v2)", BL.boot.slice(0, 3).join() === ["CLAUDE.md", RAMP, "memory/MEMORY.md"].join() && BL.boot.includes(canon) && BL.boot.includes("memory/chan-hard-rules.md") && !bad.out.includes("(mode: ") && bad.out.indexOf("BOOT BROKEN") > bad.out.indexOf("LOOKUP"));
+const inh = run(TMP, ["--mode=constructor"]);
+t("--mode=constructor is an unknown mode: exit 1, named, no TypeError (R1)", inh.code === 1 && /mode "constructor" not in the modes block/.test(inh.out) && !/TypeError/.test(inh.out));
 
 // 6. delete a mode file → MISSING + exit 1 (mutate the temp copy). The victim MUST come from
 // the DEFAULT run's own resolved list — a file from an unresolved mode is invisible to the

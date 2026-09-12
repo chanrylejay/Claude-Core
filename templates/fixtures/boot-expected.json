@@ -1,0 +1,636 @@
+{
+  "schemaVersion": 1,
+  "index": "boot-index.frozen.md",
+  "frozenFrom": "bb9979c",
+  "frozenOn": "2026-09-12",
+  "note": "Per-seat compatibility fixtures for templates/boot-resolver.mjs (batch 1a). sourceKind captured = taken from the seat's own pre-extraction script on the frozen index at bb9979c, before boot-resolver.mjs existed; derived = the resolver's own output for a mode that seat could not reach before 1a, reviewed, not captured. The net pins the resolver against every entry and the live seats against the resolver.",
+  "seats": {
+    "browser": {
+      "capturedBy": "node templates/boot-claudeai.mjs --mode=<MODE> at bb9979c; the BOOT and LOOKUP lines (path and why)",
+      "modes": {
+        "TRIAL": {
+          "sourceKind": "captured",
+          "boot": [
+            {
+              "path": "CLAUDE.md",
+              "why": "frozen core — the contract"
+            },
+            {
+              "path": "workflow/relay-boot-claudeai.md",
+              "why": "the browser half's entry ramp"
+            },
+            {
+              "path": "memory/MEMORY.md",
+              "why": "RAW and IN FULL — the router (past the frontmatter, read the prose too)"
+            },
+            {
+              "path": "memory/chan-hard-rules.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-judgment-mandate.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-critique-directives.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-review-bottleneck.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-trial-aug2026.md",
+              "why": "mode: TRIAL"
+            },
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "mode: TRIAL"
+            }
+          ],
+          "lookup": [
+            {
+              "path": "workflow/two-model-relay.md",
+              "why": "open when: cutting a patch or a brief (the ramp points here)"
+            },
+            {
+              "path": "workflow/the-drill-and-memory.md",
+              "why": "open when: after a compaction; before any memory-file edit"
+            },
+            {
+              "path": "workflow/qa-gauntlet-pattern.md",
+              "why": "open when: the work classifies HEAVY (contract, \"The QA gate\")"
+            },
+            {
+              "path": "workflow/new-project-checklist.md",
+              "why": "open when: a new build starts (CLIENT_BUILD mode still loads it)"
+            },
+            {
+              "path": "lessons/platforms/monday.md",
+              "why": "open when: any monday.com work (the trial card and canon point here)"
+            },
+            {
+              "path": "projects/REGISTRY.md",
+              "why": "open when: the work touches a project other than active_project"
+            },
+            {
+              "path": "projects/trial-aug2026/decision-log.md",
+              "why": "open when: reconstructing WHY a trial decision was made"
+            },
+            {
+              "path": "projects/trial-aug2026/relay-lessons-day8-9.md",
+              "why": "open when: BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design"
+            },
+            {
+              "path": "projects/trial-aug2026/sales-redesign-resume.md",
+              "why": "open when: before resuming the Sales redesign build"
+            },
+            {
+              "path": "projects/trial-aug2026/applicant-report-resume.md",
+              "why": "open when: before applicant-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/mailbox-report-resume.md",
+              "why": "open when: before mailbox-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/trial-follow-up.md",
+              "why": "open when: before trial follow-up or a future build"
+            }
+          ]
+        },
+        "LEAN": {
+          "sourceKind": "captured",
+          "boot": [
+            {
+              "path": "CLAUDE.md",
+              "why": "frozen core — the contract"
+            },
+            {
+              "path": "workflow/relay-boot-claudeai.md",
+              "why": "the browser half's entry ramp"
+            },
+            {
+              "path": "memory/MEMORY.md",
+              "why": "RAW and IN FULL — the router (past the frontmatter, read the prose too)"
+            },
+            {
+              "path": "memory/chan-hard-rules.md",
+              "why": "cold-start set"
+            }
+          ],
+          "lookup": [
+            {
+              "path": "memory/chan-judgment-mandate.md",
+              "why": "open when: the task touches UI, a client, or a decision for Chan (LEAN skips it)"
+            },
+            {
+              "path": "memory/chan-critique-directives.md",
+              "why": "open when: the task touches UI, a client, or a decision for Chan (LEAN skips it)"
+            },
+            {
+              "path": "memory/chan-review-bottleneck.md",
+              "why": "open when: the task touches UI, a client, or a decision for Chan (LEAN skips it)"
+            },
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "open when: the task touches the active project (LEAN skips the canon)"
+            },
+            {
+              "path": "workflow/two-model-relay.md",
+              "why": "open when: cutting a patch or a brief (the ramp points here)"
+            },
+            {
+              "path": "workflow/the-drill-and-memory.md",
+              "why": "open when: after a compaction; before any memory-file edit"
+            },
+            {
+              "path": "workflow/qa-gauntlet-pattern.md",
+              "why": "open when: the work classifies HEAVY (contract, \"The QA gate\")"
+            },
+            {
+              "path": "workflow/new-project-checklist.md",
+              "why": "open when: a new build starts (CLIENT_BUILD mode still loads it)"
+            },
+            {
+              "path": "lessons/platforms/monday.md",
+              "why": "open when: any monday.com work (the trial card and canon point here)"
+            },
+            {
+              "path": "projects/REGISTRY.md",
+              "why": "open when: the work touches a project other than active_project"
+            },
+            {
+              "path": "projects/trial-aug2026/decision-log.md",
+              "why": "open when: reconstructing WHY a trial decision was made"
+            },
+            {
+              "path": "projects/trial-aug2026/relay-lessons-day8-9.md",
+              "why": "open when: BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design"
+            },
+            {
+              "path": "projects/trial-aug2026/sales-redesign-resume.md",
+              "why": "open when: before resuming the Sales redesign build"
+            },
+            {
+              "path": "projects/trial-aug2026/applicant-report-resume.md",
+              "why": "open when: before applicant-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/mailbox-report-resume.md",
+              "why": "open when: before mailbox-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/trial-follow-up.md",
+              "why": "open when: before trial follow-up or a future build"
+            }
+          ]
+        },
+        "JOB_HUNT": {
+          "sourceKind": "captured",
+          "boot": [
+            {
+              "path": "CLAUDE.md",
+              "why": "frozen core — the contract"
+            },
+            {
+              "path": "workflow/relay-boot-claudeai.md",
+              "why": "the browser half's entry ramp"
+            },
+            {
+              "path": "memory/MEMORY.md",
+              "why": "RAW and IN FULL — the router (past the frontmatter, read the prose too)"
+            },
+            {
+              "path": "memory/chan-hard-rules.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-judgment-mandate.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-critique-directives.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-review-bottleneck.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-career-portfolio-state.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "memory/chan-career-playbook.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "memory/chan-skills-ledger.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "memory/chan-job-application-email-prefs.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "memory/chan-freelance-sales-playbook.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "portfolio/devoted-project-summary.md",
+              "why": "mode: JOB_HUNT"
+            },
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "active_project — what Chan is working on now"
+            }
+          ],
+          "lookup": [
+            {
+              "path": "workflow/two-model-relay.md",
+              "why": "open when: cutting a patch or a brief (the ramp points here)"
+            },
+            {
+              "path": "workflow/the-drill-and-memory.md",
+              "why": "open when: after a compaction; before any memory-file edit"
+            },
+            {
+              "path": "workflow/qa-gauntlet-pattern.md",
+              "why": "open when: the work classifies HEAVY (contract, \"The QA gate\")"
+            },
+            {
+              "path": "workflow/new-project-checklist.md",
+              "why": "open when: a new build starts (CLIENT_BUILD mode still loads it)"
+            },
+            {
+              "path": "lessons/platforms/monday.md",
+              "why": "open when: any monday.com work (the trial card and canon point here)"
+            },
+            {
+              "path": "projects/REGISTRY.md",
+              "why": "open when: the work touches a project other than active_project"
+            },
+            {
+              "path": "projects/trial-aug2026/decision-log.md",
+              "why": "open when: reconstructing WHY a trial decision was made"
+            },
+            {
+              "path": "projects/trial-aug2026/relay-lessons-day8-9.md",
+              "why": "open when: BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design"
+            },
+            {
+              "path": "projects/trial-aug2026/sales-redesign-resume.md",
+              "why": "open when: before resuming the Sales redesign build"
+            },
+            {
+              "path": "projects/trial-aug2026/applicant-report-resume.md",
+              "why": "open when: before applicant-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/mailbox-report-resume.md",
+              "why": "open when: before mailbox-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/trial-follow-up.md",
+              "why": "open when: before trial follow-up or a future build"
+            }
+          ]
+        },
+        "ANO_ULAM": {
+          "sourceKind": "captured",
+          "boot": [
+            {
+              "path": "CLAUDE.md",
+              "why": "frozen core — the contract"
+            },
+            {
+              "path": "workflow/relay-boot-claudeai.md",
+              "why": "the browser half's entry ramp"
+            },
+            {
+              "path": "memory/MEMORY.md",
+              "why": "RAW and IN FULL — the router (past the frontmatter, read the prose too)"
+            },
+            {
+              "path": "memory/chan-hard-rules.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-judgment-mandate.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-critique-directives.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-review-bottleneck.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "projects/ano-ulam/project-canon.md",
+              "why": "mode: ANO_ULAM"
+            },
+            {
+              "path": "lessons/platform-gotchas.md",
+              "why": "mode: ANO_ULAM"
+            },
+            {
+              "path": "memory/chan-ai-cost-context.md",
+              "why": "mode: ANO_ULAM"
+            },
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "active_project — what Chan is working on now"
+            }
+          ],
+          "lookup": [
+            {
+              "path": "workflow/two-model-relay.md",
+              "why": "open when: cutting a patch or a brief (the ramp points here)"
+            },
+            {
+              "path": "workflow/the-drill-and-memory.md",
+              "why": "open when: after a compaction; before any memory-file edit"
+            },
+            {
+              "path": "workflow/qa-gauntlet-pattern.md",
+              "why": "open when: the work classifies HEAVY (contract, \"The QA gate\")"
+            },
+            {
+              "path": "workflow/new-project-checklist.md",
+              "why": "open when: a new build starts (CLIENT_BUILD mode still loads it)"
+            },
+            {
+              "path": "lessons/platforms/monday.md",
+              "why": "open when: any monday.com work (the trial card and canon point here)"
+            },
+            {
+              "path": "projects/REGISTRY.md",
+              "why": "open when: the work touches a project other than active_project"
+            },
+            {
+              "path": "projects/trial-aug2026/decision-log.md",
+              "why": "open when: reconstructing WHY a trial decision was made"
+            },
+            {
+              "path": "projects/trial-aug2026/relay-lessons-day8-9.md",
+              "why": "open when: BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design"
+            },
+            {
+              "path": "projects/trial-aug2026/sales-redesign-resume.md",
+              "why": "open when: before resuming the Sales redesign build"
+            },
+            {
+              "path": "projects/trial-aug2026/applicant-report-resume.md",
+              "why": "open when: before applicant-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/mailbox-report-resume.md",
+              "why": "open when: before mailbox-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/trial-follow-up.md",
+              "why": "open when: before trial follow-up or a future build"
+            }
+          ]
+        },
+        "CLIENT_BUILD": {
+          "sourceKind": "captured",
+          "boot": [
+            {
+              "path": "CLAUDE.md",
+              "why": "frozen core — the contract"
+            },
+            {
+              "path": "workflow/relay-boot-claudeai.md",
+              "why": "the browser half's entry ramp"
+            },
+            {
+              "path": "memory/MEMORY.md",
+              "why": "RAW and IN FULL — the router (past the frontmatter, read the prose too)"
+            },
+            {
+              "path": "memory/chan-hard-rules.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-judgment-mandate.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-critique-directives.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "memory/chan-review-bottleneck.md",
+              "why": "cold-start set"
+            },
+            {
+              "path": "workflow/new-project-checklist.md",
+              "why": "mode: CLIENT_BUILD"
+            },
+            {
+              "path": "workflow/qa-gauntlet-pattern.md",
+              "why": "mode: CLIENT_BUILD"
+            },
+            {
+              "path": "projects/trial-aug2026/project-canon.md",
+              "why": "active_project — what Chan is working on now"
+            }
+          ],
+          "lookup": [
+            {
+              "path": "workflow/two-model-relay.md",
+              "why": "open when: cutting a patch or a brief (the ramp points here)"
+            },
+            {
+              "path": "workflow/the-drill-and-memory.md",
+              "why": "open when: after a compaction; before any memory-file edit"
+            },
+            {
+              "path": "lessons/platforms/monday.md",
+              "why": "open when: any monday.com work (the trial card and canon point here)"
+            },
+            {
+              "path": "projects/REGISTRY.md",
+              "why": "open when: the work touches a project other than active_project"
+            },
+            {
+              "path": "projects/trial-aug2026/decision-log.md",
+              "why": "open when: reconstructing WHY a trial decision was made"
+            },
+            {
+              "path": "projects/trial-aug2026/relay-lessons-day8-9.md",
+              "why": "open when: BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design"
+            },
+            {
+              "path": "projects/trial-aug2026/sales-redesign-resume.md",
+              "why": "open when: before resuming the Sales redesign build"
+            },
+            {
+              "path": "projects/trial-aug2026/applicant-report-resume.md",
+              "why": "open when: before applicant-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/mailbox-report-resume.md",
+              "why": "open when: before mailbox-report work"
+            },
+            {
+              "path": "projects/trial-aug2026/trial-follow-up.md",
+              "why": "open when: before trial follow-up or a future build"
+            }
+          ]
+        }
+      }
+    },
+    "codex": {
+      "capturedBy": "node templates/codex/session-ritual.mjs at bb9979c, CLAUDE_CORE=<clone>, staged HOME, startup; the Read plan segment. The hook resolves mode_default only (no override), so TRIAL is the only capturable mode.",
+      "modes": {
+        "TRIAL": {
+          "sourceKind": "captured",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "memory/chan-trial-aug2026.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "LEAN": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md"
+          ],
+          "note": "Resolver-derived. The pre-1a hook had no LEAN carve-out: under a LEAN mode_default it would have planned all four cold-start files and the canon, 14,238 more chars than the browser at bb9979c. That is the ~15K difference AL-30 names; one resolver closes it by construction."
+        },
+        "JOB_HUNT": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "memory/chan-career-portfolio-state.md",
+            "memory/chan-career-playbook.md",
+            "memory/chan-skills-ledger.md",
+            "memory/chan-job-application-email-prefs.md",
+            "memory/chan-freelance-sales-playbook.md",
+            "portfolio/devoted-project-summary.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "ANO_ULAM": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "projects/ano-ulam/project-canon.md",
+            "lessons/platform-gotchas.md",
+            "memory/chan-ai-cost-context.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "CLIENT_BUILD": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "workflow/new-project-checklist.md",
+            "workflow/qa-gauntlet-pattern.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        }
+      }
+    },
+    "cli": {
+      "consumer": "none until batch 1b points the drill's step 2 here; nothing runs this seat yet",
+      "modes": {
+        "TRIAL": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "memory/chan-trial-aug2026.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "LEAN": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md"
+          ]
+        },
+        "JOB_HUNT": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "memory/chan-career-portfolio-state.md",
+            "memory/chan-career-playbook.md",
+            "memory/chan-skills-ledger.md",
+            "memory/chan-job-application-email-prefs.md",
+            "memory/chan-freelance-sales-playbook.md",
+            "portfolio/devoted-project-summary.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "ANO_ULAM": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "projects/ano-ulam/project-canon.md",
+            "lessons/platform-gotchas.md",
+            "memory/chan-ai-cost-context.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        },
+        "CLIENT_BUILD": {
+          "sourceKind": "derived",
+          "boot": [
+            "CLAUDE.md",
+            "memory/MEMORY.md",
+            "memory/chan-hard-rules.md",
+            "memory/chan-judgment-mandate.md",
+            "memory/chan-critique-directives.md",
+            "memory/chan-review-bottleneck.md",
+            "workflow/new-project-checklist.md",
+            "workflow/qa-gauntlet-pattern.md",
+            "projects/trial-aug2026/project-canon.md"
+          ]
+        }
+      }
+    }
+  }
+}

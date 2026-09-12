@@ -1,8 +1,15 @@
 // Codex SessionStart ritual. It reads the Claude-Core router at run time and
 // returns exactly one SessionStart JSON object; diagnostics never use stdout.
+// Since batch 1a (Sep 12 2026) the read plan comes from the kit's ONE resolver,
+// templates/boot-resolver.mjs, imported from the kit at run time (no installed copy,
+// so this hook and the browser boot cannot drift apart again; why: audit-log AL-30/AL-32).
+// If the resolver cannot be imported, or throws (R1, Codex review Sep 12 2026: a resolver bug
+// once killed this report outright, exit 1 and no JSON), the plan degrades to contract + router
+// and the failure is named in the report, never hidden. This hook never wedges a session.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const KIT = path.resolve(process.env.CLAUDE_CORE || "C:/Users/Chanryle/Claude-Core");
@@ -17,17 +24,6 @@ const read = (file) => {
   catch (error) { failed.push(`${file} (${error.code === "ENOENT" ? "missing" : "unreadable"})`); return ""; }
 };
 const resolveListed = (entry) => path.resolve(KIT, entry.replace(/^\.\.\//, ""));
-const listFor = (router, key) => {
-  const section = router.match(new RegExp(`^${key}:[ \\t]*(?:#.*)?$([\\s\\S]*?)(?=^[A-Za-z_]+:|(?![\\s\\S]))`, "m"))?.[1] || "";
-  return [...section.matchAll(/^\s*-\s+([^#\r\n]+?)(?:\s+#.*)?\s*$/gm)].map((m) => m[1].trim());
-};
-const modeName = (router) => router.match(/^\s*mode_default:\s*([^#\s]+)/m)?.[1] || "unknown";
-const activeProject = (router) => router.match(/^\s*active_project:\s*([^#\r\n]+)/m)?.[1].trim() || "";
-const modeFiles = (router, mode) => {
-  const modes = router.match(/^modes:[ \t]*(?:#.*)?$([\s\S]*?)(?=^[A-Za-z_]+:|(?![\s\S]))/m)?.[1] || "";
-  const section = modes.match(new RegExp(`^\\s{2}${mode}:.*$([\\s\\S]*?)(?=^\\s{2}[A-Z_]+:|(?![\\s\\S]))`, "m"))?.[1] || "";
-  return [...section.matchAll(/^\s*-\s+([^#\r\n]+?)(?:\s+#.*)?\s*$/gm)].map((m) => m[1].trim());
-};
 const gitState = (cwd) => {
   const run = (...args) => spawnSync("git", args, { cwd, encoding: "utf8", timeout: 3000 });
   const branch = run("branch", "--show-current");
@@ -43,12 +39,22 @@ const contract = path.join(KIT, "CLAUDE.md");
 const routerPath = path.join(KIT, "memory", "MEMORY.md");
 read(contract);
 const router = read(routerPath);
-const cold = listFor(router, "cold_start");
-const mode = modeName(router);
-const modeSet = modeFiles(router, mode);
-const active = activeProject(router);
-const planned = [contract, routerPath, ...cold.map(resolveListed), ...modeSet.map(resolveListed)];
-if (active) planned.push(resolveListed(active)); else failed.push(`${routerPath} (active_project missing)`);
+const resolverPath = path.join(KIT, "templates", "boot-resolver.mjs");
+let resolver = null;
+try { resolver = await import(pathToFileURL(resolverPath).href); }
+catch (error) { failed.push(`${resolverPath} (${error.code === "ERR_MODULE_NOT_FOUND" ? "missing" : "unreadable: " + (error.code || error.message)})`); }
+let index = { state: {} }, plan = { mode: "", boot: [], problems: [] }, resolverRan = false;
+if (resolver) {
+  try { index = resolver.parseIndex(router); plan = resolver.resolveBoot(index, { seat: "codex" }); resolverRan = true; }
+  catch (error) { // R1: a throw inside the resolver is a named failure, never a dead hook
+    index = { state: {} }; plan = { mode: "", boot: [], problems: [] };
+    failed.push(`${resolverPath} (threw: ${error.message})`);
+  }
+}
+const mode = plan.mode || "unknown";
+const active = index.state.active_project || "";
+const planned = plan.boot.length ? plan.boot.map(({ path: p }) => resolveListed(p)) : [contract, routerPath]; // no usable resolver: the two anchors, and the failed read says why
+if (resolverRan && !active && !plan.problems.some((p) => /active_project/.test(p))) failed.push(`${routerPath} (active_project missing)`);
 for (const file of [...new Set(planned)].slice(2)) read(file);
 
 const home = process.env.USERPROFILE || process.env.HOME || os.homedir();
@@ -70,6 +76,7 @@ const report = [
   ritual,
   `Router at runtime: mode ${mode}; active project ${active || "unresolved"}.`,
   `Read plan: ${names || "router unavailable"}.`,
+  ...(plan.problems.length ? [`Resolver problems: ${plan.problems.join("; ")}.`] : []),
   gitState(path.resolve(input.cwd || process.cwd())),
   pushReport,
   stale ? "Stale PUSH_GO exists: report it to Chan and never use it." : "No stale PUSH_GO token.",
