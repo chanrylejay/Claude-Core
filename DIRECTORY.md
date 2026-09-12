@@ -58,6 +58,9 @@ provenance now certify routing through the configured matcher, launcher, runner,
 - `trial-aug2026/decision-log.md` — LOOKUP, never at boot: the trial's dated decision log, newest first; open when reconstructing why a decision was made (split from the canon Sep 7 2026, batch 0a; the canon keeps a one-line-each Locked block with each rule's scope).
 - `trial-aug2026/relay-lessons-day8-9.md` — LOOKUP, BINDING: the day 8-9 relay lessons (board scans and changes with the AI-credit checks, client-call and deck preparation, reference-led design) banked during the AL-27 freeze; open before scanning or changing a board, a client call or deck, or reference-led design. Their one home until batch 2 re-homes them into lessons/.
 - `trial-aug2026/sales-redesign-resume.md` — LOOKUP, never at boot: the Sales redesign build's resume anchor (branch, the two LOCAL-ONLY hand-offs to read first, next UI pass, what is not authorised); open before resuming that build. Moved from the canon Sep 8 2026 (batch 0a).
+- `trial-aug2026/applicant-report-resume.md` — LOOKUP: applicant-report and scraper progress, field limits and validation state; open before that work.
+- `trial-aug2026/mailbox-report-resume.md` — LOOKUP: read-only mailbox scanning and offline conversation reporting; open before that work.
+- `trial-aug2026/trial-follow-up.md` — LOOKUP: trial follow-up and banked future builds; open before planning or resuming either.
 - `ano-ulam/project-canon.md` — Chan's own product (he continues it post-Devoted): full architecture, recipe-engine laws, closed decisions, bug list. Read before ANY ano-ulam work.
 
 ## templates/ — reusable infrastructure

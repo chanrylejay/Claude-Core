@@ -66,27 +66,22 @@ the Timeline. All data is real (client data), never sample.
 
 ## Current build state
 
-- Day 13: sprint paused for live operator requests. One-click send buttons on two boards now fire a per-person Google Apps Script under the operator's own account, sending from that mailbox with signature, CC, attachment, and Sent/Failed write-back. Chan verified both end to end. Click-to-dial was set up for the recruitment seat. Lead panel v4 was untouched.
-
-- Sep 8 local v10 build: Pipeline v10 is locally complete with option (b) KPI chips. Next is the lead panel and forms so the sales seat can leave the spreadsheet, then views and cutover, then sourcing. This remains unshipped and client/staff/company details stay in the private project materials.
+- Applicant report (Sep 11): v4 paused at 19/2,304; resume via `applicant-report-resume.md`.
+- Mailbox report (Sep 11): two Inbox/Sent batches scanned, read-only; `mailbox-report-resume.md`.
+- Operator sends verified by Chan; Day 13 in `decision-log.md`.
+- Sales (Sep 8): Pipeline v10 locally complete, unshipped; resume via `sales-redesign-resume.md`. Analytics live since day 6.
+- Trial follow-up and future builds: `trial-follow-up.md`; nothing builds until Chan says so.
 
 - Day 6-9 records live in the PRIVATE repo's docs/; this canon mirrors them public-safe.
   Mirroring is a same-session step from now on (gap found Sep 4).
 - PENDING: `importer-day8` branch needs merge + a DB run to count as live; GO gates both.
-- Sales redesign: direction locked day 9; local implementation began Sep 7 on branch
-  `sales-redesign-v10` (K clone) and remains unshipped; before resuming it open
-  `sales-redesign-resume.md` (LOOKUP). Analytics live since day 6.
+
 - v2 IS LIVE (Aug 28): dashboard, timeline (team + per-person), sales pipeline,
   recruitment, jobs, team, workforce, settings; auth enforced. HEAD 6a9700c, then the
   day-5 ship record (bcaf7ea). Vercel region sin1.
 - Production verified: live dashboard numbers, /timeline works, /calendar 404s (not yet
   built), unauthed /api/leads → 401.
 - Completion surfaces empty — correct by design.
-- Post-v2 (the trial's remaining days are persuasion, not code): record demo video + short
-  message to the client, the ops lead's offered call, the boss's 15 minutes, data-quality
-  note for the sales team, day-10 ask. Nothing builds until Chan says so.
-- Banked future items: bar drag-to-move, group-events row, importer run-stamp, auto-inject
-  sales follow-ups.
 
 ## Blocked on access
 

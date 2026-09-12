@@ -44,6 +44,9 @@ lookup:                # verified present at every boot, NEVER read at boot; ope
   - projects/trial-aug2026/decision-log.md          # reconstructing WHY a trial decision was made
   - projects/trial-aug2026/relay-lessons-day8-9.md  # BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design
   - projects/trial-aug2026/sales-redesign-resume.md # before resuming the Sales redesign build
+  - projects/trial-aug2026/applicant-report-resume.md # before applicant-report work
+  - projects/trial-aug2026/mailbox-report-resume.md # before mailbox-report work
+  - projects/trial-aug2026/trial-follow-up.md # before trial follow-up or a future build
 boot:
   budget_chars: 40000  # ceiling on the BOOT list's bytes; the boot net goes red above it. Ladder in AL-20
 metadata:

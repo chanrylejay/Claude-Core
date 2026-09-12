@@ -8,6 +8,8 @@ Sep 7 2026 (batch 0a, lossless move; why: ../../lessons/audit-log.md AL-29).
 
 ## Decisions made (dated) — what was decided, why, newest first
 
+- Day 13: sprint paused for live operator requests. One-click send buttons on two boards now fire a per-person Google Apps Script under the operator's own account, sending from that mailbox with signature, CC, attachment, and Sent/Failed write-back. Chan verified both end to end. Click-to-dial was set up for the recruitment seat. Lead panel v4 was untouched.
+
 
 - Sep 3 (day 9): v2 proposal deck banked (private repo); Sales redesign direction LOCKED —
   white/light-gray surfaces and a gold accent. No app code on main.
