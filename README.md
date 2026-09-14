@@ -22,7 +22,7 @@ Built Jul 15 2026, during the Devoted Care wind-down.
 
 | Folder | What it holds |
 |---|---|
-| `memory/` | **Who Chan is** — your profile, hard rules, preferences, career state, operating protocol. `MEMORY.md` is the index; each file is one durable fact. |
+| `memory/` | **Who Chan is** — your profile, hard rules, preferences, career state, operating protocol. `MEMORY.md` is the manifest every boot reads; one retrieval unit per file (law: the drill). |
 | `workflow/` | **How we work together** — THE DRILL, the memory system itself, the QA-gauntlet pattern, the tool playbook. |
 | `lessons/` | **What experience taught us** — engineering, platform, AI-agent, and client-collaboration lessons, distilled and de-clientized. |
 | `projects/` | **Per-project canons** — one folder per project (Devoted Care's design canon lives here); read only when working that project. |
@@ -50,7 +50,7 @@ session with no operating contract at all.
 
 ## Keep it alive (the upkeep map — pointers, not copies)
 
-- New durable fact → ONE file in `memory/` + an index line in `memory/MEMORY.md`. New universal
+- New durable fact → ONE file in `memory/` (one retrieval unit per file: the drill's law) + one manifest line in `memory/MEMORY.md`'s `lookup:` with its trigger. New universal
   lesson → extend the matching CATEGORY file in `lessons/`; never create a lookalike file.
 - Every new file gets a line in `DIRECTORY.md`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
 - One home per fact; anti-bloat and where-facts-go rules: workflow/the-drill-and-memory.md, "Where new facts go".
@@ -61,7 +61,7 @@ session with no operating contract at all.
   state, blockers), never code, credentials, client names, or anything failing the
   would-he-post-it test; those live in the private project repo or LOCAL-ONLY files. Canon
   updates ride the same session that changes reality. Switching active projects updates
-  `active_project`, the NOW line, and the state block in one edit. The full project map is
+  `active_project` and the rest of the state block (`mode_default`, `active_track`, `updated`) in one edit; the NOW prose line is gone (batch 2a), the block is the one home. The full project map is
   `projects/REGISTRY.md` — every project one line, added the session it first appears.
 - Rewriting any permanent doc, by any amount: run the L24 diff audit first, and for policy text the clause-level policy diff (`templates/_policy_diff.mjs`). Measured against the version at the START of the session, not the previous edit — otherwise two small passes strip more than one large one and the audit never fires (the old "more than 25%" trigger was superseded Aug 2026; the drill is the rule's home)
   (`lessons/universal-patterns.md`, "Maintaining documents").

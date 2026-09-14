@@ -3,7 +3,9 @@
 //   node _pointer_test.mjs
 // MANDATORY after adding, renaming, or deleting any memory/ file or any DIRECTORY-listed
 // file. Pins, all raw reads:
-//   1. every memory/*.md (except LOCAL-ONLY-*) has EXACTLY ONE link line in memory/MEMORY.md
+//   1. every memory/*.md (except LOCAL-ONLY-*) has EXACTLY ONE manifest line in memory/MEMORY.md's
+//      frontmatter: in cold_start:, or in lookup: with a trigger (retargeted in batch 2a from the
+//      prose catalog, which the manifest replaced; LOCAL-ONLY-* keeps its prose pointer, pin 2)
 //   2. every markdown link in MEMORY.md resolves to a file that exists
 //   3. MEMORY.md is under the auto-load cap (200 lines / 25KB) with headroom stated
 //   4. every non-memory TRACKED file is named somewhere in DIRECTORY.md (memory/ excepted by
@@ -32,12 +34,28 @@ let fail = 0, ran = 0;
 const t = (n, c) => { ran++; if (c) console.log("  ok  " + n); else { fail++; console.log("FAIL  " + n); } };
 
 const idx = rd("memory/MEMORY.md");
-// 1 + 2
+// 1 (retargeted, batch 2a; why: ../lessons/audit-log.md AL-34): the index is a MANIFEST, so a
+//   memory file's one line is a frontmatter list entry, never a prose link. Every tracked
+//   memory/*.md (LOCAL-ONLY-* excepted, below) is EITHER in `cold_start:` (once, no lookup line)
+//   OR in `lookup:` exactly once, with a trigger on the line; the mode sets are routing
+//   references and may list the same path (the resolver dedups, first listing wins). Raw parse
+//   on purpose: this net must not depend on the resolver it is partly checking.
+const fmText = (idx.match(/^---\r?\n([\s\S]*?)\r?\n---/) || ["", ""])[1];
+const listOf = (key) => {
+  const m = fmText.match(new RegExp("^" + key + ":[^\\n]*\\n((?:[ \\t]+[^\\n]*\\n?)*)", "m"));
+  return (m ? m[1] : "").split(/\r?\n/).map((l) => l.replace(/#.*$/, "").trim()).filter((l) => l.startsWith("- ")).map((l) => l.slice(2).trim());
+};
+const triggerOf = (p) => ((fmText.split(/\r?\n/).find((l) => new RegExp("^\\s*- " + p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\s*#").test(l)) || "").match(/#\s*(.*)$/) || [, ""])[1].trim();
+const cold = listOf("cold_start"), look = listOf("lookup");
 const memFiles = fs.readdirSync(path.join(ROOT, "memory")).filter(f => f.endsWith(".md") && f !== "MEMORY.md" && !f.startsWith("LOCAL-ONLY-"));
 for (const f of memFiles) {
-  const n = (idx.match(new RegExp("\\(" + f.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\)", "g")) || []).length;
-  t(`index links ${f} exactly once (found ${n})`, n === 1);
+  const p = "memory/" + f;
+  const c = cold.filter((x) => x === p).length, k = look.filter((x) => x === p).length;
+  t(`manifest lists ${f} exactly once: cold_start ${c}, lookup ${k}${k ? " (trigger: " + (triggerOf(p) || "MISSING") + ")" : ""}`, (c === 1 && k === 0) || (c === 0 && k === 1 && triggerOf(p).length > 0));
 }
+t("the manifest's lookup: and cold_start: carry no LOCAL-ONLY-* path (a missing lookup is a boot error on a clean clone; the machine-only class keeps a prose pointer with its clone-absence disclosure, pin 2)", ![...cold, ...look].some((p) => /LOCAL-ONLY-/.test(p)));
+t("the index prose is not a catalog: no markdown link to a tracked memory file (the manifest is the one home; only the LOCAL-ONLY pointer may link)", [...idx.slice(idx.indexOf("\n---", 4) + 4).matchAll(/\]\(([^)#\s]+\.md)\)/g)].every((m) => /LOCAL-ONLY-/.test(m[1])));
+// 2
 for (const m of idx.matchAll(/\]\(([^)#\s]+\.md)\)/g)) {
   const target = m[1];
   if (/LOCAL-ONLY-/.test(target)) {

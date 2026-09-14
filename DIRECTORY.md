@@ -25,7 +25,7 @@ provenance now certify routing through the configured matcher, launcher, runner,
 
 ## memory/ — who Chan is
 
-- One durable fact per file; every file is indexed in `memory/MEMORY.md`. Read THAT index; it is the only home for memory descriptions.
+- One retrieval unit per file (law: `workflow/the-drill-and-memory.md`, the memory system); every file has exactly one manifest line in `memory/MEMORY.md`'s frontmatter (`cold_start:` or `lookup:` with its trigger, batch 2a), and its own `description:` is the only home of what it is. Read THAT index for the routing; open the file for the fact.
 
 ## workflow/ — how we work together
 
@@ -62,6 +62,7 @@ provenance now certify routing through the configured matcher, launcher, runner,
 - `trial-aug2026/mailbox-report-resume.md` — LOOKUP: read-only mailbox scanning and offline conversation reporting; open before that work.
 - `trial-aug2026/trial-follow-up.md` — LOOKUP: trial follow-up and banked future builds; open before planning or resuming either.
 - `ano-ulam/project-canon.md` — Chan's own product (he continues it post-Devoted): full architecture, recipe-engine laws, closed decisions, bug list. Read before ANY ano-ulam work.
+- `ano-ulam/status-log.md` — LOOKUP, never at boot: the dated history behind the canon (the Jul 23-28 2026 model migration, the Jun 6 2026 status snapshot) and the v3 STEP 0 gate, which BINDS v3 and AI-feature work; open when resuming the project or verifying its state (split from the canon Sep 14 2026, batch 2a, lossless; why: AL-34).
 
 ## templates/ — reusable infrastructure
 

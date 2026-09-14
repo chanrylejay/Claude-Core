@@ -7,6 +7,8 @@ metadata:
 
 # PED audit log
 
+**The gate (moved here from the file's index line in batch 2a):** gate any prompt that gets reused, leaves this machine, or touches career or client data; unsure = gate it or ask. A gated prompt gets its PED pass and its line below.
+
 One line per audit, NEWEST FIRST, each carrying an explicit sequence number: #1 is the oldest and
 the numbers only ever grow, so a new entry takes the next number and goes at the TOP. Dates alone
 cannot order these — ten of them landed on one day — and position alone proved unreliable, so the

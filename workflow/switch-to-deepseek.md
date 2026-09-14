@@ -41,7 +41,7 @@ it), then run the step-5 smoke test. Nothing is done until that smoke test answe
 
 ## First session on DeepSeek (do once, whichever path you used)
 
-Paste this exact line into Claude-Core/memory/MEMORY.md's NOW block so every future session sees the runtime reality (remove it only if you return to a vision model):
+DONE: this runtime reality lives in the frozen core (Claude-Core/CLAUDE.md, the agents block: DeepSeek is blind, saves the screenshot, reports AWAITING HIS LOOK), which every seat boots; the index's NOW block carried the line until batch 2a retired that mirror (Sep 14 2026). The line as first written, for the record (drop it only if you return to a vision model):
 
 RUNTIME: DeepSeek endpoint, NO vision. The model drives Playwright and SAVES screenshots to a file; CHAN's eyes verify every screen; never claim a screen looks right.
 

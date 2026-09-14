@@ -1,84 +1,78 @@
 ---
 name: memory-index
-description: The router for all memory reads; the state block below mirrors the NOW line, the two edited together, always.
-state:
-  updated: 2026-08-30
+description: The router: a manifest the kit's one resolver reads; the prose carries only what lists cannot.
+state:  # the live state, one home; review_by is metadata, never a gate
+  updated: 2026-09-14
   active_track: client-trial
-  trial_active: true
-  job_hunt: backgrounded
+  trial_active: true  # review_by 2026-11-14, Chan's estimate, never a fixed end
+  job_hunt: backgrounded  # review_by 2026-11-14
   devoted_engagement: ended-2026-07-24
   closure_checklist: complete
-  mode_default: TRIAL
-  active_project: projects/trial-aug2026/project-canon.md   # the canon: what Chan is working on now
-cold_start:            # opened RAW on every boot
+  mode_default: TRIAL  # review_by 2026-11-14
+  active_project: projects/trial-aug2026/project-canon.md  # the canon: what Chan is working on now
+  # STALENESS TEST, mechanical, BOTH required: a dated STATUS entry in the boot (a state value, a
+  # date-hooked lookup trigger, a BOOT-read file's header; never a review_by) is NEWER than updated
+  # AND concerns engagement status, the active track, or portfolio/demo state. Then it wins: say so
+  # and confirm with Chan before this block decides anything (client-active, QA path, mode routing).
+  # Why two: ../lessons/universal-patterns.md, "Gates that always fire".
+cold_start:  # RAW on every boot
   - memory/chan-hard-rules.md
-  - memory/chan-judgment-mandate.md   # lean:lookup
-  - memory/chan-critique-directives.md   # lean:lookup
-  - memory/chan-review-bottleneck.md   # lean:lookup
-modes:                 # mirror of the MODES prose line below, edited together, always; ADDITIVE (cold_start always loads); the workspace's `boot_mode:` line picks the mode (batch 1b)
-  JOB_HUNT:            # the rest parks at its index line (batch 1b)
+  - memory/chan-judgment-mandate.md  # lean:lookup
+  - memory/chan-critique-directives.md  # lean:lookup
+  - memory/chan-review-bottleneck.md  # lean:lookup
+modes:  # additive; the workspace boot_mode: line picks one, else mode_default
+  JOB_HUNT:
     - memory/chan-career-portfolio-state.md
     - memory/chan-skills-ledger.md
-  ANO_ULAM:            # the cost file parks at its index line (batch 1b)
+  ANO_ULAM:
     - projects/ano-ulam/project-canon.md
     - lessons/platform-gotchas.md
-  CLIENT_BUILD:        # the gauntlet is LOOKUP below, at HEAVY (batch 1b)
+  CLIENT_BUILD:
     - workflow/new-project-checklist.md
-  TRIAL:               # = trial card + canon (batch 1, Aug 30 2026); the CLIENT_BUILD set + monday.md are LOOKUP below
+  TRIAL:  # the default while trial_active is true
     - memory/chan-trial-aug2026.md
     - projects/trial-aug2026/project-canon.md
-  LEAN:                # trivial tasks: contract + index + hard rules; the canon and the lean:lookup files park in LOOKUP
-lookup:                # verified present at every boot, NEVER read at boot; open at the trigger on the line (why: AL-20)
-  - workflow/two-model-relay.md          # cutting a patch or a brief (the ramp points here)
-  - workflow/the-drill-and-memory.md     # after a compaction; before any memory-file edit
-  - workflow/qa-gauntlet-pattern.md      # the work classifies HEAVY (contract, "The QA gate")
-  - workflow/new-project-checklist.md    # a new build starts (CLIENT_BUILD mode still loads it)
-  - lessons/platforms/monday.md          # any monday.com work (the trial card and canon point here)
-  - projects/REGISTRY.md                 # the work touches a project other than active_project
-  - projects/trial-aug2026/decision-log.md          # reconstructing WHY a trial decision was made
-  - projects/trial-aug2026/relay-lessons-day8-9.md  # BINDING: before scanning or changing a Monday board, a client call or deck, or reference-led design
-  - projects/trial-aug2026/sales-redesign-resume.md # before resuming the Sales redesign build
-  - projects/trial-aug2026/applicant-report-resume.md # before applicant-report work
-  - projects/trial-aug2026/mailbox-report-resume.md # before mailbox-report work
-  - projects/trial-aug2026/trial-follow-up.md # before trial follow-up or a future build
-  - lessons/platforms/codex.md           # a Codex runtime, push-gate, sandbox, or shell question (the doorway points here)
-  - DIRECTORY.md                         # before creating a kit file, or to locate one by name
-  - portfolio/devoted-project-summary.md # writing about the Devoted project (a resume, a letter, an interview)
+  LEAN:  # trivial tasks
+lookup:  # verified present, never read at boot, opened at its trigger (AL-20)
+  - memory/chan-trial-aug2026.md  # 🛑 before routing modes or promising availability
+  - memory/chan-priority-client-sprint-over-hygiene.md  # a kit or hygiene idea while trial_active is true (AL-27)
+  - workflow/two-model-relay.md  # cutting a patch or a brief
+  - workflow/the-drill-and-memory.md  # after a compaction; before any memory-file edit
+  - workflow/qa-gauntlet-pattern.md  # the work classifies HEAVY
+  - workflow/new-project-checklist.md  # a new build starts
+  - lessons/platforms/monday.md  # any monday.com work
+  - projects/REGISTRY.md  # a project other than active_project
+  - projects/trial-aug2026/decision-log.md  # reconstructing WHY a trial decision was made
+  - projects/trial-aug2026/relay-lessons-day8-9.md  # BINDING: a Monday board scan or change, a client call or deck, reference-led design
+  - projects/trial-aug2026/sales-redesign-resume.md  # before resuming the Sales redesign
+  - projects/trial-aug2026/applicant-report-resume.md  # before applicant-report work
+  - projects/trial-aug2026/mailbox-report-resume.md  # before mailbox-report work
+  - projects/trial-aug2026/trial-follow-up.md  # before trial follow-up or a future build
+  - projects/ano-ulam/status-log.md  # resuming ano-ulam or verifying its state; the v3 STEP 0 gate inside BINDS
+  - lessons/platforms/codex.md  # a Codex runtime, push-gate, sandbox, or shell question
+  - DIRECTORY.md  # before creating a kit file, or to locate one
+  - memory/chan-ai-cost-context.md  # LAW before DeepSeek CLI work; any AI cost or model decision
+  - memory/chan-ai-cost-history.md  # why the cost posture is what it is
+  - memory/chan-career-portfolio-state.md  # LinkedIn, resume, job-hunt, or portfolio work
+  - memory/chan-skills-ledger.md  # any career-facing citation: the ceiling; engagement numbers are source material
+  - memory/chan-career-playbook.md  # a career decision or an engagement ending
+  - memory/chan-freelance-sales-playbook.md  # an Upwork proposal, a rate question, an interview frame
+  - memory/chan-job-application-email-prefs.md  # before any Chan-voice text or job email
+  - portfolio/devoted-project-summary.md  # writing about the Devoted project
+  - memory/chan-resigned-devoted-jul15.md  # anything Devoted (ENDED Jul 24 2026; hands-off)
+  - memory/chan-pre-devoted-assets.md  # the Apr-Jun 2026 apps, numbers, or prompt vault (DO NOT TOUCH)
+  - memory/chan-visual-complaint-open-mock-first.md  # a visual complaint (the reference first)
+  - memory/ped-prompt-auditor.md  # auditing a prompt with PED
+  - memory/ped-log.md  # a prompt reused, shared, or touching career or client data: gate it
+  - memory/chan-personal-facts.md  # a personal or hardware question
 boot:
-  budget_chars: 40000  # ceiling for every seat and mode unless budget_by_mode names a higher one; the resolver net goes red above it (ladder: AL-20)
-  budget_by_mode:      # measured tripwires, never targets (batch 1b; AL-33)
-    JOB_HUNT: 47000    # measured 46035, browser seat
-    ANO_ULAM: 49000    # measured 48343
+  budget_chars: 40000  # the ceiling, every seat and mode (AL-20)
 metadata:
   type: reference
 ---
 
-# Memory Index — Chan (portable)
+# Memory index
 
-- Person basics: Chan (Chanryle Cagara), chanrylecagara@gmail.com, Quezon City PH. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
-- NOW (Aug 30 2026), mirroring the frontmatter state block, the live-state source: 2-week CLIENT TRIAL ACTIVE (Australian clients, monday.com platform; see chan-trial-aug2026) is the track; job hunt backgrounded behind it; Devoted ENDED Jul 24 2026, closure checklist ALL DONE; portfolio demo v2 live. Edit the block and this line together when any of it stops being true. Staleness test, mechanical, BOTH conditions required: a dated entry elsewhere in this index is NEWER than the block's date AND is about engagement status, active track, or portfolio/demo state; a newer date on any other subject says nothing about this block. When both hold, the dated entry wins: say so and confirm the current state with Chan before this block decides anything (client-active, QA path, mode routing). (why two conditions: ../lessons/universal-patterns.md, "Gates that always fire").
-- RUNTIME (PERMANENT, Chan Sep 2 2026; primacy inverted by Chan Sep 6 2026): two hands are live on the real machine, Codex PRIMARY and Claude Code on the DeepSeek endpoint secondary; who does what and who can see: the frozen core. Claude access in VS Code is NOT coming back — plan around this, never around its return. Codex's account limits, free month, model, and effort posture: [[chan-ai-cost-context]], one home; mechanics: ../workflow/two-model-relay.md.
-- Legend: ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate.
-- MODES, additive (the cold-start set always loads too), read before working: the lists live in the frontmatter `modes:` block, the kit's one resolver expands them (why: ../lessons/audit-log.md AL-20, AL-32, AL-33); this prose carries only what lists cannot. JOB HUNT caveat: engagement numbers are SOURCE MATERIAL; the skills ledger is the ceiling on what gets cited. LEAN: the three ⭐ judgment files tagged `lean:lookup` park in LOOKUP, since a trivial task writes no UI report and parks no decision; every other mode carries them on purpose (batch 4b). A file routed out of a mode set parks at its trigger: a memory file at its index line here (the pointer net verifies it), any other file in `lookup:`. THE WORKSPACE DECIDES THE MODE (batch 1b): a project mapped to a mode carries ONE line, `boot_mode: <MODE>`, in its CLAUDE.md and AGENTS.md (same line, one commit); the session hooks expand it, so a workspace never hand-copies these lists; `mode_default` is the fallback (no line, the kit folder, the browser sandbox). The `active_project` canon boots in its own mode only; every other mode parks it as the first LOOKUP line. Prose and frontmatter are mirrors: a mode-set change edits BOTH in one edit; the resolver net pins every listed file present and every seat and mode under its budget line.
+Chan (Chanryle Cagara), chanrylecagara@gmail.com, Quezon City PH. Builds fast with AI help, reviews as the boss. Plain words, no em dashes.
 
-Read top-down. COLD START: OPEN the resolver's BOOT plan (contract, this index, the `cold_start:` set, the mode set, the canon in its own mode), all RAW (Bash, never ctx_*; the law is the drill, a LOOKUP above). The ⭐⭐ files ride every boot ON PURPOSE, LEAN excepted: judgment behaviors no hook can enforce, so repetition is their only mechanism.
-
-- [⭐ Chan's HARD rules](chan-hard-rules.md) — rule-0 THE DRILL · show-first · 🔒 ship in batches (no push/deploy without explicit GO) · DB safety · judgment mandate.
-- [⭐ Chan's judgment mandate](chan-judgment-mandate.md) — don't just execute edit lists; self-rate every surface 1-10 and close the gap.
-- [⭐ Career/portfolio state](chan-career-portfolio-state.md) — career track state (trial active Aug 2026, job hunt backgrounded); portfolio/resume/LinkedIn state + confidentiality canon.
-- [⭐⭐ Directives are NOT absolute](chan-critique-directives.md) — critique every directive (client's OR Chan's) + propose better; the owner decides.
-- [⭐⭐ The review-bottleneck lesson](chan-review-bottleneck.md) — Chan is often the single reviewer: plain language, screenshots, small slices.
-- [⭐ Visual complaint → open the reference first](chan-visual-complaint-open-mock-first.md) — compare anatomy vs the reference image before measuring.
-- [Priority: client sprint over hygiene](chan-priority-client-sprint-over-hygiene.md) — WHEN a client sprint is active (the state block's `trial_active` line decides, never this line; why: AL-27), it beats internal cleanup: kit ideas go to the backlog (lessons/audit-log.md, newest AL entry) and Chan says when they start.
-- [Chan-voice writing + job email prefs](chan-job-application-email-prefs.md) — open before drafting any Chan-voice text: no em dashes in ANY Chan-voice text; the cover-letter and job-email laws (links, legal name, honest fit first, AI-assisted dev + flexible hours) and contact info inside.
-- [🛑 Client trial ACTIVE](chan-trial-aug2026.md) — 2-week trial, Australian clients, monday.com platform; the current track (banked Aug 28 2026). Check before routing modes or promising availability.
-- [🛑 Devoted Care — ENDED Jul 24 2026](chan-resigned-devoted-jul15.md) — resigned Jul 15, handoff complete Jul 24 (the dates inside). Fully hands-off: no client-system actions, ever.
-- [Pre-Devoted assets (Apr-Jun 2026)](chan-pre-devoted-assets.md) — live apps, portfolio numbers, the private prompt vault (DO NOT TOUCH), security rulings SETTLED, do not re-raise.
-- [⭐ Skills ledger + origin story](chan-skills-ledger.md) — THE canonical source for anything career-facing: skills, tools, metrics, the origin arc.
-- [⭐ Career Resilience Playbook](chan-career-playbook.md) — open at a career decision or an engagement ending: standing posture, day-1-if-engagement-ends checklist (fired for Devoted, closure COMPLETE Aug 28 2026), side-project flywheel.
-- [⭐ Freelance sales playbook](chan-freelance-sales-playbook.md) — open at an Upwork proposal, a rate question, or an interview frame: Upwork laws, Zero-Call strategy, rate tiers ($35/hr display, flat T1-T4), no-benefits +₱3-5K rule, interview frames, employment history.
-- [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md) — the six settled rulings with site names and paths; gitignored, THIS MACHINE ONLY (absent in a fresh clone). Do not re-raise them.
-- [Personal facts](chan-personal-facts.md) — married (the MSI is his wife's), cat named Khaku, hardware notes.
-- [PED = validated prompt auditor](ped-prompt-auditor.md) — TWO production builds split by runtime: v7.0.2 on claude.ai (validated 10/10 Jul 25 2026) and v6.4.3 on DeepSeek web (the free daily driver). Chan is the courier; bare "audit" works on both; the fallback invocation for older builds is inside.
-- [PED audit log](ped-log.md) — one line per PED audit (regression memory, case-study raw material); gate any prompt that gets reused, leaves this machine, or touches career/client data; unsure = gate it or ask.
-- [AI cost context](chan-ai-cost-context.md) — open before DeepSeek CLI work or any AI cost or model decision: Chan runs on his own DeepSeek key since the engagement ended (switch runbook in workflow/); DeepSeek peak pricing since Aug 16 2026 (the session hook prints the windows); the four session habits inside are LAW before any CLI work; the kit-lean law inside binds every seat.
+Lists route; a file's own `description:` says what it is; its `lookup:` line says when; this prose restates none of it. The rules the lists obey, and why: the resolver header (`../templates/boot-resolver.mjs`). [LOCAL-ONLY security rulings](LOCAL-ONLY-security-rulings.md): six settled rulings, gitignored, THIS MACHINE ONLY (absent in a fresh clone); do not re-raise.

@@ -31,6 +31,9 @@
 //  22. batch 1b: the active canon is in BOOT for the default mode only; every other known mode
 //      parks it as the FIRST LOOKUP line (a mode whose set lists it boots it there)
 //  23. mutation: a budget_by_mode line set below its mode's count → exit 0, OVER BUDGET names it
+//      (batch 2a: planted on the temp copy when the live index carries none)
+//  24. batch 2a: the live index carries no budget_by_mode override; every mode measures against
+//      boot.budget_chars (red on 13f20e0, green on the diet)
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -101,14 +104,25 @@ t(`every mode boots exit 0 and prints its budget with the source (${perMode.map(
 t("every mode sits under its budget line, no OVER BUDGET anywhere (the per-mode red line)", perMode.every((p) => p.set <= p.budget && !/OVER BUDGET/.test(p.out)));
 t("the active canon is in BOOT for the default mode only; every other known mode parks it as the FIRST LOOKUP line (LEAN: after its lean:lookup files, batch 4b)", perMode.every((p) => { const l = lists(p.out); const modeLists = [...fm.matchAll(/^  ([A-Z_]+):[^\n]*\n((?:    - .*\n)*)/gm)].find((mm) => mm[1] === p.m); const inSet = (modeLists?.[2] || "").includes(canon); return p.m === wantDefault || inSet ? l.boot.includes(canon) && !l.look.includes(canon) : !l.boot.includes(canon) && (p.m === "LEAN" ? l.look.includes(canon) : l.look[0] === canon); }));
 
-// 23. a budget_by_mode line below its count → exit 0, OVER BUDGET names the mode's line
-const tightMode = Object.keys(byMode)[0];
-if (tightMode) {
-  fs.writeFileSync(IDX, fm.replace(new RegExp("^    " + tightMode + ": \\d+", "m"), "    " + tightMode + ": 1000"));
+// 23. a budget_by_mode line below its count → exit 0, OVER BUDGET names the mode's line.
+//     Batch 2a: the live index carries NO override any more (every plan measures under the
+//     ceiling and an override would permit growth), so the mutation plants one on the temp copy
+//     (after budget_chars) instead of skipping; a pin that only runs when the tree happens to
+//     carry an override is a pin that quietly stops running.
+const tightMode = Object.keys(byMode)[0] || firstMode;
+{
+  const planted = Object.keys(byMode).length
+    ? fm.replace(new RegExp("^    " + tightMode + ": \\d+", "m"), "    " + tightMode + ": 1000")
+    : fm.replace(/^(  budget_chars:[^\n]*\n)/m, "$1  budget_by_mode:\n    " + tightMode + ": 1000\n");
+  fs.writeFileSync(IDX, planted);
   const tm = run(TMP, ["--mode=" + tightMode]);
-  t(`budget_by_mode.${tightMode} below the count: exit 0, OVER BUDGET printed against that line`, tm.code === 0 && /OVER BUDGET/.test(tm.out) && new RegExp("budget 1000 \\(boot\\.budget_by_mode\\." + tightMode + "\\)").test(tm.out));
+  t(`budget_by_mode.${tightMode} below the count (${Object.keys(byMode).length ? "live line lowered" : "planted on the temp copy"}): exit 0, OVER BUDGET printed against that line`, tm.code === 0 && /OVER BUDGET/.test(tm.out) && new RegExp("budget 1000 \\(boot\\.budget_by_mode\\." + tightMode + "\\)").test(tm.out));
   restore();
 }
+// 24. batch 2a: the live index carries no budget_by_mode override, so every mode reports
+//     boot.budget_chars as its source (red on 13f20e0, where JOB_HUNT and ANO_ULAM rode 47,000
+//     and 49,000 tripwires; green once the diet put every plan under the one ceiling)
+t("no budget_by_mode override in the live index: every mode's budget source is boot.budget_chars (batch 2a)", Object.keys(byMode).length === 0 && perMode.every((p) => p.source === "boot.budget_chars"));
 
 // 5. unknown mode
 const bad = run(TMP, ["--mode=NO_SUCH_MODE"]);

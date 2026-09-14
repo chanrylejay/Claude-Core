@@ -61,10 +61,12 @@ project MEMORY.md, repo CLAUDE.md, and [[chan-hard-rules]] before acting; those 
 fastest orientation, never proof of current state — disk wins, at a start AND mid-session.
 
 **Mechanics:**
-- One durable fact per `.md` file, with frontmatter (`name`, `description`, `type:
-  user | feedback | project | reference`).
-- Every file gets a one-line pointer in the Core memory index (`Claude-Core/memory/MEMORY.md`), which is read on demand during the ritual. A project-scoped fact ALSO gets its own pointer line in the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) — that write is mandatory, not optional, because that index is what auto-loads each session and is the only place a 🔴 READ-FIRST marker can live. A fact with no line there is a fact the next session does not know exists.
-  so the line must carry the hook (what it is + when to read it).
+- ONE RETRIEVAL UNIT PER `.md` FILE, the law's one home (F25, batch 2a; README and DIRECTORY
+  point here): one durable fact, or one coherent set that a single trigger opens, with frontmatter
+  (`name`, `description`, `type: user | feedback | project | reference`). The `description:` is
+  the one home of WHAT the file is; nothing restates it.
+- Every file gets exactly ONE manifest line in the Core memory index's frontmatter (`Claude-Core/memory/MEMORY.md`, read in full on every boot): `cold_start:` for the always-read set, else `lookup:` with its trigger, the hook that says WHEN to open it (the pointer net pins one line per tracked memory file; the machine-only `LOCAL-ONLY-*` class keeps a prose pointer with its clone-absence disclosure instead, since a missing lookup is a boot error on a clean clone). A project-scoped fact ALSO gets its own pointer line in the project memory index (`~/.claude/projects/<key>/memory/MEMORY.md`) — that write is mandatory, not optional, because that index is what auto-loads each session and is the only place a 🔴 READ-FIRST marker can live. A fact with no line there is a fact the next session does not know exists.
+  so that line must carry the hook (what it is + when to read it).
 - Update existing files rather than duplicating. Correcting or superseding a fact in place never needs asking WHEN the change is one of these three and nothing more: fixing an error, adding detail, updating a value. Replacing, emptying, shortening, or rewriting a banked fact so its original substance is gone IS deleting it. If you cannot tell which side of that line you are on, you are deleting: ask first. DELETING a banked fact needs Chan's explicit OK: say what you believe is wrong and why, then delete only on his word.
 - Link related memories with `[[name]]`.
 
@@ -79,7 +81,9 @@ fastest orientation, never proof of current state — disk wins, at a start AND 
 - **Bank decisions the moment they're made** (a client's GO, a reversal, a locked design call) —
   not at end of session.
 - **Mark recency and priority in the index line** (🔴 READ FIRST, ⭐ importance, dates) so a
-  future session knows what's an anchor vs history. ANCHOR PRECEDENCE, mechanical: at most ONE
+  future session knows what's an anchor vs history. The legend (moved here from the Core index
+  in batch 2a, where the markers now live in each file's `description:` and a lookup trigger may
+  carry 🛑): ⭐ core · ⭐⭐ most-violated, read twice · 🛑 hot state, check before acting · 🔒 hard gate. ANCHOR PRECEDENCE, mechanical: at most ONE
   line in a project index carries 🔴 as the current resume point, and writing a new resume anchor
   INCLUDES removing 🔴 from the previous one in the same edit — the removal is part of the write,
   not a follow-up task. A file waiting on Chan's ruling is not a resume point, it is a blocker

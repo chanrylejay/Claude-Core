@@ -101,31 +101,18 @@ querying today's rows in prices and daily_suggestions before calling the pipelin
 never report success from the 504 alone. Site prices lag one day
 by design (DA posts late; the 10AM run usually ingests yesterday's edition).
 
-## Model status (UPDATED Jul 23-24 2026, supersedes the txt)
+## Model and cost rules (living; the Jul 23-28 2026 migration history is in status-log.md)
 
 Before ANY model, prompt, or cost decision, read ../../memory/chan-ai-cost-context.md FIRST.
 Where it conflicts with this section or with the "Cost ~$0/month" line above, that file wins.
-
-The txt's "deepseek-chat, migrate before Jul 24 2026" is DONE: ano-ulam migrated to
-deepseek-v4-flash Jul 23 2026. **That migration BROKE the site and this canon said it "ran
-clean" for five days.** Corrected Jul 28 2026 against live Neon and Vercel data. Prices per day
-went 144 (Jul 22, deepseek-chat) → 46 (Jul 23) → 0, 0, 0 (Jul 24-26) → 22 (Jul 27), and the
-homepage served ZERO meals throughout. Nobody had verified the OUTPUT; a Jul 26 session checked
-that lib/deepseek.ts said "deepseek-v4-flash" and called the migration handled, which is
-display-not-data.
-
-ROOT CAUSE, measured: v4-flash is a REASONING model and its hidden reasoning is billed against
-max_tokens. At the inherited 8192, reasoning consumed all 8192 and the API returned an EMPTY
-string with finish_reason "length" and no error. Reasoning length varies run to run (measured
-6018 / 8192 / 10962 / 14221 on identical input), which is why some days produced partial rows
-and others nothing. 32000 does produce a correct 204-row extraction, but the call then takes
-~82s and Vercel Hobby kills a function at 60s; deepseek-v4-pro is worse at ~95s. So DeepSeek
-CANNOT do the daily extraction on this plan at any setting. The PDF is now read in code.
-Whenever an LLM step goes quiet, print usage.completion_tokens_details before theorising.
-
-The txt's "v4-flash breaks tool calling" note is stale (predates the V4 retirement; ano-ulam
-uses no tool calling).
-DeepSeek account: Maya Visa top-up, $2 minimum, PH email-only registration, NO free credits.
+DeepSeek CANNOT do the daily extraction on this plan at any setting (the measured proof:
+`status-log.md`); the PDF is read in code. Whenever an LLM step goes quiet, print
+usage.completion_tokens_details before theorising. The txt's "v4-flash breaks tool calling"
+note is stale (predates the V4 retirement; ano-ulam uses no tool calling). DeepSeek account:
+Maya Visa top-up, $2 minimum, PH email-only registration, NO free credits. Any AI-feature prompt
+that ships gets a PED pass first, then log it in ../../memory/ped-log.md; prompts stay private
+(open-source policy above) and PED audits them locally. The v3 STEP 0 gate (what still needs a PED pass, and when, Chan's
+call) BINDS and lives in `status-log.md`, the LOOKUP opened when resuming this project.
 
 ## Closed decisions (final; never revisit)
 
@@ -179,33 +166,5 @@ only Chan's real test outputs are valid data; ask instead of fabricating history
 "Bakit?" reasoning only, never data INVENTION — extraction of real numbers out of the DA PDF is the one data-touching role and it is sanctioned (see DeepSeek's ONLY roles above). AI never makes a price up, adjusts one, or fills a gap. Open-source policy: the repo is public BY STRATEGY
 (infrastructure transparency); the DeepSeek prompt text, methodology, keys stay private.
 
-## v3 kickoff — STEP 0 (added Jul 25 2026)
-
-UPDATED Jul 28 2026. The gate stands, but its scope changed and Chan set the timing:
-
-- The PDF-to-CSV extractor prompt is NO LONGER the primary path. lib/da-parser.ts reads the
-  sheet in code; that prompt now runs only as a fallback when the DA changes its layout. Its PED
-  audit drops to low priority accordingly (it is still a shipping prompt, just a rare one).
-- The "Bakit" explainer prompt still ships in the hot path and still needs a PED pass.
-  **Chan's call, Jul 28 2026: defer that audit to the actual v3 work, not before it.**
-
-Any AI-feature prompt that ships gets a PED pass first, then log it in ../../memory/ped-log.md.
-Prompts stay private (open-source policy above); PED audits them locally.
-
-## Status snapshot (Jun 6 2026 — VERIFY before acting; the project resumes post-Devoted)
-
-Possibly-still-open from the txt + Doc A: Reddit post (account was blocked) and the
-dev-project-instructions V2.1→V2.2 fix (superseded for AI sessions by THIS canon; still open for
-the repo's own docs). **README: DONE Jul 28 2026** (commit ee174ac, rewritten to match the real
-architecture). This project is side-project lane (a) in
-../../workflow/devoted-closure-checklist.md's week-1 momentum kit.
-
-V2 ROADMAP, searched Jul 28 2026: there is no unbuilt idea list anywhere. The only roadmap that
-ever existed was the viral Facebook comment backlog (cooking instructions, protein filters,
-macros/nutrition) and ALL THREE shipped in V2.2. A fresh roadmap has to come from the live FB
-thread (350+ comments) or from a new product decision by Chan. Details:
-~/.claude/projects/c--Users-Chanryle-Downloads-Projects-Github-ano-ulam/memory/ano-ulam-roadmap-is-empty.md
-
-Related reading before a work session: ../../memory/chan-ai-cost-context.md (the model/tool
-reality after Jul 25 2026) and LOCAL-ONLY-security-rulings items 3 and 5 (env + migration
-facts, machine-only file).
+Before a work session also open LOCAL-ONLY-security-rulings items 3 and 5 (env + migration
+facts, machine-only file); dated history and the resume state: `status-log.md` (LOOKUP).

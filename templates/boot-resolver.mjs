@@ -22,13 +22,26 @@
 //      parser and names a disagreement. `mode_default` in the index is the fallback (a workspace
 //      with no line, the kit itself, the browser sandbox), never the machine-wide truth.
 //   2. THE CANON RULE. The `active_project` canon BOOTS only in its own mode (`mode_default`,
-//      or any mode whose set already lists it); every other mode carries it in LOOKUP, first
-//      line, "open when: the work touches the active project". ANO_ULAM no longer boots two
+//      or any mode whose set already lists it); every other KNOWN mode carries it in LOOKUP, first
+//      line, "open when: the work touches the active project"; an UNKNOWN mode keeps it as an
+//      anchor (1a v2: a broken index still leaves a maximal plan). ANO_ULAM no longer boots two
 //      canons; JOB_HUNT and CLIENT_BUILD stop paying for a canon they do not work in.
 //   3. PER-MODE BUDGETS. `boot.budget_chars` is the ceiling for every mode unless
 //      `boot.budget_by_mode.<MODE>` names a higher one; `budgetFor(index, mode)` is the one rule
 //      and the resolver net pins EVERY seat and mode against it on the live index, the red line
-//      AL-30 said only the default mode had.
+//      AL-30 said only the default mode had. Batch 2a (Sep 14 2026) removed the last
+//      `budget_by_mode` lines once every plan measured under the ceiling: an override permits
+//      growth, and the live net compares against whatever line exists.
+// Batch 2a, the boot diet (Sep 14 2026; why: AL-34). The index is a MANIFEST: its frontmatter is
+// the one home of every list and of the live state, its prose restates none of it, and the rules
+// the lists obey live HERE, the home the ramp and the drill point a scriptless session at. The
+// why behind two of those rules, moved out of the index prose: the three judgment files ride
+// every boot ON PURPOSE (LEAN excepted) because no hook can enforce a judgment behavior, so
+// repetition is its only mechanism (AL-25); LEAN parks them and the canon because a trivial task
+// writes no UI report and parks no decision (batch 4b). Every tracked memory file outside
+// `cold_start` has exactly one `lookup:` line (its trigger says WHEN; the file's own description
+// says WHAT); the machine-only LOCAL-ONLY-* class stays OUT of `lookup:`, since a missing lookup
+// is a boot error on a clean clone, and keeps a prose pointer with its clone-absence disclosure.
 import fs from "node:fs";
 import path from "node:path";
 
