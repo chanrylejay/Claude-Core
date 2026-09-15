@@ -24,6 +24,8 @@ before acting on anything below. Bodies moved verbatim.)
 - board_relation `text` in column_values is EMPTY — idempotence checks against it silently
   fail and re-run everything. Read `... on BoardRelationValue { linked_item_ids }`. Write with
   `{"item_ids":[...]}`; target board in defaults as `{"boardIds":[int]}`.
+- **Board-relation columns read EMPTY as text.** An audit that checks `text` will report every
+  link as missing. Read the linked ids properly before concluding anything is broken.
 - NEVER guess column ids from naming patterns — they're per-board random suffixes; a guessed
   id in a view/widget call 500s with no useful error. Read the board's columns first, every
   time. (Cost two failed calls in one session before it stuck.)
@@ -104,10 +106,15 @@ Without it the builder emits whenStatusChangesFromSomethingToSomething with the 
 - Exclusions in words beat parenthetical ids: a column id in parentheses inside the trigger line polluted matching (bound a sibling status column). Write `the status column titled "X", NOT "Y" and NOT "Z"`.
 - Deleting or pausing automations: NO API path exists. CORRECTS the manage_automations bullet above (Automations section) that framed this as a permission ceiling. Public /v2 GraphQL has zero automation/recipe/workflow mutations (194-field Mutation type, introspected, default and 2026-07 API versions): `delete_recipe` and `manage_automations` return "Cannot query field" — a schema absence, not USER_UNAUTHORIZED. The monday MCP connector's manage_automations uses a different channel and returns USER_UNAUTHORIZED even for the creator. Net: every mis-parse is a UI click.
 - Conditional row coloring has NO API surface: view settings_str / view_specific_data_str / settings carry only column visibility and order; update_view accepts settings, filter, sort only. UI-only. Do not attempt a guessed payload on a live view.
+- **Conditional colouring is UI-only.** The API accepts some payloads and silently ignores
+  others, never returns the setting on read, and rejects a between-operator on number
+  columns. Do not claim it is applied; hand the person the clicks.
 - View filters: a people column accepts the dynamic token `assigned_to_me`. The earlier claim that date columns accept pinned dates only is superseded by the rolling-date finding in the Day 8 afternoon addendum below; column types have different token support.
 - Status label slots: the reserved/empty slot is label id 5, not index 5 (a label at index 5 with id 6 renders fine; blanks render blank).
 - Notify double-listing: the builder sometimes lists the same recipient twice in a notify slot; cosmetic, one notification is sent.
-- Connector timeout mid execute_code: the sandbox usually finishes. Verify board state before re-firing; write migration scripts idempotent.
+- Connector timeout mid execute_code: The connector frequently times out on the response while the sandbox run actually
+  completes. Verify board state before re-firing.
+  Write migration scripts idempotent.
 - The compaction lesson: a workaround that lives only in recipe descriptions is not banked. Bank the phrase, not just the outcome.
 ## Day 8 addendum, afternoon (2 Sep 2026, kit-day8-lessons)
 
@@ -171,3 +178,19 @@ Every defect activates successfully and looks fine in the list. Read returned `w
 - **The automation builder silently reassigns values from fields that do not exist, and reports success.** Asked for an email action with a CC, the builder returned success with the CC address moved into To and the real recipient discarded. Verify returned `inboundFieldsSourceConfig` names every supplied field.
 - **The Gmail send action block exposes exactly three fields: to, subject, body.** There is no CC or BCC at schema level. Read the block schema, not the documentation: native monday cannot CC.
 - **The Webhooks integration has no button trigger.** A button must flip a status column, then the status change fires the webhook. That status also gives the operator Sent/Failed feedback.
+
+## Day 16 addendum (14 Sep 2026)
+
+- **Dropdown labels: the read shape and the write shape differ.** Reads return `name`, writes
+  require `label`. Editing existing labels requires resending each one WITH its id plus the
+  board revision; a stale revision returns a revision mismatch, so re-read immediately before
+  writing.
+- **Status label colours are underscore enums** (`done_green`, `working_orange`), not hyphens.
+- **Number columns cannot be a chart axis.** If a count needs charting or grouping, mirror it
+  into a status column at write time.
+- **Main-table column order is UI-only**; a named view is the place to set order, freeze
+  columns and sort.
+- **Large payloads:** upload the file as a platform asset and have the code sandbox fetch it
+  by url. Never retype a long machine key by hand — a hand-copied lookup list corrupted a few
+  characters and blocked an import twice before the cause was found. If a payload is too big
+  to pass cleanly, that is the signal to stage it as a file, not to paste it in chunks.

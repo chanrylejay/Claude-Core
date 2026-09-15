@@ -60,11 +60,21 @@ the Timeline. All data is real (client data), never sample.
 - Operator email sends use a per-person Apps Script under that operator's account, never a shared script or the platform native email action. Native email cannot CC and attachment capacity is insufficient.
 - Framing: "you already built this, I finished it", never "here's a timeline I designed";
   the system is always an "internal system", additive, never a Monday replacement.
+- One shared Position and Location vocabulary across job orders, applications, postings and
+  the weekly report; a new role is added to every board in one pass, never invented per board.
+- Every application is a row. The same person applying to three ads is three rows, because
+  that is what a weekly count measures. Person-level dedup is a separate question.
+- Dates are never invented: exact where the source printed one, estimated where derived from
+  a relative label, and an explicit "or earlier" bucket where none was shown.
+- Reporting weeks are Monday to Sunday in the client's timezone, stated in every script.
+- Location means the JOB's location, never the candidate's address; a source that publishes none says so on the row.
 - Dated decisions, newest first: `decision-log.md` (LOOKUP). The day 8-9 relay lessons still
   BIND work: `relay-lessons-day8-9.md` (LOOKUP; open before scanning or changing a Monday
   board, client calls or decks, and reference-led design).
 
 ## Current build state
+
+- Applications reporting: live on the client platform as three linked boards (postings, applications ledger, weekly report); Indeed data chain closed Sep 14, reproducible on any machine; designs, defects and limits: `indeed-jobadder-reporting.md` (LOOKUP); refresh runbook held with Chan outside this repo.
 
 - Applicant report (Sep 11): v4 paused at 19/2,304; resume via `applicant-report-resume.md`.
 - Mailbox report (Sep 11): two Inbox/Sent batches scanned, read-only; `mailbox-report-resume.md`.

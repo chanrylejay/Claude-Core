@@ -44,6 +44,7 @@ lookup:  # verified present, never read at boot, opened at its trigger (AL-20)
   - projects/REGISTRY.md  # a project other than active_project
   - projects/trial-aug2026/decision-log.md  # reconstructing WHY a trial decision was made
   - projects/trial-aug2026/relay-lessons-day8-9.md  # BINDING: a Monday board scan or change, a client call or deck, reference-led design
+  - projects/trial-aug2026/indeed-jobadder-reporting.md  # before any job-board scraping, applicant import, or weekly applications reporting
   - projects/trial-aug2026/sales-redesign-resume.md  # before resuming the Sales redesign
   - projects/trial-aug2026/applicant-report-resume.md  # before applicant-report work
   - projects/trial-aug2026/mailbox-report-resume.md  # before mailbox-report work

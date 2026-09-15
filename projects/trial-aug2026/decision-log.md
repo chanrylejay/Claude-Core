@@ -8,6 +8,19 @@ Sep 7 2026 (batch 0a, lossless move; why: ../../lessons/audit-log.md AL-29).
 
 ## Decisions made (dated) — what was decided, why, newest first
 
+- Sep 14: trial extended on Chan's word; wording, estimate and day count: the trial card (../../memory/chan-trial-aug2026.md).
+- Sep 14: applications reporting goes on the client platform as THREE linked boards, not one.
+  Both job boards share one set of boards separated by a Source column, not a board each, so
+  the weekly number is one number rather than two added by hand. Candidate profiles and
+  placements are deliberately NOT loaded: they are people, not application events, and would
+  break the weekly count.
+- Sep 14: the weekly report is its own board at the operator's grain (role x site x day), not
+  a dashboard over the full ledger. The first version showed months of history and was
+  rejected on sight; her ask was the current week only.
+- Sep 14: two features built without a brief were removed or parked on Chan's call: the
+  per-browser saved views (invisible on a second device, so worse than nothing) removed, and
+  the column-hiding control parked with its code kept on the branch.
+
 - Day 13: sprint paused for live operator requests. One-click send buttons on two boards now fire a per-person Google Apps Script under the operator's own account, sending from that mailbox with signature, CC, attachment, and Sent/Failed write-back. Chan verified both end to end. Click-to-dial was set up for the recruitment seat. Lead panel v4 was untouched.
 
 
