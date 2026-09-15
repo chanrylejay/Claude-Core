@@ -431,3 +431,91 @@ change, while a self-comparison such as `charsOf(ROOT, c) === charsOf(ROOT, c)` 
 tautological. Follow-up: replace the literal with a non-tautological semantic or structural
 invariant (or an independently versioned fixture/receipt) while retaining the live budget
 measurement. This is deferred pending Chan's ordering decision; no push or merge is implied.
+
+## AL-36 — batch 2c: helper configuration and observable posture
+
+(Sep 15 2026, Codex authoring from v10. DRAFT for the architect's hostile review; not an
+ACCEPT and not permission to publish this batch.)
+
+Authority and base. Chan authorized steps 2-3 in a fresh authoring session, then said in the
+same chat: "GO push main, Claude-Core, commit 4e0a272. Then step 5. On the two cap children,
+pass no model or effort, so their records show whether the [agents] defaults reach a child."
+The one-shot gate consumed that GO and remote main advanced from 8eb2aab to 4e0a272. This
+batch branches as `kit-2c-helpers-config` from that pushed tip. AL-35 belongs to the preceding
+audit-log note, not this batch; the separate applications-reporting bank at 90a9698 remains
+on `kit-bank-applications-reporting`, waiting on Chan's separate say.
+
+The probe and corrections. The Sep 15 morning probe at 0.154.0-alpha.6.2 spawned no child:
+the interface had no role selector, so it proved no pin behavior. V8's six SEND-BACK findings
+and v9's three were accepted in v10: role verdicts are per file; null roles leave loading
+unproven; both fixtures and their final files exist in every outcome; the default four slots
+cannot prove a two-child cap; AL-35 and the applications branch are separate; the memories
+ruling follows Chan's actual switch-off; and measured token totals establish no causal claim
+about ultra. Superseded text was corrected in place in the brief.
+
+Tests first. Main's 23-net baseline passed. C-check and C-review each recorded astra/max with
+null role metadata: C2 for each file. A-check recorded luna/medium and A-review astra/medium:
+A1 for each explicit partial-history spawn. B recorded luna/medium, read-only policy, and v1,
+with the SessionStart ritual: B1. Five one-word responses processed 80,948 tokens, including
+80,736 input (31,744 cached) and 212 output (181 reasoning). This excludes parent work and is
+not a price or a quota percentage. No denied-write proof exists. Detailed source lines, IDs,
+hashes and raw snapshots were delivered as the local step-2/3 receipt, outside the public kit.
+
+What changes in meaning. Model names may now be hand-pinned in the kit's project config and
+roles when documented and dated; the picker's personal line remains the picker's. Defaults
+are luna/high for an unnamed role, while named roles keep medium. Role-file contents and
+their C2 labels are pinned together; explicit model/effort dispatch and the read-only program
+form are the observed paths, not a claim that custom files loaded. The ritual gains one line
+that separates personal config, this session's effective record, and a dated local documented
+list; unavailable fields, unlisted configured names, ultra, and disagreements are named.
+The cost file gains Chan's max/never-ultra posture and his reason labeled as his reason, with
+the 7,848,042-token 1b measurement stated separately. The Codex memories OFF rule is retained
+beside Sep 15's on/off history and the fresh record's absent generated-memory block. The
+Claude Code recovery skeleton now explicitly disables auto memory; verify-install checks
+the installed boolean and does not equate it with observed behavior. Its installed file
+belongs to the DeepSeek CLI seat, on Chan's GO; Codex never writes under `~/.claude`.
+
+Batch 3 ledger charter, additional columns: model, effort and explicit role per response and
+spawn, preserving thread, turn and response identifiers and visibly null roles; the parent's
+own effective effort; and any retrospective task-based classification labeled as such. The
+red line compares a response with its ROLE's allowance (kit_check luna/medium, kit_review
+astra/medium), never with the parent, which would pass an astra/max helper under an astra/max
+parent. Retries and failed work remain charged to the originating batch under the relay's law.
+
+Cap/default receipts: both initial children omitted model and effort, on Chan's explicit word,
+and each recorded astra/max, null role metadata and four available slots in its fresh runtime
+message. This already-open parent did not demonstrate the luna/high defaults; a new parent's
+loading remains untested. The first child finished before list_agents returned, leaving only
+the second running. With no two-live precondition, no third attempt was made and no refusal
+was claimed. The block stays configured, not proven operational. These two responses processed
+32,317 tokens (32,134 input, 15,872 cached; 183 output, 169 reasoning), excluding parent work.
+Final-tree measurements: 24 nets green (new agents-config 28 checks, Codex ritual 50,
+bootstrap 20); 12 installed-copy rows identical, zero drift. L24 preserved all 237 codex.md,
+65 cost-file, 547 DIRECTORY and 837 prior audit-log fact tokens, zero lost. Policy reports:
+codex.md 34 clauses (2 changed, 32 added), cost 2 (1 changed, 1 added), DIRECTORY 4 added;
+none dropped. The cost file is 4,183 normalized characters, up 401 from 3,782. DeepSeek
+transitive listed-boot-plus-cost totals: TRIAL 35,620; JOB_HUNT 41,229 (1,229 over 40,000);
+ANO_ULAM 41,066 (1,066 over). These use the resolver's CRLF-normalized character method;
+the existing overages remain reported, not a raised budget. Doorway block A stays 5,134 bytes.
+The fresh installed-ritual proof, thread `01a0a2e8-a262-7191-8df7-37fb082d2ae5`, recorded
+luna/medium, v1, read-only at line 6. Its startup line 7 reports personal astra/max, effective
+luna/medium and the Sep 15 documented list, with the expected disagreement warning from the
+explicit override. The added line measures 205 characters, 206 including its newline. This
+one-word startup check made two model responses, processing 37,187 tokens (36,670 input,
+23,040 cached; 517 output, 244 reasoning). Step 5's model proofs total 69,504 processed tokens,
+excluding parent work. The ritual source and installed copy are byte-identical. Personal
+Codex config is unchanged. Verify-install reports 1 failure of 62: the installed
+`autoMemoryEnabled` key is absent. That expected red remains for the owning DeepSeek seat;
+effective Claude Code memory behavior was not observed.
+Role loading, denied-write enforcement, ultra fan-out, child-of-child spawning and exec under
+v2 remain untested unless a named receipt here says otherwise.
+
+Backlog: the first fresh kit session after landing quotes its `<multi_agent_role>` slot count (4 on Sep 15); a change is the cheapest evidence the `[agents]` block loads, short of the refusal.
+Chan says when each starts: batch 3's ledger and matched luna/xhigh versus terra/medium
+tasks; only then any RTK trial (failure detail, stderr, exit status and exceptions must survive;
+vendor savings are not measurements). Boot, drill, memory and L24 reads stay raw; ordinary
+checks use the nets' short output with local logs retained. Advisor tooling on Anthropic's
+API is unavailable to these two seats, so no action. The applications-reporting branch lands
+on Chan's separate say. Batch 2b never runs in parallel with 2c. Path-scoped `.claude/rules/`
+remain an option for a future project. The missing kit project-memory index stays reported,
+as ruled in AL-34. No new connector, package, service or compression tool was installed.

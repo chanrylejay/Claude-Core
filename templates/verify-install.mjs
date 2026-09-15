@@ -50,6 +50,7 @@ for (const [tpl, inst] of PAIRS) {
 
 // 2. wiring vs the skeleton (source of truth for the matcher and command shape)
 const skel = JSON.parse(fs.readFileSync(path.join(ROOT, "templates/global/settings.global.skeleton.json"), "utf8"));
+t("skeleton pins autoMemoryEnabled = false", skel.autoMemoryEnabled === false);
 const skelPre = (skel.hooks?.PreToolUse || []).find((e) => JSON.stringify(e).includes("push-guard"));
 const skelMatcher = skelPre?.matcher || "";
 const sPath = path.join(HOME, ".claude", "settings.json");
@@ -57,6 +58,7 @@ let st = null;
 try { st = JSON.parse(fs.readFileSync(sPath, "utf8")); t("~/.claude/settings.json exists and is valid JSON", true); }
 catch { t("~/.claude/settings.json exists and is valid JSON", false); }
 if (st) {
+  t("installed autoMemoryEnabled = false (setting only; effective behavior not observed)", st.autoMemoryEnabled === false);
   const ss = JSON.stringify(st.hooks?.SessionStart || "");
   t("SessionStart wires session-ritual.mjs", ss.includes("session-ritual.mjs"));
   const pre = (st.hooks?.PreToolUse || []).find((e) => JSON.stringify(e).includes("push-guard"));

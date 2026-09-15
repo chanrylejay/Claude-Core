@@ -1,0 +1,8 @@
+{
+  "checked_on": "2026-09-15",
+  "scope": "Names documented for this kit's pins. A list match does not prove account acceptance or runtime selection. Refresh when the picker changes or a name retires; the ritual never fetches the network.",
+  "models": [
+    { "name": "gpt-6-astra", "source": "https://developers.openai.com/api/docs/models/gpt-6-astra" },
+    { "name": "gpt-5.6-luna", "source": "https://developers.openai.com/api/docs/models/gpt-5.6-luna" }
+  ]
+}

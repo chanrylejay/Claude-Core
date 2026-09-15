@@ -49,17 +49,35 @@ Marker: codex-doorway-2026-09-01.)
   filter. Never connect Codex to an MCP that can write a third party's system (hard rule 10 has
   no hook here either). A cloud task ships the repo to OpenAI's machines: that is sending code
   out, not a local run, and on client code it needs Chan's GO first, each time.
-- **Memories stay OFF.** `~/.codex/memories/` is off by default and stays off: the kit is the one
+- **Memories stay OFF.** `~/.codex/memories/` must stay off: the kit is the one
   memory, and a second generated store is the duplicate-brain problem in disguise. OpenAI's own
   guidance says required rules belong in `AGENTS.md` and memories are a recall layer. Chronicle
   (screen capture feeding memory) stays off too: client screens sit on this machine.
-- **Never hand-pin a model name in `config.toml`; the picker's pin is fine.** OpenAI retired the
+- **Pin a documented current name in kit config; the picker's personal line stays the picker's.**
+  Chan, Sep 14-15 2026, supersedes the blanket no-hand-pin rule for the kit's project config and
+  role files. Names and the date read are in `../../templates/codex/models-current.json`;
+  refresh that list when the picker changes or a name retires. Never hand-edit the model line
+  in `~/.codex/config.toml`. The session ritual reports configured personal fields, effective
+  fields from this session's own record when reachable, and the documented list separately.
+  An unlisted configured name is a loud line, never a silent fallback; "accepted" is claimed
+  only from effective record fields, never from a list match. Missing fields are named as
+  unavailable, not guessed. The small reader accepts root scalar model/effort strings and
+  reports unsupported root multiline syntax as unavailable; it does not resolve profiles.
+  History behind the Sep 1 2026 rule: OpenAI retired the
   ChatGPT-login pins of gpt-5.4 and gpt-5.4-mini on Aug 31 2026 (gpt-5.6-terra and gpt-5.6-luna
   replace them) and the runtime REJECTS a disallowed value. The extension's model picker writes
   `model = "..."` into the file itself; that is the UI managing a current name, not a hand pin
-  (Codex's own catch, Sep 1 2026, when the first draft of this rule read as a ban). The law is:
+  (Codex's own catch, Sep 1 2026, when the first draft of this rule read as a ban). For that personal line:
   change the model in the picker, never by editing the line, and when a name retires the picker
   is where it gets fixed. Same law as DeepSeek's name churn otherwise.
+- **Kit posture: "at max, never ultra" (Chan, Sep 14-15 2026).** The ritual prints a loud line
+  if configured or recorded effective effort is ultra, and when configured and effective disagree.
+  His reason stays in `../../memory/chan-ai-cost-context.md`, labeled as his reason. Measured
+  separately: three Sep 13 1b helpers ran astra/ultra, processing 7,848,042 tokens. Those totals
+  do not establish a cause. Whether a cap bounds ultra's fan-out or a child's own spawning is
+  untested. [OpenAI's subagent documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents),
+  read Sep 15 2026, distinguishes proactive Ultra delegation in ChatGPT from instruction-driven
+  delegation in local Codex.
 - **Vision exists here, and hard rule 1 does not move.** The Codex models are multimodal and the
   CLI takes image files as input (verify with one screenshot on first use). A screen is still
   VERIFIED only when Chan's eyes saw the shot; Codex's look is evidence, like claude.ai's. What
@@ -83,6 +101,67 @@ Marker: codex-doorway-2026-09-01.)
   its reading discipline is skeleton/outline first, then `rg` and bounded line ranges; boot,
   memory, L24, and exact wording stay raw. The removal isolates Codex after the ritual-net
   collision investigation; it does not change the DeepSeek CLI's Lean setup.
+
+## Helper configuration and receipts, Sep 15 2026 (batch 2c)
+
+A pin is operational only when the child's own record shows the pinned model and effort; otherwise configured, not proven operational.
+This is the [bug 32587](https://github.com/openai/codex/issues/32587) class described in the
+Sep 15 brief (reported Jul 12 2026); config text is not evidence of a run.
+
+Helpers are absent by default; a brief that wants one names it.
+The kit's `.codex/config.toml` configures two child threads at most and no-role defaults of
+gpt-5.6-luna/high (Chan, Sep 15: "yes put luna high effort"). Named role allowances remain
+kit_check = gpt-5.6-luna/medium and kit_review = gpt-6-astra/medium. These documented names
+were checked Sep 15 2026; the dated sources are in `../../templates/codex/models-current.json`.
+The two step-5 children omitted model and effort and still recorded astra/max. This already-open
+parent did not demonstrate the defaults; new-parent loading remains untested. Both fresh child
+messages still said four slots including the parent. At the live-count check the first child
+had completed and only the second was running, so no third attempt or cap refusal was claimed.
+The defaults and cap remain configured, not proven operational. The documentation counts the
+cap as children excluding the parent; the runtime's message counts slots including the parent.
+Which governs the cap of 2 is untested.
+
+Both role files remain configured, not proven operational: C2 for each role.
+Both C runs recorded gpt-6-astra/max and `agent_role: null`. Null metadata leaves file loading
+unproven; it establishes neither that the file's pins were applied nor that they were ignored.
+The four C/A child records carried `sandbox_policy.type: danger-full-access`; inherited access
+is never labeled read-only. Each role file's `sandbox_mode = "read-only"` is config text until
+a denied write is observed. A parent's live permission overrides can be reapplied over a role.
+
+The explicit per-spawn form is proven for kit_check at gpt-5.6-luna/medium and kit_review at gpt-6-astra/medium on 0.154.0-alpha.6.2.
+Pass `model`, `reasoning_effort`, and `fork_turns = "none"` explicitly; a brief needing history
+names a positive count. A full-history fork inherits the parent and takes no override.
+A role's instructions also ride in the spawn message; a task name is not a role selector.
+The kit_check instructions limit it to already-produced receipts, counts, exit codes and logs;
+it never runs the nets. The session runs nets directly in an authorized isolated test area.
+kit_review reviews the meaning of named files against the brief's named scope, with no writes.
+
+The check program form is proven at gpt-5.6-luna/medium on the standalone v1 runtime; exec under v2 is untested.
+Use `codex exec -m gpt-5.6-luna`, with `model_reasoning_effort="medium"` passed as one `-c`
+argument, and an explicit read-only sandbox. B's record shows the read-only policy, not a denied
+write. Its SessionStart ritual fired, a per-run context cost. With the explicit worker override,
+the ritual reports "configured and effective disagree" by design: it compares personal config
+with the worker's effective settings. That line is expected in this worker; it is a posture
+fault in a parent session. If a later receipt fails the
+explicit spawn pins, no spawn helpers are used until a new build proves them; if the program
+form also fails, checks are plain scripts. Re-run these receipts after a Codex update.
+
+Runtime facts: installed `codex-cli 0.154.0-alpha.6.2`; extension records v2, standalone
+`multi_agent_v2 stable false` and B records v1. The current spawn surface is `task_name`,
+`message`, `fork_turns`, `model`, `reasoning_effort`, with no role-file selector. The role field
+lives at `session_meta.payload.source.subagent.thread_spawn.agent_role`; model and effort are
+`turn_context.payload.model` and `.effort`. The authoring record showed astra/max, matching the
+personal picker config; the earlier Sep 15 probe's believed high differed from its recorded max.
+
+Memory history, alongside the standing OFF rule: the Sep 1 text said "off by default" without
+a machine receipt. Sep 15 morning's record injected a 14,537-character `## Memory` block; its
+Sep 12 kit note still called 1a/1b a SEND-BACK after their acceptance. Continuous Sep 1-15
+behavior was not measured. Chan turned both switches off and deleted generated memories on
+Sep 15: `[features] memories = false`, `[memories] generate_memories = false`, `use_memories = false`;
+the feature listing reports `memories stable false`. The fresh authoring record
+`01a0a2c2-87bc-7b12-a291-c16f0455c9f5`, startup lines 1-10 (developer messages 3, 4, 5, 9), has
+no generated Memory block. The record, not the earlier thread's retained context, proves this
+fresh start. The backup remains outside the public kit.
 
 ## Proven on Chan's machine, Sep 1 2026 (codex-cli 0.151.0-alpha.7.2, VS Code extension, Full access)
 

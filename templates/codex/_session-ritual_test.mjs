@@ -21,13 +21,23 @@ fs.writeFileSync(path.join(KIT, "projects", "demo", "project-canon.md"), "canon\
 // batch 1a: the ritual imports the kit's ONE resolver at run time; stage it the way an install does
 fs.mkdirSync(path.join(KIT, "templates"), { recursive: true });
 fs.copyFileSync(path.join(TPL, "..", "boot-resolver.mjs"), path.join(KIT, "templates", "boot-resolver.mjs"));
+fs.mkdirSync(path.join(KIT, "templates", "codex"), { recursive: true });
+// Own the fixture: refreshing the live list must not change this scenario's expected output.
+fs.writeFileSync(path.join(KIT, "templates", "codex", "models-current.json"), JSON.stringify({
+  checked_on: "2026-09-15",
+  models: ["gpt-6-astra", "gpt-5.6-luna"].map(name => ({ name, source: `https://developers.openai.com/api/docs/models/${name}` })),
+}));
+fs.mkdirSync(path.join(HOME, ".codex"), { recursive: true });
+const configPath = path.join(HOME, ".codex", "config.toml");
+const configText = 'model = "gpt-6-astra"\nmodel_reasoning_effort = "max"\n';
+fs.writeFileSync(configPath, configText);
 spawnSync("git", ["init", "-q"], { cwd: REPO, encoding: "utf8" });
 
 let pass = 0, fail = 0;
 const ok = (label, condition) => { if (condition) pass++; else { fail++; console.error(`FAIL: ${label}`); } };
-const run = (source, cwd = REPO) => spawnSync(process.execPath, [path.join(TPL, "session-ritual.mjs")], {
-  input: JSON.stringify({ source, hook_event_name: "SessionStart", cwd }), encoding: "utf8", timeout: 10000,
-  env: { ...process.env, USERPROFILE: HOME, HOME, CLAUDE_CORE: KIT },
+const run = (source, cwd = REPO, ids = {}) => spawnSync(process.execPath, [path.join(TPL, "session-ritual.mjs")], {
+  input: JSON.stringify({ source, hook_event_name: "SessionStart", cwd, ...ids }), encoding: "utf8", timeout: 10000,
+  env: { ...process.env, USERPROFILE: HOME, HOME, CLAUDE_CORE: KIT, CODEX_THREAD_ID: "" },
 });
 const parse = (r) => { try { return JSON.parse(r.stdout); } catch { return null; } };
 const context = (r) => parse(r)?.hookSpecificOutput?.additionalContext || "";
@@ -142,6 +152,55 @@ ok("kit does not trust a bypassed default hook", /missing-hooks/.test(context(r)
 const wiring = JSON.parse(fs.readFileSync(path.join(TPL, "hooks.json"), "utf8"));
 const start = wiring.hooks?.SessionStart?.[0]?.hooks || [];
 ok("wiring has one ritual reporter and no legacy hello probe", start.length === 1 && /session-ritual\.mjs/.test(start[0].command) && !/hello\.mjs|--session-start/.test(JSON.stringify(start)));
+// Batch 2c: current/retired config, effective identity, effort, and unavailable paths.
+const posture = result => context(result).split("\n").find(line => line.startsWith("Posture:")) || "";
+r = run("startup");
+ok("posture is exactly one added line, with documented and configured distinct from effective", context(r).split("\n").length === 2 && /configured \(personal\): gpt-6-astra\/max; effective: not reachable at start; documented \(2026-09-15\): gpt-6-astra, gpt-5.6-luna/.test(posture(r)) && !/accepted/.test(posture(r)));
+fs.writeFileSync(configPath, configText.replace("gpt-6-astra", "gpt-5.4"));
+r = run("startup");
+ok("retired/unknown configured name is loud, never silently replaced or called accepted", /configured \(personal\): gpt-5.4\/max/.test(posture(r)) && /WARNING: configured name not on documented-current list/.test(posture(r)) && !/accepted/.test(posture(r)));
+fs.writeFileSync(configPath, configText.replace('"max"', '"ultra"'));
+ok("configured ultra is loud", /WARNING: ULTRA violates Chan's kit posture/.test(posture(run("startup"))));
+fs.writeFileSync(configPath, configText + '[projects.demo]\nmodel = "gpt-5.4"\nmodel_reasoning_effort = "ultra"\n');
+ok("personal root fields are not confused with table fields", /configured \(personal\): gpt-6-astra\/max/.test(posture(run("startup"))) && !/ULTRA/.test(posture(run("startup"))));
+fs.writeFileSync(configPath, configText + 'model = "gpt-5.4"\n');
+ok("duplicate configured fields are unavailable, not guessed", /configured fields unavailable/.test(posture(run("startup"))));
+fs.writeFileSync(configPath, 'developer_instructions = """\n' + configText + '"""\n' + configText);
+ok("root multiline text cannot impersonate model settings", /configured fields unavailable/.test(posture(run("startup"))));
+fs.writeFileSync(configPath, configText);
+const id = "11111111-1111-4111-8111-111111111111";
+const sessions = path.join(HOME, ".codex", "sessions", "2026", "09", "15");
+fs.mkdirSync(sessions, { recursive: true });
+const rollout = path.join(sessions, `rollout-test-${id}.jsonl`);
+const writeRecord = (model = "gpt-6-astra", effort = "max", extra = []) => fs.writeFileSync(rollout, [
+  { type: "session_meta", payload: { id } },
+  { type: "event_msg", payload: { type: "task_started", turn_id: "turn-1" } },
+  { type: "turn_context", payload: { model, effort, cwd: REPO, turn_id: "turn-1" } }, ...extra,
+].map(row => JSON.stringify(row)).join("\n") + "\n");
+writeRecord();
+r = run("startup", REPO, { session_id: id });
+ok("only this session's record establishes accepted effective fields", /effective: gpt-6-astra\/max \(accepted in record, line 3\)/.test(posture(r)) && !/disagree/.test(posture(r)));
+writeRecord("gpt-5.6-luna", "medium");
+ok("configured/effective disagreement is loud", /effective: gpt-5.6-luna\/medium/.test(posture(run("startup", REPO, { session_id: id }))) && /WARNING: configured and effective disagree/.test(posture(run("startup", REPO, { session_id: id }))));
+writeRecord("gpt-6-astra", "ultra");
+ok("effective ultra is loud even with configured max", /WARNING: ULTRA violates Chan's kit posture; configured and effective disagree/.test(posture(run("startup", REPO, { session_id: id }))));
+writeRecord("gpt-6-astra", "max", [{ type: "event_msg", payload: { type: "task_started", turn_id: "turn-2" } }]);
+ok("previous turn settings are not sold as this turn's effective settings", /effective: not reachable at start/.test(posture(run("startup", REPO, { session_id: id }))));
+writeRecord();
+fs.appendFileSync(rollout, '{"type":');
+ok("a still-writing trailing line does not hide a complete current context", /effective: gpt-6-astra\/max/.test(posture(run("startup", REPO, { session_id: id }))));
+writeRecord();
+fs.writeFileSync(rollout, fs.readFileSync(rollout, "utf8").replace(`"id":"${id}"`, '"id":"wrong-session"'));
+ok("a matching filename with the wrong session_meta id is not proof", /effective: not reachable at start/.test(posture(run("startup", REPO, { session_id: id }))));
+writeRecord();
+ok("a record from another cwd is not this workspace's effective setting", /effective: not reachable at start/.test(posture(run("startup", KIT, { session_id: id }))));
+ok("missing current record never borrows an unrelated rollout", /effective: not reachable at start/.test(posture(run("startup", REPO, { session_id: "22222222-2222-4222-8222-222222222222" }))));
+const modelPath = path.join(KIT, "templates", "codex", "models-current.json");
+fs.writeFileSync(modelPath, "{");
+r = run("startup", REPO, { session_id: id });
+ok("broken list still emits one valid JSON and a named warning", r.status === 0 && !!parse(r) && !r.stderr.trim() && /documented-current list unavailable/.test(posture(r)));
+fs.rmSync(configPath);
+ok("missing personal config is named without wedging the hook", /configured fields unavailable/.test(posture(run("startup"))));
 fs.rmSync(HOME, { recursive: true, force: true });
 fs.rmSync(KIT, { recursive: true, force: true });
 console.log(`\nsession-ritual: ${pass} passed, ${fail} failed`);

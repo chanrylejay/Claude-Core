@@ -1,0 +1,9 @@
+# Batch 2c v10; C2 on 2026-09-15, codex-cli 0.154.0-alpha.6.2.
+# Documented model name checked 2026-09-15: templates/codex/models-current.json.
+# Role-file loading: configured, not proven operational.
+name = "kit_review"
+description = "Review the meaning of named files against the brief's specified review scope."
+model = "gpt-6-astra" # Configured, not proven operational until a child record shows it.
+model_reasoning_effort = "medium" # Configured, not proven operational until a child record shows it.
+sandbox_mode = "read-only" # Configured, not proven operational; a denied write has not been observed.
+developer_instructions = "Review only the named files for meaning against the brief's review scope. Do not edit files or run the nets. Stay within the assigned task."

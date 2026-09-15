@@ -15,6 +15,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
+import { createInterface } from "node:readline";
 
 const KIT = path.resolve(process.env.CLAUDE_CORE || "C:/Users/Chanryle/Claude-Core");
 let raw = "";
@@ -69,6 +70,87 @@ if (resolverRan && !active && !plan.problems.some((p) => /active_project/.test(p
 for (const file of [...new Set(planned)].slice(2)) read(file);
 
 const home = process.env.USERPROFILE || process.env.HOME || os.homedir();
+// Batch 2c: report observations only. Never edit config, select a fallback, or call a model.
+const atom = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/.test(value) ? value : "unavailable";
+const configuredPosture = () => {
+  const values = {};
+  try {
+    const text = fs.readFileSync(path.join(home, ".codex", "config.toml"), "utf8");
+    // Deliberately narrow: personal root-level scalar strings, not resolved profiles/project config.
+    // Reject unsupported root multiline syntax rather than mistaking text inside it for settings.
+    for (const line of text.split(/\r?\n/)) {
+      if (/^\s*(?:#|$)/.test(line)) continue;
+      if (/^\s*\[/.test(line)) break;
+      if (/^[^#]*=(?:[^#]*"""|[^#]*''')/.test(line)) throw new Error("unsupported root multiline syntax");
+      const key = line.match(/^\s*(model|model_reasoning_effort)\s*=/)?.[1];
+      if (!key) continue;
+      const value = line.match(/^\s*(?:model|model_reasoning_effort)\s*=\s*(?:"([A-Za-z0-9._-]+)"|'([A-Za-z0-9._-]+)')\s*(?:#.*)?$/);
+      if (!value || Object.hasOwn(values, key)) throw new Error("ambiguous or unsupported configured field");
+      values[key] = atom(value[1] || value[2]);
+    }
+    return { model: values.model || "unavailable", effort: values.model_reasoning_effort || "unavailable" };
+  } catch { return { model: "unavailable", effort: "unavailable" }; }
+};
+const effectivePosture = async () => {
+  const id = input.session_id || input.thread_id || process.env.CODEX_THREAD_ID;
+  if (typeof id !== "string" || !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(id)) return null;
+  const sessionRoot = path.join(home, ".codex", "sessions");
+  try {
+    // Locate THIS id, never the newest unrelated rollout. No symlink traversal.
+    const matches = [];
+    const walk = (dir, depth = 0) => {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isDirectory() && depth < 3 && /^\d{2,4}$/.test(entry.name)) walk(path.join(dir, entry.name), depth + 1);
+        else if (entry.isFile() && entry.name.endsWith(`-${id}.jsonl`)) matches.push(path.join(dir, entry.name));
+      }
+    };
+    walk(sessionRoot);
+    if (matches.length !== 1) return null;
+    let metaId, context, startedTurn, line = 0;
+    const stream = fs.createReadStream(matches[0], { encoding: "utf8" });
+    const reader = createInterface({ input: stream, crlfDelay: Infinity });
+    // Stream errors are forwarded explicitly so a removed/unreadable record cannot wedge the hook.
+    stream.on("error", error => reader.emit("error", error));
+    try {
+      for await (const text of reader) {
+        line++;
+        let row; try { row = JSON.parse(text); } catch { continue; } // an unfinished trailing line is normal
+        if (row.type === "session_meta") metaId = row.payload?.id;
+        if (row.type === "event_msg" && row.payload?.type === "task_started") startedTurn = row.payload.turn_id;
+        if (row.type === "turn_context") context = { ...row.payload, line };
+      }
+    } finally { reader.close(); stream.destroy(); }
+    const sameCwd = value => typeof value === "string" && (process.platform === "win32"
+      ? path.resolve(value).toLowerCase() === path.resolve(input.cwd || process.cwd()).toLowerCase()
+      : path.resolve(value) === path.resolve(input.cwd || process.cwd()));
+    if (metaId !== id || !context || !sameCwd(context.cwd) || (startedTurn && startedTurn !== context.turn_id)) return null;
+    const model = atom(context.model), effort = atom(context.effort);
+    if (model === "unavailable" || effort === "unavailable") return null;
+    return { model, effort, line: context.line };
+  } catch { return null; }
+};
+const postureReport = async () => {
+  const configured = configuredPosture();
+  const effective = await effectivePosture();
+  let documented = null;
+  try {
+    const list = JSON.parse(fs.readFileSync(path.join(KIT, "templates", "codex", "models-current.json"), "utf8"));
+    if (/^\d{4}-\d{2}-\d{2}$/.test(list.checked_on) && Array.isArray(list.models) && list.models.length > 0
+      && list.models.every(row => atom(row.name) !== "unavailable" && row.source === `https://developers.openai.com/api/docs/models/${row.name}`)
+      && new Set(list.models.map(row => row.name)).size === list.models.length) documented = list;
+  } catch {}
+  const warnings = [];
+  if (configured.model === "unavailable" || configured.effort === "unavailable") warnings.push("configured fields unavailable; inspect personal config");
+  if (!documented) warnings.push("documented-current list unavailable; refresh it");
+  else if (configured.model !== "unavailable" && !documented.models.some(row => row.name === configured.model)) warnings.push("configured name not on documented-current list; inspect it, no fallback selected");
+  if (configured.effort === "ultra" || effective?.effort === "ultra") warnings.push("ULTRA violates Chan's kit posture");
+  if (effective && ((configured.model !== "unavailable" && configured.model !== effective.model)
+    || (configured.effort !== "unavailable" && configured.effort !== effective.effort))) warnings.push("configured and effective disagree");
+  return `Posture: configured (personal): ${configured.model}/${configured.effort}; `
+    + (effective ? `effective: ${effective.model}/${effective.effort} (accepted in record, line ${effective.line}); ` : "effective: not reachable at start; ")
+    + (documented ? `documented (${documented.checked_on}): ${documented.models.map(row => row.name).join(", ")}.` : "documented: unavailable.")
+    + (warnings.length ? " WARNING: " + warnings.join("; ") + "." : "");
+};
 const indexKey = path.resolve(input.cwd || process.cwd()).replace(/^([A-Za-z]):/, (_, drive) => `${drive.toLowerCase()}-`).replace(/[\\/]+/g, "-");
 read(path.join(home, ".claude", "projects", indexKey, "memory", "MEMORY.md"));
 const stale = fs.existsSync(path.join(home, ".codex", "PUSH_GO"));
@@ -93,4 +175,4 @@ const report = [
   stale ? "Stale PUSH_GO exists: report it to Chan and never use it." : "No stale PUSH_GO token.",
   failed.length ? `Failed reads: ${failed.join("; ")}.` : "Failed reads: none.",
 ].join(" ");
-process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: report } }) + "\n");
+process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: report + "\n" + await postureReport() } }) + "\n");

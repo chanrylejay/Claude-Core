@@ -64,6 +64,17 @@ t("a complete install reports ARMED, exit 0", r.status === 0 && /— ARMED/.test
 t("the tokenless live-fire actually BLOCKED inside the good run", /LIVE: installed push-guard BLOCKS a tokenless push \(exit 2 \+ reason\)/.test(r.stdout) && !/FAIL {2}LIVE: installed push-guard/.test(r.stdout));
 t("trap-3 reminder prints on every run", /wired is not LOADED/.test(r.stdout));
 
+// Batch 2c: absence, true, and a string "false" are not an explicit boolean disable.
+for (const value of [undefined, true, "false"]) {
+  install();
+  const file = path.join(FH, ".claude", "settings.json");
+  const settings = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (value === undefined) delete settings.autoMemoryEnabled; else settings.autoMemoryEnabled = value;
+  fs.writeFileSync(file, JSON.stringify(settings));
+  r = run();
+  t(`auto memory ${String(value)} is a named install failure`, r.status === 1 && /FAIL {2}installed autoMemoryEnabled = false/.test(r.stdout));
+}
+
 // mutation: guard file missing
 install(); fs.rmSync(path.join(FH, ".claude", "hooks", "push-guard.mjs"));
 r = run();

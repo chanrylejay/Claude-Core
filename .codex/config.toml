@@ -1,0 +1,9 @@
+# Claude-Core only. Chan's pins, Sep 15 2026; sources: templates/codex/models-current.json.
+# Evidence: configured, not proven operational.
+# Sep 15 cap children from the already-open parent both recorded astra/max, not luna/high.
+# The first finished before the live-count check; no third attempt or cap proof exists.
+# New-parent loading is untested. A task name selects no role.
+[agents]
+max_concurrent_threads_per_session = 2 # Configured; refusal with two live children is the proof.
+default_subagent_model = "gpt-5.6-luna" # Configured; documented 2026-09-15, not a runtime receipt.
+default_subagent_reasoning_effort = "high" # Configured; Chan's no-role allowance, 2026-09-15.

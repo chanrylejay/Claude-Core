@@ -4,6 +4,7 @@
   "theme": "dark",
   "effortLevel": "xhigh",
   "alwaysThinkingEnabled": true,
+  "autoMemoryEnabled": false,
   "env": {
     "LEAN_CTX_REPLACE_MODE": "0"
   },

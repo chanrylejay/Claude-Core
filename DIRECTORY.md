@@ -16,6 +16,9 @@ provenance now certify routing through the configured matcher, launcher, runner,
 
 ## Root
 
+- `.codex/config.toml` — kit-only helper defaults and two-child cap; configuration claims follow the runtime receipts in lessons/platforms/codex.md (batch 2c).
+- `.codex/agents/kit_check.toml` — luna/medium receipt inspector; never runs nets; role loading and read-only enforcement remain unproven.
+- `.codex/agents/kit_review.toml` — astra/medium meaning reviewer of named files; role loading and read-only enforcement remain unproven.
 - `README.md` — what this kit is, how to use it, what was deliberately left out.
 - `CLAUDE.md` — the operating contract; auto-loads into EVERY session via the @import in the global hub.
 - `DIRECTORY.md` — this file.
@@ -66,6 +69,8 @@ provenance now certify routing through the configured matcher, launcher, runner,
 
 ## templates/ — reusable infrastructure
 
+- `codex/models-current.json` — dated official sources for the kit's documented model names; the ritual reads it locally, and only session records establish effective settings.
+- `codex/_agents-config_test.mjs` — pins kit helper keys, role contents and C2 evidence labels, operational-form rules, model sources, and the auto-memory skeleton; `--root` checks the same pins on a pre-2c tree.
 - `verify-install.mjs` — the bootstrap arming check: is THIS machine fully armed? Since batch 3a (Aug 30 2026) also the hub's only net: @import present, fallback layer present and canon-backed, moved-out laws absent, 45-line ceiling, every pointer resolves. Byte-equality of the three installed hooks against their templates, settings wiring (matcher parity = trap 1, `|| exit 2` = trap 2, statusline), an existing absolute path, then LIVE-FIRE of the INSTALLED files in a sandboxed home (tokenless push must be BLOCKED, ritual must speak, meter must render), plus a trap-4 shadow scan for project-level guards. Exits 1 naming what is broken; prints the trap-3 reminder every run. + `_bootstrap_test.mjs`, its net (9 pins: an armed machine, and one mutation per failure mode).
 - `judgment-sample.mjs` — the judgment layer's DETECTOR (not a gate); `--log [path]` appends one dated line of counts (carrying det=N, the detector version; v2 since Aug 31 2026 knows the kit's STOP vocabulary) to ~/.claude/judgment-log.txt, which the session ritual prints at every boot with its age (batch 3b): samples recent local session transcripts for the shapes that accompany the violations the two most-violated behavioral files exist to prevent (claimed a screen without the shot, a session with zero pushback, unstructured walls, done-without-evidence) and prints counts. Weak signals, never blocking; the one hard failure is reading nothing. + `_judgment_test.mjs`, its net (14 pins over three transcript shapes).
 - `_l24_audit.mjs` — the L24 rewrite audit as a deterministic script (worktree vs a git ref; triage in-place / relocated / LOST; exit 1 on loss) + `_l24_test.mjs`, its net, which also pins the script's class list in sync with the law's floor in universal-patterns. Hand-running L24 is the fallback only.
