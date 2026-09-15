@@ -114,12 +114,22 @@ gpt-5.6-luna/high (Chan, Sep 15: "yes put luna high effort"). Named role allowan
 kit_check = gpt-5.6-luna/medium and kit_review = gpt-6-astra/medium. These documented names
 were checked Sep 15 2026; the dated sources are in `../../templates/codex/models-current.json`.
 The two step-5 children omitted model and effort and still recorded astra/max. This already-open
-parent did not demonstrate the defaults; new-parent loading remains untested. Both fresh child
+parent did not demonstrate the defaults; new-parent loading remained untested at that point. Both fresh child
 messages still said four slots including the parent. At the live-count check the first child
 had completed and only the second was running, so no third attempt or cap refusal was claimed.
-The defaults and cap remain configured, not proven operational. The documentation counts the
+The defaults and cap were then configured, not proven operational. The documentation counts the
 cap as children excluding the parent; the runtime's message counts slots including the parent.
 Which governs the cap of 2 is untested.
+
+**Fresh-parent receipt, Sep 15 2026:** the no-role defaults (gpt-5.6-luna/high) are proven
+operational for a fresh parent, for this one spawn only. The child's record is
+`C:/Users/Chanryle/.codex/sessions/2026/09/15/rollout-2026-09-15T14-44-28-01a0a3cf-5150-78f1-97d3-36fa67ff6d16.jsonl`, line 8:
+`"model":"gpt-5.6-luna"` and `"multi_agent_version":"v2","realtime_active":false,"effort":"high"`.
+The parent record is
+`C:/Users/Chanryle/.codex/sessions/2026/09/15/rollout-2026-09-15T14-34-47-01a0a3c6-72cd-7351-9969-44c698954c5b.jsonl`, line 67:
+`ready_check` was spawned with `fork_turns: "none"` and no model, effort or role argument.
+The two-child cap stays configured, not proven operational. This v2 receipt establishes
+no behavior beyond this one spawn; role-file loading and cap enforcement remain unproven.
 
 Both role files remain configured, not proven operational: C2 for each role.
 Both C runs recorded gpt-6-astra/max and `agent_role: null`. Null metadata leaves file loading
