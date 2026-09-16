@@ -420,6 +420,9 @@ The send-back of 2a v1, same day, and what it taught. Codex's review on Windows 
 
 (Sep 14 2026, Codex follow-up to the applications-reporting bank at `90a9698`, local only.)
 
+Superseded on landing: the bank landed as 5fb2135 with the canon at 7,792 and the ceiling at
+40,000, after the architect's Sep 15 send-back (AL-38, G2-1).
+
 The bank updates `templates/_boot_resolver_test.mjs`'s unknown-mode canon-size pin from
 `6746` to `8175`. On the clean post-bank tree, the resolver's `charsOf` measurement for
 `projects/trial-aug2026/project-canon.md` is `8175` (CRLF-normalized), so the pin is true.
@@ -436,6 +439,10 @@ measurement. This is deferred pending Chan's ordering decision; no push or merge
 
 (Sep 15 2026, Codex authoring from v10. DRAFT for the architect's hostile review; not an
 ACCEPT and not permission to publish this batch.)
+
+Closed: architect ACCEPT relayed by Chan Sep 15 2026 (6a3753e); pushed to main Sep 15 14:23
+on his GO; the auto-memory red and the four-slot count in this entry were both superseded
+the same afternoon (AL-38, G2-8); the group-2 close-out is AL-38.
 
 Authority and base. Chan authorized steps 2-3 in a fresh authoring session, then said in the
 same chat: "GO push main, Claude-Core, commit 4e0a272. Then step 5. On the two cap children,
@@ -524,6 +531,9 @@ as ruled in AL-34. No new connector, package, service or compression tool was in
 
 (16 Sep 2026, Codex authoring from main `8c57af7`, branch `kit-2b-catalog`.
 Local review candidate; architect semantic review pending. No push authorized or attempted.)
+
+Closed: pushed to main Sep 16 09:08 on Chan's GO, before the architect's semantic review,
+which is the group-2 review of the same day (AL-38).
 
 Chan's two rulings in this authoring chat: "Allow grouped paths and two new lines" and
 "Hold ramp work for a revised brief". The v2 brief could not preserve existing multi-file
@@ -714,3 +724,193 @@ ramp and pattern 51, on the exported whole-branch patch in a fresh browser sessi
 No helper or challenger was used,
 as scoped by the brief; no frozen core, resolver implementation, fixture or installed copy
 was changed.
+
+## AL-38 — group 2 close-out: eleven findings, the bank's landing recorded, one-home fixes, equal collaborators at boot, and the courier task retired
+
+(Sep 16 2026, Codex authoring on `kit-2-closeout` from main 8ac5f4e, from the architect's
+group-2 review, carried in brief v6 with Codex's posture-gate correction on Chan's word,
+then the architect's Sep 16 addendum, G2-10 and G2-11, authored by Codex;
+browser sandbox at 8ac5f4e, cut from Codex's read-only answers and its CLARIFY report. Review under the working rhythm's group rule: interactions and accumulated
+change across 2a v3 (8eb2aab), the applications-reporting bank (5fb2135), 2c v10 (6a3753e,
+8c57af7) and 2b v4 (452e618, 8ac5f4e); 2a's Codex acceptance of Sep 14 and 2c's architect
+acceptance of Sep 15 keep their verdicts; the bank's Sep 15 architect review is banked below;
+2b's architect read is this one. Verdict: eleven findings, the original nine plus the two
+addendum findings, none a send-back of a landed batch; the group closes when this entry lands.
+Scope note: the relay note that listed twelve files and six
+questions for this review is lost; the review read upgrade plan v5 and the Sep 15 relay
+instead, and the twelve files are the twelve tracked files two or more group-2 commits
+touched (DIRECTORY, the memory index, the trial canon, the cost file, monday.md, codex.md,
+README, the drill, the ramp, two-model-relay, the resolver net, the pointer net; ten of them
+by two or more batches, codex.md by 2c's two commits only and two-model-relay.md by 2b's two
+only, Codex's correction; this log is the thirteenth and the banking home). Against plan v5: F30 and F31 closed in 2b, F25 and F7
+in 2a, F14 partial as AL-34 banked it, F21 half-closed (G2-7); batch 2's "LEAN about 13K"
+target unmet, Codex and CLI 15,238 and browser 17,820 at the review base, a measured exception beside AL-34's
+four, never a ruling.)
+
+Reproduced in the sandbox at 8ac5f4e: 24 nets, 0 failed (copies 59 TEMPLATE; Codex's saved
+Sep 16 08:48 run 24 nets, copies LIVE 61, DeepSeek ritual LIVE 151, 13 installed copies, 0
+drift); AL-37's tables exactly (browser TRIAL / LEAN / CLIENT_BUILD / JOB_HUNT / ANO_ULAM
+35,136 / 17,820 / 30,664 / 39,880 / 39,717; Codex and CLI plans 32,554 / 15,238 / 28,082 /
+37,298 / 37,135; the DeepSeek seat plus its 4,183-char cost read 36,737 / 19,421 / 32,265 /
+41,481 / 41,318; ramp 2,582, index 5,409, canon 7,611); the twelve day 8-9 bullets each
+resolve by one distinctive phrase to exactly one live home outside this log. Today's
+public-safety read of the bank's new file and canon lines agrees with the Sep 15 review:
+both job boards are third-party platforms, JobAdder already public in the accepted canon's
+open questions, the operator unnamed, the counts a scratch-board rehearsal. The pushes of
+this group, each on Chan's own GO: Sep 15 14:23 4e0a272..6a3753e, Sep 15 16:32
+6a3753e..8c57af7, Sep 16 09:08 8c57af7..8ac5f4e; 2b's push preceded its architect review by
+Chan's choice, and this entry is that review.
+
+G2-1, the bank's landing, never recorded: AL-35 describes the local candidate 90a9698 (canon
+8,175, `boot.budget_chars` 43,000, browser TRIAL 41,975, "trimming the canon is not
+warranted") and AL-36 still names it as the bank. What happened: the architect's Sep 15
+review sent the candidate back at 15:39; Codex cut from the boot-read canon a ten-line block
+carrying three live board counts, the board-grain description, a reconciliation claim, a
+runbook fragment and the three-defect closure paragraph (the shape and the defects now live
+in the applications lookup file, the runbook is a one-line pointer in the canon, and the
+counts appear nowhere public, by the send-back); the rebase onto 6a3753e dropped the ceiling
+raise, since the post-2a base has 4,864 of TRIAL headroom; content accepted 16:05 with
+corrections required before the push, landed as 5fb2135 (canon 7,792, ceiling 40,000), pushed
+16:32. 90a9698 is on no branch of origin. AL-35 carries
+a superseded line pointing here.
+G2-2, the bank duplicated two monday.md rules beside their originals (board-relation `text`
+reads EMPTY; conditional colouring is UI-only): merged into the existing bullets, the new
+clauses kept. L24 277 tokens / 277 in place / 0 relocated / 0 LOST; policy diff 4 flagged.
+G2-3, the cost file, cut to its law in 2a, regained a dated measurement in 2c (the
+7,848,042-token 1b helper sentence) that codex.md's kit-posture bullet already holds
+verbatim, two live homes: the sentence left the cost file for a pointer; the posture, Chan's
+reason and every pointer stay, the models-current.json pointer among them (the 2c review's
+R4, retained by Chan); the header date reads Sep 15. Cost file 4,167 chars (4,183 before);
+DeepSeek transitive JOB_HUNT 41,465 / ANO_ULAM 41,302, reported under his option-1 ruling (G2-8).
+G2-4, `workflow/switch-to-codex.md` step 1 still said the picker "normally" sits at
+gpt-5.6-terra, medium (Sep 3 wording), a stale mirror of the posture whose one home is the
+cost file: replaced with a pointer, the never-hand-edit rule kept.
+G2-5, three headers on a pushed main described trees that no longer existed (AL-35's numbers,
+AL-36's DRAFT with its expected red and its four-slot count, AL-37's review-pending and
+no-push, stale twenty-three minutes after it was written): each carries one appended closing
+line pointing here; the push rows are above.
+G2-6, the resolver net kept `extra === 7492` for the LEAN trio two lines above the canon pin 2b
+made structural: made structural the same way (the parked set is the `lean:lookup` cold-start
+entries, sum positive and printed, never pinned). Resolver net 99 passed, 0 failed (99 before).
+G2-7, F21's platform half: plan v5 assigned two lookup lines by task trigger; AL-34's recut
+carried only universal-patterns into 2b; `lessons/platform-gotchas.md` (2,285 chars) boots in
+ANO_ULAM and has no lookup line elsewhere; a 116-char line measured fits every seat and mode
+but leaves browser JOB_HUNT 4 chars of headroom. Chan's ruling, Sep 16, option c: the trial
+canon's stack line now points at the index (+62 chars, the canon 7,673; this edit alone made
+browser TRIAL 35,198, before G2-10's ramp change);
+the general lookup line is batch 3's, after the JOB_HUNT trim or override decision.
+G2-8, three facts that lived only in session records, banked: Chan's option-1 ruling on the
+DeepSeek seat's transitive overs (Sep 14, reaffirmed Sep 15, confirmed Sep 16 in his words,
+"ill go with your recommendations": reported as measured, no budget line moves, until he says
+otherwise); the DeepSeek CLI's `autoMemoryEnabled: false` write on
+his GO, Sep 15 14:31, verify-install 62 of 62 ARMED, a fresh session at 14:34 with 0 entries,
+the folder absent on Sep 16, the reload check still owed; the fresh-parent record's own
+runtime message showing 3 slots including the parent (was 4 in the already-open parent) and
+the Sep 16 session showing 3, evidence the `[agents]` block loads and the cap counts children,
+now in codex.md beside the luna/high receipt; the third-child refusal, role loading and
+read-only enforcement stay unproven.
+G2-9, the working rhythm's Sessions bullet still carried the Sep 8 effort ladder (medium to
+apply, high for review, max for policy), a stale mirror of the kit posture the cost file has
+held since Sep 14 (astra at max, never ultra): Codex caught v4's medium instruction;
+replaced with a pointer to the cost file and a check of this session's effective model and
+effort. The ritual compares shared personal defaults with the effective record; concurrent
+sessions can intentionally differ, so that difference alone is informational. Chan requested
+this correction Sep 16 after this session was verified at astra/max; no shared-default or
+other-session change was needed. The matching parent-warning sentence in codex.md is
+aligned with this ruling in the same edit.
+
+G2-10, collaborator status was taught too late. Every browser session opens
+`workflow/relay-boot-claudeai.md` first, whose Plan-and-brief line said "a hand executes";
+the Sep 4 collaborator ruling lived in a lookup reached when a brief was already being cut.
+That ordering taught a hierarchy at boot and offered its correction after the architect had
+started acting on it. Chan described the repeated failure Sep 16: "this always happened every
+new claude.ai session even i said it to them multiple times". Today's v4 prescribed medium
+effort and v5 treated a shared-default disagreement as a stop; the hand caught both wrong
+instructions. The approved ramp line now names the hands as equals and asks their challenge
+before they build. Chan's GO in this chat was "GO for this ramp text": +62 chars, ramp
+2,582 to 2,644, browser JOB_HUNT 39,942 with 58 headroom; every browser mode remains below
+40,000. The Brief-shape rule carries his equal-status quote, gives the hand authorship of
+the AL entry, code and receipts it owns, makes its challenge the first step before edits,
+and leaves machine session settings with the hand under Chan's rulings. The branch loop,
+one-writer rule, work split and banking paragraph in the same file now follow that ownership.
+G2-11, the courier task made continuity depend on Chan doing extra copying. The rule told
+him to save architect messages into a relay file; it stopped getting done, leaving today's
+review a stale file and a missing newer note. Chan's Sep 16 words: "i dont want the relay
+file" and "why we invent this task". The hand now writes public-safe continuation state in
+this newest AL entry and banks private receipts itself in the existing gitignored
+`LOCAL-ONLY-relay.md`. Any architect end-of-session notes ride at the bottom of the brief
+file Chan already moves; the hand reads and banks them. There is no separate file for Chan
+to maintain or paste. The former normal-project courier home, `data/relay.md`, and its
+`ctx_read` compression figure of ~79% are historical context, not a reason to retain that
+task; pasting repeated content into chat was the cost concern, and retiring the copying
+step addresses it directly. Project facts keep the drill's project-memory home.
+
+Interactions read and found clean: DIRECTORY generated from the catalog carries 2c's and the
+bank's lines verbatim (AL-37's L24 on DIRECTORY: zero lost); the manifest's retired
+relay-lessons trigger is covered by the monday, client-collaboration and universal-patterns
+lookup lines and no path appears twice in any seat or mode; the ramp's Install line is the
+browser seat's allowlist entry under hard rule 12, one home, distinct from Codex's locked
+seven; the ramp's retired critique sentence still boots in every mode through the frozen
+core's operating style; the drill's and README's catalog instruction fails safe for a
+lessons/platforms/ file (the generator rejects an excepted path); the frozen fixtures naming
+the retired file are by design (frozen at bb9979c, never a router); 2c's ritual line and the
+resolver plan share one JSON (ritual net 50); the bank's five Locked rules and its build-state
+line date Sep 14, not newer than the state block; the pointer net gained pins and lost none.
+
+Codex's machine, reported and not acted on: five historical dirty worktrees (3, 5, 6, 6 and 6
+changed paths) and one unpublished commit on `review/core-0a-2-v3-20260908`, Chan's cleanup
+call as in G1-6; Codex memory flags remain off; codex-cli 0.154.0-alpha.6.2; personal config
+untouched by this batch. During authoring, the shared personal default differs from this
+kit session; this session is verified at astra/max and no default change is needed (G2-9).
+
+Open, all Chan's: the auto-memory reload check; the worktree cleanup; CI on the public repo;
+auditor 4's watch; the boot capsule after batch 3's ledger; when batch 3 starts (plan v5 item
+1, the context-notes trial, then the ledger with AL-36's role-allowance red line).
+
+Final-tree receipts, measured last: suite 24 nets, 0 failed, on a byte-identical tracked-file
+copy inside this clone. The bootstrap fixture uses a Windows short path to keep its kit-path
+matcher unambiguous, and the gauntlet fixture uses a process-local Git discovery ceiling so
+no-repo fixtures do not discover the enclosing repository; other nets keep full paths, and
+neither adjustment changes the tested code or assertions.
+Per-net passed counts: boot 25; resolver 99; bootstrap 20; judgment 20; L24 22; pointer 301;
+policy-diff 8; prose 241; raw-read 8; safety 20; switch 18; lawcheck 17; agents-config 28;
+artifact-gauntlet 9; codex-guard 44; connectors 357; copies 61; pre-push 14; Codex ritual 50;
+DeepSeek meter 46; DeepSeek ritual 151 LIVE; gauntlet 52; Playwright guard 23; push guard 43.
+Boot: browser TRIAL 35,260 / 40,000 (4,740 headroom); JOB_HUNT 39,942 (58 headroom);
+ANO_ULAM 39,779 (221 headroom); LEAN 17,882; CLIENT_BUILD 30,726; ramp 2,644.
+Installed copies 13 checked, 0 drifted/missing;
+verify-install 62 passed, 0 failed, ARMED. Push row: none until Chan's GO.
+
+L24 against 8ac5f4e, zero fact tokens lost:
+
+| File | Tokens | In place | Relocated | LOST |
+|---|---:|---:|---:|---:|
+| lessons/platforms/monday.md | 277 | 277 | 0 | 0 |
+| memory/chan-ai-cost-context.md | 74 | 71 | 3 | 0 |
+| workflow/switch-to-codex.md | 37 | 34 | 3 | 0 |
+| workflow/two-model-relay.md | 170 | 167 | 3 | 0 |
+| workflow/relay-boot-claudeai.md | 46 | 46 | 0 | 0 |
+| lessons/platforms/codex.md | 324 | 324 | 0 | 0 |
+| projects/trial-aug2026/project-canon.md | 97 | 97 | 0 | 0 |
+| lessons/audit-log.md | 1047 | 1047 | 0 | 0 |
+| templates/_boot_resolver_test.mjs | 412 | 411 | 1 | 0 |
+
+Policy diff against 8ac5f4e (flagged / changed / dropped / added):
+
+| File | Flagged | Changed | Dropped | Added |
+|---|---:|---:|---:|---:|
+| lessons/platforms/monday.md | 4 | 2 | 2 | 0 |
+| memory/chan-ai-cost-context.md | 1 | 1 | 0 | 0 |
+| workflow/switch-to-codex.md | 2 | 0 | 1 | 1 |
+| workflow/two-model-relay.md | 16 | 1 | 4 | 11 |
+| workflow/relay-boot-claudeai.md | 1 | 1 | 0 | 0 |
+| lessons/platforms/codex.md | 2 | 0 | 1 | 1 |
+| projects/trial-aug2026/project-canon.md | 0 | 0 | 0 | 0 |
+| lessons/audit-log.md | 42 | 0 | 0 | 42 |
+
+The architect's Sep 16 addendum supplied G2-10 and G2-11 after the first local receipt;
+both are addressed here, including Chan's separate approval of the ramp text. The tool's
+dropped clauses in monday.md are the duplicate bullets whose substance remains in the
+merged originals; the retired courier rule's history is G2-11. The hand has banked private
+source receipts and the full policy lists in the existing gitignored relay. Public
+continuation state is this entry; Chan has no relay-file task.
