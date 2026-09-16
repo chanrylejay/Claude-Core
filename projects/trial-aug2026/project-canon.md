@@ -33,7 +33,7 @@ the Timeline. All data is real (client data), never sample.
 ## Stack and conventions
 
 - Next.js 13.5 App Router + TypeScript + Tailwind + shadcn/ui (Radix) + Recharts.
-- Neon Postgres (@neondatabase/serverless), DeepSeek AI (draft route), Vercel.
+- Neon Postgres (@neondatabase/serverless), DeepSeek AI (draft route), Vercel (their gotchas: ../../lessons/platform-gotchas.md, the index).
 - Repo layout: app/ (routes + API), components/ (ui + feature clients), lib/, data/,
   scripts/ (monday.com GraphQL importer), seed/, docs/. Run: npm run dev.
 - Design tokens: cream #FAF7F0 bg, charcoal #2B2B2B text, gold accent #C9A24B (links/chips/
