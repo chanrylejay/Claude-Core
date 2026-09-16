@@ -119,7 +119,7 @@ messages still said four slots including the parent. At the live-count check the
 had completed and only the second was running, so no third attempt or cap refusal was claimed.
 The defaults and cap were then configured, not proven operational. The documentation counts the
 cap as children excluding the parent; the runtime's message counts slots including the parent.
-Which governs the cap of 2 is untested.
+How the cap of 2 mapped to the runtime's slot count was untested at that point.
 
 **Fresh-parent receipt, Sep 15 2026:** the no-role defaults (gpt-5.6-luna/high) are proven
 operational for a fresh parent, for this one spawn only. The child's record is
@@ -128,8 +128,14 @@ operational for a fresh parent, for this one spawn only. The child's record is
 The parent record is
 `C:/Users/Chanryle/.codex/sessions/2026/09/15/rollout-2026-09-15T14-34-47-01a0a3c6-72cd-7351-9969-44c698954c5b.jsonl`, line 67:
 `ready_check` was spawned with `fork_turns: "none"` and no model, effort or role argument.
-The two-child cap stays configured, not proven operational. This v2 receipt establishes
-no behavior beyond this one spawn; role-file loading and cap enforcement remain unproven.
+This v2 spawn receipt establishes no behavior beyond this one spawn; role-file loading and
+cap enforcement remain unproven.
+
+**Fresh-parent slot receipt, Sep 15-16 2026:** line 4 of the same parent record reports
+3 available concurrency slots including the parent; the Sep 16 session also reports 3.
+Together with the configured two-child limit, this proves the `[agents]` block loads in a
+fresh parent and the cap counts children, excluding the parent. A third-child refusal has
+not been observed: cap enforcement, role-file loading and read-only enforcement stay unproven.
 
 Both role files remain configured, not proven operational: C2 for each role.
 Both C runs recorded gpt-6-astra/max and `agent_role: null`. Null metadata leaves file loading
@@ -151,8 +157,9 @@ Use `codex exec -m gpt-5.6-luna`, with `model_reasoning_effort="medium"` passed 
 argument, and an explicit read-only sandbox. B's record shows the read-only policy, not a denied
 write. Its SessionStart ritual fired, a per-run context cost. With the explicit worker override,
 the ritual reports "configured and effective disagree" by design: it compares personal config
-with the worker's effective settings. That line is expected in this worker; it is a posture
-fault in a parent session. If a later receipt fails the
+with the worker's effective settings. That line is expected in this worker. A parent verifies
+its own effective model and effort against the cost file's posture for that session's kind;
+a different shared personal default alone is informational (Chan, Sep 16 2026). If a later receipt fails the
 explicit spawn pins, no spawn helpers are used until a new build proves them; if the program
 form also fails, checks are plain scripts. Re-run these receipts after a Codex update.
 

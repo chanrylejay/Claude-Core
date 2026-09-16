@@ -16,7 +16,8 @@ client-funded account unless Chan expressly rules on that cutover first.
 ## Cutover
 
 1. Confirm the account condition and that Chan wants Codex as a second hand. Select the model in
-   Codex's picker (normally gpt-5.6-terra, medium); do not hand-edit a model pin.
+   Codex's picker to the posture the cost file states (`../memory/chan-ai-cost-context.md`, one
+   home); do not hand-edit the picker's line.
 2. Trust the intended project, then start a new Codex thread from its root. Prove that global and
    project `AGENTS.md` instructions both load before any substantive work.
 3. Install the guarded-Bash files and the clone's `pre-push` hook byte-for-byte from

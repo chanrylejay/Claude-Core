@@ -24,8 +24,8 @@ before acting on anything below. Bodies moved verbatim.)
 - board_relation `text` in column_values is EMPTY — idempotence checks against it silently
   fail and re-run everything. Read `... on BoardRelationValue { linked_item_ids }`. Write with
   `{"item_ids":[...]}`; target board in defaults as `{"boardIds":[int]}`.
-- **Board-relation columns read EMPTY as text.** An audit that checks `text` will report every
-  link as missing. Read the linked ids properly before concluding anything is broken.
+  An audit that checks `text` reports every link as missing; read the linked ids before
+  concluding anything is broken.
 - NEVER guess column ids from naming patterns — they're per-board random suffixes; a guessed
   id in a view/widget call 500s with no useful error. Read the board's columns first, every
   time. (Cost two failed calls in one session before it stuck.)
@@ -106,9 +106,9 @@ Without it the builder emits whenStatusChangesFromSomethingToSomething with the 
 - Exclusions in words beat parenthetical ids: a column id in parentheses inside the trigger line polluted matching (bound a sibling status column). Write `the status column titled "X", NOT "Y" and NOT "Z"`.
 - Deleting or pausing automations: NO API path exists. CORRECTS the manage_automations bullet above (Automations section) that framed this as a permission ceiling. Public /v2 GraphQL has zero automation/recipe/workflow mutations (194-field Mutation type, introspected, default and 2026-07 API versions): `delete_recipe` and `manage_automations` return "Cannot query field" — a schema absence, not USER_UNAUTHORIZED. The monday MCP connector's manage_automations uses a different channel and returns USER_UNAUTHORIZED even for the creator. Net: every mis-parse is a UI click.
 - Conditional row coloring has NO API surface: view settings_str / view_specific_data_str / settings carry only column visibility and order; update_view accepts settings, filter, sort only. UI-only. Do not attempt a guessed payload on a live view.
-- **Conditional colouring is UI-only.** The API accepts some payloads and silently ignores
+  The API accepts some payloads and silently ignores
   others, never returns the setting on read, and rejects a between-operator on number
-  columns. Do not claim it is applied; hand the person the clicks.
+  columns; do not claim it is applied, hand the person the clicks.
 - View filters: a people column accepts the dynamic token `assigned_to_me`. The earlier claim that date columns accept pinned dates only is superseded by the rolling-date finding in the Day 8 afternoon addendum below; column types have different token support.
 - Status label slots: the reserved/empty slot is label id 5, not index 5 (a label at index 5 with id 6 renders fine; blanks render blank).
 - Notify double-listing: the builder sometimes lists the same recipient twice in a notify slot; cosmetic, one notification is sent.
