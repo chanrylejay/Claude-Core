@@ -96,7 +96,7 @@ fastest orientation, never proof of current state — disk wins, at a start AND 
 Moved here from the global hub, batch 3a Aug 30 2026 (why: ../lessons/audit-log.md AL-22).
 - About Chan, or how we work in any project: Claude-Core `memory/` or `lessons/`, plus one index
   line in `memory/MEMORY.md` (a memory/ file gets NO `DIRECTORY.md` line: that index exempts
-  memory/, one home for their listing) and, for a lessons/ file, one line in `DIRECTORY.md`.
+  memory/, one home for their listing) and, for a lessons/ file, one entry in `templates/directory-catalog.json`, then `node templates/directory-gen.mjs --write`.
 - About one project only: that project's memory folder. Never into Claude-Core and never into the hub.
 - When a fact moves homes, verify the substance actually sits in the NEW home (grep it there), then
   delete the old copy in the same edit: a LOSSLESS move is the one-home law at work, not a deletion.

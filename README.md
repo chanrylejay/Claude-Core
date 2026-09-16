@@ -29,7 +29,7 @@ Built Jul 15 2026, during the Devoted Care wind-down.
 | `archives/` | **Frozen originals** — Documents A, B, C verbatim with stale-lock warnings; never edited, never committed (see below). |
 | `templates/` | **Reusable infrastructure** — the five gauntlet agents (spec-reader, reviewer, net-runner, recon, challenger) and the guard hooks (push-guard, gauntlet-guard). The two client-persona roles (QA/UX) are written fresh per project. |
 | `portfolio/` | A confidentiality-safe summary of what you built at Devoted, ready for resume/interview use. |
-| `DIRECTORY.md` | One-line index of every file in this kit. New file → new line there, always. |
+| `DIRECTORY.md` | One-line index of every file in this kit. New file → one entry in `templates/directory-catalog.json`, then `node templates/directory-gen.mjs --write`, always. |
 | `CLAUDE.md` | The operating contract — auto-loads into every session via the @import in the global hub (`~/.claude/CLAUDE.md`). |
 
 ## How to use it
@@ -52,7 +52,7 @@ session with no operating contract at all.
 
 - New durable fact → ONE file in `memory/` (one retrieval unit per file: the drill's law) + one manifest line in `memory/MEMORY.md`'s `lookup:` with its trigger. New universal
   lesson → extend the matching CATEGORY file in `lessons/`; never create a lookalike file.
-- Every new file gets a line in `DIRECTORY.md`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
+- Every new file gets one entry in `templates/directory-catalog.json`, then `node templates/directory-gen.mjs --write`, always — EXCEPT `memory/` files, which are indexed one line each in `memory/MEMORY.md` and never in DIRECTORY too.
 - One home per fact; anti-bloat and where-facts-go rules: workflow/the-drill-and-memory.md, "Where new facts go".
 - **Active-project canon law (Aug 28 2026, Chan's GO):** every project Chan is actively working
   has a PUBLIC-SAFE canon in `projects/<name>/project-canon.md`, and the state block in

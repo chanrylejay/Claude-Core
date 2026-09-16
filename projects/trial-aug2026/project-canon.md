@@ -68,9 +68,7 @@ the Timeline. All data is real (client data), never sample.
   a relative label, and an explicit "or earlier" bucket where none was shown.
 - Reporting weeks are Monday to Sunday in the client's timezone, stated in every script.
 - Location means the JOB's location, never the candidate's address; a source that publishes none says so on the row.
-- Dated decisions, newest first: `decision-log.md` (LOOKUP). The day 8-9 relay lessons still
-  BIND work: `relay-lessons-day8-9.md` (LOOKUP; open before scanning or changing a Monday
-  board, client calls or decks, and reference-led design).
+- Dated decisions, newest first: `decision-log.md` (LOOKUP).
 
 ## Current build state
 

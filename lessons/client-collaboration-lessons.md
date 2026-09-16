@@ -136,3 +136,9 @@ add-on, Netlify needs Enterprise, Anthropic offers it first-party via API.
   what is paid for, who uses it, who can administer it and where it hurts. Assembling that map
   is genuinely valuable to an owner, costs only conversations, and is a legitimate reason to
   ask for a meeting that is not "please look at my work."
+
+## Client calls and proposal decks (trial, Sep 2026)
+
+- First client call after a text-only relationship: build a cheat sheet with CLICK/SAY columns, plan one live demo action (change a status, watch the row move), four canned answers, no yes/no close. The speaker's own fear-rating of the call is not data; the client's requests list is.
+- A proposal deck sells the ask: put the number on the slide, show now-vs-proposed with weekly and monthly totals, tie the bonus to a client outcome that costs the client nothing until they have won, make the arithmetic doable in the client's head. Never pitch automation as "replaces N VAs" to a client who employs VAs.
+- "Read it as me" pass: re-derive the deck from everything the person has said, not from their draft lines; the strongest sentences are often facts mentioned elsewhere ("the owner barely gives me tasks" became "you do not have to manage me; you have already seen that").

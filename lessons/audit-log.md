@@ -519,3 +519,167 @@ API is unavailable to these two seats, so no action. The applications-reporting 
 on Chan's separate say. Batch 2b never runs in parallel with 2c. Path-scoped `.claude/rules/`
 remain an option for a future project. The missing kit project-memory index stays reported,
 as ruled in AL-34. No new connector, package, service or compression tool was installed.
+
+## AL-37 — batch 2b: generated DIRECTORY and the parked lessons; F30 held
+
+(16 Sep 2026, Codex authoring from main `8c57af7`, branch `kit-2b-catalog`.
+Local review candidate; architect semantic review pending. No push authorized or attempted.)
+
+Chan's two rulings in this authoring chat: "Allow grouped paths and two new lines" and
+"Hold ramp work for a revised brief". The v2 brief could not preserve existing multi-file
+DIRECTORY blocks with a single path per entry, or list its two new files under its allowed
+diff. The catalog therefore uses `path` for one file, `paths` for an existing grouped block,
+and `path: null` for prose. Its two new DIRECTORY lines name the catalog and generator.
+The exact proposed ramp step is 348 characters, 349 with its newline; with the +111 index
+swap, browser JOB_HUNT would be 40,233 and ANO_ULAM 40,070. The ramp remains byte-identical
+to the base. F30 is HELD, not closed; its wording and the budget repair await a revised brief.
+
+The twelve day 8-9 bullets moved to these homes. Two merge into existing rules, with their
+missing clauses preserved; no second home remains in the retired project file.
+
+| Source topic | New home and placement |
+|---|---|
+| Contradictory authority in a brief | workflow/two-model-relay.md, Standing rules; MERGED into the existing contradiction rule, preserving the origin example, reversible local edits, step coverage and whose GO counts |
+| Two exemplary refusals | workflow/two-model-relay.md, the receiving-hand refusal rule |
+| Retesting old planner caution | workflow/two-model-relay.md, Standing rules; the automation wording points to monday.md |
+| Human board activity before scanning | lessons/platforms/monday.md, Day 8 afternoon |
+| Existing dashboard and view screenshots | lessons/platforms/monday.md; MERGED into the dashboard rule, adding view sets and API blindness |
+| Credit accounting before renames | lessons/platforms/monday.md, Day 8 afternoon |
+| API feasibility in briefs | workflow/two-model-relay.md, Brief shape |
+| Stable identifiers for human clicks | workflow/two-model-relay.md, Brief shape |
+| First-call preparation | lessons/client-collaboration-lessons.md, Client calls and proposal decks |
+| Proposal content and the VA framing limit | lessons/client-collaboration-lessons.md, same block |
+| Two kinds of design reference | lessons/universal-patterns.md, unnumbered Reference-led design block after Day 10 |
+| Reconstructing the speaker's deck | lessons/client-collaboration-lessons.md, same block |
+
+The generator checks an ordered dependency-free JSON catalog against exact `git ls-files`
+paths, with only memory/*.md and lessons/platforms/* exempted because their manifests own
+them; duplicate owners, untracked paths, absent coverage and missing tracked files fail.
+Its default `--check` compares the generated header and text against DIRECTORY, reporting
+the first differing line; `--write` writes only after coverage passes, and CRLF checkouts
+compare in git's LF text form. Without git, it uses the pointer net's degraded-strict disk
+inventory, retaining that net's machine-file exclusions and making ordinary strays fail.
+
+The pointer net replaces basename substring coverage with the generator, exact catalog
+ownership and a line-1 marker. Delivery-transient and indexed-pending-addition notes remain;
+certification requires catalog paths to be staged/tracked. Mutation tests cover grouped
+text, duplicates, basename collisions, missing/untracked paths, exceptions, malformed text,
+CRLF, missing markers, first-line diagnostics, fallback strictness and refused invalid writes.
+The pattern pin covers the two numbered-pattern sections, since the later fan-out lesson has
+its own local 1-3 list; it checks contiguous unique numbers, the H1, CLI-era heading and
+DIRECTORY count, plus every tracked by-number reference. Its base-tree reference check was
+already red on AL-34's citation of the then-absent pattern 51; duplicate, gap, stale count and
+out-of-range mutations also fail. The catalog and generator subjects were absent on the base.
+
+Meaning changed: the day 8-9 lessons bind through the manifest's task triggers, with Monday
+work still reaching its existing platform home; DIRECTORY is authored through the catalog
+and cannot pass its check while drifting from it or losing tracked coverage; pattern numbers
+are mechanically checked. F21 closes for universal-patterns and F31 lands as pattern 51, one
+line. AL-35's follow-up closes: the unknown-mode recovery pin keeps the exact BOOT-list
+structure, canon presence and lookup exclusion, requires a positive canon size, and prints
+that size instead of asserting a brittle literal. The measured canon here is 7,611 chars.
+
+The verbatim retired preamble exposed one pointer-net limit: a quoted relative link was
+resolved from its new file instead of its original location. An explicit retired-source
+fence now records that location; the net still requires each target to exist, rejects an
+escaping source path or unclosed fence, and resumes the current file's base after the quote.
+
+Measurements use the resolver's CRLF-normalized UTF-16 characters, against base 8c57af7.
+
+| File | Base | Candidate |
+|---|---:|---:|
+| DIRECTORY.md | 31,751 | 31,936 |
+| templates/directory-catalog.json | absent | 41,229 |
+| memory/MEMORY.md | 5,298 | 5,409 (+111; ceiling +150) |
+| projects/trial-aug2026/project-canon.md | 7,792 | 7,611 |
+| workflow/relay-boot-claudeai.md | 2,586 | 2,586 (held) |
+
+| Mode | Browser base → candidate | Browser headroom | Codex/CLI plan base → candidate | CLI plus cost base → candidate |
+|---|---:|---:|---:|---:|
+| TRIAL | 35210 → 35140 | 4860 | 32624 → 32554 | 36807 → 36737 |
+| LEAN | 17713 → 17824 | 22176 | 15127 → 15238 | 19310 → 19421 |
+| CLIENT_BUILD | 30557 → 30668 | 9332 | 27971 → 28082 | 32154 → 32265 |
+| JOB_HUNT | 39773 → 39884 | 116 | 37187 → 37298 | 41370 → 41481 |
+| ANO_ULAM | 39610 → 39721 | 279 | 37024 → 37135 | 41207 → 41318 |
+
+The budget stays 40,000 for every seat and mode. The contract-mandated DeepSeek cost read
+is 4,183 characters outside the resolver plan; its existing transitive overages are reported,
+not repaired by raising the ceiling: JOB_HUNT 1,481 over, ANO_ULAM 1,318 over.
+
+L24 against 8c57af7 (tokens / in place / relocated / LOST); unchanged ramp included:
+
+| File | Tokens | In place | Relocated | LOST | Policy clauses |
+|---|---:|---:|---:|---:|---:|
+| workflow/two-model-relay.md | 162 | 162 | 0 | 0 | 7 |
+| lessons/platforms/monday.md | 275 | 275 | 0 | 0 | 4 |
+| lessons/client-collaboration-lessons.md | 106 | 106 | 0 | 0 | 5 |
+| lessons/universal-patterns.md | 339 | 338 | 1 | 0 | 3 |
+| workflow/the-drill-and-memory.md | 134 | 134 | 0 | 0 | 0 |
+| README.md | 93 | 93 | 0 | 0 | 0 |
+| DIRECTORY.md | 563 | 555 | 8 | 0 | 2 |
+| projects/trial-aug2026/project-canon.md | 103 | 97 | 6 | 0 | 1 |
+| memory/MEMORY.md | 157 | 154 | 3 | 0 | 1 |
+| workflow/relay-boot-claudeai.md | 46 | 46 | 0 | 0 | 0 |
+| lessons/audit-log.md | 912 | 912 | 0 | 0 | 26 |
+
+The policy list has three DROPPED clauses: DIRECTORY's two retired routing sentences
+survive verbatim below, and the canon's retired binding pointer is replaced by the manifest
+triggers, with the twelve rules preserved in their target homes. The dashboard clause gains
+the view-set scope from the source; remaining flagged clauses are additions or relocations.
+The source-text proof covers each complete parked bullet (the dashboard sentence merges with
+its initial letter lowercased; the caution sentence gains its platform-home pointer) and the
+verbatim H1/preamble. One distinctive phrase per bullet resolves to exactly one new home.
+
+Final verification: 24 nets, 0 failed; pointer 296, resolver 99, browser 25, prose 241 on
+78 tracked Markdown files, public-safety 20 on 157 tracked files, Codex copies net 61, and
+DeepSeek ritual LIVE 151. Installed copies: 13 checked, 0 drifted or missing. Marker counts
+are 1 in DIRECTORY and 1 in the generator header. The 16 changed paths were counted by git.
+Receipts are re-measured on the final tree; the local artifact carries the commit/tree hashes,
+complete DIRECTORY diff, policy lists, relocation hits and push row. Nothing was pushed.
+
+Retired verbatim: the parked file's H1 and preamble (original location:
+`projects/trial-aug2026/relay-lessons-day8-9.md`):
+
+```md retired-source=projects/trial-aug2026/relay-lessons-day8-9.md
+# Trial Aug 2026 — relay lessons, day 8-9 (LOOKUP; BINDING, not history)
+
+These lessons still bind work. They are not decisions and not history; they were banked into
+the canon during the AL-27 freeze and moved here verbatim on Sep 7 2026 (batch 0a, why:
+../../lessons/audit-log.md AL-29) so the canon carries only what every trial boot needs.
+Open this BEFORE: scanning or changing anything on a Monday board, read-only audits included
+(the scan and AI-credit rules);
+preparing a client call or a deck; reference-led design of a product screen. Due to be
+re-homed into `lessons/` (relay, monday, client-collaboration) in batch 2; until then this
+file is their one home.
+```
+
+DIRECTORY's former upkeep sentence, verbatim:
+
+```md
+Keep this current: **any new file added to the kit gets a
+line here** (same rule as a memory index).
+```
+
+Its replacement: Keep this current: **any new file added to the kit gets one entry in `templates/directory-catalog.json`, then `node templates/directory-gen.mjs --write`** (same rule as a memory index).
+
+The retired DIRECTORY row, verbatim (including its former routing and temporary-home wording):
+
+```md
+- `trial-aug2026/relay-lessons-day8-9.md` — LOOKUP, BINDING: the day 8-9 relay lessons (board scans and changes with the AI-credit checks, client-call and deck preparation, reference-led design) banked during the AL-27 freeze; open before scanning or changing a board, a client call or deck, or reference-led design. Their one home until batch 2 re-homes them into lessons/.
+```
+
+The old pattern headers, verbatim:
+
+```md
+# Universal Patterns — the numbered patterns (1–50) + how Chan tests AI systems
+## CLI-era patterns (26-50)
+```
+
+Follow-ups: the eleven mirrored frontmatter descriptions' one-home migration (the twelfth,
+boot-index.frozen.md, is captured history and keeps its line); the DIRECTORY diet; the
+platform-gotchas general trigger, which is outside this batch; and the revised F30 ramp brief.
+Review scope remains mechanical relocation checks and the receiving peer's inspection, plus
+the architect's focused semantic review of routing, the two triggers, the canon line and
+pattern 51. The ramp has no candidate change to review. No helper or challenger was used,
+as scoped by the brief; no frozen core, resolver implementation, fixture or installed copy
+was changed.

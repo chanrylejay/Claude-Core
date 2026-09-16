@@ -96,6 +96,9 @@ dependent work.
   show. "Important" is never the zipper's judgment call; the default is IN, an exclusion is
   NAMED.
 
+- Delegate to the hands only what the API can do; API-impossible items are named as human clicks with exact steps, not briefs.
+- Ids over names in every relay to a human clicking in a UI.
+
 ## Standing rules
 
 - **One-writer rule.** claude.ai drafts and proves (sandbox commits are patch
@@ -144,6 +147,7 @@ dependent work.
   stale-looking artefact, a duplicate, or an invented correction are stops that prevent a
   wrong commit, not friction to route around. The planner rules on that pushback by name in
   the next message.
+  Exemplar behaviours to teach: hands stop on a one-row count mismatch and attach a diagnosis (the +1 was live drift; the diagnosis was exact). Hands refuse a blind write to a live client view when no evidence of the payload shape exists, and say so.
 - **Reversible work gets latitude; only the irreversible gets a stop-gate.** Exact step
   lists ending in "stop if it fails" turn planner errors into owner round trips, even for
   diagnosis. Reading, diagnosing, testing, and other undoable work belong to the hand to
@@ -153,10 +157,12 @@ dependent work.
 - **Never put contradictory instructions in one brief.** "Report only, no edits" cannot
   coexist with a request for a temporary log line and a live push attempt. Re-read the brief
   for internal contradiction before sending; the hand cannot resolve one and should not try.
+  A brief header "NOT A GO" plus a step directing a live-system or deploy-costing write without Chan's explicit GO is a CONTRADICTORY brief; the hands were right to hold. "NOT A GO" does not bar authorized reversible local file edits. Carry every GO inside the brief and say which steps it covers; only Chan's own GO counts.
 - **The hand correcting the planner's diagnosis is its highest-value output.** Reading the
   source can kill a planner theory: a supposedly stale installed guard, a path-spelling bug,
   or a Day 9 line that does not exist on the branch. The planner accepts that correction by
   name in its next move; a hand that only obeys would ship the wrong fix.
+- The brief-writer's own stale caution is a cost too: once new evidence lands (armor phrases: `../lessons/platforms/monday.md`, Automation builder armor phrases), retest before assigning work to human hands.
 - **Every patch carries its SHA-256 in the brief; the agent verifies BEFORE applying.**
   `sha256sum <file>` (or `certutil -hashfile <file> SHA256`) must match the brief's line, or
   the run STOPS. The marker-string rule above proves the right version AFTER applying; the

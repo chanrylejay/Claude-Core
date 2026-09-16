@@ -1,4 +1,4 @@
-# Universal Patterns — the numbered patterns (1–50) + how Chan tests AI systems
+# Universal Patterns — the numbered patterns (1–51) + how Chan tests AI systems
 
 Distilled Jul 23 2026 from Document B v9 (verbatim original: `../archives/document-b-lessons-registry-v9.md`).
 These are project-agnostic engineering and AI-collaboration patterns proven across 7 prompt systems, 2 n8n platforms, 4 web apps, and the Devoted Care production era. Reference by number.
@@ -38,7 +38,7 @@ category.
 24. **Multi-session build management:** number the micro-sessions, one deliverable each, end each with a handoff paragraph, never load files the session will not touch.
 25. **Trimmed context documents per sub-project:** instructions = lean behavior layer; context doc = deep knowledge layer; never duplicate between the two; never hand a sub-instance the raw full archive.
 
-## CLI-era patterns (26-50)
+## CLI-era patterns (26-51)
 
 26. **Silent fallbacks poison production:** any helper that quietly degrades to mock data WILL feed a real surface. Fallbacks are for layout, never for facts; gate real-record consumers on an explicit live flag.
 27. **Racing builds corrupt artifacts:** two builds (or build plus dev server) over one artifact dir corrupt it confusingly. Kill all, wipe, rebuild once. Never use grep-filtered build output as a success signal.
@@ -132,6 +132,8 @@ category.
     in a few steps within the brand's palette, and reserve exactly one colour for
     completion so the system has reward as well as warning.
 
+51. **Editing a mock is not editing the page: verify by computed style, never by source.** Three sub-cases (mock-editing session, Sep 7 2026): (a) a precompiled Tailwind build no-ops any class it has never seen, so a class added in the markup changes nothing on screen; (b) a global `!important` rule repaints every literal it matches; (c) a text replace can cut a `class=""` attribute and drop what followed the cut. Rule: read the computed style in the browser before calling a visual change done, never the source; and after every replace, assert the attribute closes.
+
 ## Day 10 field lessons (4 Sep 2026, kit-day8-lessons)
 
 - **Read the activity log before removing anything a human might be using.** An empty field is not evidence: the log distinguishes abandonment from active resistance. When an owner questions a recommendation, get the data; do not restate the recommendation.
@@ -141,6 +143,10 @@ category.
 - **Verify view and layout writes by reading them back.** API writes can persist without rendering reliably. Read the view after writing, compare the column order, then hand the screen to the owner's eyes.
 - **Duplicate detection needs normalisation and more than one key.** Match name, email, and phone after stripping punctuation and case. Time spacing separates same-day duplicates from genuine repeat business; never bulk-archive on a name match alone.
 - **Blank is worse than wrong.** A record with no routing status is invisible to automations, filters, and dashboard counts. Hunt blank statuses as their own defect class.
+
+## Reference-led design (3 Sep 2026, kit-day8-lessons)
+
+- Two reference sets when designing a product screen: FEATURE references (what it does) and LOOK references (grammar: spacing, radius, type, one accent). Copy grammar, never brand; never paste competitor screenshots into a client deliverable. The design half renders an HTML mockup for approval; the hands implement from the registry.
 
 ## How Chan stress-tests AI systems (the methodology)
 

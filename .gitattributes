@@ -14,3 +14,4 @@ templates/codex-chan-guard.rules text eol=lf
 
 # Batch 1a (Sep 12 2026): the shared-resolver fixtures are compared against pinned output.
 templates/fixtures/* text eol=lf
+templates/directory-catalog.json text eol=lf
