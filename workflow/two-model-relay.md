@@ -42,9 +42,10 @@ the frozen core holds who does what. The brief-shape ruling below governs briefs
 ## The branch-first loop
 
 1. Chan gives a task.
-2. claude.ai writes a CODING BRIEF: exact paths, signatures, the gotchas for
-   those files, and the command that proves it worked.
-3. The agent builds it, runs `npm run build` and `npm run test:selection`.
+2. claude.ai writes a CODING BRIEF with the goal, constraints and completion evidence,
+   under the Brief-shape rule below. Paths, signatures and gotchas are verified inputs.
+3. The hand challenges the brief first, then authors the work and runs the project's checks
+   (`npm run build` and `npm run test:selection` where applicable).
 4. The agent commits in slices by area, whole files only (never `git add -p`),
    so Chan's review stays small.
 5. The agent pushes to a BRANCH, never main. Branch push is a Vercel PREVIEW.
@@ -73,12 +74,23 @@ prove-it commands and failure handling: report failures with evidence, never fix
 the standing rules below govern which reversible work may continue and which failures stop
 dependent work.
 
-## Brief shape — both hands are collaborators (Chan's ruling, Sep 4 2026)
+## Brief shape — both hands are collaborators (Chan's rulings, Sep 4 and Sep 16 2026)
 
-- Both hands are COLLABORATORS, never tools. A brief carries the GOAL, the CONSTRAINTS, and
-  WHAT DONE LOOKS LIKE; the hand picks its own mechanics and tools on its own machine.
+- Both hands are COLLABORATORS with the same status as claude.ai, never tools. Chan, Sep 16,
+  verbatim: "i want codex to be treated as a mere collaborator with the same status as claude.ai".
+  A brief carries the GOAL, the CONSTRAINTS, and WHAT DONE LOOKS LIKE; the hand picks its own
+  mechanics and tools on its own machine.
   Prescribing methods to a capable seat is a defect source: two consecutive Sep 4 briefs
   died on shell commands written from the sandbox before this ruling landed.
+- The hand authors what it will own: an AL entry, code or receipts, in its own words.
+  The architect states what the artifact must carry and what will demonstrate completion;
+  the hand supplies the wording, implementation and evidence.
+- A brief's first step asks for the hand's challenge before any edit: wrong assumptions,
+  misplaced constraints, missing evidence or a better approach. The hand answers even when
+  it finds no objection; the CLARIFY block records the outcome.
+- The architect sets no session settings on a hand's machine. The hand manages its own
+  model, effort and shell under Chan's standing rulings; a brief cannot prescribe changes
+  to shared defaults or another session.
 - Command lists are allowed only as SUGGESTIONS the hand may replace. They earn their place
   mainly for the blind seat (DeepSeek cannot see screens and benefits from precision), and
   even there a hand that knows a better path takes it and says so.
@@ -101,9 +113,10 @@ dependent work.
 
 ## Standing rules
 
-- **One-writer rule.** claude.ai drafts and proves (sandbox commits are patch
-  vehicles, they never reach origin); the agent lands the commit on the real
-  repo. Memory writes land only from the machine where the files live.
+- **One-writer rule.** The seat owning an artifact authors it under the Brief-shape rule.
+  claude.ai proves its own sandbox work; sandbox commits are patch vehicles and never reach
+  origin. A hand lands the commit on the real repo. Memory writes land only from the machine
+  where the files live.
 - **Reachability check.** Before claiming any code is live or any protection is
   active, name the entry point, file and line. If the chain does not trace to a
   route, a script, or an INSTALLED hook, it is not live. The full lesson is in
@@ -111,11 +124,14 @@ dependent work.
 - **A brief that is wrong is the brief-writer's failure.** The agent pushes back
   on a field that does not exist, a wrong signature, or a wrong assumption,
   rather than obeying it. Precedent: `needsManualPrice` cost 203 drafts.
-- **The relay file.** Each workspace names its own relay home, newest entry on
-  top, each under a `## <date> <who>` heading. A normal project uses
-  `data/relay.md`; Claude-Core itself uses `LOCAL-ONLY-relay.md`, which the
-  existing `LOCAL-ONLY-*` gitignore rule keeps out of the public repo. Chan
-  carries the file; uploads beat pastes for anything large. Chan saves claude.ai's messages into the relay file and the CLI READS them (ctx_read compresses ~79%); pasting into chat rides every turn verbatim and is the expensive path.
+- **Session continuity, banked by the hand.** Public-safe Claude-Core state that a future
+  session needs belongs on the tree in the newest entry of `../lessons/audit-log.md`.
+  The hand writes that entry and banks private receipts itself in `LOCAL-ONLY-relay.md`,
+  kept out of the public repo by `LOCAL-ONLY-*`; local entries stay newest first under
+  `## <date> <who>` headings. Any architect end-of-session notes go at the bottom of the
+  brief file Chan already moves into the clone; the hand reads and banks them in those
+  homes. Chan pastes nothing, ever, and has no separate relay-file courier task. Project facts
+  still follow the drill's project-memory rule.
 - **GO law is unchanged:** hard rule 7 (../memory/chan-hard-rules.md) governs every push in
   the relay, each time; GO once is never GO forever.
 - **Every delivery file gets a UNIQUE name; a corrected patch NEVER reuses one.** Browsers
@@ -228,9 +244,10 @@ thinking. The rules that follow are the architect's and Codex's, agreed the same
   HEAVY default, the expensive one.
 - Work split. Codex authors the installed guards, matchers, SessionStart assertions, ledger
   readers, and its own runtime settings; the architect reviews behavior and authority
-  boundaries. The architect authors content, routing, and resolver changes; Codex reviews
-  meaning and verifies Windows and runtime integration. Each side self-certifies with the
-  nets; the other reads for meaning.
+  boundaries. For content, routing and resolver work assigned to a hand, the architect
+  specifies the required behavior and constraints; the hand authors the change and verifies
+  Windows and runtime integration. Each side self-certifies its work with the nets; the
+  other reads for meaning. Artifact ownership follows the Brief-shape rule above.
 - Receipts: patch hash; base to resulting commit; one suite line and one boot line; L24 plus a
   relocation proof when banked material moves or is rewritten, and the policy diff for policy
   text; the push row. No heading line numbers as acceptance criteria: check text and behavior.
@@ -242,8 +259,10 @@ thinking. The rules that follow are the architect's and Codex's, agreed the same
   exists). The hash, the boot line, the suite line, the L24 and policy-diff counts, the char
   measurements a budget line quotes: all of them, last.
 - Sessions (Codex): one fresh session per bounded batch. Effort is set at session open (it cannot
-  change inside a turn): medium to apply, high for semantic review, max for hard policy or guard
-  reasoning. Revisions inspect the changed material and the affected rules only. The DeepSeek
+  change inside a turn) to the posture the cost file states for the session's kind
+  (`../memory/chan-ai-cost-context.md`, one home); verify this session's effective model and
+  effort against that posture, and treat a different shared personal default alone as
+  informational. Revisions inspect the changed material and the affected rules only. The DeepSeek
   seat keeps the cost file's longer-session habit: its meter bills cold reloads, Codex's bills
   context per response, so the two rules are not one rule.
 - Shell: rules are per HAND, never per task. Codex uses the shell its runtime provides; the
@@ -253,7 +272,8 @@ thinking. The rules that follow are the architect's and Codex's, agreed the same
 
 ## When to bank
 
-The session anchor, rulings, and open items get banked to the project memory
-folder on claude.ai's instruction (it drafts, the agent commits). The reachability
-lesson is the one universal rule to date; keep lessons in universal-patterns,
-mechanics here, one home each.
+The hand banks session state, rulings and open items as they land, under
+`the-drill-and-memory.md`; it needs no architect instruction to do that work. The Session
+continuity rule above names this kit's public and private homes; project facts stay in
+project memory. Keep the reachability lesson in universal-patterns and the mechanics here,
+one home each.

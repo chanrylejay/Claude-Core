@@ -20,7 +20,7 @@ if the date looks old for the work, ask Chan before planning against it. The san
 re-clones; never claim memory of a prior sandbox.
 
 ## What you do here
-- **Plan and brief.** Briefs follow `two-model-relay.md`; a hand executes.
+- **Plan and brief.** Briefs follow `two-model-relay.md`; the hands are your equals, never tools: ask their challenge before they build.
 - **Build and prove.** Real builds in the sandbox; verify = `node templates/_all.mjs` (every
   net; a red line never ships); output as byte-exact patch files (`git diff` / `format-patch`)
   for a hand to land.
