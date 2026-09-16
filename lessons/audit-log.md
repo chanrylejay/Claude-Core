@@ -520,7 +520,7 @@ on Chan's separate say. Batch 2b never runs in parallel with 2c. Path-scoped `.c
 remain an option for a future project. The missing kit project-memory index stays reported,
 as ruled in AL-34. No new connector, package, service or compression tool was installed.
 
-## AL-37 — batch 2b: generated DIRECTORY and the parked lessons; F30 held
+## AL-37 — batch 2b: generated DIRECTORY, the parked lessons and F30 closed
 
 (16 Sep 2026, Codex authoring from main `8c57af7`, branch `kit-2b-catalog`.
 Local review candidate; architect semantic review pending. No push authorized or attempted.)
@@ -530,9 +530,18 @@ Chan's two rulings in this authoring chat: "Allow grouped paths and two new line
 DIRECTORY blocks with a single path per entry, or list its two new files under its allowed
 diff. The catalog therefore uses `path` for one file, `paths` for an existing grouped block,
 and `path: null` for prose. Its two new DIRECTORY lines name the catalog and generator.
-The exact proposed ramp step is 348 characters, 349 with its newline; with the +111 index
-swap, browser JOB_HUNT would be 40,233 and ANO_ULAM 40,070. The ramp remains byte-identical
-to the base. F30 is HELD, not closed; its wording and the budget repair await a revised brief.
+The v2 proposed ramp step was 348 characters, 349 with its newline; with the +111 index
+swap, browser JOB_HUNT would have been 40,233 and ANO_ULAM 40,070. At 452e618 the ramp
+remained byte-identical to the base and F30 was HELD for a revised brief. Chan supplied v4
+on Sep 16, explicitly releasing the ramp through step 5 after that step was read. F30 closes
+in this batch: the byte-exact architect-authored ramp records Chan's Sep 15 2026 standing GO
+on its Install line, with the two names, versions and Sep 7 measurement. Its 2,582 characters
+are four fewer than the original ramp; no install was performed on this machine.
+
+The delivery-transients clause also moves from the ramp to workflow/two-model-relay.md,
+beside the unique-delivery-name rule. The ramp's boot-report parenthetical is redundant with
+the script's printed report instruction; its critique sentence is governed by the cold-start
+read memory/chan-critique-directives.md. The retired originals are quoted below.
 
 The twelve day 8-9 bullets moved to these homes. Two merge into existing rules, with their
 missing clauses preserved; no second home remains in the retired project file.
@@ -586,31 +595,35 @@ escaping source path or unclosed fence, and resumes the current file's base afte
 
 Measurements use the resolver's CRLF-normalized UTF-16 characters, against base 8c57af7.
 
+Accepted intermediate receipt at 452e618 (ramp held): browser TRIAL / LEAN / CLIENT_BUILD /
+JOB_HUNT / ANO_ULAM = 35140 / 17824 / 30668 / 39884 / 39721; corresponding headroom =
+4860 / 22176 / 9332 / 116 / 279. The following tables describe the final v4 tree.
+
 | File | Base | Candidate |
 |---|---:|---:|
 | DIRECTORY.md | 31,751 | 31,936 |
 | templates/directory-catalog.json | absent | 41,229 |
 | memory/MEMORY.md | 5,298 | 5,409 (+111; ceiling +150) |
 | projects/trial-aug2026/project-canon.md | 7,792 | 7,611 |
-| workflow/relay-boot-claudeai.md | 2,586 | 2,586 (held) |
+| workflow/relay-boot-claudeai.md | 2,586 | 2,582 |
 
 | Mode | Browser base → candidate | Browser headroom | Codex/CLI plan base → candidate | CLI plus cost base → candidate |
 |---|---:|---:|---:|---:|
-| TRIAL | 35210 → 35140 | 4860 | 32624 → 32554 | 36807 → 36737 |
-| LEAN | 17713 → 17824 | 22176 | 15127 → 15238 | 19310 → 19421 |
-| CLIENT_BUILD | 30557 → 30668 | 9332 | 27971 → 28082 | 32154 → 32265 |
-| JOB_HUNT | 39773 → 39884 | 116 | 37187 → 37298 | 41370 → 41481 |
-| ANO_ULAM | 39610 → 39721 | 279 | 37024 → 37135 | 41207 → 41318 |
+| TRIAL | 35210 → 35136 | 4864 | 32624 → 32554 | 36807 → 36737 |
+| LEAN | 17713 → 17820 | 22180 | 15127 → 15238 | 19310 → 19421 |
+| CLIENT_BUILD | 30557 → 30664 | 9336 | 27971 → 28082 | 32154 → 32265 |
+| JOB_HUNT | 39773 → 39880 | 120 | 37187 → 37298 | 41370 → 41481 |
+| ANO_ULAM | 39610 → 39717 | 283 | 37024 → 37135 | 41207 → 41318 |
 
 The budget stays 40,000 for every seat and mode. The contract-mandated DeepSeek cost read
 is 4,183 characters outside the resolver plan; its existing transitive overages are reported,
 not repaired by raising the ceiling: JOB_HUNT 1,481 over, ANO_ULAM 1,318 over.
 
-L24 against 8c57af7 (tokens / in place / relocated / LOST); unchanged ramp included:
+L24 against 8c57af7 (tokens / in place / relocated / LOST), re-measured after the ramp rewrite:
 
 | File | Tokens | In place | Relocated | LOST | Policy clauses |
 |---|---:|---:|---:|---:|---:|
-| workflow/two-model-relay.md | 162 | 162 | 0 | 0 | 7 |
+| workflow/two-model-relay.md | 162 | 162 | 0 | 0 | 8 |
 | lessons/platforms/monday.md | 275 | 275 | 0 | 0 | 4 |
 | lessons/client-collaboration-lessons.md | 106 | 106 | 0 | 0 | 5 |
 | lessons/universal-patterns.md | 339 | 338 | 1 | 0 | 3 |
@@ -619,12 +632,18 @@ L24 against 8c57af7 (tokens / in place / relocated / LOST); unchanged ramp inclu
 | DIRECTORY.md | 563 | 555 | 8 | 0 | 2 |
 | projects/trial-aug2026/project-canon.md | 103 | 97 | 6 | 0 | 1 |
 | memory/MEMORY.md | 157 | 154 | 3 | 0 | 1 |
-| workflow/relay-boot-claudeai.md | 46 | 46 | 0 | 0 | 0 |
-| lessons/audit-log.md | 912 | 912 | 0 | 0 | 26 |
+| workflow/relay-boot-claudeai.md | 46 | 40 | 6 | 0 | 4 |
+| lessons/audit-log.md | 912 | 912 | 0 | 0 | 30 |
 
-The policy list has three DROPPED clauses: DIRECTORY's two retired routing sentences
-survive verbatim below, and the canon's retired binding pointer is replaced by the manifest
-triggers, with the twelve rules preserved in their target homes. The dashboard clause gains
+The policy list has four DROPPED clauses: DIRECTORY's two retired routing sentences
+survive verbatim below, the canon's retired binding pointer is replaced by the manifest
+triggers, and the ramp's critique sentence retains its named cold-start home. The twelve
+rules remain in their target homes. The ramp policy list is 2 changed (the clone line and
+Build and prove), 1 dropped (critique), 1 added (Install); v4 expected only 1 changed, but
+the real-base tool also flags the clone-line restriction, retained in What you never do.
+This measured discrepancy is reported for the architect's review; the ramp text is byte-exact.
+Two-model-relay adds one transients clause against
+452e618, eight added clauses across the whole batch against 8c57af7. The dashboard clause gains
 the view-set scope from the source; remaining flagged clauses are additions or relocations.
 The source-text proof covers each complete parked bullet (the dashboard sentence merges with
 its initial letter lowercased; the caution sentence gains its platform-home pointer) and the
@@ -633,7 +652,7 @@ verbatim H1/preamble. One distinctive phrase per bullet resolves to exactly one 
 Final verification: 24 nets, 0 failed; pointer 296, resolver 99, browser 25, prose 241 on
 78 tracked Markdown files, public-safety 20 on 157 tracked files, Codex copies net 61, and
 DeepSeek ritual LIVE 151. Installed copies: 13 checked, 0 drifted or missing. Marker counts
-are 1 in DIRECTORY and 1 in the generator header. The 16 changed paths were counted by git.
+are 1 in DIRECTORY and 1 in the generator header. The 17 changed paths were counted by git.
 Receipts are re-measured on the final tree; the local artifact carries the commit/tree hashes,
 complete DIRECTORY diff, policy lists, relocation hits and push row. Nothing was pushed.
 
@@ -668,6 +687,16 @@ The retired DIRECTORY row, verbatim (including its former routing and temporary-
 - `trial-aug2026/relay-lessons-day8-9.md` — LOOKUP, BINDING: the day 8-9 relay lessons (board scans and changes with the AI-credit checks, client-call and deck preparation, reference-led design) banked during the AL-27 freeze; open before scanning or changing a board, a client call or deck, or reference-led design. Their one home until batch 2 re-homes them into lessons/.
 ```
 
+The ramp's retired boot-report parenthetical, critique sentence, and transients clause,
+verbatim. Their current homes are the script's report instruction,
+`memory/chan-critique-directives.md`, and `workflow/two-model-relay.md`, respectively:
+
+```text
+(the BOOT reads done, the CLONE HEAD date, the BOOT SET count)
+Critique every directive, his included; he decides.
+delivery transients (`CODING-BRIEF-*`, `FIX-*`, `*.patch`) at root only.
+```
+
 The old pattern headers, verbatim:
 
 ```md
@@ -677,9 +706,11 @@ The old pattern headers, verbatim:
 
 Follow-ups: the eleven mirrored frontmatter descriptions' one-home migration (the twelfth,
 boot-index.frozen.md, is captured history and keeps its line); the DIRECTORY diet; the
-platform-gotchas general trigger, which is outside this batch; and the revised F30 ramp brief.
+platform-gotchas general trigger, which is outside this batch. The revised F30 ramp brief
+follow-up is closed by v4 in this batch.
 Review scope remains mechanical relocation checks and the receiving peer's inspection, plus
-the architect's focused semantic review of routing, the two triggers, the canon line and
-pattern 51. The ramp has no candidate change to review. No helper or challenger was used,
+the architect's focused semantic review of routing, the two triggers, the canon line, the
+ramp and pattern 51, on the exported whole-branch patch in a fresh browser session.
+No helper or challenger was used,
 as scoped by the brief; no frozen core, resolver implementation, fixture or installed copy
 was changed.

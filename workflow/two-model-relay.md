@@ -129,6 +129,7 @@ dependent work.
   literal verifiable by grep; a rendered or computed string can never serve (found live
   Aug 2026: a brief named the gauge's rendered "ctx NNK", which no grep of source can ever
   match).
+- Delivery transients (`CODING-BRIEF-*`, `FIX-*`, `*.patch`) live at the repo root only.
 - **A marker string must discriminate.** It must exist in the NEW version and not the old
   one; a grep-able source literal alone is insufficient if both files share it. Ship a
   runnable test with an expected count (for example, `grep -c "<literal>"`), plus a hash
